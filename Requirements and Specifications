@@ -1,3 +1,21 @@
+# Project abstract
+
+Recipick is a service that helps users to find recipes. And while we do recognize that there are many other web-services that recommend recipes based on categories, our service differs from them in that our recommendations are primarily based on budget. Just like some people would want some recipe ideas to lose/gain weight, we highly believe that many people would want to choose recipes based on money. Our website targets these people and offers them the unique budget-based recipe recommendation service. 
+Our service aims to provide tight-on-budget people who want to make sure that they can eat the cheapest (or most extravagant) meals that they can find. Given a certain budget that you decide, we find you the best recipes out there that fits into the budget. You can also upload your personal recipes to share them with other people. 
+
+# Customers
+
+1. Those who live alone
+2. Those who want to save up money on eating
+3. Korean soliders...?
+4. Busy people who want ideas for a quick meal
+
+# Market competitors
+
+![](https://github.com/swsnu/swpp2020-team3/blob/master/Photos/Market%20Competitors%20Analysis.png)
+
+
+
 # UI details
 
 ## Total overview:
