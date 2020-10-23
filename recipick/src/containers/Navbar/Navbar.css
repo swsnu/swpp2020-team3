@@ -5,6 +5,52 @@ ul {
     overflow: hidden;
     background-color: #333333;
   }
+
+  dl {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #999494;
+  }
+
+  searchbar {
+    float: left;
+    padding: 12px;
+    
+  }
+
+  searchbar input {
+    color: gray  
+  }
+
+  searchbar img {
+    display: block;
+    padding: 2px;
+    text-decoration: none;
+  }
+
+  searchbar img:hover {
+    background-color: #111111;
+  }
+
+  logo {
+    float: left;
+    color: white;
+    padding: 12px;
+  }
+  
+  logo a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+  }
+  
+  logo a:hover {
+    background-color: #111111;
+  }
   
   li {
     float: left;
