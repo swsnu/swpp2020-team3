@@ -1,5 +1,5 @@
 .first_list, .second_list, .third_list {
-    background-color: white;
+    background-color:#c9c7c7;
 }
 
 .random_content {
@@ -13,11 +13,11 @@
 
 .random_content p {
     margin: 0px;
-    padding: 0px;
+    padding: 2px;
+    background-color: #9e9d9d;
 }
 
 .random_content img {
     margin: 0px;
     padding: 0px;
-    border-top : 10px solid #ccc;
 }
