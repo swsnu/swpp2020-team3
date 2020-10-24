@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import './App.css';
 import Mainpage from './containers/Mainpage/Mainpage';
 import Navbar from './containers/Navbar/Navbar';
+import Createpage from './containers/Createpage/Createpage';
 
 function App(props) {
   return(
@@ -14,6 +15,7 @@ function App(props) {
         <Navbar history={props.history}/>
         <Switch>
           <Route path='/main-page' exact render={() => <Mainpage history={props.history}/>} />
+          <Route path='/create' exact render={()=> <Createpage history={props.history}/>} />
           <Redirect from='/' exact to='/main-page'/>
           <Route render = {() => <h1>Not Found</h1>} />
         </Switch>
