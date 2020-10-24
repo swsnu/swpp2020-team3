@@ -42,35 +42,35 @@ class Createpage extends Component{
                 
                 <h1>Add ingredients</h1>
                 <select name="Ingredients" id="indredients">
-                    <option value="ramyun">라면</option>
-                    <option value="sausage">소시지</option>
-                    <option value="kimbap">삼각김밥</option>
-                    <option value="juice">쥬시클</option>
+                    <option id='ingredient' value="ramyun">라면</option>
+                    <option id='ingredient' value="sausage">소시지</option>
+                    <option id='ingredient' value="kimbap">삼각김밥</option>
+                    <option id='ingredient' value="juice">쥬시클</option>
                 </select>
                 
                 <h1>Approximate cooking time</h1>
-                <input id="recipe-title-input" type='number' placeholder='min' name='title' />
+                <input id="recipe-cooking-time-input" type='number' placeholder='minutes' name='cooking-time' />
                 <p>분</p>
                 
                 <h1>How to</h1>
                 {this.state.CreateStepList}
-                <button onClick={()=> this.onClickAddStep()}>Click to add a step</button>
+                <button id='addStep' onClick={()=> this.onClickAddStep()}>Click to add a step</button>
                 
                 <h1>Select a category</h1>
                 <div className='buttons'>
-                    <button onClick={(event)=>this.onClickChangeColor(event, 'Italian')} name='italian'>Italian</button>
-                    <button onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
-                    <button onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
-                    <button onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
-                    <button onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
-                    <button onClick={(event)=>this.onClickChangeColor(event, 'Moroccan')}>Moroccan</button>
+                    <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Italian')}>Italian</button>
+                    <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
+                    <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
+                    <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
+                    <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
+                    <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Moroccan')}>Moroccan</button>
                 </div>
                 
                 <h1>Total estimated price</h1>
                 <h3>Price Calculated</h3>
                 <p>원</p>
                 
-                <button onClick={()=>this.onClickSubmit()}>Submit</button>
+                <button id='submit' onClick={()=>this.onClickSubmit()}>Submit</button>
             </div>
         )        
     }
