@@ -3,7 +3,9 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { NavLink } from 'react-router-dom';
+//Local imports
 import './Navbar.css'
+import Createpage from '../Createpage/Createpage';
 
 class Navbar extends Component{
     state = {
@@ -45,6 +47,7 @@ class Navbar extends Component{
                     <li><NavLink to='/main-page' exact>??게시판??</NavLink></li>
                     <li><NavLink to='/main-page' exact>Login</NavLink></li>
                     <li><NavLink to='/main-page' exact>Sign Up</NavLink></li>
+                    <li><NavLink to='/create' exact>Create</NavLink></li>
                 </ul>
                 <dl>
                     <searchbar> <input type='text' value = {this.state.minPrice} onClick={() => this.minPriceClickHandler()} onChange={(event) =>  this.setState({minPrice: event.target.value})}/></searchbar>
