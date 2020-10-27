@@ -1,0 +1,23 @@
+.first_list, .second_list, .third_list {
+    background-color:#c9c7c7;
+}
+
+.random_content {
+    margin-top: 50px;
+    float: left;
+    color: black;
+    padding: 0px;
+    border : 10px solid #ccc;
+    line-break: normal;
+}
+
+.random_content p {
+    margin: 0px;
+    padding: 2px;
+    background-color: #9e9d9d;
+}
+
+.random_content img {
+    margin: 0px;
+    padding: 0px;
+}
