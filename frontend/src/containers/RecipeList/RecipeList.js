@@ -1,21 +1,31 @@
 import React, {Component} from 'react';
+import Recipe from '../../components/Recipe/Recipe'
+import * as actionCreators from '../../store/actions/index';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 //TODO:
-//      needs "recipe" component
+//      should select categories simultaneously 
 //      implement search handler
 class RecipeList extends Component{
 
     state = {
         category : 0,
+
         minCost : 0,
-        maxCost : 2000,
+        maxCost : 20000,
         minTime : 0,
-        maxTime : 2000,
+        maxTime : 20,
+
         searchMode : "relevance",
         searchOptionsClicked : false,
+
         pageStart : 0,
         currentPage : 1,
-        numRecipe : 39,
+    }
+
+    componentDidMount() {
+        this.props.onGetRecipes();
     }
 
     clickSearchModeHandler = searchmode => {
@@ -52,7 +62,24 @@ class RecipeList extends Component{
         this.setState({currentPage: this.state.pageStart+6});
     }
 
+
+
     render(){
+        const recipes = this.props.storedRecipes.map((rcp) => {
+            return (
+                <Recipe
+                    author={rcp.author}
+                    abstraction={rcp.abstraction}
+                    title={rcp.title}
+                    rating={rcp.rating}
+                    time={rcp.time}
+                    cost={rcp.cost}
+                    likes={rcp.likes}
+                    clicked={this.clickRecipeHandler()}
+                />
+            );
+        });
+
         return(
             <div className = "RecipeList">
                 <div className = "category-search">
@@ -70,7 +97,7 @@ class RecipeList extends Component{
                     </div>
                     <div className = "constraints">
                         <div className = "cost">
-                            <p>Cost($)</p>
+                            <p>Cost(won)</p>
                             <input className = "min-cost" value = {this.state.minCost} 
                                    onChange={(event) => this.setState({minCost: event.target.value})}></input>
                             <input className = "max-cost" value = {this.state.maxCost} 
@@ -87,9 +114,12 @@ class RecipeList extends Component{
                     <div className = "search-options">
                         <div className = "options">
                             <button className ="sorted-by" onClick={() => this.clickOptionsHandler()}>sorted by</button>
-                            {this.state.searchOptionsClicked && <button className ="relevance" onClick={() => this.clickSearchModeHandler("relevance")}>relevance</button>}
-                            {this.state.searchOptionsClicked && <button className ="most-liked" onClick={() => this.clickSearchModeHandler("most-liked")}>most liked</button>}
-                            {this.state.searchOptionsClicked && <button className ="most-recent" onClick={() => this.clickSearchModeHandler("most-recent")}>most recent</button>}
+                            {this.state.searchOptionsClicked && <button className ="relevance"
+                                    onClick={() => this.clickSearchModeHandler("relevance")}>relevance</button>}
+                            {this.state.searchOptionsClicked && <button className ="most-liked"
+                                    onClick={() => this.clickSearchModeHandler("most-liked")}>most liked</button>}
+                            {this.state.searchOptionsClicked && <button className ="most-recent"
+                                    onClick={() => this.clickSearchModeHandler("most-recent")}>most recent</button>}
                         </div>
                         <div className = "search">
                             <button className = "search-button" onClick={() => this.clickSearchHandler()}>search</button>
@@ -97,22 +127,7 @@ class RecipeList extends Component{
                     </div>
                 </div>
                 <div className = "recipes">
-                    <div className = "row">
-                        {((this.state.currentPage-1)*6+1) <= this.state.numRecipe &&
-                            <button onClick={() => this.clickRecipeHandler(1)}>{'recipe'+((this.state.currentPage-1)*6+1)}</button>} 
-                    	{((this.state.currentPage-1)*6+2) <= this.state.numRecipe &&
-                            <button onClick={() => this.clickRecipeHandler(2)}>{'recipe'+((this.state.currentPage-1)*6+2)}</button>} 
-                        {((this.state.currentPage-1)*6+3) <= this.state.numRecipe &&
-                            <button onClick={() => this.clickRecipeHandler(3)}>{'recipe'+((this.state.currentPage-1)*6+3)}</button>} 
-                    </div>
-                    <div className = "row">
-                        {((this.state.currentPage-1)*6+4) <= this.state.numRecipe &&
-                            <button onClick={() => this.clickRecipeHandler(4)}>{'recipe'+((this.state.currentPage-1)*6+4)}</button>} 
-                        {((this.state.currentPage-1)*6+5) <= this.state.numRecipe &&
-                            <button onClick={() => this.clickRecipeHandler(5)}>{'recipe'+((this.state.currentPage-1)*6+5)}</button>} 
-                        {((this.state.currentPage-1)*6+6)<= this.state.numRecipe &&
-                            <button onClick={() => this.clickRecipeHandler(6)}>{'recipe'+((this.state.currentPage-1)*6+6)}</button>} 
-                    </div>
+                    {recipes}
                 </div>
                 <div className = "pages">
                     <div className = "page">
@@ -120,12 +135,12 @@ class RecipeList extends Component{
                     </div>
                     <div className = "row">
                         <button disabled ={this.state.pageStart == 0} onClick={() => this.clickLeftPageHandler()}>left</button>
-                        {((this.state.pageStart)*6) <= this.state.numRecipe && <button onClick={() => this.clickPageHandler(1)}>{this.state.pageStart+1}</button>}
-                        {((this.state.pageStart+1)*6) <= this.state.numRecipe && <button onClick={() => this.clickPageHandler(2)}>{this.state.pageStart+2}</button>}
-                        {((this.state.pageStart+2)*6) <= this.state.numRecipe && <button onClick={() => this.clickPageHandler(3)}>{this.state.pageStart+3}</button>}
-                        {((this.state.pageStart+3)*6) <= this.state.numRecipe && <button onClick={() => this.clickPageHandler(4)}>{this.state.pageStart+4}</button>}
-                        {((this.state.pageStart+4)*6) <= this.state.numRecipe && <button onClick={() => this.clickPageHandler(5)}>{this.state.pageStart+5}</button>}
-                        <button disabled={(this.state.pageStart+5)*6 > this.state.numRecipe} onClick={() => this.clickRightPageHandler()}>right</button>
+                        <button onClick={() => this.clickPageHandler(1)}>{this.state.pageStart+1}</button>
+                        <button onClick={() => this.clickPageHandler(2)}>{this.state.pageStart+2}</button>
+                        <button onClick={() => this.clickPageHandler(3)}>{this.state.pageStart+3}</button>
+                        <button onClick={() => this.clickPageHandler(4)}>{this.state.pageStart+4}</button>
+                        <button onClick={() => this.clickPageHandler(5)}>{this.state.pageStart+5}</button>
+                        <button disabled={false} onClick={() => this.clickRightPageHandler()}>right</button>
                     </div>
                 </div>
             </div>
@@ -134,4 +149,17 @@ class RecipeList extends Component{
     }
 };
 
-export default RecipeList;
+const mapStateToProps = state => {
+    return {
+        storedRecipes: state.rcp.recipes,
+    };
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        onGetRecipes: () =>
+            dispatch(actionCreators.getRecipes()),
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(RecipeList));

@@ -1,6 +1,7 @@
 //React imports
 import React from 'react';
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 
 //Local imports:
 import './App.css';
@@ -12,7 +13,7 @@ import Createpage from './containers/Createpage/Createpage';
 
 function App(props) {
   return(
-    <BrowserRouter history={props.history}>
+    <ConnectedRouter history={props.history}>
       <div className="App">
         <Navbar history={props.history}/>
         <Switch>
@@ -24,7 +25,7 @@ function App(props) {
           <Route render = {() => <h1>Not Found</h1>} />
         </Switch>
       </div>
-    </BrowserRouter>
+    </ConnectedRouter>
   );
 }
 
