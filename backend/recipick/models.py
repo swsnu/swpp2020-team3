@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 class Ingredient(models.Model):
     name = models.CharField(max_length=64)
     quantity = models.IntegerField()
-    price_normalized = models.IntegerField()
-    _type = models.CharField(max_length=5) #개 / g
+    price = models.IntegerField()
+    price_normalized = models.IntegerField() # 좀 더 엄밀한 나눗셈 필요
+    igd_type = models.CharField(max_length=5) # 단위: 개 / g
     brand = models.CharField(max_length=64)
     picture = models.ImageField(blank=True)
 
 class ImageModel(models.Model):
     img = models.ImageField()
-    name = models.CharField(max_length=128)
 
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
