@@ -1,0 +1,14 @@
+요약
+오늘한거
+삽질
+pull request, merge 완료
+훈이 yarn 파탄
+main page, detail page, create page, list page 완료
+다음 할거
+
+같은 종류의 재료는 최소 수량 기준으로 가격 적용
+
+재료 사진은 mouse hover시 두둥등장
+comment의 좋아요는 추후 개발
+
+
