@@ -38,28 +38,31 @@ def signout(request):
         return HttpResponse(status=204)
     else:
         return HttpResponseNotAllowed(['GET'])
+
+def ingredient_post(request):
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.POST['json'])
+            name = body["name"]
+            quantity = body['quantity']
+            price = body['price']
+            igd_type = body['igd_type']
+            brand = body['brand']
+            picture = request.FILES['file']
+        except:
+            return HttpResponse(status = 400)
+        igd = Ingredient(name = name, quantity = quantity, price = price, price_normalized = int(price)/int(quantity),
+        igd_type = igd_type, brand = brand, picture = picture)
+        igd.save()
+        response = {'id': igd.id, 'name': igd.name, 'quantity':igd.quantity, 'price':igd.price, 'igd_type':igd.igd_type, 'brand':igd.brand}
+        return JsonResponse(response, safe=False, status=200)
+    else:
+        return HttpResponseNotAllowed(['POST'])
         
 def ingredient(request, id):
     if request.method == 'GET':
         ingredient = [igd for igd in Ingredient.objects.filter(id = id).values()]
         return JsonResponse(ingredient, safe=False, status=200)
-    elif request.method == 'POST':
-        try:
-            body = request.body.decode()
-            name = json.loads(body)['name']
-            quantity = json.loads(body)['quantity']
-            price = json.loads(body)['price']
-            igd_type = json.loads(body)['igd_type']
-            brand = json.loads(body)['brand']
-            picture = request.FILES['file']
-        except:
-            HttpResponse(status = 400)
-        user = request.user
-        igd = Ingredient(name = name, author = user, quantity = quantity, price = price, price_normalized = int(price)/int(quantity),
-        igd_type = igd_type, brand = brand, picture = picture)
-        igd.save()
-        response = {'id': igd.id, 'name': igd.name, 'quantity':igd.quantity, 'price':igd.price, 'igd_type':igd.igd_type, 'brand':igd.brand, 'picture':igd.picture}
-        return JsonResponse(response, safe=False, status=200)
     elif request.method == 'PUT':
         try:
             body = request.body.decode()
@@ -70,7 +73,7 @@ def ingredient(request, id):
             brand = json.loads(body)['brand']
             picture = request.FILES['file']
         except:
-            HttpResponse(status = 400)
+            return HttpResponse(status = 400)
         igd = Ingredient.objects.filter(id=id)[0]
         igd.name = name
         igd.quantity = quantity
@@ -92,7 +95,47 @@ def ingredient(request, id):
     else:
         return HttpResponseNotAllowed(['GET','PUT'])
     
-    
+def recipe_post(request):
+    if request.method == 'POST':
+        try:
+            # decode error 추가
+            body = json.loads(request.POST['json'])
+            title = body['title']
+            summary = body['summary']
+            d_list = body['description']
+            t_list = body['tag']
+            rating = float(body['rating'])
+            price = int(body['price'])
+            likes = int(body['likes'])
+            edited = bool(body['edited'])
+            d = body['date']
+            user = request.user
+            date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
+            igd_file = request.FILES.getlist('igd_file')
+            recipe = Recipe(author = user, title = title, summary = summary, price = price, description_list = d_list, tag_list = t_list,
+            rating = rating, likes = likes, edited = edited, created_date = date)
+            recipe.save()
+
+            for f in request.FILES.getlist('file'):
+                i = ImageModel(img = f)
+                i.save()
+                recipe.photo_list.add(i)
+
+            num=0
+            for i in body['ingredients']:
+                igd = Ingredient(name = i['name'], quantity = i['quantity'], price = i['price'], price_normalized = int(i['price'])/int(i['quantity']),
+                igd_type = i['igd_type'], brand = i['brand'], picture=igd_file[num])
+                igd.save()
+                recipe.ingredient_list.add(igd)
+                num = num + 1
+                
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 400)
+        return HttpResponse(status = 201)
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
 def recipe(request, id):
     if request.method == 'GET':
         recipe = [recipe for recipe in Recipe.objects.filter(id = id).values()]
@@ -118,34 +161,8 @@ def recipe(request, id):
                 igd_type = i.igd_type, brand = i.brand, picture=i.picture)
                 recipe.ingredient_list.add(igd)
         except:
-            HttpResponse(status = 400)
+            return HttpResponse(status = 400)
         return HttpResponse(status = 200)
-    elif request.method == 'POST':
-        try:
-            body = request.body.decode()
-            title = json.loads(body)['title']
-            summary = json.loads(body)['summary']
-            d_list = json.loads(body)['description']
-            t_list = json.loads(body)['tag']
-            rating = json.loads(body)['rating']
-            likes = json.loads(body)['likes']
-            edited = json.loads(body)['edited']
-            d = json.loads(body)['date']
-            user = request.user
-            date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
-            recipe = Recipe.objects.create(author = user, title = title, summary = summary, description_list = d_list, tag_list = t_list,
-            rating = rating, likes = likes, edited = edited, created_date = date)
-            for f in request.FILES.getlist('file'):
-                i = ImageModel.objects.create(img = f)
-                recipe.photo_list.add(i)
-            
-            for i in json.loads(body)['ingredients']:
-                igd = Ingredient.objects.create(name = i.name, quantity = i.quantity, price = i.price, price_normalized = int(i.price)/int(i.quantity),
-                igd_type = i.igd_type, brand = i.brand, picture=i.picture)
-                recipe.ingredient_list.add(igd)
-        except:
-            HttpResponse(status = 400)
-        return HttpResponse(status = 201)
     elif request.method == 'DELETE':
         try:
             recipe = Recipe.objects.get(id = id)
@@ -162,7 +179,7 @@ def recipe(request, id):
         recipe.delete()
         return HttpResponse(status = 200)
     else:
-        return HttpResponseNotAllowed(['GET','PUT','DELETE','POST'])
+        return HttpResponseNotAllowed(['GET','PUT','DELETE'])
 
 def recipe_comment(request, id):
     if request.method == 'GET':

@@ -10,7 +10,7 @@ class Ingredient(models.Model):
     price_normalized = models.IntegerField() # 좀 더 엄밀한 나눗셈 필요
     igd_type = models.CharField(max_length=5) # 단위: 개 / g
     brand = models.CharField(max_length=64)
-    picture = models.ImageField(blank=True)
+    picture = models.ImageField()
 
 class ImageModel(models.Model):
     img = models.ImageField()
