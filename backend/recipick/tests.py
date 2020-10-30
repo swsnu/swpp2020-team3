@@ -91,3 +91,4 @@ class RecipickTestCase(TestCase):
         self.assertEqual(response.status_code, 201)
 
         response = client.delete('/api/ingredient', HTTP_X_CSRFTOKEN=csrftoken)
+        
