@@ -3,7 +3,7 @@ matrix:
     - language: node_js
       node_js: '12'
       cache:
-        -yarn: true
+        - yarn: true
       before_install:
         - cd frontend
       install:
