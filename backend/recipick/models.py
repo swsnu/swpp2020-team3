@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=64)
-    quantity = models.IntegerField()
+    quantity = models.FloatField()
     price = models.IntegerField()
     price_normalized = models.IntegerField() # 좀 더 엄밀한 나눗셈 필요
     igd_type = models.CharField(max_length=5) # 단위: 개 / g
@@ -14,6 +14,7 @@ class Ingredient(models.Model):
 
 class ImageModel(models.Model):
     img = models.ImageField()
+    desc_index = models.IntegerField()
 
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
@@ -23,9 +24,10 @@ class Recipe(models.Model):
         on_delete = models.SET_NULL,
         null = True,
     )
-    photo_list = models.ManyToManyField(
-        ImageModel,
-    )
+    # This should be foreign key for the one to many field. However, when we use foreign key, we can't implement list. How to handle this?
+#     photo_list = models.ManyToManyField(
+#         ImageModel,
+#     )
     description_list = models.TextField(null=True)
     tag_list = models.TextField(null=True)
     price = models.IntegerField()
