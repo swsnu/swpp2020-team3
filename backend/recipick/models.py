@@ -24,15 +24,17 @@ class Recipe(models.Model):
         on_delete = models.SET_NULL,
         null = True,
     )
+
     # This should be foreign key for the one to many field. However, when we use foreign key, we can't implement list. How to handle this?
-#     photo_list = models.ManyToManyField(
-#         ImageModel,
-#     )
+    photo_list = models.ManyToManyField(
+        ImageModel,
+    )
+    
     description_list = models.TextField(null=True)
     tag_list = models.TextField(null=True)
     price = models.IntegerField()
     ingredient_list = models.ManyToManyField(
-            Ingredient,
+        Ingredient,
     )
     rating = models.FloatField()
     likes = models.IntegerField()
@@ -40,7 +42,7 @@ class Recipe(models.Model):
     edited = models.BooleanField()
 
 class Comment(models.Model):
-    article = models.ForeignKey(
+    recipe = models.ForeignKey(
         Recipe,
         on_delete = models.SET_NULL,
         null = True,

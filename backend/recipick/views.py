@@ -63,28 +63,6 @@ def ingredient(request, id):
     if request.method == 'GET':
         ingredient = [igd for igd in Ingredient.objects.filter(id = id).values()]
         return JsonResponse(ingredient, safe=False, status=200)
-    elif request.method == 'PUT':
-        try:
-            body = request.body.decode()
-            name = json.loads(body)['name']
-            quantity = json.loads(body)['quantity']
-            price = json.loads(body)['price']
-            igd_type = json.loads(body)['igd_type']
-            brand = json.loads(body)['brand']
-            picture = request.FILES['file']
-        except:
-            return HttpResponse(status = 400)
-        igd = Ingredient.objects.filter(id=id)[0]
-        igd.name = name
-        igd.quantity = quantity
-        igd.price = price
-        igd.price_normalized = int(igd.price) / int(igd.quantity)
-        igd.igd_type = igd_type
-        igd.brand = brand
-        igd.picture = picture
-        igd.save()
-        response = {'id': igd.id, 'name': igd.name, 'quantity':igd.quantity, 'price':igd.price, 'igd_type':igd.igd_type, 'brand':igd.brand, 'picture':igd.picture}
-        return JsonResponse(response, safe=False, status=200)
     elif request.method == 'DELETE':
         try:
             igd = Ingredient.objects.get(id = id)
@@ -111,15 +89,19 @@ def recipe_post(request):
             d = body['date']
             user = request.user
             date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
+
             igd_file = request.FILES.getlist('igd_file')
             recipe = Recipe(author = user, title = title, summary = summary, price = price, description_list = d_list, tag_list = t_list,
             rating = rating, likes = likes, edited = edited, created_date = date)
             recipe.save()
 
+            c = 0
+            img_idx = body['img_idx_list']
             for f in request.FILES.getlist('file'):
-                i = ImageModel(img = f)
+                i = ImageModel(img = f, desc_index = img_idx[c])
                 i.save()
                 recipe.photo_list.add(i)
+                c = c+1
 
             num=0
             for i in body['ingredients']:
@@ -140,29 +122,6 @@ def recipe(request, id):
     if request.method == 'GET':
         recipe = [recipe for recipe in Recipe.objects.filter(id = id).values()]
         return JsonResponse(recipe, safe=False, status=200)
-    elif request.method == 'PUT':
-        try:
-            body = request.body.decode()
-            title = json.loads(body)['title']
-            summary = json.loads(body)['summary']
-            d_list = json.loads(body)['description']
-            t_list = json.loads(body)['tag']
-            rating = json.loads(body)['rating']
-            likes = json.loads(body)['likes']
-            edited = json.loads(body)['edited']
-            recipe = Recipe.objects.create(title = title, summary = summary, description_list = d_list, tag_list = t_list,
-            rating = rating, likes = likes, edited = edited)
-            for f in request.FILES.getlist('file'):
-                i = ImageModel.objects.create(img = f)
-                recipe.photo_list.add(i)
-            
-            for i in json.loads(body)['ingredients']:
-                igd = Ingredient.objects.create(name = i.name, quantity = i.quantity, price = i.price, price_normalized = int(i.price)/int(i.quantity),
-                igd_type = i.igd_type, brand = i.brand, picture=i.picture)
-                recipe.ingredient_list.add(igd)
-        except:
-            return HttpResponse(status = 400)
-        return HttpResponse(status = 200)
     elif request.method == 'DELETE':
         try:
             recipe = Recipe.objects.get(id = id)
@@ -184,7 +143,7 @@ def recipe(request, id):
 def recipe_comment(request, id):
     if request.method == 'GET':
         recipe = Recipe.objects.get(id= id)
-        comment = [comment for comment in Comment.objects.filter(comment = recipe).values()]
+        comment = [comment for comment in Comment.objects.filter(recipe = recipe).values()]
         return JsonResponse(comment, safe=False, status=200)
     elif request.method == 'POST':
         req_data = json.loads(request.body.decode())

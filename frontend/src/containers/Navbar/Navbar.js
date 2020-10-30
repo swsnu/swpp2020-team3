@@ -38,7 +38,7 @@ class Navbar extends Component{
 
     render(){
         return(
-            <div>
+            <div className = 'NavBar'>
                 <ul>
                     <logo> <NavLink to='/main-page' exact><img className='Logo' src={require('../../Image/LOGO.png')}/></NavLink> </logo>
                     <li> <NavLink to='/main-page' exact>중식</NavLink> </li>
