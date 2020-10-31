@@ -21,8 +21,9 @@ class CreateStep extends Component{
  
     render() {
         return (
-            <div>
+            <div className="CreateStep">
                 <ImageUploader
+                id="ImageUploader"
                 withIcon={true}
                 buttonText='Choose images'
                 onChange={this.onDrop}

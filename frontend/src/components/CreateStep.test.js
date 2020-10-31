@@ -5,10 +5,19 @@ import { connectRouter, ConnectedRouter } from 'connected-react-router';
 import {BrowserRouter, Router, Route, Redirect, Switch} from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
-import Createpage from './Createpage'
 import CreateStep from './CreateStep'
 
 const history = createBrowserHistory()
+
+// jest.mock('./ImageUploader', () => {
+//     return jest.fn(() => {
+//         return (
+//             <div className="CreateStep">
+//                 <h1>CreateStep</h1>
+//             </div>
+//         )
+//     })
+// })
 
 describe('<CreateStep />', () => {
     let createstep;
@@ -21,10 +30,17 @@ describe('<CreateStep />', () => {
       );
     })
   
-    it('should render Createpage', () => {
-      const component = mount(createpage);
-      const wrapper = component.find('Createpage');
+    it('should render CreateStep', () => {
+      const component = mount(createstep);
+      const wrapper = component.find('CreateStep');
       expect(wrapper.length).toBe(1)
     });
+
+    it('should test ImageUpload', () => {
+        const component = mount(createstep);
+        const wrapper = component.find('#ImageUploader');
+        expect(wrapper.length).toBe(1)
+        wrapper.simulate('change', { target: { picture: ['dummy'] }})
+      });
 })
        
