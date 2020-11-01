@@ -5,6 +5,9 @@ import { ConnectedRouter } from 'connected-react-router';
 import { NavLink } from 'react-router-dom';
 //Local imports
 
+
+//TODO:
+//should connect to store
 class Login extends Component{
     state = {
         id: "",
@@ -30,4 +33,20 @@ class Login extends Component{
     }
 }
 
-export default Login;
+const mapStateToProps = state => {
+    return {
+       
+    };
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        onLogin: (userCredentials) => dispatch(actionCreators.onLogin(userCredentials)),
+
+        }
+    }
+
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Login));

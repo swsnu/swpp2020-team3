@@ -5,6 +5,9 @@ import { ConnectedRouter } from 'connected-react-router';
 import { NavLink } from 'react-router-dom';
 //Local imports
 
+
+//TODO:
+//should connect to store
 class Signup extends Component{
     state = {
         name: "",
@@ -17,6 +20,7 @@ class Signup extends Component{
         //this.props.onSignup
         var userCredentials = this.state;
         console.log(userCredentials)
+        this.props.onSignup(userCredentials)
     }
     render(){
         return(
@@ -39,4 +43,21 @@ class Signup extends Component{
     }
 }
 
-export default Signup;
+
+const mapStateToProps = state => {
+    return {
+       
+    };
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        onSignup: (userCredentials) => dispatch(actionCreators.onSignup(userCredentials)),
+
+        }
+    }
+
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Signup));
