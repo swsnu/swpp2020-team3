@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import { NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
 //Local imports
 
 
@@ -44,20 +44,21 @@ class Signup extends Component{
 }
 
 
-const mapStateToProps = state => {
-    return {
+// const mapStateToProps = state => {
+//     return {
        
-    };
-}
+//     };
+// }
   
-const mapDispatchToProps = dispatch => {
-    return {
-        onSignup: (userCredentials) => dispatch(actionCreators.onSignup(userCredentials)),
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         onSignup: (userCredentials) => dispatch(actionCreators.onSignup(userCredentials)),
 
-        }
-    }
-
-
+//         }
+//     }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Signup));
+
+
+//export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Signup));
+export default (withRouter(Signup));

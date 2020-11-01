@@ -9,7 +9,7 @@ import RecipeList from './containers/RecipeList/RecipeList'
 import Detailpage from './containers/detailpage/Detailpage'
 import Navbar from './containers/Navbar/Navbar';
 import Createpage from './containers/Createpage/Createpage';
-import Signup from './containers/Signup/Signup';
+import Signup from './containers/Authentication/Signup/Signup';
 import Login from './containers/Authentication/Login/Login';
 
 function App(props) {

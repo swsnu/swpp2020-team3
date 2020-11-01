@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import { NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
+
 //Local imports
 
 
@@ -20,8 +21,8 @@ class Login extends Component{
     }
     render(){
         return(
-            <div className="Signup">
-                <form className="Signup" >
+            <div className="Login">
+                <form className="Login" >
                     <label>ID</label>
                     <input type="text" name="id" onChange={(event) => this.setState({id: event.target.value})}></input>
                     <label>Password</label>
@@ -33,20 +34,21 @@ class Login extends Component{
     }
 }
 
-const mapStateToProps = state => {
-    return {
+// const mapStateToProps = state => {
+//     return {
        
-    };
-}
+//     };
+// }
   
-const mapDispatchToProps = dispatch => {
-    return {
-        onLogin: (userCredentials) => dispatch(actionCreators.onLogin(userCredentials)),
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         onLogin: (userCredentials) => dispatch(actionCreators.onLogin(userCredentials)),
 
-        }
-    }
-
-
+//         }
+//     }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Login));
+
+
+//export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Login));
+export default (withRouter(Login));
