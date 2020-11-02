@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { withRouter } from 'react-router-dom'
 //Local imports
-
+import * as actionCreators from '../../../store/actions/index';
 
 //TODO:
 //should connect to store
@@ -17,8 +17,10 @@ class Signup extends Component{
         password_confirm: ""
     }
     onClickSubmit(){
-        //this.props.onSignup
+        //this should be the one --> discuss
         var userCredentials = this.state;
+        var tempuserCredentials = {"username": userCredentials.name, "password": userCredentials.password} // this shouldn't be here
+        userCredentials = tempuserCredentials; // this shouldn't be here
         console.log(userCredentials)
         this.props.onSignup(userCredentials)
     }
@@ -44,21 +46,16 @@ class Signup extends Component{
 }
 
 
-// const mapStateToProps = state => {
-//     return {
+const mapStateToProps = state => {
+    return {
        
-//     };
-// }
+    };
+}
   
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onSignup: (userCredentials) => dispatch(actionCreators.onSignup(userCredentials)),
+const mapDispatchToProps = dispatch => {
+    return {
+        onSignup: (userCredentials) => dispatch(actionCreators.signUp(userCredentials)),
+        }
+    }
 
-//         }
-//     }
-
-
-
-
-//export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Signup));
-export default (withRouter(Signup));
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Signup));

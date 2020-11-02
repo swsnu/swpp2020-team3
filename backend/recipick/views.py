@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
 from .models import Ingredient, Comment, Recipe, Reply, ImageModel
 from django.contrib import auth
 import json
