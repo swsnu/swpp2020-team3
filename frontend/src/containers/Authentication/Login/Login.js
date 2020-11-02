@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { withRouter } from 'react-router-dom'
 
 //Local imports
+import * as actionCreators from '../../../store/actions/index';
 
 
 //TODO:
@@ -17,7 +18,10 @@ class Login extends Component{
     onClickSubmit(){
         //this.props.onSignup
         var userCredentials = this.state;
+        var tempuserCredentials = {"username": userCredentials.id, "password": userCredentials.password} // this shouldn't be here
+        userCredentials = tempuserCredentials; // this shouldn't be here
         console.log(userCredentials)
+        this.props.onLogin(userCredentials)
     }
     render(){
         return(
@@ -34,21 +38,20 @@ class Login extends Component{
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
+const mapStateToProps = state => {
+    return {
        
-//     };
-// }
+    };
+}
   
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onLogin: (userCredentials) => dispatch(actionCreators.onLogin(userCredentials)),
+const mapDispatchToProps = dispatch => {
+    return {
+        onLogin: (userCredentials) => dispatch(actionCreators.signIn(userCredentials)),
 
-//         }
-//     }
-
-
+        }
+    }
 
 
-//export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Login));
-export default (withRouter(Login));
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Login));

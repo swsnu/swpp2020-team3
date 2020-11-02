@@ -4,4 +4,5 @@ export {
 
 export {
     signUp,
+    signIn,
 } from './userCreators';
