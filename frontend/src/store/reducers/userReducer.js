@@ -5,13 +5,13 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-   switch (action.type) {
-     case actionTypes.SIGN_UP:
-       return { ...state, currentUser: action.user };
+  //  switch (action.type) {
+  //    case actionTypes.SIGN_UP:
+  //      return { ...state, currentUser: action.user };
 
-     default:
-       break;
-   }
+  //    default:
+  //      break;
+  //  }
   return state;
 };
 
