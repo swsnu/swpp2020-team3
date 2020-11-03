@@ -45,8 +45,8 @@ class Navbar extends Component{
                     <li> <NavLink to='/main-page' exact>한식</NavLink> </li>
                     <li> <NavLink to='/main-page' exact>양식</NavLink> </li>
                     <li><NavLink to='/main-page' exact>??게시판??</NavLink></li>
-                    <li><NavLink to='/main-page' exact>Login</NavLink></li>
-                    <li><NavLink to='/main-page' exact>Sign Up</NavLink></li>
+                    <li><NavLink to='/login' exact>Login</NavLink></li>
+                    <li><NavLink to='/signup' exact>Sign Up</NavLink></li>
                     <li><NavLink to='/create' exact>Create</NavLink></li>
                 </ul>
                 <dl>

@@ -10,7 +10,7 @@ class Detailpage extends Component {
         const methodData = [{img: require('../../Image/LOGO.png')   , explanation:'first'}, {img: require('../../Image/LOGO.png'), explanation:'second'}]
         const methods = methodData.map((item) => <DishStep img={item.img} explanation={item.explanation}/>)
         return (
-            <div>
+            <div className="Detailpage">
                 <DishResult img={require('../../Image/LOGO.png')} abstraction='sample_recipe' ingredients='no'/>
                 <div className='dish_method'>
                     {methods}
