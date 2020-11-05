@@ -9,9 +9,9 @@ urlpatterns = [
     path('reply/<int:id>', views.reply, name='reply'),
     path('signup/', views.signup, name='signup'),
     path('ingredient/<int:id>', views.ingredient, name='ingredient'),
-    path('recipe', views.recipe_post, name='recipe_post'),
+    path('recipe/', views.recipe_post, name='recipe_post'),
     path('ingredient', views.ingredient_post, name='ingredient_post'),
-    path('signin', views.signin, name='signin'),
+    path('signin/', views.signin, name='signin'),
     path('signout', views.signout, name='signout'),
     path('token', views.token, name='token'),
 ]
