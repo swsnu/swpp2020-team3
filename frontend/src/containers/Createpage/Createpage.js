@@ -61,6 +61,7 @@ class Createpage extends Component{
                         <div className = 'create_second'>
                             <p>조리 방법</p>
                             {this.state.CreateStepList}
+                            <br/>
                             <button id='addStep' onClick={()=> this.onClickAddStep()}>Click to add a step</button>
                             <br/>
                         </div>

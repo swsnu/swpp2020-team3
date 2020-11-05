@@ -51,13 +51,10 @@ class Navbar extends Component{
                     <li><NavLink to='/create' exact>Create</NavLink></li>
                 </ul>
                 <div className='SearchBar'>
-                    <div className= 'searchbar'> <input type='text' value = {this.state.minPrice} onClick={() => this.minPriceClickHandler()} 
-                    onBlur = { (e) => this.state.minPrice == '' && this.setState({minPrice : '하한'}) } onChange={(event) =>  this.setState({minPrice: event.target.value})}/></div>
+                    <div className= 'searchbar'> <input type='text' placeholder = "하한" onChange={(event) =>  this.setState({minPrice: event.target.value})}/></div>
                     <div className= 'searchbar'>~</div>  
-                    <div className= 'searchbar'><input type='text' value = {this.state.maxPrice} 
-                    onBlur = { (e) => this.state.maxPrice == '' && this.setState({maxPrice : '상한'}) } onClick={() => this.maxPriceClickHandler()} onChange={(event) =>  this.setState({maxPrice: event.target.value})}/></div> 
-                    <div className= 'searchbar'><input type='text' value = {this.state.keyword} 
-                    onBlur = { (e) => this.state.keyword == '' && this.setState({keyword : '키워드'})} onClick={() => this.keywordClickHandler()} onChange={(event) =>  this.setState({keyword: event.target.value})}/></div> 
+                    <div className= 'searchbar'><input type='text'  placeholder = "상한" onChange={(event) =>  this.setState({maxPrice: event.target.value})}/></div> 
+                    <div className= 'searchbar'><input type='text'  placeholder = "키워드" onChange={(event) =>  this.setState({keyword: event.target.value})}/></div> 
                     <div className= 'searchbar'><img className = 'Search_Confirm' onClick={() => this.searchConfirmHandler()} src={require('../../Image/Search_Confirm.png')}/></div>
                 </div>
             </div>

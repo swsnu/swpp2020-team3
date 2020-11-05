@@ -15,16 +15,7 @@ class Login extends Component{
         id: "아이디",
         password: "비밀번호",
     }
-    onClickId(){
-        if (this.state.id == '아이디') {
-            this.setState({id : ''})
-        }
-    }
-    onClickPassword(){
-        if (this.state.password == '비밀번호') {
-            this.setState({password : ''})
-        }
-    }
+
     onClickSubmit(){
         //this.props.onSignup
         var userCredentials = this.state;
@@ -39,10 +30,8 @@ class Login extends Component{
                 <div className="Login">
                     <form className="Login" >
                         <label>RECIPICK</label>
-                        <input type="text" name="id" value = {this.state.id}  onBlur = { (e) => this.state.id == '' && this.setState({id : '아이디'}) } 
-                        onClick = {() => this.onClickId()} onChange={(event) => this.setState({id: event.target.value})}></input>
-                        <input type="text" name="password" value = {this.state.password} onBlur = { (e) => this.state.password == '' && this.setState({password : '비밀번호'}) }
-                        onClick = {() => this.onClickPassword()} onChange={(event) => this.setState({password: event.target.value})}></input>
+                        <input type="text" name="id"  placeholder = "아이디" onChange={(event) => this.setState({id: event.target.value})}></input>
+                        <input type="text" name="password" placeholder = "비밀번호" onChange={(event) => this.setState({password: event.target.value})}></input>
                         <button className="LoginButton" onClick={()=>this.onClickSubmit()}>로그인</button>
                     </form>
                 </div>
