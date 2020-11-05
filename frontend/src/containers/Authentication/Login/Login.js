@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { withRouter } from 'react-router-dom'
-
+import './Login.css'
 //Local imports
 import * as actionCreators from '../../../store/actions/index';
 
@@ -12,8 +12,18 @@ import * as actionCreators from '../../../store/actions/index';
 //should connect to store
 class Login extends Component{
     state = {
-        id: "",
-        password: "",
+        id: "아이디",
+        password: "비밀번호",
+    }
+    onClickId(){
+        if (this.state.id == '아이디') {
+            this.setState({id : ''})
+        }
+    }
+    onClickPassword(){
+        if (this.state.password == '비밀번호') {
+            this.setState({password : ''})
+        }
     }
     onClickSubmit(){
         //this.props.onSignup
@@ -25,14 +35,17 @@ class Login extends Component{
     }
     render(){
         return(
-            <div className="Login">
-                <form className="Login" >
-                    <label>ID</label>
-                    <input type="text" name="id" onChange={(event) => this.setState({id: event.target.value})}></input>
-                    <label>Password</label>
-                    <input type="text" name="password" onChange={(event) => this.setState({password: event.target.value})}></input>
-                </form>
-                <button onClick={()=>this.onClickSubmit()}>Submit</button>
+            <div className = 'LoginBackground'>
+                <div className="Login">
+                    <form className="Login" >
+                        <label>RECIPICK</label>
+                        <input type="text" name="id" value = {this.state.id}  onBlur = { (e) => this.state.id == '' && this.setState({id : '아이디'}) } 
+                        onClick = {() => this.onClickId()} onChange={(event) => this.setState({id: event.target.value})}></input>
+                        <input type="text" name="password" value = {this.state.password} onBlur = { (e) => this.state.password == '' && this.setState({password : '비밀번호'}) }
+                        onClick = {() => this.onClickPassword()} onChange={(event) => this.setState({password: event.target.value})}></input>
+                        <button className="LoginButton" onClick={()=>this.onClickSubmit()}>로그인</button>
+                    </form>
+                </div>
             </div>
         )
     }

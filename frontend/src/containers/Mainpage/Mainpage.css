@@ -1,5 +1,6 @@
 .first_list, .second_list, .third_list {
-    background-color:#c9c7c7;
+    height: 100%;
+    background-color:white;
 }
 
 .random_content {
