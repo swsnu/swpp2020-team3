@@ -16,3 +16,13 @@ export const getRecipes = (pageID) => {
       .then(res => dispatch(getRecipes_(res.data)));
   };
 };
+
+const createRecipe_ = (recipe) => {
+  return {type: actionTypes.CREATE_RECIPE}
+};
+export const createRecipe = (recipe) => {
+  return dispatch => {
+    return axios.post('api/recipe/', recipe)
+      .then(res => dispatch(createRecipe_(res.data)))
+  }
+}

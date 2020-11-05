@@ -40,7 +40,7 @@ class Recipe(models.Model):
     likes = models.IntegerField()
     created_date = models.DateField()
     edited = models.BooleanField()
-
+    
 class Comment(models.Model):
     recipe = models.ForeignKey(
         Recipe,

@@ -4,22 +4,28 @@ import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 // Local imports
 import CreateStep from '../../components/CreateStep'
+import * as actionCreators from '../../store/actions/index'
 
 class Createpage extends Component{
     state = {
         CreateStepList: [],
         typeList: [],
+        title: "",
+        summary: "",
+        ingredient: [],
+        time: "",
+        price: 10000, //normally should be calculated
         redirect: false
     }
+    //must retreive ingredients
+
     onClickAddStep(){
-        console.log("added 1")
         var tempList = this.state.CreateStepList.concat(<CreateStep/>)
         this.setState({CreateStepList: tempList})       
     }
 
     onClickChangeColor(event, param){
         if (!this.state.typeList.includes(param)){
-            console.log("add element")
             event.target.style.backgroundColor = 'grey'
             this.setState({typeList: this.state.typeList.concat(param)})
         }
@@ -31,6 +37,12 @@ class Createpage extends Component{
 
     onClickSubmit(){
         this.props.history.push('/main-page');
+        var finalRecipe = {
+            'title': this.state.title,
+            'summary': this.state.summary,
+            
+        }
+        this.props.onCreate(this.state)
         this.setState({redirect: true})
     }
 
@@ -38,10 +50,12 @@ class Createpage extends Component{
         return(
             <div className='Createpage'>
                 <h1>Dish name</h1>
-                <input id="recipe-title-input" type='text' placeholder='Title' name='title' />
+                <input id="recipe-title-input" type='text' placeholder='Title'
+                    name='title' onChange={(event) => this.setState({name: event.target.value})} />
                 
                 <h1>Add ingredients</h1>
-                <select name="Ingredients" id="indredients">
+                <select name="Ingredients" id="indredients" 
+                    value={this.state.value} onChange={(event) => this.setState({ingredient: event.target.value})}>
                     <option id='ingredient' value="ramyun">라면</option>
                     <option id='ingredient' value="sausage">소시지</option>
                     <option id='ingredient' value="kimbap">삼각김밥</option>
@@ -49,7 +63,8 @@ class Createpage extends Component{
                 </select>
                 
                 <h1>Approximate cooking time</h1>
-                <input id="recipe-cooking-time-input" type='number' placeholder='minutes' name='cooking-time' />
+                <input id="recipe-cooking-time-input" type='number' 
+                    value={this.state.value} onChange={(event) => this.setState({time: event.target.value})} placeholder='minutes' name='cooking-time' />
                 <p>분</p>
                 
                 <h1>How to</h1>
@@ -68,7 +83,7 @@ class Createpage extends Component{
                 
                 <h1>Total estimated price</h1>
                 <h3>Price Calculated</h3>
-                <p>원</p>
+                <p>{this.state.price} 원</p>
                 
                 <button id='submit' onClick={()=>this.onClickSubmit()}>Submit</button>
             </div>
@@ -76,5 +91,18 @@ class Createpage extends Component{
     }
 }
 
-export default withRouter(Createpage);
+const mapStateToProps = state => {
+    return {
+       
+    };
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        onCreate: (recipe) => dispatch(actionCreators.createRecipe(recipe)),
+
+        }
+    }
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Createpage));
 
