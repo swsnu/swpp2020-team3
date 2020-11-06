@@ -1,4 +1,7 @@
   ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -6,7 +9,10 @@
     background-color: #333333;
   }
 
-  dl {
+  div .SearchBar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -14,23 +20,23 @@
     background-color: #999494;
   }
 
-  searchbar {
+  div .searchbar {
     float: left;
     padding: 12px;
     
   }
 
-  searchbar input {
+  div .searchbar input {
     color: gray  
   }
 
-  searchbar img {
+  div .searchbar img {
     display: block;
     padding: 2px;
     text-decoration: none;
   }
 
-  searchbar img:hover {
+  div .searchbar img:hover {
     background-color: #111111;
   }
 
@@ -46,10 +52,6 @@
     text-align: center;
     padding: 10px;
     text-decoration: none;
-  }
-  
-  logo a:hover {
-    background-color: #111111;
   }
   
   li {

@@ -1,5 +1,14 @@
+html, body, #root, #root >div {
+    height: 95%;
+}
+
+div .LoginBackground {
+    height: 100%;
+    background-color: #f2eded;
+}
+
 div .Login {
-    margin-top: 50px;
+    padding-top: 50px;
     display: flex;
     justify-content: center;
     align-items: center;

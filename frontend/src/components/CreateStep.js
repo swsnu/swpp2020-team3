@@ -5,7 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { NavLink } from 'react-router-dom';
 import { Dropdown } from 'semantic-ui-react'
 import ImageUploader from 'react-images-upload';
-
+import './CreateStep.css'
 class CreateStep extends Component{
     constructor(props) {
         super(props);
@@ -22,6 +22,7 @@ class CreateStep extends Component{
     render() {
         return (
             <div className="CreateStep">
+                <hr/>
                 <ImageUploader
                 id="ImageUploader"
                 withIcon={true}
