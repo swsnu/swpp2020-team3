@@ -32,7 +32,9 @@ class Recipe(models.Model):
     
     description_list = models.TextField(null=True)
     tag_list = models.TextField(null=True)
+    category = models.IntegerField(default=0)
     price = models.IntegerField()
+    time = models.IntegerField(default=0)
     ingredient_list = models.ManyToManyField(
         Ingredient,
     )
@@ -40,6 +42,7 @@ class Recipe(models.Model):
     likes = models.IntegerField()
     created_date = models.DateField()
     edited = models.BooleanField()
+    
 
 class Comment(models.Model):
     recipe = models.ForeignKey(

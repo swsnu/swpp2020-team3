@@ -1,41 +1,60 @@
 import React, {Component} from 'react';
-import Recipe from '../../components/Recipe/Recipe'
+import Recipe from '../../components/Recipe/Recipe';
+import { connect } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import { withRouter } from 'react-router-dom';
+import * as actionCreators from '../../store/actions/index';
+import queryString from 'query-string';
 
 //TODO:
-//      should select categories simultaneously 
-//      implement search handler
+//      more search options
+
 class RecipeList extends Component{
 
     state = {
-        recipes: [],
-
-        categories : [false,false,false,false,false,false],
+        category1: false,
+        category2: false,
+        category3: false,
+        category4: false,
+        category5: false,
+        category6: false,
 
         minCost : 0,
         maxCost : 20000,
         minTime : 0,
         maxTime : 20,
-
-        searchMode : "relevance",
-        searchOptionsClicked : false,
-        search : 0,
+        searchWord : "",
 
         pageStart : 0,
-        currentPage : 1,
+        searchMode : "most-liked",
+        searchOptionsClicked : false,
     }
-    /*
+    
     componentDidMount() {
-        this.props.onGetRecipes();
+        this.props.onGetRecipes(this.state);
     }
-    */
+    
+    componentDidUpdate(prevProps, prevState){
+        if(prevState){
+            if(this.state.pageStart !== prevState.pageStart){
+                this.props.onGetRecipes(this.state);
+            }
+        }
+            
+    }
+    
     clickSearchModeHandler = searchmode => {
         this.setState({searchMode: searchmode});
+        this.setState({searchOptionsClicked: false});
     }
 
     clickCategoryHandler(id){
-        let modifiedCategories = this.state.categories;
-        modifiedCategories[id-1] = !modifiedCategories[id-1];
-        this.setState({category : modifiedCategories});
+        if(id == 1) this.setState({category1 : !this.state.category1});
+        else if(id == 2) this.setState({category2 : !this.state.category2});
+        else if(id == 3) this.setState({category3 : !this.state.category3});
+        else if(id == 4) this.setState({category4 : !this.state.category4});
+        else if(id == 5) this.setState({category5 : !this.state.category5});
+        else this.setState({category6 : !this.state.category6});
     }
 
     clickOptionsHandler = () => {
@@ -47,38 +66,52 @@ class RecipeList extends Component{
     }
 
     clickSearchHandler = () => {
-        this.setState({search: this.state.search+1});
+        this.props.onGetRecipes(this.state);
     }
 
-    clickPagePreviousHandler = () => {
-        this.setState({pageStart: this.state.pageStart-5});
-        this.setState({currentPage: this.state.pageStart-4});   
+    clickPagePreviousHandler = (pageNum) => {
+        let pageHeadNum = (pageNum / 5) * 5;
+        this.setState({pageStart: pageHeadNum-5});
+        this.props.history.push('/search?id='+(pageHeadNum-4)); 
     }
 
-    clickPageNumberHandler = (id) => {
-        this.setState({currentPage: this.state.pageStart+id});
+    clickPageNumberHandler = (pageNum,id) => {
+        let pageHeadNum = (pageNum / 5) * 5;
+        this.props.history.push(`/search?id=${pageHeadNum+id}`);
     }
 
-    clickPageNextHandler = () => {
-        this.setState({pageStart: this.state.pageStart+5});
-        this.setState({currentPage: this.state.pageStart+6});
+    clickPageNextHandler = (pageNum) => {
+        let pageHeadNum = (pageNum / 5) * 5;
+        this.setState({pageStart: pageHeadNum+5});
+        this.props.history.push('/search?id='+(pageHeadNum+6));
     }
 
 
 
     render(){
-        const recipes = this.state.recipes.map((recipe) => {
-        //const recipes = this.props.storedRecipes.map((recipe) => {
+        
+        let {search} = this.props.location;
+        let queryObj = queryString.parse(search);
+        let {pageNum, mode} = queryObj;
+        if(!pageNum) pageNum=1;
+        let pageHeadNum = Math.floor(pageNum / 5) * 5;
+
+        let slicedRecipes;
+        if(pageNum%5 === 0)
+            slicedRecipes = this.props.storedRecipes.slice(10*(pageNum%5-1), 10*5);
+        else
+            slicedRecipes = this.props.storedRecipes.slice(10*(pageNum%5-1), 10*(pageNum%5));
+        const recipes = slicedRecipes.map((recipe) => {
             return (
                 <Recipe
                     author={recipe.author}
-                    abstraction={recipe.abstraction}
+                    abstraction={recipe.summary}
                     title={recipe.title}
                     rating={recipe.rating}
                     time={recipe.time}
-                    cost={recipe.cost}
+                    cost={recipe.price}
                     likes={recipe.likes}
-                    clickedRecipe={this.clickRecipeHandler(recipe.id)}
+                    clickedRecipe={() => this.clickRecipeHandler(recipe.id)}
                     clickedLikes={null}
                 />
             );
@@ -114,6 +147,11 @@ class RecipeList extends Component{
                             <input className = "max-time-input" value = {this.state.maxTime} 
                                    onChange={(event) => this.setState({maxTime: event.target.value})}></input>
                         </div>
+                        <div className = "row">
+                            <p>gum sak eo</p>
+                            <input className = "search-word-input" value = {this.state.searchWord} 
+                                   onChange={(event) => this.setState({searchWord: event.target.value})}></input>
+                        </div>
                     </div>
                     <div className = "search-options">
                         <div className = "options">
@@ -121,9 +159,13 @@ class RecipeList extends Component{
                             {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                     onClick={() => this.clickSearchModeHandler("relevance")}>relevance</button>}
                             {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                    onClick={() => this.clickSearchModeHandler("most-liked")}>most liked</button>}
+                                    onClick={() => this.clickSearchModeHandler("likes")}>most liked</button>}
                             {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                    onClick={() => this.clickSearchModeHandler("most-recent")}>most recent</button>}
+                                    onClick={() => this.clickSearchModeHandler("uploaded date")}>most recent</button>}
+                            {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                    onClick={() => this.clickSearchModeHandler("rating")}>most recent</button>}
+                            {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                    onClick={() => this.clickSearchModeHandler("cost")}>most recent</button>}
                         </div>
                         <div className = "search">
                             <button className = "search-confirm-button" onClick={() => this.clickSearchHandler()}>search</button>
@@ -139,19 +181,19 @@ class RecipeList extends Component{
                     </div>
                     <div className = "row">
                         <button className="list-page-previous-button"
-                                disabled ={this.state.pageStart == 0} onClick={() => this.clickPagePreviousHandler()}>left</button>
-                        <button className="list-page-number-button"
-                                onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>
-                        <button className="list-page-number-button"
-                                onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>
-                        <button className="list-page-number-button"
-                                onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>
-                        <button className="list-page-number-button"
-                                onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>
-                        <button className="list-page-number-button"
-                                onClick={() => this.clickPageNumberHandler(5)}>{this.state.pageStart+5}</button>
-                        <button className="list-page-next-button"
-                                disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>
+                                disabled ={pageHeadNum == 0} onClick={() => this.clickPagePreviousHandler(pageNum)}>left</button>
+                        {this.props.storedRecipes.length >= 1 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(pageNum,1)}>{pageHeadNum+1}</button>}
+                        {this.props.storedRecipes.length >= 11 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(pageNum,2)}>{pageHeadNum+2}</button>}
+                        {this.props.storedRecipes.length >= 21 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(pageNum,3)}>{pageHeadNum+3}</button>}
+                        {this.props.storedRecipes.length >= 31 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(pageNum,4)}>{pageHeadNum+4}</button>}
+                        {this.props.storedRecipes.length >= 41 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(pageNum,5)}>{pageHeadNum+5}</button>}
+                        {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
+                                disabled={false} onClick={() => this.clickPageNextHandler(pageNum)}>right</button>}
                     </div>
                 </div>
             </div>
@@ -160,7 +202,7 @@ class RecipeList extends Component{
     }
 };
 
-/*
+
 const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.recipes,
@@ -169,11 +211,10 @@ const mapStateToProps = state => {
   
 const mapDispatchToProps = dispatch => {
     return {
-        onGetRecipes: () =>
-            dispatch(actionCreators.getRecipes()),
+        onGetRecipes: (searchSettings) =>
+            dispatch(actionCreators.getRecipes(searchSettings)),
     }
 }
-*/
 
-//export default connect(mapStateToProps,mapDispatchToProps)(withRouter(RecipeList));
-export default RecipeList;
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(RecipeList));
