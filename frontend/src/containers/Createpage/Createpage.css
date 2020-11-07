@@ -126,7 +126,7 @@ div .Createpage h1, p{
 #addStep {
     background:#f5f5f5;
     border:2px solid #e1e1e1;
-    color: gray;
+    color: black;
     padding: 5px 12px;
     text-align: center;
     text-decoration: none;
@@ -134,6 +134,10 @@ div .Createpage h1, p{
     font-size: 16px;
     margin-left: 350px
 }
+
+#addStep:hover {
+    background-color: gray;
+  }
 
 div .Createpage h3{
     color: black;
@@ -164,3 +168,7 @@ div .Createpage h3{
     text-align: center;
     text-decoration: none;
 }
+
+#submit:hover {
+    background-color: gray;
+  }

@@ -1,0 +1,61 @@
+.ListBackground {
+    background: #f2eded;
+}
+
+.RecipeList{
+    height: 100%;
+    background: #f2eded;
+    padding-top:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    line-break: normal;
+}
+
+.category-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-mode-select-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#list-option {
+    padding: 10px;
+}
+
+#option_label{
+    display: inline-block;
+    text-align: center;
+    background-color: gray;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    padding:6px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+#list-input {
+    padding:6px;
+    margin: 10px;
+    border:2px solid #e1e1e1;
+    border-radius: 3px;
+}
+
+.search-options {
+    background: #f2eded;
+    display: block;
+    height: 18vh;
+    width: 14vh;
+}
+
+.search-options-button {
+    position: fix;
+}

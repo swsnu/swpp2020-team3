@@ -118,6 +118,7 @@ def recipe_page(request):
             categories.append(6)
         print(categories)
         recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
+        print(recipelist)
         if searchMode == 'uploaded-date':
             recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)].values()
         elif searchMode == 'likes':
