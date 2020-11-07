@@ -12,10 +12,12 @@ import CreateStep from './CreateStep';
 // TODO: Now it renders with descriptionList. Instead make a single array where each element contains imageList,
 //       descriptionList and imagePreviewList
 // (?)TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
+// TODO: make ingredient component that displays icon, price and so on.
 class Createpage extends Component{
    
    state = {
        title:'',
+       summary:'',
        ingredient: '',
        duration: '',
        tagList: [],
@@ -24,6 +26,7 @@ class Createpage extends Component{
        descriptionList: [],
        imageList: [],
        imagePreviewList: [],
+       selectedIngrList: [],
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -62,9 +65,20 @@ class Createpage extends Component{
     addStepHandler(){
         let newList = this.state.descriptionList
         console.log(newList)
-        newList.push(null)
+        newList.push('')
         console.log(newList)
         this.setState({descriptionList: newList})
+    }
+    deleteStepHandler(event){
+        let index = event.target.index
+        let newDList = this.state.descriptionList;
+        let newIList = this.state.imageList;
+        newDList.splice(index, 1)
+        newIList.splice(index, 1)
+        console.log(newDList)
+        console.log(newIList)
+        this.setState({descriptionList: newDList})
+        this.setState({imageList: newIList})
     }
 
     submitHandler(){
@@ -77,7 +91,9 @@ class Createpage extends Component{
             descriptionList: state.descriptionList,
             imageList: state.imageList,
             tagList: state.tagList,
-            prevList: state.imagePreviewList
+            prevList: state.imagePreviewList,
+            ////
+            summary: state.summary,
         }
         this.props.onCreate(recipe)
         console.log(this.state)
@@ -94,15 +110,34 @@ class Createpage extends Component{
         }
     }
 
+    addSelectedIgdHandler(event){
+        let param = event.target.value
+        if (!this.state.selectedIngrList.includes(event.target.value)){
+            this.setState({selectedIngrList: this.state.selectedIngrList.concat(param)})
+        }
+        else{
+            this.setState({selectedIngrList: this.state.selectedIngrList.filter((igd)=>{if(igd!=param) return igd})})
+        }
+    }
+
     render(){
         let displayStepList;
         displayStepList = this.state.descriptionList.map((item, index) => (
             <div>
-                <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index}/>   
+                {console.log(this.state.descriptionList[index])}
+                <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
+                            value_text={this.state.descriptionList[index]}/>
                 <img src={this.state.imagePreviewList[index]}/>
+                <button onClick={(index) => this.deleteStepHandler(index)} index={index}>Delete step</button>
             </div>
         ))
-        console.log(this.props.igrdList)
+        let displayIngredientList;
+        displayIngredientList = this.state.selectedIngrList.map((item) => (
+            <div id='ingredient'>
+                {item}
+            </div>
+        ))
+        console.log(this.state.ingredient)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -114,14 +149,19 @@ class Createpage extends Component{
                             <input id="recipe-title-input" type='text' placeholder='Title' name='title' 
                             onChange={(event) => this.setState({title: event.target.value})}/>
                             <br/>
+                            <p>레시피의 간단한 설명</p>
+                            <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
+                            onChange={(event) => this.setState({summary: event.target.value})}/>
+                            <br/>
                             <p>재료 추가</p>
                             <select name="Ingredients" id="ingredients" 
-                                value={this.state.value} onChange={(event) => this.setState({ingredient: event.target.value})}>
+                                value={this.state.value} onChange={(event) => this.addSelectedIgdHandler(event)}>
                                 <option id='ingredient' value="ramyun">라면</option>
                                 <option id='ingredient' value="sausage">소시지</option>
                                 <option id='ingredient' value="kimbap">삼각김밥</option>
                                 <option id='ingredient' value="juice">쥬시클</option>
                             </select>
+                            {displayIngredientList}
                             <br/>
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
