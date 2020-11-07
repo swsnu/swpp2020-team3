@@ -12,6 +12,7 @@ urlpatterns = [
     path('recipe/', views.recipe_post, name='recipe_post'),
     path('image/', views.image, name='image'),
     path('ingredient', views.ingredient_post, name='ingredient_post'),
+    path('ingredient/', views.ingredient_list, name='ingredient_list'),
     path('signin/', views.signin, name='signin'),
     path('signout', views.signout, name='signout'),
     path('token', views.token, name='token'),

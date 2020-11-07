@@ -22,8 +22,6 @@ class CreateStep extends Component{
     render(){
         return(
             <div className="step">
-                <label>Add image</label>
-                <br/>
                 <input type="file" accept='.jpg, .png, .jpeg' 
                     onChange={(event) => this.imageHandler(event)}/>
                 <br/>

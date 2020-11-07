@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from .models import Ingredient, Comment, Recipe, Reply, ImageModel
+from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel
 from django.contrib import auth
 import json
 from json import JSONDecodeError
@@ -76,7 +76,18 @@ def ingredient(request, id):
         igd.delete()
         return HttpResponse(status=200)
     else:
-        return HttpResponseNotAllowed(['GET','PUT'])
+        return HttpResponseNotAllowed(['GET','DELETE'])
+
+def ingredient_list(request):
+    if request.method == 'GET':
+        ingredient_list = Ingredient.objects.all().values()
+        ingredientList = []
+        for ing in ingredient_list:
+            ingredientList.append({'name': ing['name'], 'quantity': ing['quantity'], 
+                    'price': ing['price'], 'igd_type': ing['igd_type'], 'brand': ing['brand']})
+        return JsonResponse(ingredientList, safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
     
 def image(request):
     if request.method == 'GET':
@@ -112,15 +123,17 @@ def recipe_post(request):
 
         user = request.user
         # date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
-        recipe = Recipe(title=title, price=price, duration=duration)
+        recipe = Recipe(title=title, price=price, duration=duration, description_list=d_list, tag_list=t_list)
         recipe.save()
 
+        cnt = 0;
         for img_64 in p_list:
             format, imgstr = img_64.split(';base64,')
             ext = format.split('/')[-1]
             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
-            new_img = ImageModel.objects.create(img = data)
+            new_img = ImageModel.objects.create(img=data, description_index=cnt)
             recipe.photo_list.add(new_img)
+            cnt = cnt + 1
         
         recipe.save()
 

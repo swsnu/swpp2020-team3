@@ -15,11 +15,11 @@ import CreateStep from './CreateStep';
 class Createpage extends Component{
    
    state = {
-       name:'',
+       title:'',
        ingredient: '',
-       time: '',
-       typeList: [],
-       price: '',
+       duration: '',
+       tagList: [],
+       price: 3000,
        ////////
        descriptionList: [],
        imageList: [],
@@ -28,6 +28,9 @@ class Createpage extends Component{
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
 
+   componentDidMount(){
+       this.props.onGetIgrList()
+   }
 
     inputHandler(params){
         let description = params['description']
@@ -66,18 +69,28 @@ class Createpage extends Component{
 
     submitHandler(){
         //this.props.history.push('/main-page');
-        //this.props.onCreate()
+        let state = this.state;
+        let recipe = {
+            title: state.title,
+            duration: state.duration,
+            price: state.price,
+            descriptionList: state.descriptionList,
+            imageList: state.imageList,
+            tagList: state.tagList,
+            prevList: state.imagePreviewList
+        }
+        this.props.onCreate(recipe)
         console.log(this.state)
     }
     
     onClickChangeColor(event, param){
-        if (!this.state.typeList.includes(param)){
+        if (!this.state.tagList.includes(param)){
             event.target.style.backgroundColor = 'grey'
-            this.setState({typeList: this.state.typeList.concat(param)})
+            this.setState({tagList: this.state.tagList.concat(param)})
         }
         else{
             event.target.style.backgroundColor = null
-            this.setState({typeList: this.state.typeList.filter((type)=>{if(type!=param) return type})})
+            this.setState({tagList: this.state.tagList.filter((type)=>{if(type!=param) return type})})
         }
     }
 
@@ -89,7 +102,7 @@ class Createpage extends Component{
                 <img src={this.state.imagePreviewList[index]}/>
             </div>
         ))
-
+        console.log(this.props.igrdList)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -99,7 +112,7 @@ class Createpage extends Component{
                         <div className = 'create_first'>
                             <p>레시피 제목</p>
                             <input id="recipe-title-input" type='text' placeholder='Title' name='title' 
-                            onChange={(event) => this.setState({name: event.target.value})}/>
+                            onChange={(event) => this.setState({title: event.target.value})}/>
                             <br/>
                             <p>재료 추가</p>
                             <select name="Ingredients" id="ingredients" 
@@ -112,7 +125,7 @@ class Createpage extends Component{
                             <br/>
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
-                                value={this.state.value} onChange={(event) => this.setState({time: event.target.value})} 
+                                value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
                                 placeholder='minutes' name='cooking-time' />
                             {"  분"}
                         </div>
@@ -155,14 +168,14 @@ class Createpage extends Component{
 
 const mapStateToProps = state => {
     return {
-       
+       igrdList: state.rcp.ingredientList
     };
 }
   
 const mapDispatchToProps = dispatch => {
     return {
         onCreate: (recipe) => dispatch(actionCreators.createRecipe(recipe)),
-
+        onGetIgrList: () => dispatch(actionCreators.getIngredients())
         }
     }
 

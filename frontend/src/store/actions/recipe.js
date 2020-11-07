@@ -26,3 +26,14 @@ export const createRecipe = (recipe) => {
       .then(res => dispatch(createRecipe_(res.data)))
   }
 }
+
+const getIngredients_ = (result) => {
+  return {type: actionTypes.GET_INGREDIENTS, ingredients: result}
+}
+export const getIngredients = () => {
+  return dispatch => {
+    return axios.get('api/ingredient/')
+      .then(res => {
+        dispatch(getIngredients_(res.data))})
+  }
+}
