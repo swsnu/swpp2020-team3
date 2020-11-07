@@ -21,7 +21,7 @@ const signIn_ = (userCredentials) => {
 };
 export const signIn = (userCredentials) => {
   return dispatch => {
-    return axios.post('api/signin', userCredentials)
+    return axios.post('api/signin/', userCredentials)
       .then(res => dispatch(signIn_(res.data)))
   }
 }

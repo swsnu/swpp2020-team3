@@ -130,7 +130,6 @@ def recipe_post(request):
             summary = body['summary']
             d_list = body['description']
             t_list = body['tag']
-            rating = float(body['rating'])
             price = int(body['price'])
             likes = int(body['likes'])
             edited = bool(body['edited'])
@@ -140,7 +139,7 @@ def recipe_post(request):
 
             igd_file = request.FILES.getlist('igd_file')
             recipe = Recipe(author = user, title = title, summary = summary, price = price, description_list = d_list, tag_list = t_list,
-            rating = rating, likes = likes, edited = edited, created_date = date)
+            likes = likes, edited = edited, created_date = date)
             recipe.save()
 
             c = 0
