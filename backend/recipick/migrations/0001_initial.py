@@ -69,7 +69,6 @@ class Migration(migrations.Migration):
                 ('likes', models.IntegerField()),
                 ('created_date', models.DateField()),
                 ('edited', models.BooleanField()),
-                ('time', models.IntegerField()),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
                 ('ingredient_list', models.ManyToManyField(to='recipick.Ingredient')),
                 ('photo_list', models.ManyToManyField(to='recipick.ImageModel')),

@@ -13,6 +13,7 @@ import CreateStep from './CreateStep';
 //       descriptionList and imagePreviewList
 // (?)TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
 // TODO: make ingredient component that displays icon, price and so on.
+// TODO: delete step doesn't display the correct value
 class Createpage extends Component{
    
    state = {
