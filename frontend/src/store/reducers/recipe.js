@@ -11,6 +11,9 @@ const reducer = (state = initialState, action) => {
     case actionTypes.GET_RECIPES:
       return { ...state, recipes: action.recipes };
 
+    case actionTypes.GET_RECIPE:
+      return { ...state, selectedRecipe: action.recipe};
+
     default:
       break;
   }

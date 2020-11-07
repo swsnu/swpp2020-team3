@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
-import Replies from '../reply/Replies';
-
-import './Comment.css'
-
-class Comment extends Component {
+class Reply extends Component {
     state = {
         author_name:''
     }
@@ -13,18 +9,16 @@ class Comment extends Component {
         let newContent = prompt("new comment", this.props.content); // edit comment prompt
         // if valid editing, change comment
         if(newContent){
-            this.props.onEditComment(newContent)
+            this.props.onEditReply(newContent)
         }
     }
     
     render() {
-        const replies = <Replies commentId={this.props.id}/>
         return(
             <div>
                 <p>{this.props.content} - {this.props.author}</p>
-                {<button id='edit-comment-button' onClick={this.onEdit}>edit</button>}
-                {<button id='delete-comment-button' onClick={() => this.props.onDeleteComment()}>delete</button>}
-                {replies}
+                {<button id='edit-reply-button' onClick={this.onEdit}>edit</button>}
+                {<button id='delete-reply-button' onClick={() => this.props.onDeleteReply()}>delete</button>}
             </div>
         ) 
     }

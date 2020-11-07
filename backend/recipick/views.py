@@ -121,7 +121,7 @@ def recipe_post(request):
 
 def recipe(request, id):
     if request.method == 'GET':
-        recipe = [recipe for recipe in Recipe.objects.filter(id = id).values()]
+        recipe = [recipe for recipe in Recipe.objects.filter(id = id).values()][0]
         return JsonResponse(recipe, safe=False, status=200)
     elif request.method == 'DELETE':
         try:

@@ -30,8 +30,9 @@ class Recipe(models.Model):
         ImageModel,
     )
     
-    description_list = models.TextField(null=True)
-    tag_list = models.TextField(null=True)
+    description_list = models.JSONField(null=True)
+
+    tag_list = models.JSONField(null=True)
     price = models.IntegerField()
     ingredient_list = models.ManyToManyField(
         Ingredient,
