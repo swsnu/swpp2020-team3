@@ -41,7 +41,6 @@ class Recipe(models.Model):
     edited = models.BooleanField(null=True)    
     summary = models.TextField(null=True)
 
-    
 class Comment(models.Model):
     recipe = models.ForeignKey(
         Recipe,

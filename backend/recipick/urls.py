@@ -2,6 +2,7 @@ from django.urls import path
 from recipick import views
 
 urlpatterns = [
+    path('recipepage/', views.recipe_page, name='recipe_page'),
     path('recipe/<int:id>/comment', views.recipe_comment, name='recipe_comment'),
     path('comment/<int:id>/reply', views.comment_reply, name='comment_reply'),
     path('recipe/<int:id>', views.recipe, name='recipe'),

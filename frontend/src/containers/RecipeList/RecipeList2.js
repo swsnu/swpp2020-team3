@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
-import Recipe from '../../components/Recipe/Recipe'
-import * as actionCreators from '../../store/actions/index';
+import Recipe from '../../components/Recipe/Recipe';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { ConnectedRouter } from 'connected-react-router';
+import { withRouter } from 'react-router-dom';
+import * as actionCreators from '../../store/actions/index';
+import queryString from 'query-string';
 
 //TODO:
-//      should select categories simultaneously 
-//      implement search handler
+//      page query : currentPage, searchmode
+//      implement search handler (options/sort)
+
 class RecipeList extends Component{
 
     state = {
-        category : 0,
+        categories : [false,false,false,false,false,false],
 
         minCost : 0,
         maxCost : 20000,
@@ -23,41 +26,53 @@ class RecipeList extends Component{
         pageStart : 0,
         currentPage : 1,
     }
-
+    
     componentDidMount() {
-        this.props.onGetRecipes();
+        this.props.onGetRecipes(this.state.pageStart,this.state.searchMode);
     }
-
+    
+    componentDidUpdate(prevProps, prevState){
+        
+        if(prevState){
+            if(this.state.pageStart !== prevState.pageStart){
+                this.props.onGetRecipes(this.state.pageStart,this.state.searchMode);
+            }
+        }
+            
+    }
+    
     clickSearchModeHandler = searchmode => {
         this.setState({searchMode: searchmode});
     }
 
     clickCategoryHandler(id){
-        this.setState({category : id})
+        let modifiedCategories = this.state.categories;
+        modifiedCategories[id-1] = !modifiedCategories[id-1];
+        this.setState({category : modifiedCategories});
     }
 
     clickOptionsHandler = () => {
         this.setState({searchOptionsClicked: !(this.state.searchOptionsClicked)});
     }
 
-    clickRecipeHandler = recipe => {
-        this.props.history.push('/recipe/'+recipe);
+    clickRecipeHandler = id => {
+        this.props.history.push('/recipe/'+id);
     }
 
     clickSearchHandler = () => {
-
+        window.location.reload();
     }
 
-    clickLeftPageHandler = () => {
+    clickPagePreviousHandler = () => {
         this.setState({pageStart: this.state.pageStart-5});
-        this.setState({currentPage: this.state.pageStart-4});
+        this.setState({currentPage: this.state.pageStart-4});   
     }
 
-    clickPageHandler = (id) => {
+    clickPageNumberHandler = (id) => {
         this.setState({currentPage: this.state.pageStart+id});
     }
 
-    clickRightPageHandler = () => {
+    clickPageNextHandler = () => {
         this.setState({pageStart: this.state.pageStart+5});
         this.setState({currentPage: this.state.pageStart+6});
     }
@@ -65,17 +80,29 @@ class RecipeList extends Component{
 
 
     render(){
-        const recipes = this.props.storedRecipes.map((rcp) => {
+        /*
+        const {search} = this.props.location;
+        const queryObj = queryString.parse(search);
+        const {id, mode} = queryObj;
+        */
+        let slicedRecipes;
+        if(this.state.currentPage%5 === 0)
+            slicedRecipes = this.props.storedRecipes.slice(10*(this.state.currentPage%5-1), 10*5);
+        else
+            slicedRecipes = this.props.storedRecipes.slice(10*(this.state.currentPage%5-1), 10*(this.state.currentPage%5));
+        const recipes = slicedRecipes.map((recipe) => {
             return (
                 <Recipe
-                    author={rcp.author}
-                    abstraction={rcp.abstraction}
-                    title={rcp.title}
-                    rating={rcp.rating}
-                    time={rcp.time}
-                    cost={rcp.cost}
-                    likes={rcp.likes}
-                    clicked={this.clickRecipeHandler()}
+                    author={recipe.author}
+                    abstraction={recipe.summary}
+                    title={recipe.title}
+                    rating={recipe.rating}
+                    //time={recipe.time}
+                    time={0}
+                    cost={recipe.price}
+                    likes={recipe.likes}
+                    clickedRecipe={() => this.clickRecipeHandler(recipe.id)}
+                    clickedLikes={null}
                 />
             );
         });
@@ -85,44 +112,44 @@ class RecipeList extends Component{
                 <div className = "category-search">
                     <div className = "categories">
                         <div className = "row">
-                            <button onClick={() => this.clickCategoryHandler(1)}>양식</button>
-                            <button onClick={() => this.clickCategoryHandler(2)}>한식</button>
-                            <button onClick={() => this.clickCategoryHandler(3)}>중식</button>
+                            <button className="category-select-button" onClick={() => this.clickCategoryHandler(1)}>양식</button>
+                            <button className="category-select-button" onClick={() => this.clickCategoryHandler(2)}>한식</button>
+                            <button className="category-select-button" onClick={() => this.clickCategoryHandler(3)}>중식</button>
                         </div>
                         <div className = "row">
-                            <button onClick={() => this.clickCategoryHandler(4)}>일식</button>
-                            <button onClick={() => this.clickCategoryHandler(5)}>인스턴트</button>
-                            <button onClick={() => this.clickCategoryHandler(6)}>최저가</button>
+                            <button className="category-select-button" onClick={() => this.clickCategoryHandler(4)}>일식</button>
+                            <button className="category-select-button" onClick={() => this.clickCategoryHandler(5)}>인스턴트</button>
+                            <button className="category-select-button" onClick={() => this.clickCategoryHandler(6)}>최저가</button>
                         </div>
                     </div>
                     <div className = "constraints">
                         <div className = "cost">
                             <p>Cost(won)</p>
-                            <input className = "min-cost" value = {this.state.minCost} 
+                            <input className = "min-cost-input" value = {this.state.minCost} 
                                    onChange={(event) => this.setState({minCost: event.target.value})}></input>
-                            <input className = "max-cost" value = {this.state.maxCost} 
+                            <input className = "max-cost-input" value = {this.state.maxCost} 
                                    onChange={(event) => this.setState({maxCost: event.target.value})}></input>
                         </div>
                         <div className = "time">
                             <p>Time(min)</p>
-                            <input className = "min-time" value = {this.state.minTime} 
+                            <input className = "min-time-input" value = {this.state.minTime} 
                                    onChange={(event) => this.setState({minTime: event.target.value})}></input>
-                            <input className = "max-time" value = {this.state.maxTime} 
+                            <input className = "max-time-input" value = {this.state.maxTime} 
                                    onChange={(event) => this.setState({maxTime: event.target.value})}></input>
                         </div>
                     </div>
                     <div className = "search-options">
                         <div className = "options">
-                            <button className ="sorted-by" onClick={() => this.clickOptionsHandler()}>sorted by</button>
-                            {this.state.searchOptionsClicked && <button className ="relevance"
+                            <button className ="search-options-button" onClick={() => this.clickOptionsHandler()}>sorted by</button>
+                            {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                     onClick={() => this.clickSearchModeHandler("relevance")}>relevance</button>}
-                            {this.state.searchOptionsClicked && <button className ="most-liked"
+                            {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                     onClick={() => this.clickSearchModeHandler("most-liked")}>most liked</button>}
-                            {this.state.searchOptionsClicked && <button className ="most-recent"
+                            {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                     onClick={() => this.clickSearchModeHandler("most-recent")}>most recent</button>}
                         </div>
                         <div className = "search">
-                            <button className = "search-button" onClick={() => this.clickSearchHandler()}>search</button>
+                            <button className = "search-confirm-button" onClick={() => this.clickSearchHandler()}>search</button>
                         </div>
                     </div>
                 </div>
@@ -134,13 +161,20 @@ class RecipeList extends Component{
                         <p>Page</p>
                     </div>
                     <div className = "row">
-                        <button disabled ={this.state.pageStart == 0} onClick={() => this.clickLeftPageHandler()}>left</button>
-                        <button onClick={() => this.clickPageHandler(1)}>{this.state.pageStart+1}</button>
-                        <button onClick={() => this.clickPageHandler(2)}>{this.state.pageStart+2}</button>
-                        <button onClick={() => this.clickPageHandler(3)}>{this.state.pageStart+3}</button>
-                        <button onClick={() => this.clickPageHandler(4)}>{this.state.pageStart+4}</button>
-                        <button onClick={() => this.clickPageHandler(5)}>{this.state.pageStart+5}</button>
-                        <button disabled={false} onClick={() => this.clickRightPageHandler()}>right</button>
+                        <button className="list-page-previous-button"
+                                disabled ={this.state.pageStart == 0} onClick={() => this.clickPagePreviousHandler()}>left</button>
+                        {this.props.storedRecipes.length >= 1 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
+                        {this.props.storedRecipes.length >= 11 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>}
+                        {this.props.storedRecipes.length >= 21 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>}
+                        {this.props.storedRecipes.length >= 31 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
+                        {this.props.storedRecipes.length >= 41 && <button className="list-page-number-button"
+                                onClick={() => this.clickPageNumberHandler(5)}>{this.state.pageStart+5}</button>}
+                        {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
+                                disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
                     </div>
                 </div>
             </div>
@@ -148,6 +182,7 @@ class RecipeList extends Component{
         )        
     }
 };
+
 
 const mapStateToProps = state => {
     return {
@@ -157,9 +192,10 @@ const mapStateToProps = state => {
   
 const mapDispatchToProps = dispatch => {
     return {
-        onGetRecipes: () =>
-            dispatch(actionCreators.getRecipes()),
+        onGetRecipes: (pageID, searchMode) =>
+            dispatch(actionCreators.getRecipes(pageID, searchMode)),
     }
 }
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(RecipeList));

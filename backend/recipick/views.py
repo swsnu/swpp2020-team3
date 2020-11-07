@@ -77,18 +77,54 @@ def ingredient(request, id):
         return HttpResponse(status=200)
     else:
         return HttpResponseNotAllowed(['GET','PUT'])
-    
-def image(request):
+
+def recipe_page(request):
     if request.method == 'GET':
-        try: # if bad request --> 400
-            imgList = ImageModel.objects.all().values()
-            print(imgList)
-        except:
-            return HttpResponse(status = 400)
-        return HttpResponse(status = 200)
+        minCost = int(request.GET.get('minCost'))
+        maxCost = int(request.GET.get('maxCost'))
+        minTime = int(request.GET.get('minTime'))
+        maxTime = int(request.GET.get('maxTime'))
+        pageStart = int(request.GET.get('pageStart'))
+        searchMode = request.GET.get('searchMode')
+        categories = []
+        if request.GET.get('category1') == 'true':
+            categories.append(1)
+        if request.GET.get('category2') == 'true':
+            categories.append(2)
+        if request.GET.get('category3') == 'true':
+            categories.append(3)
+        if request.GET.get('category4') == 'true':
+            categories.append(4)
+        if request.GET.get('category5') == 'true':
+            categories.append(5)
+        if request.GET.get('category6') == 'true':
+            categories.append(6)
+        print(categories)
+        recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, time__gte = minTime, time__lte = maxTime, category__in = categories)
+        if searchMode == 'uploaded-date':
+            recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)].values()
+        elif searchMode == 'likes':
+            recipepage = recipelist.order_by('-likes')[10*pageStart:(10*pageStart+51)].values()
+        elif searchMode == 'cost':
+            recipepage = recipelist.order_by('-cost')[10*pageStart:(10*pageStart+51)].values()
+        elif searchMode == 'rating':
+            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)].values()
+        else: # searchMode == 'relevance'
+            recipepage = recipelist[10*pageStart:(10*pageStart+51)].values()
+        return JsonResponse([recipe for recipe in recipepage], safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['GET'])
+    
 
+    #if request.method == 'GET':
+    #    recipelist=[]
+    #    if Recipe.objects.all().count() < 10*id:
+    #        recipelist = []
+    #    else:
+    #        recipelist = [recipe for recipe in Recipe.objects.all()[10*id:(10*id+51)].values()]
+    #    return JsonResponse(recipelist, safe=False, status=200)
+    #else:
+    #    return HttpResponseNotAllowed(['GET'])
 
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
