@@ -2,6 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   currentUser: {},
+  getuser: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -12,6 +13,10 @@ const reducer = (state = initialState, action) => {
   //    default:
   //      break;
   //  }
+  switch(action.type) {
+    case actionTypes.GET_USER:
+      return {...state, getuser: action.getuser};
+  }
   return state;
 };
 

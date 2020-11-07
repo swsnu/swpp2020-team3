@@ -11,6 +11,11 @@ import base64
 from django.core.files.base import ContentFile
 
 
+def getuser(request, id):
+    if(request.method) == 'GET':
+        user = [user for user in User.objects.filter(id = id).values()]
+        print(user)
+        return JsonResponse(user, safe=False, status=200)
 
 def signup(request):
     if request.method == 'POST':
@@ -112,7 +117,7 @@ def recipe_page(request):
         if request.GET.get('category6') == 'true':
             categories.append(6)
         print(categories)
-        recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, time__gte = minTime, time__lte = maxTime, category__in = categories)
+        recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
         if searchMode == 'uploaded-date':
             recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)].values()
         elif searchMode == 'likes':
@@ -323,6 +328,8 @@ def reply(request, id):
         return HttpResponse(status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+
+
 
 @ensure_csrf_cookie
 def token(request):

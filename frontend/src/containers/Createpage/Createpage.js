@@ -97,7 +97,6 @@ class Createpage extends Component{
             summary: state.summary,
         }
         this.props.onCreate(recipe)
-        console.log(this.state)
     }
     
     onClickChangeColor(event, param){

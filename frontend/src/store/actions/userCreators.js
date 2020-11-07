@@ -25,3 +25,14 @@ export const signIn = (userCredentials) => {
       .then(res => dispatch(signIn_(res.data)))
   }
 }
+
+const getUser_ = (userCredentials) => {
+  console.log(userCredentials)
+  return { type: actionTypes.GET_USER, getuser: userCredentials};
+};
+export const getUser = (id) => {
+  return dispatch => {
+    return axios.get('api/getuser/'+id)
+    .then(res => dispatch(getUser_(res.data)))
+  }
+}

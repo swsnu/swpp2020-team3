@@ -5,3 +5,5 @@ export const SIGN_UP = 'SIGN_UP';
 export const LOGIN = 'LOGIN';
 
 export const CREATE_RECIPE = 'CREATE_RECIPE';
+
+export const GET_USER = 'GET_USER';

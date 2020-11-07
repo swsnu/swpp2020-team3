@@ -40,6 +40,7 @@ class Recipe(models.Model):
     created_date = models.DateField(null=True)
     edited = models.BooleanField(null=True)    
     summary = models.TextField(null=True)
+    category = models.TextField(null=True)
 
 class Comment(models.Model):
     recipe = models.ForeignKey(

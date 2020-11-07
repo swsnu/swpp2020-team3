@@ -5,6 +5,7 @@ export {
 export {
     signUp,
     signIn,
+    getUser,
 } from './userCreators';
 
 export {
