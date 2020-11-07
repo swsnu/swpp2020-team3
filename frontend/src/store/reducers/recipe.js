@@ -1,9 +1,9 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  recipes: [
-  ],
+  recipes: [],
   selectedRecipe: null,
+  ingredientList: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -12,6 +12,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, recipes: action.recipes };
     case actionTypes.CREATE_RECIPE:
       return {...state};
+    case actionTypes.GET_INGREDIENTS:
+      return {...state, ingredientList: action.ingredients}
     default:
       break;
   }

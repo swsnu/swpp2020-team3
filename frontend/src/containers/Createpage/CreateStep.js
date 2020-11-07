@@ -10,6 +10,9 @@ import * as actionCreators from '../../store/actions/index'
 // TODO: must implement preview of image
 // TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
 class CreateStep extends Component{
+state={
+    value: this.props.value_text
+}
     inputHandler(event){
         this.props.event_text({description: event.target.value, index: this.props.index})
     }
@@ -22,9 +25,8 @@ class CreateStep extends Component{
     render(){
         return(
             <div className="step">
-                <label>Add image</label>
-                <br/>
-                <input type="file" accept='.jpg, .png, .jpeg' 
+                {console.log(this.props.value_text)}
+                <input type="file" accept='.jpg, .png, .jpeg' value={this.state.value}
                     onChange={(event) => this.imageHandler(event)}/>
                 <br/>
                 <textarea type="text" onChange={(event) => this.inputHandler(event)}/>

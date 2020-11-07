@@ -12,22 +12,29 @@ import CreateStep from './CreateStep';
 // TODO: Now it renders with descriptionList. Instead make a single array where each element contains imageList,
 //       descriptionList and imagePreviewList
 // (?)TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
+// TODO: make ingredient component that displays icon, price and so on.
+// TODO: delete step doesn't display the correct value
 class Createpage extends Component{
    
    state = {
-       name:'',
+       title:'',
+       summary:'',
        ingredient: '',
-       time: '',
-       typeList: [],
-       price: '',
+       duration: '',
+       tagList: [],
+       price: 3000,
        ////////
        descriptionList: [],
        imageList: [],
        imagePreviewList: [],
+       selectedIngrList: [],
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
 
+   componentDidMount(){
+       this.props.onGetIgrList()
+   }
 
     inputHandler(params){
         let description = params['description']
@@ -59,25 +66,58 @@ class Createpage extends Component{
     addStepHandler(){
         let newList = this.state.descriptionList
         console.log(newList)
-        newList.push(null)
+        newList.push('')
         console.log(newList)
         this.setState({descriptionList: newList})
+    }
+    deleteStepHandler(event){
+        let index = event.target.index
+        let newDList = this.state.descriptionList;
+        let newIList = this.state.imageList;
+        newDList.splice(index, 1)
+        newIList.splice(index, 1)
+        console.log(newDList)
+        console.log(newIList)
+        this.setState({descriptionList: newDList})
+        this.setState({imageList: newIList})
     }
 
     submitHandler(){
         //this.props.history.push('/main-page');
-        //this.props.onCreate()
+        let state = this.state;
+        let recipe = {
+            title: state.title,
+            duration: state.duration,
+            price: state.price,
+            descriptionList: state.descriptionList,
+            imageList: state.imageList,
+            tagList: state.tagList,
+            prevList: state.imagePreviewList,
+            ////
+            summary: state.summary,
+        }
+        this.props.onCreate(recipe)
         console.log(this.state)
     }
     
     onClickChangeColor(event, param){
-        if (!this.state.typeList.includes(param)){
+        if (!this.state.tagList.includes(param)){
             event.target.style.backgroundColor = 'grey'
-            this.setState({typeList: this.state.typeList.concat(param)})
+            this.setState({tagList: this.state.tagList.concat(param)})
         }
         else{
             event.target.style.backgroundColor = null
-            this.setState({typeList: this.state.typeList.filter((type)=>{if(type!=param) return type})})
+            this.setState({tagList: this.state.tagList.filter((type)=>{if(type!=param) return type})})
+        }
+    }
+
+    addSelectedIgdHandler(event){
+        let param = event.target.value
+        if (!this.state.selectedIngrList.includes(event.target.value)){
+            this.setState({selectedIngrList: this.state.selectedIngrList.concat(param)})
+        }
+        else{
+            this.setState({selectedIngrList: this.state.selectedIngrList.filter((igd)=>{if(igd!=param) return igd})})
         }
     }
 
@@ -85,11 +125,20 @@ class Createpage extends Component{
         let displayStepList;
         displayStepList = this.state.descriptionList.map((item, index) => (
             <div>
-                <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index}/>   
+                {console.log(this.state.descriptionList[index])}
+                <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
+                            value_text={this.state.descriptionList[index]}/>
                 <img src={this.state.imagePreviewList[index]}/>
+                <button onClick={(index) => this.deleteStepHandler(index)} index={index}>Delete step</button>
             </div>
         ))
-
+        let displayIngredientList;
+        displayIngredientList = this.state.selectedIngrList.map((item) => (
+            <div id='ingredient'>
+                {item}
+            </div>
+        ))
+        console.log(this.state.ingredient)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -99,20 +148,25 @@ class Createpage extends Component{
                         <div className = 'create_first'>
                             <p>레시피 제목</p>
                             <input id="recipe-title-input" type='text' placeholder='Title' name='title' 
-                            onChange={(event) => this.setState({name: event.target.value})}/>
+                            onChange={(event) => this.setState({title: event.target.value})}/>
+                            <br/>
+                            <p>레시피의 간단한 설명</p>
+                            <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
+                            onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
                             <p>재료 추가</p>
                             <select name="Ingredients" id="ingredients" 
-                                value={this.state.value} onChange={(event) => this.setState({ingredient: event.target.value})}>
+                                value={this.state.value} onChange={(event) => this.addSelectedIgdHandler(event)}>
                                 <option id='ingredient' value="ramyun">라면</option>
                                 <option id='ingredient' value="sausage">소시지</option>
                                 <option id='ingredient' value="kimbap">삼각김밥</option>
                                 <option id='ingredient' value="juice">쥬시클</option>
                             </select>
+                            {displayIngredientList}
                             <br/>
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
-                                value={this.state.value} onChange={(event) => this.setState({time: event.target.value})} 
+                                value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
                                 placeholder='minutes' name='cooking-time' />
                             {"  분"}
                         </div>
@@ -155,14 +209,14 @@ class Createpage extends Component{
 
 const mapStateToProps = state => {
     return {
-       
+       igrdList: state.rcp.ingredientList
     };
 }
   
 const mapDispatchToProps = dispatch => {
     return {
         onCreate: (recipe) => dispatch(actionCreators.createRecipe(recipe)),
-
+        onGetIgrList: () => dispatch(actionCreators.getIngredients())
         }
     }
 

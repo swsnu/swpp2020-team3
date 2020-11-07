@@ -7,14 +7,14 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=64)
     quantity = models.FloatField()
     price = models.IntegerField()
-    price_normalized = models.IntegerField() # 좀 더 엄밀한 나눗셈 필요
+    price_normalized = models.IntegerField(null=True) # 좀 더 엄밀한 나눗셈 필요
     igd_type = models.CharField(max_length=5) # 단위: 개 / g
     brand = models.CharField(max_length=64)
-    picture = models.ImageField()
+    picture = models.ImageField(null=True)
 
 class ImageModel(models.Model):
     img = models.ImageField()
-    # desc_index = models.IntegerField() # Omit for now, because the frontend only receives one image per description
+    description_index = models.IntegerField(default=0) # Omit for now, because the frontend only receives one image per description
 
 class Recipe(models.Model):
     title = models.CharField(max_length=64)

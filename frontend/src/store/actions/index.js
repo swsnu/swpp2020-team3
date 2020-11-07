@@ -9,4 +9,5 @@ export {
 
 export {
     createRecipe,
+    getIngredients,
 } from './recipe'
