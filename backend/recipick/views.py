@@ -127,6 +127,17 @@ def recipe_page(request):
     else:
         return HttpResponseNotAllowed(['GET'])
     
+def image(request):
+    if request.method == 'GET':
+        try: # if bad request --> 400
+            imgList = ImageModel.objects.all().values()
+            print(imgList)
+        except:
+            return HttpResponse(status = 400)
+        return HttpResponse(status = 200)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
 
     #if request.method == 'GET':
     #    recipelist=[]
