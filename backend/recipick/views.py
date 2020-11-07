@@ -5,7 +5,11 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Ingredient, Comment, Recipe, Reply, ImageModel
 from django.contrib import auth
 import json
+from json import JSONDecodeError
 import datetime
+import base64
+from django.core.files.base import ContentFile
+
 
 
 def signup(request):
@@ -111,6 +115,7 @@ def recipe_page(request):
     else:
         return HttpResponseNotAllowed(['GET'])
     
+
     #if request.method == 'GET':
     #    recipelist=[]
     #    if Recipe.objects.all().count() < 10*id:
@@ -122,45 +127,54 @@ def recipe_page(request):
     #    return HttpResponseNotAllowed(['GET'])
 
 def recipe_post(request):
-    if request.method == 'POST':
-        try:
-            # decode error 추가
-            body = json.loads(request.POST['json'])
+    if request.method == 'POST': # only allowed method, else --> 405
+        try: # bad request (decode error) --> 400
+            body = json.loads(request.body.decode())
             title = body['title']
-            summary = body['summary']
-            d_list = body['description']
-            t_list = body['tag']
-            price = int(body['price'])
-            likes = int(body['likes'])
-            edited = bool(body['edited'])
-            d = body['date']
-            user = request.user
-            date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
+            price = body['price']   # normally should convert to int
+            duration = body['duration']  # normally should convert to float
+            d_list = body['descriptionList']
+            t_list = body['tagList']
+            i_list = body['imageList']  
+            p_list = body['prevList']   # right now works with prev. Maybe there is a better method?
 
-            igd_file = request.FILES.getlist('igd_file')
-            recipe = Recipe(author = user, title = title, summary = summary, price = price, description_list = d_list, tag_list = t_list,
-            likes = likes, edited = edited, created_date = date)
-            recipe.save()
-
-            c = 0
-            img_idx = body['img_idx_list']
-            for f in request.FILES.getlist('file'):
-                i = ImageModel(img = f, desc_index = img_idx[c])
-                i.save()
-                recipe.photo_list.add(i)
-                c = c+1
-
-            num=0
-            for i in body['ingredients']:
-                igd = Ingredient(name = i['name'], quantity = i['quantity'], price = i['price'], price_normalized = int(i['price'])/int(i['quantity']),
-                igd_type = i['igd_type'], brand = i['brand'], picture=igd_file[num])
-                igd.save()
-                recipe.ingredient_list.add(igd)
-                num = num + 1
-                
-        except Exception as e:
-            print(e)
+            ##@@## these will be implemented later ##@@##
+            #summary = body['summary']
+            #likes = int(body['likes'])
+            #edited = bool(body['edited'])
+            #d = body['date']
+        except (KeyError, JSONDecodeError) as e:
             return HttpResponse(status = 400)
+
+        user = request.user
+        # date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
+        recipe = Recipe(title=title, price=price, duration=duration)
+        recipe.save()
+
+        for img_64 in p_list:
+            format, imgstr = img_64.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            new_img = ImageModel.objects.create(img = data)
+            recipe.photo_list.add(new_img)
+        
+        recipe.save()
+
+# I don't know if we can use request.FILES.getlist(). Study and ask 조교님.
+        # c = 0
+        # img_idx = body['img_idx_list']
+        # for f in request.FILES.getlist('file'):
+        #     i = ImageModel(img = f, desc_index = img_idx[c])
+        #     i.save()
+        #     recipe.photo_list.add(i)
+        #     c = c+1
+        # num=0
+        # for i in body['ingredients']:
+        #     igd = Ingredient(name = i['name'], quantity = i['quantity'], price = i['price'], price_normalized = int(i['price'])/int(i['quantity']),
+        #     igd_type = i['igd_type'], brand = i['brand'], picture=igd_file[num])
+        #     igd.save()
+        #     recipe.ingredient_list.add(igd)
+        #     num = num + 1
         return HttpResponse(status = 201)
     else:
         return HttpResponseNotAllowed(['POST'])

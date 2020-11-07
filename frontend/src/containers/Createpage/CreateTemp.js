@@ -3,73 +3,89 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 // Local imports
+import CreateStep from '../../components/CreateStep'
 import './Createpage.css'
+
 import * as actionCreators from '../../store/actions/index'
-import CreateStep from './CreateStep';
+import UploadImage from '../../components/UploadImage/UploadImage';
 
 // TODO: must retreive ingredients
-// TODO: must resize image before previewing
-// TODO: Now it renders with descriptionList. Instead make a single array where each element contains imageList,
-//       descriptionList and imagePreviewList
-// (?)TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
+// TODO: must implement preview of image
+// TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
 class Createpage extends Component{
-   
-   state = {
-       name:'',
-       ingredient: '',
-       time: '',
-       typeList: [],
-       price: '',
-       ////////
-       descriptionList: [],
-       imageList: [],
-       imagePreviewList: [],
-   }
-   inputHandler = this.inputHandler.bind(this);
-   imageHandler = this.imageHandler.bind(this);
+    state = {
+        CreateStepList: [],
+        typeList: [],
+        title: "",
+        summary: "",
+        ingredient: [],
+        time: "",
+        price: 10000, //normally should be calculated
+        redirect: false,
 
 
-    inputHandler(params){
-        let description = params['description']
-        let index = params['index']
-        let newList = this.state.descriptionList;
-        newList[index] = description
-        this.setState({descriptionList: newList})
-        console.log(this.state)
+// final
+        createStepList: [],
+        file: [],
+        description: [],
+        singleDescription: "",
+//        imagePreviewUrl: ""
+
+
+
     }
-    imageHandler(params){
-        let index = params['index']
-        let file = params['file']
+
+
+    updateImageStatus(event){
+        console.log('update image status')
+        let file = event.target.files[0] // can upload only one image at a time
+
         let reader = new FileReader();
-    // console.log(reader.readyState) // 0 is for empty, 1 is for loading, and 2 is for completed
+        console.log(reader.readyState) // 0 is for empty, 1 is for loading, and 2 is for completed
         reader.onloadend = () => {
-            let newImgList = this.state.imageList;
-            let newPreviewList = this.state.imagePreviewList;
-            newImgList[index] = file;
-            newPreviewList[index] = reader.result
             this.setState({
-                imageList: newImgList,
-                imagePreviewList: newPreviewList
+                file: file,
+                imagePreviewUrl: reader.result
             })
         }
         reader.readAsDataURL(file)
-        console.log(this.state)
     }
 
-    addStepHandler(){
-        let newList = this.state.descriptionList
-        console.log(newList)
-        newList.push(null)
-        console.log(newList)
-        this.setState({descriptionList: newList})
+    addDescription(event){
+        console.log(event.target.value)
+        this.setState({singleDescription: event.target.value})
     }
 
-    submitHandler(){
-        //this.props.history.push('/main-page');
-        //this.props.onCreate()
-        console.log(this.state)
+
+    onClickAddStep(){
+        // Delete button for each step
+       // var tempList = this.state.CreateStepList.concat(<CreateStep image={this.saveImage()}/>)
+        var tempList = this.state.CreateStepList.concat(
+            <div className='create-step'>
+                <div className="upload-image">
+                    <label>Add image</label>
+                    <input type="file" accept='.jpg, .png, .jpeg' 
+                        onChange={(event) => {
+                            console.log('update image status')
+                            let file = event.target.files[0] // can upload only one image at a time
+                            let reader = new FileReader();
+                            console.log(reader.readyState) // 0 is for empty, 1 is for loading, and 2 is for completed
+                            reader.onloadend = () => {
+                                this.setState({
+                                    file: this.state.file.concat(file),
+                                    //imagePreviewUrl: reader.result
+                                })
+                            }
+                            reader.readAsDataURL(file)
+                        }}/>
+                    <img /*src={this.state.imagePreviewUrl}*/ />
+                </div>
+                <textarea placeholder='Enter explanation' value={this.state.singleDescription} onChange={(event) => this.addDescription(event)}/>
+            </div>
+            )
+        this.setState({CreateStepList: tempList})
     }
-    
+
     onClickChangeColor(event, param){
         if (!this.state.typeList.includes(param)){
             event.target.style.backgroundColor = 'grey'
@@ -81,19 +97,25 @@ class Createpage extends Component{
         }
     }
 
+    onClickSubmit(){
+        //this.props.history.push('/main-page');
+        var finalRecipe = {
+            'title': this.state.title,
+            'summary': this.state.summary,
+            
+        }
+        console.log(this.state.description)
+        console.log(this.state.file)
+        this.props.onCreate(this.state)
+        this.setState({redirect: true})
+    }
+
     render(){
-        let displayStepList;
-        displayStepList = this.state.descriptionList.map((item, index) => (
-            <div>
-                <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index}/>   
-                <img src={this.state.imagePreviewList[index]}/>
-            </div>
-        ))
 
         return(
-            <div className="CreateBackground">
-                <div className="CreatepageBlock">
-                    <div className="Createpage">
+            <div className = "CreateBackground">
+                <div className = 'CreatepageBlock'>
+                    <div className='Createpage'>
                         <label> 레시피 등록 </label>
                         <br/>
                         <div className = 'create_first'>
@@ -112,16 +134,19 @@ class Createpage extends Component{
                             <br/>
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
-                                value={this.state.value} onChange={(event) => this.setState({time: event.target.value})} 
-                                placeholder='minutes' name='cooking-time' />
+                                value={this.state.value} onChange={(event) => this.setState({time: event.target.value})} placeholder='minutes' name='cooking-time' />
                             {"  분"}
                         </div>
                         <br/>
                         <div className = 'create_second'>
                             <p>조리 방법</p>
-                            {displayStepList}
+
+
+                            {this.state.CreateStepList}
+                            
+                            
                             <br/>
-                            <button id='addStep' onClick={() => this.addStepHandler()}>Click to add a step</button>
+                            <button id='addStep' onClick={()=> this.onClickAddStep()}>Click to add a step</button>
                             <br/>
                         </div>
                         <br/>
@@ -141,15 +166,20 @@ class Createpage extends Component{
                             <h3>계산된 가격</h3>
                             <p>{this.state.price} 원</p>
                         </div>
+
+
+
+
+
                         <div className = 'create_fifth'>
-                            <button id='submit' onClick={() => this.submitHandler()}>Submit</button>                        </div>
+                            <button id='submit' onClick={()=>this.onClickSubmit()}>Submit</button>
+                        </div>
 
                         <div className = 'footspace'><br/></div>
-                        
-                    </div>  
+                    </div>
                 </div>
-            </div>   
-        )
+            </div>
+        )        
     }
 }
 
