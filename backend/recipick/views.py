@@ -156,6 +156,9 @@ def image(request):
 
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
+        user = request.user
+        if not user.is_authenticated: # not authenticated --> 401
+            return HttpResponse(status=401)
         try: # bad request (decode error) --> 400
             body = json.loads(request.body.decode())
             title = body['title']
@@ -165,7 +168,6 @@ def recipe_post(request):
             t_list = body['tagList']
             i_list = body['imageList']  
             p_list = body['prevList']   # right now works with prev. Maybe there is a better method?
-
             ##@@## these will be implemented later ##@@##
             #summary = body['summary']
             #likes = int(body['likes'])
@@ -174,9 +176,8 @@ def recipe_post(request):
         except (KeyError, JSONDecodeError) as e:
             return HttpResponse(status = 400)
 
-        user = request.user
         # date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
-        recipe = Recipe(title=title, price=price, duration=duration, description_list=d_list, tag_list=t_list)
+        recipe = Recipe(user=user, title=title, price=price, duration=duration, description_list=d_list, tag_list=t_list)
         recipe.save()
 
         cnt = 0;
