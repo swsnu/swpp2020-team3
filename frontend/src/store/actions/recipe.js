@@ -65,11 +65,6 @@ export const getIngredients = () => {
 }
 
 
-const getRecipe_ = (recipes) => {
-  console.log(recipes)
-  return { type: actionTypes.GET_RECIPE, selectedRecipe: recipes };
-};
-
 /*
 export const getRecipes = (pageID, searchMode) => {
   return dispatch => {
@@ -78,10 +73,3 @@ export const getRecipes = (pageID, searchMode) => {
   };
 };
 */
-
-export const getRecipe = (id) => {
-  console.log(1)
-  return dispatch => {
-    return axios.get('api/recipe/'+id).then(res => dispatch(getRecipe_(res.data)));
-  };
-};

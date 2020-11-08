@@ -1,10 +1,10 @@
 div .CreateBackground {
-    background: #f2eded;
+    background: #fafafa;
 }
 
 div .CreatepageBlock {
     height: 100%;
-    background: #f2eded;
+    background: #fafafa;
     padding-top:20px;
     display: flex;
     justify-content: center;
@@ -16,15 +16,15 @@ div .CreatepageBlock {
 div .Createpage {
     display: block;
     width: 120vh;
-    background: #f2eded;
+    background: #fafafa;
 }
 
 div .Createpage label{
     display: inline-block;
     text-align: left;
-    background-color: gray;
+    background-color: #fcc051;
     border: none;
-    color: white;
+    color: black;
     padding-left: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
