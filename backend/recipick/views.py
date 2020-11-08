@@ -2,11 +2,20 @@ from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from .models import Ingredient, Comment, Recipe, Reply, ImageModel
+from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel
 from django.contrib import auth
 import json
+from json import JSONDecodeError
 import datetime
+import base64
+from django.core.files.base import ContentFile
 
+
+def getuser(request, id):
+    if(request.method) == 'GET':
+        user = [user for user in User.objects.filter(id = id).values()]
+        print(user)
+        return JsonResponse(user, safe=False, status=200)
 
 def signup(request):
     if request.method == 'POST':
@@ -72,49 +81,130 @@ def ingredient(request, id):
         igd.delete()
         return HttpResponse(status=200)
     else:
-        return HttpResponseNotAllowed(['GET','PUT'])
+        return HttpResponseNotAllowed(['GET','DELETE'])
+
+def ingredient_list(request):
+    if request.method == 'GET':
+        ingredient_list = Ingredient.objects.all().values()
+        ingredientList = []
+        for ing in ingredient_list:
+            ingredientList.append({'name': ing['name'], 'quantity': ing['quantity'], 
+                    'price': ing['price'], 'igd_type': ing['igd_type'], 'brand': ing['brand']})
+        return JsonResponse(ingredientList, safe=False)
+    else:
+        return HttpResponseNotAllowed(['GET'])
     
-def recipe_post(request):
-    if request.method == 'POST':
-        try:
-            # decode error 추가
-            body = json.loads(request.POST['json'])
-            title = body['title']
-            summary = body['summary']
-            d_list = body['description']
-            t_list = body['tag']
-            rating = float(body['rating'])
-            price = int(body['price'])
-            likes = int(body['likes'])
-            edited = bool(body['edited'])
-            d = body['date']
-            user = request.user
-            date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
 
-            igd_file = request.FILES.getlist('igd_file')
-            recipe = Recipe(author = user, title = title, summary = summary, price = price, description_list = d_list, tag_list = t_list,
-            rating = rating, likes = likes, edited = edited, created_date = date)
-            recipe.save()
-
-            c = 0
-            img_idx = body['img_idx_list']
-            for f in request.FILES.getlist('file'):
-                i = ImageModel(img = f, desc_index = img_idx[c])
-                i.save()
-                recipe.photo_list.add(i)
-                c = c+1
-
-            num=0
-            for i in body['ingredients']:
-                igd = Ingredient(name = i['name'], quantity = i['quantity'], price = i['price'], price_normalized = int(i['price'])/int(i['quantity']),
-                igd_type = i['igd_type'], brand = i['brand'], picture=igd_file[num])
-                igd.save()
-                recipe.ingredient_list.add(igd)
-                num = num + 1
-                
-        except Exception as e:
-            print(e)
+def recipe_page(request):
+    if request.method == 'GET':
+        minCost = int(request.GET.get('minCost'))
+        maxCost = int(request.GET.get('maxCost'))
+        minTime = int(request.GET.get('minTime'))
+        maxTime = int(request.GET.get('maxTime'))
+        pageStart = int(request.GET.get('pageStart'))
+        searchMode = request.GET.get('searchMode')
+        categories = []
+        if request.GET.get('category1') == 'true':
+            categories.append(1)
+        if request.GET.get('category2') == 'true':
+            categories.append(2)
+        if request.GET.get('category3') == 'true':
+            categories.append(3)
+        if request.GET.get('category4') == 'true':
+            categories.append(4)
+        if request.GET.get('category5') == 'true':
+            categories.append(5)
+        if request.GET.get('category6') == 'true':
+            categories.append(6)
+        print(categories)
+        recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
+        if searchMode == 'uploaded-date':
+            recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)].values()
+        elif searchMode == 'likes':
+            recipepage = recipelist.order_by('-likes')[10*pageStart:(10*pageStart+51)].values()
+        elif searchMode == 'cost':
+            recipepage = recipelist.order_by('-cost')[10*pageStart:(10*pageStart+51)].values()
+        elif searchMode == 'rating':
+            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)].values()
+        else: # searchMode == 'relevance'
+            recipepage = recipelist[10*pageStart:(10*pageStart+51)].values()
+        return JsonResponse([recipe for recipe in recipepage], safe=False, status=200)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+    
+def image(request):
+    if request.method == 'GET':
+        try: # if bad request --> 400
+            imgList = ImageModel.objects.all().values()
+            print(imgList)
+        except:
             return HttpResponse(status = 400)
+        return HttpResponse(status = 200)
+    else:
+        return HttpResponseNotAllowed(['GET'])
+
+
+    #if request.method == 'GET':
+    #    recipelist=[]
+    #    if Recipe.objects.all().count() < 10*id:
+    #        recipelist = []
+    #    else:
+    #        recipelist = [recipe for recipe in Recipe.objects.all()[10*id:(10*id+51)].values()]
+    #    return JsonResponse(recipelist, safe=False, status=200)
+    #else:
+    #    return HttpResponseNotAllowed(['GET'])
+
+def recipe_post(request):
+    if request.method == 'POST': # only allowed method, else --> 405
+        try: # bad request (decode error) --> 400
+            body = json.loads(request.body.decode())
+            title = body['title']
+            price = body['price']   # normally should convert to int
+            duration = body['duration']  # normally should convert to float
+            d_list = body['descriptionList']
+            t_list = body['tagList']
+            i_list = body['imageList']  
+            p_list = body['prevList']   # right now works with prev. Maybe there is a better method?
+
+            ##@@## these will be implemented later ##@@##
+            #summary = body['summary']
+            #likes = int(body['likes'])
+            #edited = bool(body['edited'])
+            #d = body['date']
+        except (KeyError, JSONDecodeError) as e:
+            return HttpResponse(status = 400)
+
+        user = request.user
+        # date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
+        recipe = Recipe(title=title, price=price, duration=duration, description_list=d_list, tag_list=t_list)
+        recipe.save()
+
+        cnt = 0;
+        for img_64 in p_list:
+            format, imgstr = img_64.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            new_img = ImageModel.objects.create(img=data, description_index=cnt)
+            recipe.photo_list.add(new_img)
+            cnt = cnt + 1
+        
+        recipe.save()
+
+# I don't know if we can use request.FILES.getlist(). Study and ask 조교님.
+        # c = 0
+        # img_idx = body['img_idx_list']
+        # for f in request.FILES.getlist('file'):
+        #     i = ImageModel(img = f, desc_index = img_idx[c])
+        #     i.save()
+        #     recipe.photo_list.add(i)
+        #     c = c+1
+        # num=0
+        # for i in body['ingredients']:
+        #     igd = Ingredient(name = i['name'], quantity = i['quantity'], price = i['price'], price_normalized = int(i['price'])/int(i['quantity']),
+        #     igd_type = i['igd_type'], brand = i['brand'], picture=igd_file[num])
+        #     igd.save()
+        #     recipe.ingredient_list.add(igd)
+        #     num = num + 1
         return HttpResponse(status = 201)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -238,6 +328,8 @@ def reply(request, id):
         return HttpResponse(status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
+
+
 
 @ensure_csrf_cookie
 def token(request):

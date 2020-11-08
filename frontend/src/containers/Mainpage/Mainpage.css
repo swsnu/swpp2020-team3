@@ -1,23 +1,55 @@
+.MainpageBackground {
+    background-color: #f2eded
+}
+
+.Mainpage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.firstBlock, .secondBlock, .thirdBlock {
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom:10px;
+    display: block;
+    width: 116vh;
+}
+
 .first_list, .second_list, .third_list {
-    background-color:#c9c7c7;
+    padding-top:20px;
+    padding-bottom: 20px;
+    display: box;
+    width: 112vh;
+    background-color:white;
+}
+
+.toCreate {
+    padding-left: 20px;
+    color: black;
 }
 
 .random_content {
-    margin-top: 50px;
     float: left;
     color: black;
-    padding: 0px;
-    border : 10px solid #ccc;
+    padding:10px;
+    border : 3px solid #ccc;
     line-break: normal;
+    margin: 10px;
+    background:#f2eded;
 }
 
-.random_content p {
-    margin: 0px;
-    padding: 2px;
-    background-color: #9e9d9d;
-}
-
-.random_content img {
-    margin: 0px;
-    padding: 0px;
+.list_title {
+    display: inline-block;
+    text-align: left;
+    background-color: gray;
+    border: none;
+    color: white;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 110vh;
+    text-decoration: none;
+    font-size: 16px;
 }

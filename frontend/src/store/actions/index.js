@@ -1,11 +1,14 @@
 export {
     getRecipes,
-    getRecipe
+    getRecipe,
+    createRecipe,
+    getIngredients,
 } from './recipe';
 
 export {
     signUp,
     signIn,
+    getUser,
 } from './userCreators';
 
 export {

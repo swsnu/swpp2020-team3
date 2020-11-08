@@ -15,10 +15,11 @@ import Login from './containers/Authentication/Login/Login';
 function App(props) {
   return(
     <BrowserRouter history={props.history}>
+      
       <div className="App">
         <Navbar history={props.history}/>
         <Switch>
-          <Route path='/search' exact component={RecipeList} />
+          <Route path='/search' component={RecipeList} />
           <Route path='/main-page' exact render={() => <Mainpage history={props.history}/>} />
           <Route path='/detail-page/:id' exact render={() => <Detailpage history={props.history}/>}/>
           <Route path='/create' exact render={()=> <Createpage history={props.history}/>} />
