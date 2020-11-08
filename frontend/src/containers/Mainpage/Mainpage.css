@@ -1,5 +1,5 @@
 .MainpageBackground {
-    background-color: #f2eded
+    background-color: #fafafa;
 }
 
 .Mainpage {
@@ -43,9 +43,9 @@
 .list_title {
     display: inline-block;
     text-align: left;
-    background-color: gray;
+    background-color: #fcc051;
     border: none;
-    color: white;
+    color: black;
     padding-left: 20px;
     padding-top: 10px;
     padding-bottom: 10px;

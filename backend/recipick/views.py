@@ -9,12 +9,12 @@ from json import JSONDecodeError
 import datetime
 import base64
 from django.core.files.base import ContentFile
-
+from random import *
+import random
 
 def getuser(request, id):
     if(request.method) == 'GET':
         user = [user for user in User.objects.filter(id = id).values()]
-        print(user)
         return JsonResponse(user, safe=False, status=200)
 
 def signup(request):
@@ -191,6 +191,7 @@ def recipe_post(request):
         
         recipe.save()
 
+
 # I don't know if we can use request.FILES.getlist(). Study and ask 조교님.
         # c = 0
         # img_idx = body['img_idx_list']
@@ -212,8 +213,33 @@ def recipe_post(request):
 
 def recipe(request, id):
     if request.method == 'GET':
-        recipe = [recipe for recipe in Recipe.objects.filter(id = id).values()][0]
-        return JsonResponse(recipe, safe=False, status=200)
+        cnt = Recipe.objects.all().count()
+        if cnt <= 4:
+            recipes = [recipes for recipes in Recipe.objects.all()]
+            newrecipes = []
+            for recipe in recipes:
+                p_list = recipe.photo_list
+                new_list = []
+                for photo in p_list.all():
+                    encoded_string = base64.b64encode(photo.img.read())
+                    new_list.append(encoded_string.decode('utf-8'))
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'photo_list': new_list}
+                newrecipes.append(newrecipe)
+            return JsonResponse(newrecipes, safe=False)
+        else :
+            recipes = [recipes for recipes in Recipe.objects.all()]
+            s = random.sample(range(1,cnt), 4)
+            newrecipes = []
+            for n in s:
+                recipe = recipes[n]
+                p_list = recipe.photo_list
+                new_list = []
+                for photo in p_list.all():
+                    encoded_string = base64.b64encode(photo.img.read())
+                    new_list.append(encoded_string.decode('utf-8'))
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'photo_list': new_list}
+                newrecipes.append(newrecipe)
+            return JsonResponse(newrecipes, safe=False)
     elif request.method == 'DELETE':
         try:
             recipe = Recipe.objects.get(id = id)

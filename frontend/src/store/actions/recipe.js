@@ -63,3 +63,25 @@ export const getIngredients = () => {
         dispatch(getIngredients_(res.data))})
   }
 }
+
+
+const getRecipe_ = (recipes) => {
+  console.log(recipes)
+  return { type: actionTypes.GET_RECIPE, selectedRecipe: recipes };
+};
+
+/*
+export const getRecipes = (pageID, searchMode) => {
+  return dispatch => {
+    return axios.get('api/recipepage/'+pageID+'/'+searchMode+'/')
+      .then(res => dispatch(getRecipes_(res.data)));
+  };
+};
+*/
+
+export const getRecipe = (id) => {
+  console.log(1)
+  return dispatch => {
+    return axios.get('api/recipe/'+id).then(res => dispatch(getRecipe_(res.data)));
+  };
+};
