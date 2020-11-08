@@ -6,6 +6,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
 import CreateStep from './CreateStep';
+import Ingredient from '../../components/Ingredient/Ingredient';
 
 // TODO: must retreive ingredients
 // TODO: must resize image before previewing
@@ -32,9 +33,9 @@ class Createpage extends Component{
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
 
-   componentDidMount(){
-       this.props.onGetIgrList()
-   }
+    componentDidMount(){
+        this.props.onGetIgrList()
+    }
 
     inputHandler(params){
         let description = params['description']
@@ -138,15 +139,7 @@ class Createpage extends Component{
                 {item}
             </div>
         ))
-        let ingredientList = this.props.igrdList.map((igr) => (
-            <div id='ingredient'>
-                <p>Name</p>
-                {igr['name']}
-                <p>Brand</p>
-                {igr['brand']}
-            </div>
-        ))
-        console.log(ingredientList)
+        console.log(this.props.igrdList)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -171,7 +164,7 @@ class Createpage extends Component{
                                 <option id='ingredient' value="juice">쥬시클</option>
                             </select>
                             {selectedIngredientList}
-                            {ingredientList}
+                            <Ingredient/>
                             <br/>
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
