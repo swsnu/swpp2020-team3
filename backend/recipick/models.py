@@ -29,9 +29,8 @@ class Recipe(models.Model):
     photo_list = models.ManyToManyField(
         ImageModel,
     )
-    description_list = models.TextField(null=True)
-    tag_list = models.TextField(null=True)
-    #### Not used yet ####
+    description_list = models.JSONField(null=True)
+    tag_list = models.JSONField(null=True)
     ingredient_list = models.ManyToManyField(
         Ingredient,
     )

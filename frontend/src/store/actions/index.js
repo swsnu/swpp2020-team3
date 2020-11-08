@@ -1,5 +1,8 @@
 export {
     getRecipes,
+    getRecipe,
+    createRecipe,
+    getIngredients,
 } from './recipe';
 
 export {
@@ -9,6 +12,16 @@ export {
 } from './userCreators';
 
 export {
-    createRecipe,
-    getIngredients,
-} from './recipe'
+    getComments,
+    addComment,
+    editComment,
+    deleteComment
+} from './comment';
+
+export {
+    getReplies,
+    getReplySet,
+    addReply,
+    editReply,
+    deleteReply
+} from './reply';

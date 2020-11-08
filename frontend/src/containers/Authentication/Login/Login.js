@@ -49,7 +49,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onLogin: (userCredentials) => dispatch(actionCreators.signIn(userCredentials)),
-
         }
     }
 

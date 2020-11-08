@@ -21,7 +21,7 @@ function App(props) {
         <Switch>
           <Route path='/search' component={RecipeList} />
           <Route path='/main-page' exact render={() => <Mainpage history={props.history}/>} />
-          <Route path='/detail-page' exact render={() => <Detailpage history={props.history}/>}/>
+          <Route path='/detail-page/:id' exact render={() => <Detailpage history={props.history}/>}/>
           <Route path='/create' exact render={()=> <Createpage history={props.history}/>} />
           <Route path='/signup' exact render={() => <Signup history={props.history} />} />
           <Route path='/login' exact render={() => <Login history={props.history} />} />
