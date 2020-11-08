@@ -39,58 +39,60 @@ class Mainpage extends Component{
             {image: require('../../Image/item.png'), title: 'item5'}
         ],
         thirdList : [
-            {image: require('../../Image/item.png'), title: 'item1'}, 
-            {image: require('../../Image/item.png'), title: 'item2'}, 
+            {image: require('../../Image/F4201_4.jpg'), title: 'item1'}, 
+            {image: require('../../Image/F4201_4.jpg'), title: 'item2'}, 
             {image: require('../../Image/item.png'), title: 'item3'},
-            {image: require('../../Image/item.png'), title: 'item4'}, 
-            {image: require('../../Image/item.png'), title: 'item5'}
         ],
+        check: null
     }
 
     componentDidMount() {
-        this.props.onGetRecipes(this.state.search);
+        this.props.onGetRecipe(1);
+        this.props.onGetUser(1)
     }
 
     toCreateHandler() {
+        this.setState({check: 1})
         this.props.history.push('/create')
         window.location.reload()
     }
 
     render(){
-        const recipes = this.props.storedRecipes.map((recipe) => {
-            return (
-                <Recipe
-                    author={recipe.author}
-                    abstraction={recipe.summary}
-                    title={recipe.title}
-                    rating={recipe.rating}
-                    time={recipe.time}
-                    cost={recipe.price}
-                    likes={recipe.likes}
-                    clickedRecipe={() => this.clickRecipeHandler(recipe.id)}
-                    clickedLikes={null}
-                />
-            );
-        });
+        let test;
+        console.log(this.props.storedRecipes!=null)
+        if(this.props.storedRecipes){
+            let c = this.props.storedRecipes[0]
+            if(this.props.storedRecipes[0].photo_list){
+                let d = c.photo_list[0]
+                let t = 'data:image/png;base64,'+ d
+                test = <img src = {t} width = '100' ></img>
+            }
+        }
 
-        const dailyrandomList = this.state.dailyrandomList.map( (td) => {
-            return (
-                <li className = 'random_content'>
-                    <DisplayRecipe img = {<img src = {td.image}/>} title = {td.title} />
-                </li>
-            )   
-        })
+        let dailyrandomList;
+        if(this.props.storedRecipes){
+            dailyrandomList = this.props.storedRecipes.map((td) => {
+                console.log(td)
+                let d = 'data:image/png;base64,'+ td.photo_list[0]
+                return (
+                    <li className = 'random_content' id = 'r1'>
+                        <DisplayRecipe img = {<img src = {d} width='100'/>} title = {'td.title'} />
+                    </li>
+                )   
+            })
+        }
+        
         const secondlist = this.state.secondList.map( (td) => {
             return (
-                <li className = 'random_content'>
+                <li className = 'random_content' id = 'r2'>
                     <DisplayRecipe img = {<img src = {td.image}/>} title = {td.title} />
                 </li>
             )   
         })
         const thirdlist = this.state.thirdList.map( (td) => {
             return (
-                <li className = 'random_content'>
-                    <DisplayRecipe img = {<img src = {td.image}/>} title = {td.title} />
+                <li className = 'random_content' id = 'r3'>
+                    <DisplayRecipe img = {<img src = {td.image} width='150'/>} title = {td.title} />
                 </li>
             )   
         })
@@ -98,29 +100,31 @@ class Mainpage extends Component{
         return(
             <div className = 'MainpageBackground'>
                 <div className = 'Mainpage'>
-                    <div className = 'firstBlock'>
-                        <div className = 'list_title'>{'오늘의 랜덤 레시피  &   레시피 등록하기'}</div>
-                        <ul className = 'first_list'> 
-                            {dailyrandomList}
-                            <li className = 'toCreate'>
-                                <div><img src = {require('../../Image/toCreate.png')} onClick = {() => this.toCreateHandler()}/></div>
-                                <div>{'click to create'}</div>
-                            </li>
-                        </ul>
+                    <div className = 'mainblock'>
+                        <div className = 'firstBlock'>
+                            <div className = 'list_title' id = 'title1'>{'오늘의 랜덤 레시피  &   레시피 등록하기'}</div>
+                            <ul className = 'first_list'> 
+                                {dailyrandomList}
+                                <li className = 'toCreate'>
+                                    <div><img src = {require('../../Image/toCreate.png')} onClick = {() => this.toCreateHandler()}/></div>
+                                    <div>{'click to create'}</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className = 'secondBlock' >
+                            <div className = 'list_title' id = 'title2' >{'최근 인기 레시피'}</div>
+                            <ul className = 'second_list'>
+                                {secondlist}
+                            </ul>
+                        </div>
+                        <div className = 'thirdBlock'>
+                            <div className = 'list_title' id = 'title3'>{'내 입맛 맞춤 레시피'}</div>
+                            <ul className = 'third_list'>
+                            {thirdlist}
+                            </ul>
+                        </div>
+                        <div> </div>
                     </div>
-                    <div className = 'secondBlock'>
-                        <div className = 'list_title'>{'최근 인기 레시피'}</div>
-                        <ul className = 'second_list'>
-                            {secondlist}
-                        </ul>
-                    </div>
-                    <div className = 'thirdBlock'>
-                        <div className = 'list_title'>{'내 입맛 맞춤 레시피'}</div>
-                        <ul className = 'third_list'>
-                        {thirdlist}
-                        </ul>
-                    </div>
-                    <div> {recipes}</div>
                 </div>
             </div>
         )        
@@ -129,15 +133,14 @@ class Mainpage extends Component{
 
 const mapStateToProps = state => {
     return {
-        storedRecipes: state.rcp.recipes,
-        getuser: state.rcp.getuser,
+        storedRecipes: state.rcp.selectedRecipe,
     };
 }
   
 const mapDispatchToProps = dispatch => {
     return {
-        onGetRecipes: (searchSettings) =>
-            dispatch(actionCreators.getRecipes(searchSettings)),
+        onGetRecipe: (id) =>
+            dispatch(actionCreators.getRecipe(id)),
         onGetUser: (td) =>
             dispatch(actionCreators.getUser(td)),
     }

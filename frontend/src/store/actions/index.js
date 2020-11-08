@@ -1,5 +1,6 @@
 export {
     getRecipes,
+    getRecipe,
 } from './recipe';
 
 export {
