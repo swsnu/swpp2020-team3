@@ -12,6 +12,8 @@ const reducer = (state = initialState, action) => {
       return {...state, selectedRecipe: action.selectedRecipe}
     case actionTypes.GET_RECIPES:
       return { ...state, recipes: action.recipes };
+    case actionTypes.GET_RECIPE:
+      return { ...state, selectedRecipe: action.recipe};
     case actionTypes.CREATE_RECIPE:
       return {...state};
     case actionTypes.GET_INGREDIENTS:

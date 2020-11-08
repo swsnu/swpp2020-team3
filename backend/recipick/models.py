@@ -24,13 +24,14 @@ class Recipe(models.Model):
     )
     price = models.IntegerField()
     duration= models.IntegerField(default='0')
+    # thumbnail = models.ImageField(null=True)
+    duration= models.IntegerField()
     # This should be foreign key for the one to many field. However, when we use foreign key, we can't implement list. How to handle this?
     photo_list = models.ManyToManyField(
         ImageModel,
     )
-    description_list = models.TextField(null=True)
-    tag_list = models.TextField(null=True)
-    #### Not used yet ####
+    description_list = models.JSONField(null=True)
+    tag_list = models.JSONField(null=True)
     ingredient_list = models.ManyToManyField(
         Ingredient,
     )

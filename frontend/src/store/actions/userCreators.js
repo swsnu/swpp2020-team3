@@ -26,6 +26,7 @@ export const signIn = (userCredentials) => {
   }
 }
 
+
 const getUser_ = (userCredentials) => {
   return { type: actionTypes.GET_USER, getuser: userCredentials};
 };

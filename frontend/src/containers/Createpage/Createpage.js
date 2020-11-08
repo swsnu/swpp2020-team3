@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import Select from 'react-select'
 // Local imports
 import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
 import CreateStep from './CreateStep';
+import Ingredient from '../../components/Ingredient/Ingredient';
 
 // TODO: must retreive ingredients
 // TODO: must resize image before previewing
@@ -14,6 +16,11 @@ import CreateStep from './CreateStep';
 // (?)TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
 // TODO: make ingredient component that displays icon, price and so on.
 // TODO: delete step doesn't display the correct value
+// TODO: normalized price display (must bring from backend)
+// TODO: input quantity, calculate price 
+// TODO: bring images
+// TODO: in search bar, everything is selected
+
 class Createpage extends Component{
    
    state = {
@@ -22,19 +29,20 @@ class Createpage extends Component{
        ingredient: '',
        duration: '',
        tagList: [],
-       price: 3000,
        ////////
        descriptionList: [],
        imageList: [],
        imagePreviewList: [],
-       selectedIngrList: [],
+       selectedIngredientList: [],
+       quantity: '',
+       priceList: ''
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
 
-   componentDidMount(){
-       this.props.onGetIgrList()
-   }
+    componentDidMount(){
+        this.props.onGetIgrList()
+    }
 
     inputHandler(params){
         let description = params['description']
@@ -88,7 +96,7 @@ class Createpage extends Component{
         let recipe = {
             title: state.title,
             duration: state.duration,
-            price: state.price,
+            totalPrice: state.totalPrice,
             descriptionList: state.descriptionList,
             imageList: state.imageList,
             tagList: state.tagList,
@@ -110,16 +118,35 @@ class Createpage extends Component{
         }
     }
 
-    addSelectedIgdHandler(event){
-        let param = event.target.value
-        if (!this.state.selectedIngrList.includes(event.target.value)){
-            this.setState({selectedIngrList: this.state.selectedIngrList.concat(param)})
+    addSelectedIngredientHandler(event){
+        this.setState({selectedIngredientList: this.state.selectedIngredientList.concat(event)})
+    }
+    deleteSelectedIngredientHandler(index){
+        let newList = this.state.selectedIngredientList;
+        let entry = newList[index]
+        //console.log(entry.amount*entry.price)
+        //let price = this.state.totalPrice
+        //this.setState({totalPrice: price-(entry.amount*entry.price)})
+        newList.splice(index, 1)
+
+        this.setState({selectedIngredientList: newList})
+    }
+    addIngredientQuantity(event, id, itemPrice){
+        let list = this.state.selectedIngredientList
+        let amount = event.target.value
+        if(list[id]['amount']!=undefined){
+            list[id]['amount'] = parseInt(amount)
         }
         else{
-            this.setState({selectedIngrList: this.state.selectedIngrList.filter((igd)=>{if(igd!=param) return igd})})
+            list[id]['amount'] = parseInt(amount)
         }
-    }
+        this.setState({selectedIngredientList: list})
+        // update priceList
+        //let priceList = this.state.priceList;
+        //let price = list[id]['price']
 
+        //priceList['event']
+    }
     render(){
         let displayStepList;
         displayStepList = this.state.descriptionList.map((item, index) => (
@@ -128,16 +155,40 @@ class Createpage extends Component{
                 <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
                             value_text={this.state.descriptionList[index]}/>
                 <img src={this.state.imagePreviewList[index]}/>
-                <button onClick={(index) => this.deleteStepHandler(index)} index={index}>Delete step</button>
+                <button onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
             </div>
         ))
-        let displayIngredientList;
-        displayIngredientList = this.state.selectedIngrList.map((item) => (
-            <div id='ingredient'>
-                {item}
+
+
+//value={this.state.selectedIngredientList[index]['amount']} 
+
+        let selectedIngredientList;
+        selectedIngredientList = this.state.selectedIngredientList.map((item, index) => (
+            <div id='ingredient' key={index}>
+                {item.brand}
+                {item.name}
+                {item.price}
+                <input idx={index} type='number' placeholder='양' 
+                    onChange={(event) => this.addIngredientQuantity(event, index)}/>
+                {item.amount * item.price}
+                <button onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
-        console.log(this.state.ingredient)
+        console.log(this.state)
+
+
+        let totalPrice = 0;
+        let list = this.state.selectedIngredientList
+        let priceList = []
+        if(list.length > 0){
+            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
+            //console.log(priceList)
+            for(let i = 0; i < priceList.length; i++){
+                totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
+            }
+            console.log(totalPrice)
+        }
+        
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -153,6 +204,17 @@ class Createpage extends Component{
                             <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
                             onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
+
+
+
+                            <p>재료 추가</p>
+                            <Select options={this.props.ingredientList} getOptionLabel={option => `[${option.brand}] ${option.name} 
+                            (${option.price}원 - normalized price)`}
+                            onChange={(event) => this.addSelectedIngredientHandler(event)}
+                            isSearchable={true} placeholder={'재료를 입력하시오.'} autoFocus={true}/>
+                            {selectedIngredientList}
+
+{/*#########}
                             <p>재료 추가</p>
                             <select name="Ingredients" id="ingredients" 
                                 value={this.state.value} onChange={(event) => this.addSelectedIgdHandler(event)}>
@@ -161,8 +223,13 @@ class Createpage extends Component{
                                 <option id='ingredient' value="kimbap">삼각김밥</option>
                                 <option id='ingredient' value="juice">쥬시클</option>
                             </select>
-                            {displayIngredientList}
+                            {selectedIngredientList}
+                            <Ingredient/>
                             <br/>
+{/*#########*/}
+
+
+
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
                                 value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
@@ -192,7 +259,7 @@ class Createpage extends Component{
                         <div className = 'create_fourth'>
                             <p>총 예상 가격 :   </p>
                             <h3>계산된 가격</h3>
-                            <p>{this.state.price} 원</p>
+                            <p>{totalPrice} 원</p>
                         </div>
                         <div className = 'create_fifth'>
                             <button id='submit' onClick={() => this.submitHandler()}>Submit</button>                        </div>
@@ -208,7 +275,7 @@ class Createpage extends Component{
 
 const mapStateToProps = state => {
     return {
-       igrdList: state.rcp.ingredientList
+       ingredientList: state.rcp.ingredientList
     };
 }
   

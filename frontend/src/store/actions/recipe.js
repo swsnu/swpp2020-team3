@@ -14,11 +14,26 @@ const getRecipes_ = (recipes) => {
 /*
 export const getRecipes = (pageID, searchMode) => {
   return dispatch => {
-    return axios.get('api/recipepage/'+pageID+'/'+searchMode+'/')
+    return axios.get('/recipe/',pageID)
       .then(res => dispatch(getRecipes_(res.data)));
   };
 };
 */
+const getRecipe_ = (recipe) => {
+  return {type: actionTypes.GET_RECIPE, recipe: recipe};
+}
+
+export const getRecipe = (id) => {
+  return dispatch => {
+    return axios.get('/api/recipe/'+id+'/')
+      .then(res => dispatch(getRecipe_(res.data)))
+  }
+}
+//     return axios.get('api/recipepage/'+pageID+'/'+searchMode+'/')
+//       .then(res => dispatch(getRecipes_(res.data)));
+//   };
+// };
+
 
 export const getRecipes = (searchSettings) => {
   return dispatch => {
