@@ -132,13 +132,21 @@ class Createpage extends Component{
                 <button onClick={(index) => this.deleteStepHandler(index)} index={index}>Delete step</button>
             </div>
         ))
-        let displayIngredientList;
-        displayIngredientList = this.state.selectedIngrList.map((item) => (
+        let selectedIngredientList;
+        selectedIngredientList = this.state.selectedIngrList.map((item) => (
             <div id='ingredient'>
                 {item}
             </div>
         ))
-        console.log(this.state.ingredient)
+        let ingredientList = this.props.igrdList.map((igr) => (
+            <div id='ingredient'>
+                <p>Name</p>
+                {igr['name']}
+                <p>Brand</p>
+                {igr['brand']}
+            </div>
+        ))
+        console.log(ingredientList)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -162,7 +170,8 @@ class Createpage extends Component{
                                 <option id='ingredient' value="kimbap">삼각김밥</option>
                                 <option id='ingredient' value="juice">쥬시클</option>
                             </select>
-                            {displayIngredientList}
+                            {selectedIngredientList}
+                            {ingredientList}
                             <br/>
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
