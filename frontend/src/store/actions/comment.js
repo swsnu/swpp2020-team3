@@ -33,7 +33,7 @@ const editComment_ = (comment) => {
 
 export const editComment = (comment) => {
   return dispatch => {
-    return axios.put('/api/comment/'+comment.id, comment)
+    return axios.put('/api/comment/'+comment.id+'/', comment)
       .then(res => dispatch(editComment_(comment)))
   }
 }

@@ -17,6 +17,7 @@ export {
 
 export {
     getReplies,
+    getReplySet,
     addReply,
     editReply,
     deleteReply

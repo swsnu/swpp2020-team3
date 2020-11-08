@@ -12,7 +12,7 @@ const getRecipes_ = (recipes) => {
 
 export const getRecipes = (pageID) => {
   return dispatch => {
-    return axios.get('/recipe',pageID)
+    return axios.get('/recipe/',pageID)
       .then(res => dispatch(getRecipes_(res.data)));
   };
 };
@@ -23,7 +23,7 @@ const getRecipe_ = (recipe) => {
 
 export const getRecipe = (id) => {
   return dispatch => {
-    return axios.get('/api/recipe/'+id)
+    return axios.get('/api/recipe/'+id+'/')
       .then(res => dispatch(getRecipe_(res.data)))
   }
 }

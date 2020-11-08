@@ -24,4 +24,4 @@ class Reply extends Component {
     }
 }
 
-export default Comment;
+export default Reply;

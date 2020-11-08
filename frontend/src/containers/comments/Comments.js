@@ -11,11 +11,18 @@ class Comments extends Component {
     state={
         content:''
     }
+
     componentDidMount() {
-        this.props.getComments(this.props.recipeId);
+        this.props.getComments(this.props.recipeId)
+            .then(res => {
+                let list = res.comments.map(item => item.id)
+                this.props.getReplySet(list)
+            })
     }
+
     render() {
-        const commentlist = this.props.comments.map( (item) => <Comment content={item.content} author={item.author_id} id={item.id}
+        
+        const commentlist = this.props.comments.map( (item) => <Comment replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} id={item.id}
             onEditComment={(content) => this.props.onEditComment({id: item.id, content, edited: true})} onDeleteComment={() => this.props.onDeleteComment(item.id)}/>)
         return (
             <div className='comments'>
@@ -29,7 +36,8 @@ class Comments extends Component {
 
 const mapStateToProps = state => {
     return {
-        comments: state.comment.comments
+        comments: state.comment.comments,
+        replies: state.reply.replies
     }
 }
 
@@ -39,6 +47,7 @@ const mapDispatchToProps = dispatch => {
         onEditComment: (comment) => dispatch(actionCreators.editComment(comment)),
         onDeleteComment: (commentId) => dispatch(actionCreators.deleteComment(commentId)),
         addComment: (comment) => dispatch(actionCreators.addComment(comment)),
+        getReplySet: (comment_id_list) => dispatch(actionCreators.getReplySet(comment_id_list))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Comments);

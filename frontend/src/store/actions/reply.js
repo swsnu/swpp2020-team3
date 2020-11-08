@@ -18,6 +18,21 @@ export const getReplies = (commentId) => {
   };
 };
 
+export const getReplySet = (comment_id_list) => {
+  let replies=[];
+  return dispatch => {
+    for(let id of comment_id_list){
+      axios.get('/api/comment/'+id+'/reply/')
+        .then(res => {
+          replies=[...replies, ...res.data]
+          if(id==comment_id_list[comment_id_list.length-1]){
+            dispatch(getReplies_(replies))
+          }
+        })
+    }
+  }
+}
+
 const addReply_ = (reply) => {
   return { type: actionTypes.ADD_REPLY, reply: reply}
 }
@@ -34,8 +49,11 @@ const editReply_ = (reply) => {
 
 export const editReply = (reply) => {
   return dispatch => {
-    return axios.put('/api/reply/'+reply.id, reply)
-      .then(res => dispatch(editReply_(reply)))
+    return axios.put('/api/reply/'+reply.id+'/', reply)
+      .then(res => {
+        console.log(res)
+        dispatch(editReply_(res.data))
+      })
   }
 }
 
@@ -45,7 +63,7 @@ const deleteReply_ = (id) => {
 
 export const deleteReply = (id) => {
   return dispatch => {
-    return axios.delete('/api/reply/'+id)
+    return axios.delete('/api/reply/'+id+'/')
       .then(res => dispatch(deleteReply_(id)))
   }
 }

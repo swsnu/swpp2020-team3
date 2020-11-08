@@ -10,18 +10,13 @@ class Replies extends Component {
         content: '',
         replies: null,
     }
+
     constructor(props) {
-        super(props)
-        this.props.getReplies(this.props.commentId)
-            .then(res => {
-                console.log(res.replies)
-                if(this.state.replies!=null) this.setState({...this.state, replies: res.replies})
-            })
+        super(props);
     }
 
     render() {
-        console.log(this.state)
-        const replylist = this.state.replies && this.state.replies.map( (item) => <Reply content={item.content} author={item.author_id} 
+        const replylist = this.props.replies.map( (item) => <Reply content={item.content} author={item.author_id} 
             onEditReply={(content) => this.props.onEditReply({id: item.id, content, edited: true})} onDeleteReply={() => this.props.onDeleteReply(item.id)}/>)
         return (
             <div className='replies'>
@@ -35,8 +30,8 @@ class Replies extends Component {
 
 const mapStateToProps = state => {
     return {
-        replies: state.reply.replies
-    }
+
+        }
 }
 
 const mapDispatchToProps = dispatch => {

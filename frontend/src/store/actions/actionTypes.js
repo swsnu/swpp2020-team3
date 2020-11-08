@@ -11,5 +11,5 @@ export const DELETE_COMMENT = 'DELETE_COMMENT';
 
 export const GET_REPLIES = 'GET_REPLIES';
 export const ADD_REPLY = 'ADD_REPLY';
-export const EDIT_REPLY = 'EDIT_COMMENT';
+export const EDIT_REPLY = 'EDIT_REPLY';
 export const DELETE_REPLY = 'DELETE_REPLY';
