@@ -18,7 +18,7 @@ export const getRecipes = (pageID, searchMode) => {
       .then(res => dispatch(getRecipes_(res.data)));
   };
 };
-
+*/
 const getRecipe_ = (recipe) => {
   return {type: actionTypes.GET_RECIPE, recipe: recipe};
 }
@@ -29,11 +29,11 @@ export const getRecipe = (id) => {
       .then(res => dispatch(getRecipe_(res.data)))
   }
 }
-    return axios.get('api/recipepage/'+pageID+'/'+searchMode+'/')
-      .then(res => dispatch(getRecipes_(res.data)));
-  };
-};
-*/
+//     return axios.get('api/recipepage/'+pageID+'/'+searchMode+'/')
+//       .then(res => dispatch(getRecipes_(res.data)));
+//   };
+// };
+
 
 export const getRecipes = (searchSettings) => {
   return dispatch => {
