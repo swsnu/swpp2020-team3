@@ -29,13 +29,13 @@ class Createpage extends Component{
        ingredient: '',
        duration: '',
        tagList: [],
-       price: 3000,
        ////////
        descriptionList: [],
        imageList: [],
        imagePreviewList: [],
        selectedIngredientList: [],
-       quantity: ''
+       quantity: '',
+       priceList: ''
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -96,7 +96,7 @@ class Createpage extends Component{
         let recipe = {
             title: state.title,
             duration: state.duration,
-            price: state.price,
+            totalPrice: state.totalPrice,
             descriptionList: state.descriptionList,
             imageList: state.imageList,
             tagList: state.tagList,
@@ -124,20 +124,29 @@ class Createpage extends Component{
     }
     deleteSelectedIngredientHandler(index){
         let newList = this.state.selectedIngredientList;
+        let entry = newList[index]
+        //console.log(entry.amount*entry.price)
+        //let price = this.state.totalPrice
+        //this.setState({totalPrice: price-(entry.amount*entry.price)})
         newList.splice(index, 1)
-        console.log(newList)
+
         this.setState({selectedIngredientList: newList})
     }
-    addIngredientQuantity(event, id){
+    addIngredientQuantity(event, id, itemPrice){
         let list = this.state.selectedIngredientList
+        let amount = event.target.value
         if(list[id]['amount']!=undefined){
-            list[id]['amount'] = parseInt(event.target.value)
+            list[id]['amount'] = parseInt(amount)
         }
         else{
-            list[id]['amount'] = parseInt(event.target.value)
+            list[id]['amount'] = parseInt(amount)
         }
         this.setState({selectedIngredientList: list})
+        // update priceList
+        //let priceList = this.state.priceList;
+        //let price = list[id]['price']
 
+        //priceList['event']
     }
     render(){
         let displayStepList;
@@ -162,14 +171,25 @@ class Createpage extends Component{
                 {item.price}
                 <input idx={index} type='number' placeholder='양' 
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
-                <button onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > 삭제 </button>
+                {item.amount * item.price}
+                <button onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
         console.log(this.state)
 
 
-
-
+        let totalPrice = 0;
+        let list = this.state.selectedIngredientList
+        let priceList = []
+        if(list.length > 0){
+            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
+            //console.log(priceList)
+            for(let i = 0; i < priceList.length; i++){
+                totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
+            }
+            console.log(totalPrice)
+        }
+        
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -240,7 +260,7 @@ class Createpage extends Component{
                         <div className = 'create_fourth'>
                             <p>총 예상 가격 :   </p>
                             <h3>계산된 가격</h3>
-                            <p>{this.state.price} 원</p>
+                            <p>{totalPrice} 원</p>
                         </div>
                         <div className = 'create_fifth'>
                             <button id='submit' onClick={() => this.submitHandler()}>Submit</button>                        </div>
