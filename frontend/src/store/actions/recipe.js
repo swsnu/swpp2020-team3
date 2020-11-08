@@ -38,7 +38,6 @@ export const createRecipe = (recipe) => {
 }
 
 const getIngredients_ = (result) => {
-  console.log(result)
   return {type: actionTypes.GET_INGREDIENTS, ingredients: result}
 }
 export const getIngredients = () => {

@@ -13,7 +13,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CREATE_RECIPE:
       return {...state};
     case actionTypes.GET_INGREDIENTS:
-      console.log(action.ingredients)
       return {...state, ingredientList: action.ingredients}
     default:
       break;

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import Select from 'react-select'
 // Local imports
 import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
@@ -15,6 +16,11 @@ import Ingredient from '../../components/Ingredient/Ingredient';
 // (?)TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
 // TODO: make ingredient component that displays icon, price and so on.
 // TODO: delete step doesn't display the correct value
+// TODO: normalized price display (must bring from backend)
+// TODO: input quantity, calculate price 
+// TODO: bring images
+// TODO: in search bar, everything is selected
+
 class Createpage extends Component{
    
    state = {
@@ -28,7 +34,8 @@ class Createpage extends Component{
        descriptionList: [],
        imageList: [],
        imagePreviewList: [],
-       selectedIngrList: [],
+       selectedIngredientList: [],
+       quantity: ''
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -112,16 +119,26 @@ class Createpage extends Component{
         }
     }
 
-    addSelectedIgdHandler(event){
-        let param = event.target.value
-        if (!this.state.selectedIngrList.includes(event.target.value)){
-            this.setState({selectedIngrList: this.state.selectedIngrList.concat(param)})
+    addSelectedIngredientHandler(event){
+        this.setState({selectedIngredientList: this.state.selectedIngredientList.concat(event)})
+    }
+    deleteSelectedIngredientHandler(index){
+        let newList = this.state.selectedIngredientList;
+        newList.splice(index, 1)
+        console.log(newList)
+        this.setState({selectedIngredientList: newList})
+    }
+    addIngredientQuantity(event, id){
+        let list = this.state.selectedIngredientList
+        if(list[id]['amount']!=undefined){
+            list[id]['amount'] = parseInt(event.target.value)
         }
         else{
-            this.setState({selectedIngrList: this.state.selectedIngrList.filter((igd)=>{if(igd!=param) return igd})})
+            list[id]['amount'] = parseInt(event.target.value)
         }
-    }
+        this.setState({selectedIngredientList: list})
 
+    }
     render(){
         let displayStepList;
         displayStepList = this.state.descriptionList.map((item, index) => (
@@ -130,16 +147,29 @@ class Createpage extends Component{
                 <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
                             value_text={this.state.descriptionList[index]}/>
                 <img src={this.state.imagePreviewList[index]}/>
-                <button onClick={(index) => this.deleteStepHandler(index)} index={index}>Delete step</button>
+                <button onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
             </div>
         ))
+
+
+//value={this.state.selectedIngredientList[index]['amount']} 
+
         let selectedIngredientList;
-        selectedIngredientList = this.state.selectedIngrList.map((item) => (
-            <div id='ingredient'>
-                {item}
+        selectedIngredientList = this.state.selectedIngredientList.map((item, index) => (
+            <div id='ingredient' key={index}>
+                {item.brand}
+                {item.name}
+                {item.price}
+                <input idx={index} type='number' placeholder='양' 
+                    onChange={(event) => this.addIngredientQuantity(event, index)}/>
+                <button onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > 삭제 </button>
             </div>
         ))
-        console.log(this.props.igrdList)
+        console.log(this.state)
+
+
+
+
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -155,6 +185,17 @@ class Createpage extends Component{
                             <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
                             onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
+
+
+
+                            <p>재료 추가</p>
+                            <Select options={this.props.ingredientList} getOptionLabel={option => `[${option.brand}] ${option.name} 
+                            (${option.price}원 - normalized price)`}
+                            onChange={(event) => this.addSelectedIngredientHandler(event)}
+                            isSearchable={true} placeholder={'재료를 입력하시오.'} autoFocus={true}/>
+                            {selectedIngredientList}
+
+{/*#########}
                             <p>재료 추가</p>
                             <select name="Ingredients" id="ingredients" 
                                 value={this.state.value} onChange={(event) => this.addSelectedIgdHandler(event)}>
@@ -166,6 +207,10 @@ class Createpage extends Component{
                             {selectedIngredientList}
                             <Ingredient/>
                             <br/>
+{/*#########*/}
+
+
+
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
                                 value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
@@ -211,7 +256,7 @@ class Createpage extends Component{
 
 const mapStateToProps = state => {
     return {
-       igrdList: state.rcp.ingredientList
+       ingredientList: state.rcp.ingredientList
     };
 }
   
