@@ -1,9 +1,30 @@
 import React, {Component} from 'react';
 import DisplayRecipe from '../../components/Recipe/DisplayRecipe'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import './Mainpage.css';
+import * as actionCreators from '../../store/actions/index'
+import Recipe from '../../components/Recipe/Recipe';
 class Mainpage extends Component{
 
     state = {
+        search: {category1: false,
+            category2: false,
+            category3: false,
+            category4: false,
+            category5: false,
+            category6: false,
+    
+            minCost : 0,
+            maxCost : 20000,
+            minTime : 0,
+            maxTime : 20,
+            searchWord : "",
+    
+            pageStart : 0,
+            searchMode : "most-liked",
+            searchOptionsClicked : false},
         dailyrandomList: [
             {image: require('../../Image/item.png'), title: 'item1'}, 
             {image: require('../../Image/item.png'), title: 'item2'}, 
@@ -26,12 +47,32 @@ class Mainpage extends Component{
         ],
     }
 
+    componentDidMount() {
+        this.props.onGetRecipes(this.state.search);
+    }
+
     toCreateHandler() {
         this.props.history.push('/create')
         window.location.reload()
     }
 
     render(){
+        const recipes = this.props.storedRecipes.map((recipe) => {
+            return (
+                <Recipe
+                    author={recipe.author}
+                    abstraction={recipe.summary}
+                    title={recipe.title}
+                    rating={recipe.rating}
+                    time={recipe.time}
+                    cost={recipe.price}
+                    likes={recipe.likes}
+                    clickedRecipe={() => this.clickRecipeHandler(recipe.id)}
+                    clickedLikes={null}
+                />
+            );
+        });
+
         const dailyrandomList = this.state.dailyrandomList.map( (td) => {
             return (
                 <li className = 'random_content'>
@@ -53,6 +94,7 @@ class Mainpage extends Component{
                 </li>
             )   
         })
+
         return(
             <div className = 'MainpageBackground'>
                 <div className = 'Mainpage'>
@@ -78,10 +120,27 @@ class Mainpage extends Component{
                         {thirdlist}
                         </ul>
                     </div>
+                    <div> {recipes}</div>
                 </div>
             </div>
         )        
     }
 };
 
-export default Mainpage;
+const mapStateToProps = state => {
+    return {
+        storedRecipes: state.rcp.recipes,
+        getuser: state.rcp.getuser,
+    };
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        onGetRecipes: (searchSettings) =>
+            dispatch(actionCreators.getRecipes(searchSettings)),
+        onGetUser: (td) =>
+            dispatch(actionCreators.getUser(td)),
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Mainpage));
