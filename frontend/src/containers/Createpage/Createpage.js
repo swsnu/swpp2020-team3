@@ -9,17 +9,6 @@ import * as actionCreators from '../../store/actions/index'
 import CreateStep from './CreateStep';
 import Ingredient from '../../components/Ingredient/Ingredient';
 
-// TODO: must retreive ingredients
-// TODO: must resize image before previewing
-// TODO: Now it renders with descriptionList. Instead make a single array where each element contains imageList,
-//       descriptionList and imagePreviewList
-// (?)TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
-// TODO: make ingredient component that displays icon, price and so on.
-// TODO: delete step doesn't display the correct value
-// TODO: normalized price display (must bring from backend)
-// TODO: input quantity, calculate price 
-// TODO: bring images
-// TODO: in search bar, everything is selected
 
 class Createpage extends Component{
    
@@ -105,6 +94,7 @@ class Createpage extends Component{
             summary: state.summary,
         }
         this.props.onCreate(recipe)
+        this.props.history.push('/main-page/')
     }
     
     onClickChangeColor(event, param){
@@ -124,9 +114,6 @@ class Createpage extends Component{
     deleteSelectedIngredientHandler(index){
         let newList = this.state.selectedIngredientList;
         let entry = newList[index]
-        //console.log(entry.amount*entry.price)
-        //let price = this.state.totalPrice
-        //this.setState({totalPrice: price-(entry.amount*entry.price)})
         newList.splice(index, 1)
 
         this.setState({selectedIngredientList: newList})
@@ -141,11 +128,6 @@ class Createpage extends Component{
             list[id]['amount'] = parseInt(amount)
         }
         this.setState({selectedIngredientList: list})
-        // update priceList
-        //let priceList = this.state.priceList;
-        //let price = list[id]['price']
-
-        //priceList['event']
     }
     render(){
         let displayStepList;
@@ -154,7 +136,7 @@ class Createpage extends Component{
                 {console.log(this.state.descriptionList[index])}
                 <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
                             value_text={this.state.descriptionList[index]}/>
-                <img src={this.state.imagePreviewList[index]}/>
+                <img src={this.state.imagePreviewList[index]} width='250' height='200'/>
                 <button onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
             </div>
         ))
@@ -170,7 +152,7 @@ class Createpage extends Component{
                 {item.price}
                 <input idx={index} type='number' placeholder='양' 
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
-                {item.amount * item.price}
+                {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
                 <button onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
@@ -259,7 +241,7 @@ class Createpage extends Component{
                         <div className = 'create_fourth'>
                             <p>총 예상 가격 :   </p>
                             <h3>계산된 가격</h3>
-                            <p>{totalPrice} 원</p>
+                            <p>{isNaN(totalPrice) ? 0 : totalPrice} 원</p>
                         </div>
                         <div className = 'create_fifth'>
                             <button id='submit' onClick={() => this.submitHandler()}>Submit</button>                        </div>
