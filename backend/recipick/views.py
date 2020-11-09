@@ -11,9 +11,6 @@ import base64
 from django.core.files.base import ContentFile
 from random import *
 import random
-import psycopg2
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
-
 
 def getuser(request, id):
     if(request.method) == 'GET':

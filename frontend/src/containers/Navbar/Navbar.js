@@ -33,7 +33,12 @@ class Navbar extends Component{
     }
 
     searchConfirmHandler = () => {
-        this.props.history.push(`/search?minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&keyword=${this.state.keyword}`);
+        this.maxPriceClickHandler();
+        this.minPriceClickHandler();
+        this.keywordClickHandler();
+        this.props.history.push(`/search?category1=true&category2=true&category3=true&category4=true&category5=true&category6=true
+        &minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&minDuration=0&maxDuration=0&keyword=${this.state.keyword}
+        &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`);
         window.location.reload();
     }
 

@@ -20,10 +20,10 @@ class RecipeList extends Component{
         category5: true,
         category6: true,
 
-        minCost : 0,
-        maxCost : Number.MAX_SAFE_INTEGER,
-        minTime : 0,
-        maxTime : Number.MAX_SAFE_INTEGER,
+        minPrice : 0,
+        maxPrice : Number.MAX_SAFE_INTEGER,
+        minDuration : 0,
+        maxDuration : Number.MAX_SAFE_INTEGER,
         searchWord : "",
 
         pageStart : 0,
@@ -37,10 +37,11 @@ class RecipeList extends Component{
         const {search} = this.props.location;
         if(search){
             const query = queryString.parse(search);
-            const {minPrice,maxPrice, keyword} = query;
-            this.setState({minCost: minPrice}); // parse to int
-            this.setState({maxCost: maxPrice});
+            const {minPrice, maxPrice, keyword} = query;
+            this.setState({minPrice: minPrice});
+            this.setState({maxPrice: maxPrice});
             this.setState({searchWord: keyword});
+            this.setState({searchOptionsClicked : false});
         }
         this.props.onGetRecipes(this.state);
     }
@@ -61,24 +62,19 @@ class RecipeList extends Component{
     }
 
     clickCategoryHandler = (event,id) => {
-        if(id == 1){
-            this.setState({category1 : !this.state.category1});
-        }
-        else if(id == 2){
-            this.setState({category2 : !this.state.category2});
-        }
-        else if(id == 3){
-            this.setState({category3 : !this.state.category3});
-        }
-        else if(id == 4){
-            this.setState({category4 : !this.state.category4});
-        }
-        else if(id == 5){
-            this.setState({category5 : !this.state.category5});
-        }
-        else{
-            this.setState({category6 : !this.state.category6});
-        }
+        if(id == 1) this.setState({category1 : !this.state.category1});
+        else if(id == 2) this.setState({category2 : !this.state.category2});
+        else if(id == 3) this.setState({category3 : !this.state.category3});
+        else if(id == 4) this.setState({category4 : !this.state.category4});
+        else if(id == 5) this.setState({category5 : !this.state.category5});
+        else this.setState({category6 : !this.state.category6});
+    }
+
+    checkInputHandler = () =>{
+        if(this.state.maxPrice === '') this.setState({maxPrice: Number.MAX_SAFE_INTEGER});
+        if(this.state.minPrice === '') this.setState({minPrice: 0});
+        if(this.state.maxDuration === '') this.setState({maxDuration: Number.MAX_SAFE_INTEGER});
+        if(this.state.minDuration === '') this.setState({minDuration: 0});
     }
 
     clickOptionsHandler = () => {
@@ -90,7 +86,12 @@ class RecipeList extends Component{
     }
 
     clickSearchHandler = () => {
-        this.props.history.push(`/search?minPrice=${this.state.minCost}&maxPrice=${this.state.maxCost}&keyword=${this.state.searchWord}`);
+        this.checkInputHandler();
+        this.props.history.push(`category1=${this.state.category1}&category2=${this.state.category2}&category3=${this.state.category3}
+            &category4=${this.state.category4}&category5=${this.state.category5}&category6=${this.state.category6}
+            &minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&minDuration=${this.state.minDuration}
+            &maxDuration=${this.state.minDuration}&keyword=${this.state.searchWord}&pageStart=${this.state.pageStart}
+            &pageNumber=${this.state.pageNumber}&searchMode=${this.state.searchMode}&searchOptionsClicked=false`);
         this.props.onGetRecipes(this.state);
     }
 
@@ -99,7 +100,7 @@ class RecipeList extends Component{
         this.setState({pageNumber: this.state.pageStart-4});
     }
 
-    clickPageNumberHandler = (event,id) => {
+    clickPageNumberHandler = (id) => {
         this.setState({pageNumber: this.state.pageStart+id});
     }
 
@@ -153,22 +154,22 @@ class RecipeList extends Component{
                         </div>
                     <div className = "constraints">
                         <div className = "cost">
-                            <p>Cost(won)</p>
-                            <input className = "min-cost-input" value = {this.state.minCost} 
-                                   onChange={(event) => this.setState({minCost: event.target.value})}></input>
-                            <input className = "max-cost-input" value = {this.state.maxCost} 
-                                   onChange={(event) => this.setState({maxCost: event.target.value})}></input>
+                            <p>Price(won)</p>
+                            <input className = "min-cost-input" placeholder = "하한" value = {this.state.minPrice} 
+                                   onChange={(event) => this.setState({minPrice: event.target.value})}></input>
+                            <input className = "max-cost-input" placeholder = "상한" value = {this.state.maxPrice} 
+                                   onChange={(event) => this.setState({maxPrice: event.target.value})}></input>
                         </div>
                         <div className = "time">
-                            <p>Time(min)</p>
-                            <input className = "min-time-input" value = {this.state.minTime} 
-                                   onChange={(event) => this.setState({minTime: event.target.value})}></input>
-                            <input className = "max-time-input" value = {this.state.maxTime} 
-                                   onChange={(event) => this.setState({maxTime: event.target.value})}></input>
+                            <p>Duration(min)</p>
+                            <input className = "min-time-input" placeholder = "하한" value = {this.state.minDuration} 
+                                   onChange={(event) => this.setState({minDuration: event.target.value})}></input>
+                            <input className = "max-time-input" placeholder = "상한" value = {this.state.maxDuration} 
+                                   onChange={(event) => this.setState({maxDuration: event.target.value})}></input>
                         </div>
                         <div className = "keywords">
                             <p>Keywords</p>
-                            <input className = "search-word-input" value = {this.state.searchWord} 
+                            <input className = "search-word-input" placeholder = "키워드" value = {this.state.searchWord} 
                                    onChange={(event) => this.setState({searchWord: event.target.value})}></input>
                         </div>
                     </div>
@@ -204,19 +205,19 @@ class RecipeList extends Component{
                                 disabled ={this.state.pageStart == 0} onClick={() => this.clickPagePreviousHandler()}>left</button>}
                         {this.props.storedRecipes.length >= 1 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==1 ? "grey" : null}}
-                                onClick={(event) => this.clickPageNumberHandler(event,1)}>{this.state.pageStart+1}</button>}
+                                onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
                         {this.props.storedRecipes.length >= 11 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==2 ? "grey" : null}}
-                                onClick={(event) => this.clickPageNumberHandler(event,2)}>{this.state.pageStart+2}</button>}
+                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+2}</button>}
                         {this.props.storedRecipes.length >= 21 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==3 ? "grey" : null}}
-                                onClick={(event) => this.clickPageNumberHandler(event,3)}>{this.state.pageStart+3}</button>}
+                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+3}</button>}
                         {this.props.storedRecipes.length >= 31 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==4 ? "grey" : null}}
-                                onClick={(event) => this.clickPageNumberHandler(event,4)}>{this.state.pageStart+4}</button>}
+                                onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
                         {this.props.storedRecipes.length >= 41 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==0 ? "grey" : null}}
-                                onClick={(event) => this.clickPageNumberHandler(event,5)}>{this.state.pageStart+5}</button>}
+                                onClick={() => this.clickPageNumberHandler(5)}>{this.state.pageStart+5}</button>}
                         {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
                                 disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
                     </div>
