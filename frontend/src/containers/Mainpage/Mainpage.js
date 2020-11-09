@@ -47,8 +47,7 @@ class Mainpage extends Component{
     }
 
     componentDidMount() {
-        this.props.onGetRecipe(1);
-        this.props.onGetUser(1)
+        this.props.onGetRandom()
     }
 
     toCreateHandler() {
@@ -133,14 +132,14 @@ class Mainpage extends Component{
 
 const mapStateToProps = state => {
     return {
-        storedRecipes: state.rcp.selectedRecipe,
+        storedRecipes: state.rcp.randomRecipe,
     };
 }
   
 const mapDispatchToProps = dispatch => {
     return {
-        onGetRecipe: (id) =>
-            dispatch(actionCreators.getRecipe(id)),
+        onGetRandom: () =>
+            dispatch(actionCreators.getRandom()),
         onGetUser: (td) =>
             dispatch(actionCreators.getUser(td)),
     }

@@ -3,6 +3,7 @@ from recipick import views
 
 # TODO: change url of ingredient_post and ingredient_list
 urlpatterns = [
+    path('random/', views.randomrecipe, name='randomrecipe'),
     path('recipe/<int:id>/comment/', views.recipe_comment, name='recipe_comment'),
     path('comment/<int:id>/reply/', views.comment_reply, name='comment_reply'),
     path('recipe/<int:id>/', views.recipe, name='recipe'),

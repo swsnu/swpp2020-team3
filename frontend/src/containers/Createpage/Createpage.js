@@ -155,7 +155,7 @@ class Createpage extends Component{
                 <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
                             value_text={this.state.descriptionList[index]}/>
                 <img src={this.state.imagePreviewList[index]}/>
-                <button onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
+                <button id = 'deletestep' onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
             </div>
         ))
 
@@ -206,7 +206,7 @@ class Createpage extends Component{
                             <br/>
 
 
-
+                            <div id='igd_add'></div>
                             <p>재료 추가</p>
                             <Select options={this.props.ingredientList} getOptionLabel={option => `[${option.brand}] ${option.name} 
                             (${option.price}원 - normalized price)`}
@@ -239,7 +239,7 @@ class Createpage extends Component{
                         <br/>
                         <div className = 'create_second'>
                             <p>조리 방법</p>
-                            {displayStepList}
+                            <div id = 'step'>{displayStepList}</div>
                             <br/>
                             <button id='addStep' onClick={() => this.addStepHandler()}>Click to add a step</button>
                             <br/>

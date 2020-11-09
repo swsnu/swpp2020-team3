@@ -1,6 +1,6 @@
 div .SignupBackground {
     height: 100%;
-    background-color: #f2eded;
+    background-color: #fafafa;
 }
 
 div .Signup {
@@ -16,14 +16,15 @@ div .Signup p {
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    background-color: gray;
+    background-color: #fcc051;
     border: none;
-    color: white;
+    color: black;
     width: 290px;
     height: 50px;
     text-decoration: none;
     font-size: 16px;
     margin-right: 15px;
+    font-weight: bold;
 }
 
 div .Signup label {
@@ -44,12 +45,13 @@ div .Signup input {
 }
 
 div .Signup  button {
-    background-color: gray;
+    background-color: #fcc051;
     border: none;
-    color: white;
+    color: black;
     padding: 15px 125px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    font-weight: bold;
 }
