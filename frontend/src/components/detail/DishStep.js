@@ -6,7 +6,7 @@ class DishStep extends Component {
         return (
             <div className='dish_step'>
                 <br/>
-                <img src={this.props.img}/>
+                <img src={this.props.img} width='100'/>
                 <div className='dish_explanation'>
                     {this.props.explanation}
                 </div>

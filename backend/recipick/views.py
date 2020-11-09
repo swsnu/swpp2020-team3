@@ -204,8 +204,9 @@ def recipe_post(request):
     else:
         return HttpResponseNotAllowed(['POST'])
 
-def recipe(request, id):
-    if request.method == 'GET':
+def randomrecipe(request):
+     if request.method == 'GET':
+        print('check')
         cnt = Recipe.objects.all().count()
         if cnt <= 4:
             recipes = [recipes for recipes in Recipe.objects.all()]
@@ -233,6 +234,45 @@ def recipe(request, id):
                 newrecipe = {'id': recipe.id, 'title': recipe.title, 'photo_list': new_list}
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
+
+def recipe(request, id):
+    if request.method == 'GET':
+        recipe = Recipe.objects.get(id = id)
+        p_list = recipe.photo_list
+        new_list = []
+        for photo in p_list.all():
+            encoded_string = base64.b64encode(photo.img.read())
+            new_list.append(encoded_string.decode('utf-8'))
+        igd = recipe.ingredient_list
+        newigdlist = []
+        for item in igd.all():
+            newitem = {
+                'name':item.name,
+                'quantity': item.quantity,
+                'price': item.price,
+                'price_normalized': item.price_normalized,
+                'igd_type': item.igd_type,
+                'brand': item.brand,
+            }
+            newigdphoto = base64.b64encode(item.picture.read())
+            newitem['picture'] = newigdphoto.decode('utf-8')
+            newigdlist.append(newitem)
+        newrecipe = {
+            'title': recipe.title,
+            'price': recipe.price,
+            'duration': recipe.duration,
+            'photo_list': new_list,
+            'description_list': recipe.description_list,
+            'tag_list': recipe.tag_list,
+            'ingredient_list': newigdlist,
+            'category': recipe.category,
+            'rating': recipe.rating,
+            'likes': recipe.likes,
+            'created_date': recipe.created_date,
+            'edited': recipe.edited,
+            'summary': recipe.summary,
+        }
+        return JsonResponse(newrecipe, safe=False)
     elif request.method == 'DELETE':
         try:
             recipe = Recipe.objects.get(id = id)

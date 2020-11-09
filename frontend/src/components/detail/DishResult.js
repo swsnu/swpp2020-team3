@@ -3,17 +3,19 @@ import React, {Component} from 'react';
 
 class DishResult extends Component {
     render() {
+        console.log(this.props.ingredients)
+        const showigd = this.props.ingredients
         return (
             <div className='dish_result'>
                 <div>
                     {this.props.title}
                 </div>
-                <img src={this.props.img}/>
+                {this.props.img}
                 <div>
                     {this.props.abstraction}
                 </div>
                 <div>
-                    {this.props.ingredients}
+                    {showigd}
                 </div>
             </div>
         )

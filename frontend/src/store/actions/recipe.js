@@ -5,6 +5,15 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+const getRandom_ = (recipe) => {
+  return {type: actionTypes.GET_RANDOM, randomRecipe: recipe}
+};
+export const getRandom = () => {
+  return dispatch => {
+    return axios.get('api/random/')
+      .then(res => dispatch(getRandom_(res.data)))
+  }
+}
 
 const getRecipes_ = (recipes) => {
   console.log(recipes)
@@ -20,7 +29,7 @@ export const getRecipes = (pageID, searchMode) => {
 };
 */
 const getRecipe_ = (recipe) => {
-  return {type: actionTypes.GET_RECIPE, recipe: recipe};
+  return {type: actionTypes.GET_RECIPE, selectedRecipe: recipe};
 }
 
 export const getRecipe = (id) => {

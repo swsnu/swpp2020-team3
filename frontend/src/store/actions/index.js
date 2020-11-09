@@ -3,6 +3,7 @@ export {
     getRecipe,
     createRecipe,
     getIngredients,
+    getRandom,
 } from './recipe';
 
 export {

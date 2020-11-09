@@ -235,6 +235,7 @@ class Createpage extends Component{
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
+
                             {selectedIngredientList}
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
