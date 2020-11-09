@@ -25,8 +25,8 @@ state={
     render(){
         return(
             <div className="step">
-                {console.log(this.props.value_text)}
-                <input type="file" accept='.jpg, .png, .jpeg' value={this.state.value}
+                {console.log(this.props.value_text)} 
+                <input type="file" accept='.jpg, .png, .jpeg' value={this.state.value} 
                     onChange={(event) => this.imageHandler(event)}/>
                 <br/>
                 <textarea type="text" onChange={(event) => this.inputHandler(event)}/>

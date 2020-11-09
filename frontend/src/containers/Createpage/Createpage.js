@@ -24,8 +24,10 @@ class Createpage extends Component{
        imagePreviewList: [],
        ingredientList: null,
        selectedIngredientList: [],
-       quantity: '',
-       priceList: ''
+       //quantity: '',
+       priceList: '',
+       thumbnail: '',
+       thumbnailURL: ''
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -51,6 +53,7 @@ class Createpage extends Component{
             let newImgList = this.state.imageList;
             let newPreviewList = this.state.imagePreviewList;
             newImgList[index] = file;
+            console.log(file)
             newPreviewList[index] = reader.result
             this.setState({
                 imageList: newImgList,
@@ -59,6 +62,15 @@ class Createpage extends Component{
         }
         reader.readAsDataURL(file)
         console.log(this.state)
+    }
+    thumbnailHandler(file){
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            this.setState({thumbnailURL: reader.result})
+            console.log(file)
+            this.setState({thumbnail: file})
+        }
+        reader.readAsDataURL(file)
     }
 
     addStepHandler(){
@@ -83,19 +95,32 @@ class Createpage extends Component{
     submitHandler(){
         //this.props.history.push('/main-page');
         let state = this.state;
+        let priceList = []
+        let totalPrice = 0;
+        let list = this.state.selectedIngredientList
+        if(list.length > 0){
+            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
+            for(let i = 0; i < priceList.length; i++){
+                totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
+            }
+        }
+        var today = new Date(),
+        date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         let recipe = {
             title: state.title,
             duration: state.duration,
-            totalPrice: state.totalPrice,
+            totalPrice: totalPrice,
             descriptionList: state.descriptionList,
-            imageList: state.imageList,
+            //imageList: state.imageList,
             tagList: state.tagList,
             prevList: state.imagePreviewList,
-            ////
             summary: state.summary,
+            ingredientList: state.selectedIngredientList,
+            thumbnail: state.thumbnailURL,
+            date: date
         }
         this.props.onCreate(recipe)
-        this.props.history.push('/main-page/')
+        //this.props.history.push('main-page/')
     }
     
     onClickChangeColor(event, param){
@@ -172,7 +197,6 @@ class Createpage extends Component{
         let priceList = []
         if(list.length > 0){
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
-            //console.log(priceList)
             for(let i = 0; i < priceList.length; i++){
                 totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
             }
@@ -194,8 +218,14 @@ class Createpage extends Component{
                             <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
                             onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
-                            <p>재료 추가</p>
+
+                            <p> 썸네일 사진 추가 </p>
+                            <input type="file" accept='.jpg, .png, .jpeg'
+                                onChange={(event) => this.thumbnailHandler(event.target.files[0])}/>
+                            <img src={this.state.thumbnailURL} width='250' height='200' />
+                            <br/>
                             
+                            <p>재료 추가</p>
                             {this.state.ingredientList == null
                             ? <Select options={this.props.ingredientList} 
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
@@ -205,7 +235,6 @@ class Createpage extends Component{
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
-                            
                             {selectedIngredientList}
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 

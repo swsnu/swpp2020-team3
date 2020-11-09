@@ -48,7 +48,7 @@ const createRecipe_ = (recipe) => {
 };
 export const createRecipe = (recipe) => {
   return dispatch => {
-    return axios.post('api/recipe/', recipe)
+    return axios.post('/api/recipe/', recipe)
       .then(res => dispatch(createRecipe_(res.data)))
   }
 }
