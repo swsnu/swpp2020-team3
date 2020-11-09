@@ -27,10 +27,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('img', models.ImageField(upload_to='')),
-<<<<<<< HEAD
-=======
                 ('description_index', models.IntegerField(default=0)),
->>>>>>> master
             ],
         ),
         migrations.CreateModel(
@@ -43,11 +40,7 @@ class Migration(migrations.Migration):
                 ('price_normalized', models.IntegerField(null=True)),
                 ('igd_type', models.CharField(max_length=5)),
                 ('brand', models.CharField(max_length=64)),
-<<<<<<< HEAD
                 ('picture', models.ImageField(null=True, upload_to=''),),
-=======
-                ('picture', models.ImageField(null=True, upload_to='')),
->>>>>>> master
             ],
         ),
         migrations.CreateModel(
@@ -79,7 +72,6 @@ class Migration(migrations.Migration):
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
                 ('ingredient_list', models.ManyToManyField(to='recipick.Ingredient')),
                 ('photo_list', models.ManyToManyField(to='recipick.ImageModel')),
-                ('category', models.TextField(null=True)),
             ],
         ),
         migrations.AddField(

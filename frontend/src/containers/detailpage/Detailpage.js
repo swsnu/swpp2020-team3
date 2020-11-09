@@ -30,7 +30,7 @@ class Detailpage extends Component {
                 <div className='dish_method'>
                     {methods}
                     <button>Edit</button>
-                    <button>Delete</button>
+                    <button onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
                 </div>
                 <Comments recipeId={this.props.match.params.id}/>
             </div>
@@ -47,6 +47,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
+        deleteRecipe: (id) => dispatch(actionCreators.deleteRecipe(id))
     };
 }
 

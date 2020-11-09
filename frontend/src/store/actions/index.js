@@ -1,6 +1,7 @@
 export {
     getRecipes,
     getRecipe,
+    deleteRecipe,
     createRecipe,
     getIngredients,
 } from './recipe';
