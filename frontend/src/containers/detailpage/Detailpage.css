@@ -1,4 +1,32 @@
+#detailBackground {
+    background-color: #fafafa;
+}
+
+.Detailpage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#detailBlock {
+    padding-top:50px;
+    padding-bottom:50px;
+}
+
 .dish_method {
-    background-color: cyan;
-    text-align: center;
+    width: 120vh;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    text-align: left;
+    background: white;
+    border-radius: 20px;
+    margin-bottom:20px;
+}
+
+#detailmethod {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
