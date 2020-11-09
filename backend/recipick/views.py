@@ -157,7 +157,6 @@ def image(request):
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
         user = request.user
-        print(user)
         if not user.is_authenticated: # not authenticated --> 401
             return HttpResponse(status=401)
         try: # bad request (decode error) --> 400
