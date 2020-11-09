@@ -33,7 +33,7 @@ class Navbar extends Component{
     }
 
     searchConfirmHandler = () => {
-        this.props.history.push('/search')
+        this.props.history.push(`/search?minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&keyword=${this.state.keyword}`);
         window.location.reload();
     }
 
