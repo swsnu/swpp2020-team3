@@ -4,6 +4,7 @@ export {
     deleteRecipe,
     createRecipe,
     getIngredients,
+    getRandom,
 } from './recipe';
 
 export {

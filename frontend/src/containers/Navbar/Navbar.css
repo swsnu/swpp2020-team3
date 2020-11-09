@@ -65,10 +65,10 @@
     color: black;
     font-weight: bold;
     text-align: center;
-    padding: 16px;
+    padding: 13px;
     text-decoration: none;
   }
   
   li a:hover {
-    background-color: #111111;
+    background-color: #d6961e;
   }

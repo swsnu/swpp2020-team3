@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 // Local imports
 import './Createpage.css'
+import './CreateStep.css'
 import * as actionCreators from '../../store/actions/index'
 
 // TODO: must retreive ingredients

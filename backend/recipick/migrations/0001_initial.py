@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('price_normalized', models.IntegerField(null=True)),
                 ('igd_type', models.CharField(max_length=5)),
                 ('brand', models.CharField(max_length=64)),
-                ('picture', models.ImageField(null=True, upload_to=''),),
+                ('picture', models.ImageField(null=True, upload_to='')),
             ],
         ),
         migrations.CreateModel(

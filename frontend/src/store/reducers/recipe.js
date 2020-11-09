@@ -4,6 +4,7 @@ const initialState = {
   recipes: [],
   selectedRecipe: null,
   ingredientList: [],
+  randomRecipe: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -21,6 +22,8 @@ const reducer = (state = initialState, action) => {
       return {...state};
     case actionTypes.GET_INGREDIENTS:
       return {...state, ingredientList: action.ingredients}
+    case actionTypes.GET_RANDOM:
+      return {...state, randomRecipe: action.randomRecipe}
     default:
       break;
   }

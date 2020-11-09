@@ -31,6 +31,7 @@ div .Createpage label{
     width: 117.5vh;
     text-decoration: none;
     font-size: 16px;
+    font-weight: bold;
 }
 
 div .create_first {
@@ -86,6 +87,18 @@ div .Createpage h1, p{
   font-size: 16px;
   padding:5px 10px;
   margin-left: 20px;
+}
+
+#deletestep {
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 7px;
+}
+
+#deletestep:hover {
+    background-color: #d6961e
 }
 
 #recipe-title-input {
@@ -162,13 +175,35 @@ div .Createpage h3{
 }
 
 #submit {
-    background:#f5f5f5;
-    border:2px solid #e1e1e1;
-    padding: 5px 12px;
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 7px 15px;
     text-align: center;
     text-decoration: none;
+    margin: 10px;
 }
 
 #submit:hover {
-    background-color: gray;
-  }
+    background-color: #d6961e;
+}
+
+#recipe-summary-input {
+    background:#f5f5f5; 
+    border:2px solid #e1e1e1; 
+    border-radius: 5px;
+    font-size:16px; 
+    padding-left:15px; 
+    height:30px; 
+    width: 600px;
+    vertical-align:middle; 
+    margin-top:-1px;
+}
+
+#step {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

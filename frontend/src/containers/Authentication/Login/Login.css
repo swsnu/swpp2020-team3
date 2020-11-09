@@ -4,7 +4,7 @@ html, body, #root, #root >div {
 
 div .LoginBackground {
     height: 100%;
-    background-color: #f2eded;
+    background-color: #fafafa;
 }
 
 div .Login {
@@ -21,13 +21,14 @@ div .Login label {
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    background-color: gray;
+    background-color: #fcc051;
     border: none;
-    color: white;
+    color: black;
     width: 310px;
     height: 50px;
     text-decoration: none;
     font-size: 16px;
+    font-weight: bold;
 }
 
 div .Login input {
@@ -39,12 +40,13 @@ div .Login input {
 }
 
 div .Login  button {
-    background-color: gray;
+    background-color: #fcc051;
     border: none;
-    color: white;
+    color: black;
     padding: 15px 131px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    font-weight: bold;
 }

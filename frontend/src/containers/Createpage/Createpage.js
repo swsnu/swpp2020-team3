@@ -204,32 +204,12 @@ class Createpage extends Component{
                             <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
                             onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
-
-
-
                             <p>재료 추가</p>
                             <Select options={this.props.ingredientList} getOptionLabel={option => `[${option.brand}] ${option.name} 
                             (${option.price}원 - normalized price)`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} autoFocus={true}/>
                             {selectedIngredientList}
-
-{/*#########}
-                            <p>재료 추가</p>
-                            <select name="Ingredients" id="ingredients" 
-                                value={this.state.value} onChange={(event) => this.addSelectedIgdHandler(event)}>
-                                <option id='ingredient' value="ramyun">라면</option>
-                                <option id='ingredient' value="sausage">소시지</option>
-                                <option id='ingredient' value="kimbap">삼각김밥</option>
-                                <option id='ingredient' value="juice">쥬시클</option>
-                            </select>
-                            {selectedIngredientList}
-                            <Ingredient/>
-                            <br/>
-{/*#########*/}
-
-
-
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
                                 value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
