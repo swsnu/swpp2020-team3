@@ -14,6 +14,7 @@ class Ingredient(models.Model):
 
 class ImageModel(models.Model):
     img = models.ImageField()
+    description_index =  models.IntegerField(default=0)
 
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
@@ -24,7 +25,7 @@ class Recipe(models.Model):
     )
     price = models.IntegerField()
     duration= models.IntegerField(default='0')
-    # thumbnail = models.ImageField(null=True)
+    thumbnail = models.ImageField(upload_to='blog/%Y/%m/%d', null=True, default='media/already.png')
     duration= models.IntegerField()
     # This should be foreign key for the one to many field. However, when we use foreign key, we can't implement list. How to handle this?
     photo_list = models.ManyToManyField(
