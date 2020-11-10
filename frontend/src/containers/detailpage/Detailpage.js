@@ -7,6 +7,7 @@ import * as actionCreators from '../../store/actions/index';
 import DishResult from '../../components/detail/DishResult';
 import DishStep from '../../components/detail/DishStep';
 import Comments from '../comments/Comments';
+import './Detailpage.css'
 //import './Detailpage.css';
 
 class Detailpage extends Component {
@@ -16,29 +17,31 @@ class Detailpage extends Component {
         this.props.getRecipe(this.props.match.params.id);
     }
     render() {
-
         const title = this.props.recipe && this.props.recipe.title;
         const abstraction = this.props.recipe && this.props.recipe.summary;
         const descriptions = this.props.recipe && this.props.recipe.description_list.descriptions;
+        const rating  = this.props.recipe && this.props.recipe.rating
+        const likes = this.props.recipe && this.props.recipe.likes
+        const price = this.props.recipe && this.props.recipe.price
+        const category = this.props.recipe && this.props.recipe.category
+        const tags = this.props.recipe && this.props.recipe.tag_list.tags
         let igd;
         if(this.props.recipe){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
                 let img = 'data:image/png;base64,'+igd.picture
                 return (
-                    <div>
-                        <p>재료</p>
-                        {igd.name}
-                        {igd.brand}
-                        {igd.quantity}
-                        {igd.igd_type}
-                        {igd.price}
-                        {<img src={img} width='100'/>}
+                    <div id='detailigd'>
+                        <div id = 'detailigdinfo'>
+                            <div id='igdlabel'>{igd.name}</div>
+                            <div id='igdlabel'>{'('+igd.brand+')'}</div>
+                            <div id='igdlabel'>{igd.quantity+igd.igd_type}</div>
+                            <div id='igdlabel'>{igd.price+'원'}</div>
+                        </div>
+                        {<img id = 'detailimg' src={img} width='100'/>}
                     </div>
                 )
             })
         }
-        console.log(this.props.recipe)
-        console.log(typeof(descriptions))
         let d = null;
         if(this.props.recipe){
             d = 'data:image/png;base64,'+ this.props.recipe.photo_list[0]
@@ -47,14 +50,21 @@ class Detailpage extends Component {
         const methods = methodData && methodData.map((item) => <DishStep img={item.img} explanation={item.explanation}/>)
 
         return (
-            <div className="Detailpage">
-                <DishResult img={<img src = {d} width='100'/>} title={title} abstraction={abstraction} ingredients={igd}/>
-                <div className='dish_method'>
-                    {methods}
-                    <button>Edit</button>
-                    <button>Delete</button>
+            <div id = 'detailBackground'>
+                <div className="Detailpage">
+                    <div id = "detailBlock">
+                        <DishResult img={<img src = {d} width='300'/>} tag={tags} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
+                        <div className='dish_method'>
+                            <div id = 'detailtitle3'>{'조리 순서'}</div>
+                            <div id = 'detailmethod'>
+                                {methods}
+                                <button>Edit</button>
+                                <button onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
+                            </div>
+                        </div>
+                        <Comments recipeId={this.props.match.params.id}/>
+                    </div>
                 </div>
-                <Comments recipeId={this.props.match.params.id}/>
             </div>
         )
     }
@@ -69,6 +79,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
+        deleteRecipe: (id) => dispatch(actionCreators.deleteRecipe(id))
     };
 }
 
