@@ -19,7 +19,7 @@ class Detailpage extends Component {
     render() {
         const title = this.props.recipe && this.props.recipe.title;
         const abstraction = this.props.recipe && this.props.recipe.summary;
-        const descriptions = this.props.recipe && this.props.recipe.description_list.descriptions;
+        const descriptions = this.props.recipe && this.props.recipe.description_list;
         const rating  = this.props.recipe && this.props.recipe.rating
         const likes = this.props.recipe && this.props.recipe.likes
         const price = this.props.recipe && this.props.recipe.price
