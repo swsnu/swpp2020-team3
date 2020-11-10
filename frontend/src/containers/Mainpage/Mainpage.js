@@ -59,9 +59,11 @@ class Mainpage extends Component{
 
     render(){
         let test;
-        console.log(this.props.storedRecipes!=null)
-        if(this.props.storedRecipes){
+        console.log(this.props.storedRecipes)
+        if(this.props.storedRecipes && this.props.storedRecipes[0]){
             let c = this.props.storedRecipes[0]
+            console.log(this.props.storedRecipes)
+            console.log(c)
             if(this.props.storedRecipes[0].photo_list){
                 let d = c.photo_list[0]
                 let t = 'data:image/png;base64,'+ d
