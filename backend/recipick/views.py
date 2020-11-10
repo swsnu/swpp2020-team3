@@ -163,7 +163,6 @@ def image(request):
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
         user = request.user
-        print(user)
         if not user.is_authenticated: # not authenticated --> 401
             return HttpResponse(status=401)
         try: # bad request (decode error) --> 400
@@ -190,10 +189,19 @@ def recipe_post(request):
         recipe.save()
         
         # ingredients
+        ingList = Ingredient.objects
+        print(ingList.count())
+
         for ing in ingredient_list:
+            target = list(ingList.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type']).values())
+            print(target)
+            # print(type(target.values()))
             temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
                 igd_type=ing['igd_type'], brand=ing['brand'])
-            recipe.ingredient_list.add(temp)
+            # print(type(temp))
+            value = target[0]['id']
+            #print(value)
+            recipe.ingredient_list.add(value)
         recipe.save()
 
         # photo_list
