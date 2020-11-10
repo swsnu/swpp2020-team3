@@ -117,8 +117,14 @@ def recipe_page(request):
             categories.append('5')
         if request.GET.get('category6') == 'true':
             categories.append('6')
-        print(categories)
-        recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
+
+
+        listOfRecipes = Recipe.objects
+        recipelist = listOfRecipes.filter(price__gte = minCost)
+        #, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
+        
+
+
         if searchMode == 'uploaded-date':
             recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'likes':
@@ -134,11 +140,11 @@ def recipe_page(request):
             #recipepage = recipelist.annotate(rank=SearchRank(vector,query)).order_by('-rank').filter(rank__gt = 0)[10*pageStart:(10*pageStart+51)]
         newrecipepage = []
         for recipe in recipepage:
+
             tn = recipe.thumbnail
             decoded_string = base64.b64encode(tn.read()).decode('utf-8')
             newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': recipe.author.username, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': decoded_string}
             newrecipepage.append(newrecipe)
-        
         return JsonResponse(newrecipepage, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['GET'])

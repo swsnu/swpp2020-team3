@@ -111,9 +111,8 @@ class RecipeList extends Component{
     }
 
 
-
     render(){
-
+        console.log(this.props.storedRecipes)
         let slicedRecipes;
         if(this.state.pageNumber%5 === 0)
             slicedRecipes = this.props.storedRecipes.slice(10*(this.state.pageNumber%5-1), 10*5);
