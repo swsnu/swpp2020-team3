@@ -24,7 +24,7 @@ class Detailpage extends Component {
         const likes = this.props.recipe && this.props.recipe.likes
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
-        const tags = this.props.recipe && this.props.recipe.tag_list.tags
+        const tags = this.props.recipe && this.props.recipe.tag_list
         let igd;
         if(this.props.recipe){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
