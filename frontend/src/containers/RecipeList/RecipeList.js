@@ -148,9 +148,9 @@ class RecipeList extends Component{
                             <button className="category-select-button" style = {{backgroundColor: this.state.category4 ? "grey" : null}}
                                 onClick={(event) => this.clickCategoryHandler(event,4)}>일식</button>
                             <button className="category-select-button" style = {{backgroundColor: this.state.category5 ? "grey" : null}}
-                            onClick={(event) => this.clickCategoryHandler(event,5)}>인스턴트</button>
+                            onClick={(event) => this.clickCategoryHandler(event,5)}>편의점</button>
                             <button className="category-select-button" style = {{backgroundColor: this.state.category6 ? "grey" : null}}
-                            onClick={(event) => this.clickCategoryHandler(event,6)}>최저가</button>
+                            onClick={(event) => this.clickCategoryHandler(event,6)}>디저트</button>
                         </div>
                     <div className = "constraints">
                         <div className = "cost">
