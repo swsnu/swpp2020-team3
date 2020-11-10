@@ -118,7 +118,7 @@ class Createpage extends Component{
             date: date
         }
         this.props.onCreate(recipe)
-        this.props.history.push('main-page/')
+        this.props.history.push('/main-page/')
     }
     
     onClickChangeColor(event, param){
