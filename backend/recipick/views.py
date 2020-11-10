@@ -253,6 +253,7 @@ def recipe(request, id):
     if request.method == 'GET':
         recipe = Recipe.objects.get(id = id)
         p_list = recipe.photo_list
+        thumbnail = base64.b64encode(recipe.thumbnail.read()).decode('utf-8')
         new_list = []
         for photo in p_list.all():
             encoded_string = base64.b64encode(photo.img.read())
@@ -276,6 +277,7 @@ def recipe(request, id):
             'price': recipe.price,
             'duration': recipe.duration,
             'photo_list': new_list,
+            'thumbnail': thumbnail,
             'description_list': recipe.description_list,
             'tag_list': recipe.tag_list,
             'ingredient_list': newigdlist,
