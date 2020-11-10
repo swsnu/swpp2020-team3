@@ -114,16 +114,13 @@ def recipe_page(request):
         if request.GET.get('category4') == 'true':
             categories.append('Japanese')
         if request.GET.get('category5') == 'true':
-            categories.append('ConvienceStore')
+            categories.append('Mexican')
         if request.GET.get('category6') == 'true':
             categories.append('Dessert')
-
 
         listOfRecipes = Recipe.objects
         recipelist = listOfRecipes.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
         
-
-
         if searchMode == 'uploaded-date':
             recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'likes':
