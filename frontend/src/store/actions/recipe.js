@@ -52,12 +52,24 @@ export const getRecipes = (searchSettings) => {
   };
 };
 
+const deleteRecipe_ = (id) => {
+  return {type: actionTypes.DELETE_RECIPE, id: id}
+}
+
+export const deleteRecipe = (id) => {
+  return dispatch => {
+    return axios.delete('/api/recipe/'+id+'/')
+      .then(res => dispatch(deleteRecipe_(id)))
+      .then(() => dispatch(push('/main-page/')))
+  }
+}
+
 const createRecipe_ = (recipe) => {
   return {type: actionTypes.CREATE_RECIPE}
 };
 export const createRecipe = (recipe) => {
   return dispatch => {
-    return axios.post('api/recipe/', recipe)
+    return axios.post('/api/recipe/', recipe)
       .then(res => dispatch(createRecipe_(res.data)))
   }
 }
