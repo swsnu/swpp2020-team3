@@ -8,7 +8,6 @@ import queryString from 'query-string';
 import './RecipeList.css'
 //TODO:
 //      중간 이후에 할 일 : like/unlike recipe User model, authentication?
-//      query string doesn't work...
 class RecipeList extends Component{
 
     state = {
@@ -39,6 +38,15 @@ class RecipeList extends Component{
         let query = this.state;
         if(search){
             query = queryString.parse(search);
+            query.category1 = query.category1 == 'true' ? true : false;
+            query.category2 = query.category2 == 'true' ? true : false;
+            query.category3 = query.category3 == 'true' ? true : false;
+            query.category4 = query.category4 == 'true' ? true : false;
+            query.category5 = query.category5 == 'true' ? true : false;
+            query.category6 = query.category6 == 'true' ? true : false;
+            query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
+
+            query = queryString.parse(search);
             this.setState(query);
         }
         // changed state doen't applied...
@@ -53,6 +61,13 @@ class RecipeList extends Component{
                 let query = this.state;
                 if(search){
                     query = queryString.parse(search);
+                    query.category1 = query.category1 == 'true' ? true : false;
+                    query.category2 = query.category2 == 'true' ? true : false;
+                    query.category3 = query.category3 == 'true' ? true : false;
+                    query.category4 = query.category4 == 'true' ? true : false;
+                    query.category5 = query.category5 == 'true' ? true : false;
+                    query.category6 = query.category6 == 'true' ? true : false;
+                    query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
                     this.setState(query);
                 }
                 this.props.onGetRecipes(query);
