@@ -34,7 +34,6 @@ class RecipeList extends Component{
 
     
     componentDidMount() {
-        
         const {search} = this.props.location;
         let query = this.state;
         if(search){
@@ -92,7 +91,11 @@ class RecipeList extends Component{
 
     clickSearchHandler = () => {
         this.checkInputHandler();
-        this.props.history.push(`/search?category1=${this.state.category1}&category2=${this.state.category2}&category3=${this.state.category3}&category4=${this.state.category4}&category5=${this.state.category5}&category6=${this.state.category6}&minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&minDuration=${this.state.minDuration}&maxDuration=${this.state.minDuration}&searchWord=${this.state.searchWord}&pageStart=${this.state.pageStart}&pageNumber=${this.state.pageNumber}&searchMode=${this.state.searchMode}&searchOptionsClicked=false`);
+        this.props.history.push(`/search?category1=${this.state.category1}&category2=${this.state.category2}
+        &category3=${this.state.category3}&category4=${this.state.category4}&category5=${this.state.category5}
+        &category6=${this.state.category6}&minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}
+        &minDuration=${this.state.minDuration}&maxDuration=${this.state.minDuration}&searchWord=${this.state.searchWord}
+        &pageStart=${this.state.pageStart}&pageNumber=${this.state.pageNumber}&searchMode=${this.state.searchMode}&searchOptionsClicked=false`);
         this.props.onGetRecipes(this.state);
     }
 

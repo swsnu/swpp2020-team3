@@ -24,9 +24,31 @@ class Navbar extends Component{
             <div className = 'NavBar'>
                 <ul className = 'NavBar'>
                     <logo> <NavLink to='/main-page' exact><img className='Logo' src={require('../../Image/LOGO.png')}/></NavLink> </logo>
-                    <li> <NavLink to='/main-page' exact>중식</NavLink> </li>
-                    <li> <NavLink to='/main-page' exact>한식</NavLink> </li>
-                    <li> <NavLink to='/main-page' exact>양식</NavLink> </li>
+
+                    <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=false&category3=true&category4=false&category5=false&category6=false
+                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
+                                &maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}
+                                &minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}
+                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
+                                window.location.reload()
+                                }}> 중식 </a>
+                    </li>
+                    <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=true&category3=false&category4=false&category5=false&category6=false
+                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
+                                &maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}
+                                &minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}
+                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
+                                window.location.reload()
+                                }}> 한식 </a>
+                    </li>
+                    <li> <a onClick={() => {this.props.history.push(`/search?category1=true&category2=false&category3=false&category4=false&category5=false&category6=false
+                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
+                                &maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}
+                                &minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}
+                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
+                                window.location.reload()
+                                }}> 양식 </a>
+                    </li>
                     <li><NavLink to='/main-page' exact>??게시판??</NavLink></li>
                     <li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
                     <li id = 'lisign'><NavLink to='/signup' exact>Sign Up</NavLink></li>
