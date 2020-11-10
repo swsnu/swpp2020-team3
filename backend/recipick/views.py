@@ -106,17 +106,17 @@ def recipe_page(request):
         searchWord = request.GET.get('searchWord')
         categories = []
         if request.GET.get('category1') == 'true':
-            categories.append('1')
+            categories.append('Italian')
         if request.GET.get('category2') == 'true':
-            categories.append('2')
+            categories.append('Korean')
         if request.GET.get('category3') == 'true':
-            categories.append('3')
+            categories.append('Japanese')  
         if request.GET.get('category4') == 'true':
-            categories.append('4')
+            categories.append('Chinese')
         if request.GET.get('category5') == 'true':
-            categories.append('5')
+            categories.append('Mexican')
         if request.GET.get('category6') == 'true':
-            categories.append('6')
+            categories.append('Moroccan')
         print(categories)
         recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
         if searchMode == 'uploaded-date':
