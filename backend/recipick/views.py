@@ -106,19 +106,21 @@ def recipe_page(request):
         searchWord = request.GET.get('searchWord')
         categories = []
         if request.GET.get('category1') == 'true':
-            categories.append('Italian')
+            categories.append('American')
         if request.GET.get('category2') == 'true':
             categories.append('Korean')
         if request.GET.get('category3') == 'true':
-            categories.append('Japanese')  
-        if request.GET.get('category4') == 'true':
             categories.append('Chinese')
+        if request.GET.get('category4') == 'true':
+            categories.append('Japanese')
         if request.GET.get('category5') == 'true':
             categories.append('Mexican')
         if request.GET.get('category6') == 'true':
-            categories.append('Moroccan')
-        print(categories)
-        recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
+            categories.append('Dessert')
+
+        listOfRecipes = Recipe.objects
+        recipelist = listOfRecipes.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
+        
         if searchMode == 'uploaded-date':
             recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'likes':
@@ -134,11 +136,11 @@ def recipe_page(request):
             #recipepage = recipelist.annotate(rank=SearchRank(vector,query)).order_by('-rank').filter(rank__gt = 0)[10*pageStart:(10*pageStart+51)]
         newrecipepage = []
         for recipe in recipepage:
+
             tn = recipe.thumbnail
             decoded_string = base64.b64encode(tn.read()).decode('utf-8')
             newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': recipe.author.username, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': decoded_string}
             newrecipepage.append(newrecipe)
-        
         return JsonResponse(newrecipepage, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['GET'])
@@ -157,7 +159,6 @@ def image(request):
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
         user = request.user
-        print(user)
         if not user.is_authenticated: # not authenticated --> 401
             return HttpResponse(status=401)
         try: # bad request (decode error) --> 400
@@ -184,10 +185,19 @@ def recipe_post(request):
         recipe.save()
         
         # ingredients
+        ingList = Ingredient.objects
+        print(ingList.count())
+
         for ing in ingredient_list:
+            target = list(ingList.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type']).values())
+            print(target)
+            # print(type(target.values()))
             temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
                 igd_type=ing['igd_type'], brand=ing['brand'])
-            recipe.ingredient_list.add(temp)
+            # print(type(temp))
+            value = target[0]['id']
+            #print(value)
+            recipe.ingredient_list.add(value)
         recipe.save()
 
         # photo_list
@@ -212,12 +222,8 @@ def randomrecipe(request):
             recipes = [recipes for recipes in Recipe.objects.all()]
             newrecipes = []
             for recipe in recipes:
-                p_list = recipe.photo_list
-                new_list = []
-                for photo in p_list.all():
-                    encoded_string = base64.b64encode(photo.img.read())
-                    new_list.append(encoded_string.decode('utf-8'))
-                newrecipe = {'id': recipe.id, 'title': recipe.title, 'photo_list': new_list}
+                encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'thumbnail': encoded_thumbnail.decode('utf-8')}
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
         else :
@@ -226,12 +232,8 @@ def randomrecipe(request):
             newrecipes = []
             for n in s:
                 recipe = recipes[n]
-                p_list = recipe.photo_list
-                new_list = []
-                for photo in p_list.all():
-                    encoded_string = base64.b64encode(photo.img.read())
-                    new_list.append(encoded_string.decode('utf-8'))
-                newrecipe = {'id': recipe.id, 'title': recipe.title, 'photo_list': new_list}
+                encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'thumbnail': encoded_thumbnail.decode('utf-8')}
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
 
@@ -239,6 +241,7 @@ def recipe(request, id):
     if request.method == 'GET':
         recipe = Recipe.objects.get(id = id)
         p_list = recipe.photo_list
+        thumbnail = base64.b64encode(recipe.thumbnail.read()).decode('utf-8')
         new_list = []
         for photo in p_list.all():
             encoded_string = base64.b64encode(photo.img.read())
@@ -262,6 +265,7 @@ def recipe(request, id):
             'price': recipe.price,
             'duration': recipe.duration,
             'photo_list': new_list,
+            'thumbnail': thumbnail,
             'description_list': recipe.description_list,
             'tag_list': recipe.tag_list,
             'ingredient_list': newigdlist,

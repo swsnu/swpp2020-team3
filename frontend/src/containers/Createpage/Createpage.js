@@ -86,8 +86,6 @@ class Createpage extends Component{
         let newIList = this.state.imageList;
         newDList.splice(index, 1)
         newIList.splice(index, 1)
-        console.log(newDList)
-        console.log(newIList)
         this.setState({descriptionList: newDList})
         this.setState({imageList: newIList})
     }
@@ -120,7 +118,7 @@ class Createpage extends Component{
             date: date
         }
         this.props.onCreate(recipe)
-        //this.props.history.push('main-page/')
+        this.props.history.push('main-page/')
     }
     
     onClickChangeColor(event, param){
