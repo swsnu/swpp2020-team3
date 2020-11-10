@@ -52,6 +52,13 @@ class RecipeList extends Component{
                 let query = this.state;
                 if(search){
                     query = queryString.parse(search);
+                    query.category1 = query.category1 == 'true' ? true : false;
+                    query.category2 = query.category2 == 'true' ? true : false;
+                    query.category3 = query.category3 == 'true' ? true : false;
+                    query.category4 = query.category4 == 'true' ? true : false;
+                    query.category5 = query.category5 == 'true' ? true : false;
+                    query.category6 = query.category6 == 'true' ? true : false;
+                    query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
                     this.setState(query);
                 }
                 this.props.onGetRecipes(query);
@@ -115,7 +122,6 @@ class RecipeList extends Component{
 
 
     render(){
-        console.log(this.props.storedRecipes)
         let slicedRecipes;
         if(this.state.pageNumber%5 === 0)
             slicedRecipes = this.props.storedRecipes.slice(10*(this.state.pageNumber%5-1), 10*5);
