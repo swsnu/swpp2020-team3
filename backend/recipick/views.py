@@ -126,7 +126,7 @@ def recipe_page(request):
         elif searchMode == 'likes':
             recipepage = recipelist.order_by('-likes')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'cost':
-            recipepage = recipelist.order_by('cost')[10*pageStart:(10*pageStart+51)]
+            recipepage = recipelist.order_by('price')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'rating':
             recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)]
         else: # searchMode == 'relevance'

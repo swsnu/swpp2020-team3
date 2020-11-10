@@ -15,7 +15,7 @@ class Navbar extends Component{
     }
 
     searchConfirmHandler = () => {
-        this.props.history.push(`/search?category1=true&category2=true&category3=true&category4=true&category5=true&category6=true&minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}&maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}&minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}&pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`);
+        this.props.history.push(`/search?category1=true&category2=true&category3=true&category4=true&category5=true&category6=true&minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}&maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}&minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}&pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`);
         window.location.reload();
     }
 
@@ -27,29 +27,28 @@ class Navbar extends Component{
 
                     <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=false&category3=true&category4=false&category5=false&category6=false
                                 &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}
+                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
+                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
                                 &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
                                 window.location.reload()
                                 }}> 중식 </a>
                     </li>
                     <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=true&category3=false&category4=false&category5=false&category6=false
                                 &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}
+                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
+                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
                                 &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
                                 window.location.reload()
                                 }}> 한식 </a>
                     </li>
                     <li> <a onClick={() => {this.props.history.push(`/search?category1=true&category2=false&category3=false&category4=false&category5=false&category6=false
                                 &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}
+                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
+                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
                                 &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
                                 window.location.reload()
                                 }}> 양식 </a>
                     </li>
-                    <li><NavLink to='/main-page' exact>??게시판??</NavLink></li>
                     <li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
                     <li id = 'lisign'><NavLink to='/signup' exact>Sign Up</NavLink></li>
                     <li><NavLink to='/create' exact>Create</NavLink></li>

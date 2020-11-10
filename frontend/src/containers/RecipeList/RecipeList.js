@@ -20,9 +20,9 @@ class RecipeList extends Component{
         category6: true,
 
         minPrice : 0,
-        maxPrice : Number.MAX_SAFE_INTEGER,
+        maxPrice : 100000,
         minDuration : 0,
-        maxDuration : Number.MAX_SAFE_INTEGER,
+        maxDuration : 100,
         searchWord : "",
 
         pageStart : 0,
@@ -38,6 +38,14 @@ class RecipeList extends Component{
         let query = this.state;
         if(search){
             query = queryString.parse(search);
+            query.category1 = query.category1 == 'true' ? true : false;
+            query.category2 = query.category2 == 'true' ? true : false;
+            query.category3 = query.category3 == 'true' ? true : false;
+            query.category4 = query.category4 == 'true' ? true : false;
+            query.category5 = query.category5 == 'true' ? true : false;
+            query.category6 = query.category6 == 'true' ? true : false;
+            query.pageStart = Number(query.pageStart);
+            query.pageNumber = Number(query.pageNumber);
             this.setState(query);
         }
         // changed state doen't applied...
@@ -58,6 +66,8 @@ class RecipeList extends Component{
                     query.category4 = query.category4 == 'true' ? true : false;
                     query.category5 = query.category5 == 'true' ? true : false;
                     query.category6 = query.category6 == 'true' ? true : false;
+                    query.pageStart = Number(query.pageStart);
+                    query.pageNumber = Number(query.pageNumber);
                     query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
                     this.setState(query);
                 }
@@ -82,9 +92,9 @@ class RecipeList extends Component{
     }
 
     checkInputHandler = () =>{
-        if(this.state.maxPrice === '') this.setState({maxPrice: Number.MAX_SAFE_INTEGER});
+        if(this.state.maxPrice === '') this.setState({maxPrice: 100000});
         if(this.state.minPrice === '') this.setState({minPrice: 0});
-        if(this.state.maxDuration === '') this.setState({maxDuration: Number.MAX_SAFE_INTEGER});
+        if(this.state.maxDuration === '') this.setState({maxDuration: 100});
         if(this.state.minDuration === '') this.setState({minDuration: 0});
     }
 
@@ -144,72 +154,76 @@ class RecipeList extends Component{
         return(
             <div className = "RecipeList">
                 <div className = "category-search">
-                    <div className = "categories">
-                        <div className = "row">
-                            <button className="category-select-button" style = {{backgroundColor: this.state.category1 ? "grey" : null}}
-                                onClick={(event) => this.clickCategoryHandler(event,1)}>양식</button>
-                            <button className="category-select-button" style = {{backgroundColor: this.state.category2 ? "grey" : null}}
-                                onClick={(event) => this.clickCategoryHandler(event,2)}>한식</button>
-                            <button className="category-select-button" style = {{backgroundColor: this.state.category3 ? "grey" : null}}
-                                onClick={(event) => this.clickCategoryHandler(event,3)}>중식</button>
-                        </div>
-                        <div className = "row">
-                            <button className="category-select-button" style = {{backgroundColor: this.state.category4 ? "grey" : null}}
-                                onClick={(event) => this.clickCategoryHandler(event,4)}>일식</button>
-                            <button className="category-select-button" style = {{backgroundColor: this.state.category5 ? "grey" : null}}
-                            onClick={(event) => this.clickCategoryHandler(event,5)}>편의점</button>
-                            <button className="category-select-button" style = {{backgroundColor: this.state.category6 ? "grey" : null}}
-                            onClick={(event) => this.clickCategoryHandler(event,6)}>디저트</button>
-                        </div>
-                    <div className = "constraints">
-                        <div className = "cost">
-                            <p>Price(won)</p>
-                            <input className = "min-cost-input" placeholder = "하한" value = {this.state.minPrice} 
-                                   onChange={(event) => this.setState({minPrice: event.target.value})}></input>
-                            <input className = "max-cost-input" placeholder = "상한" value = {this.state.maxPrice} 
-                                   onChange={(event) => this.setState({maxPrice: event.target.value})}></input>
-                        </div>
-                        <div className = "time">
-                            <p>Duration(min)</p>
-                            <input className = "min-time-input" placeholder = "하한" value = {this.state.minDuration} 
-                                   onChange={(event) => this.setState({minDuration: event.target.value})}></input>
-                            <input className = "max-time-input" placeholder = "상한" value = {this.state.maxDuration} 
-                                   onChange={(event) => this.setState({maxDuration: event.target.value})}></input>
-                        </div>
-                        <div className = "keywords">
-                            <p>Keywords</p>
-                            <input className = "search-word-input" placeholder = "키워드" value = {this.state.searchWord} 
-                                   onChange={(event) => this.setState({searchWord: event.target.value})}></input>
-                        </div>
-                    </div>
-                    <div className = "search-options" id = "list-option">
-                        <div id = "option_label"> 분류 </div>
-                            <div className = "options">
-                                <button className ="search-options-button" onClick={() => this.clickOptionsHandler()}>sorted by</button>
-                                {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                        onClick={() => this.clickSearchModeHandler("relevance")}>relevance</button>}
-                                {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                        onClick={() => this.clickSearchModeHandler("likes")}>likes</button>}
-                                {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                        onClick={() => this.clickSearchModeHandler("uploaded date")}>most recent</button>}
-                                {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                        onClick={() => this.clickSearchModeHandler("rating")}>rating</button>}
-                                {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                        onClick={() => this.clickSearchModeHandler("cost")}>cost</button>}
+                    <div id ='categoryblock'>
+                        <div className = "categories">
+                            <label id='option_label'>카테고리</label>
+                            <div className = "row">
+                                <button className="category-select-button" style = {{backgroundColor: this.state.category1 ? "#fcc051" : null}}
+                                    onClick={(event) => this.clickCategoryHandler(event,1)}>양식</button>
+                                <button className="category-select-button" style = {{backgroundColor: this.state.category2 ? "#fcc051" : null}}
+                                    onClick={(event) => this.clickCategoryHandler(event,2)}>한식</button>
+                                <button className="category-select-button" style = {{backgroundColor: this.state.category3 ? "#fcc051" : null}}
+                                    onClick={(event) => this.clickCategoryHandler(event,3)}>중식</button>
                             </div>
-                            <div className = "search">
-                                <button className = "search-confirm-button" onClick={() => this.clickSearchHandler()}>search</button>
+                            <div className = "row">
+                                <button className="category-select-button" style = {{backgroundColor: this.state.category4 ? "#fcc051" : null}}
+                                    onClick={(event) => this.clickCategoryHandler(event,4)}>일식</button>
+                                <button className="category-select-button" style = {{backgroundColor: this.state.category5 ? "#fcc051" : null}}
+                                onClick={(event) => this.clickCategoryHandler(event,5)}>편의점</button>
+                                <button className="category-select-button" style = {{backgroundColor: this.state.category6 ? "#fcc051" : null}}
+                                onClick={(event) => this.clickCategoryHandler(event,6)}>디저트</button>
                             </div>
                         </div>
-                    </div>
-                    <div className = "recipes">
-                        {recipes}
-                    </div>
-                    <div className = "pages">
-                        <div className = "page">
-                            <p>Page</p>
+                        <div className = "constraints">
+                            <div className = "cost">
+                                <p id='option_label'>가격(원)</p>
+                                <input className = "min-cost-input" id='list-input' placeholder = "하한" value = {this.state.minPrice} 
+                                    onChange={(event) => this.setState({minPrice: event.target.value})}></input>
+                                <input className = "max-cost-input" id='list-input' placeholder = "상한" value = {this.state.maxPrice} 
+                                    onChange={(event) => this.setState({maxPrice: event.target.value})}></input>
+                            </div>
+                            <div className = "time">
+                                <p id='option_label'>시간(분)</p>
+                                <input className = "min-time-input" id='list-input' placeholder = "하한" value = {this.state.minDuration} 
+                                    onChange={(event) => this.setState({minDuration: event.target.value})}></input>
+                                <input className = "max-time-input" id='list-input' placeholder = "상한" value = {this.state.maxDuration} 
+                                    onChange={(event) => this.setState({maxDuration: event.target.value})}></input>
+                            </div>
+                            <div className = "keywords">
+                                <p id='option_label'>검색어</p>
+                                <input className = "search-word-input" id='list-input' placeholder = "키워드" value = {this.state.searchWord} 
+                                    onChange={(event) => this.setState({searchWord: event.target.value})}></input>
+                            </div>
                         </div>
-                        <div className = "row">
+                        <div className = "search-options" id = "list-option">
+                                <div className = "options">
+                                    <button className ="search-options-button" onClick={() => this.clickOptionsHandler()}>분류</button>
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("relevance")}>관련성</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("likes")}>좋아요순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("uploaded date")}>최신순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("rating")}>평점순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("cost")}>비용순</button>}
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div className = "search">
+                    <button className = "search-confirm-button" onClick={() => this.clickSearchHandler()}>검색</button>
+                </div>
+                <div className = "recipes">
+                        <div id ='slice'>{recipes && recipes.slice(0,5)}</div>
+                        <div id='slice'>{recipes && recipes.slice(5,14)}</div>
+                </div>
+                <div className = "pages">
+                    <div className = "page">
+                        <p>Page</p>
+                    </div>
+                    <div className = "row">
                         {this.props.storedRecipes.length >= 1 && <button className="list-page-previous-button"
                                 disabled ={this.state.pageStart == 0} onClick={() => this.clickPagePreviousHandler()}>left</button>}
                         {this.props.storedRecipes.length >= 1 && <button className="list-page-number-button"
@@ -229,7 +243,6 @@ class RecipeList extends Component{
                                 onClick={() => this.clickPageNumberHandler(5)}>{this.state.pageStart+5}</button>}
                         {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
                                 disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
-                    </div>
                     </div>
                 </div>
             </div>
