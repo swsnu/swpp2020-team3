@@ -97,10 +97,10 @@ def ingredient_list(request):
 
 def recipe_page(request):
     if request.method == 'GET':
-        minCost = int(request.GET.get('minCost'))
-        maxCost = int(request.GET.get('maxCost'))
-        minTime = int(request.GET.get('minTime'))
-        maxTime = int(request.GET.get('maxTime'))
+        minCost = int(request.GET.get('minPrice'))
+        maxCost = int(request.GET.get('maxPrice'))
+        minTime = int(request.GET.get('minDuration'))
+        maxTime = int(request.GET.get('maxDuration'))
         pageStart = int(request.GET.get('pageStart'))
         searchMode = request.GET.get('searchMode')
         searchWord = request.GET.get('searchWord')
@@ -128,9 +128,10 @@ def recipe_page(request):
         elif searchMode == 'rating':
             recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)]
         else: # searchMode == 'relevance'
-            vector = SearchVector('title')
-            query = SearchQuery(searchWord)
-            recipepage = recipelist.annotate(rank=SearchRank(vector,query)).order_by('-rank').filter(rank__gt = 0)[10*pageStart:(10*pageStart+51)]
+            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)]
+            #vector = SearchVector('title')
+            #query = SearchQuery(searchWord)
+            #recipepage = recipelist.annotate(rank=SearchRank(vector,query)).order_by('-rank').filter(rank__gt = 0)[10*pageStart:(10*pageStart+51)]
         newrecipepage = []
         for recipe in recipepage:
             tn = recipe.thumbnail

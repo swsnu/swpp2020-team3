@@ -7,9 +7,8 @@ import * as actionCreators from '../../store/actions/index';
 import queryString from 'query-string';
 import './RecipeList.css'
 //TODO:
-//      Recipe component 바꾸기 (image 넣기, 구조 등)
 //      중간 이후에 할 일 : like/unlike recipe User model, authentication?
-
+//      query string doesn't work...
 class RecipeList extends Component{
 
     state = {
@@ -31,26 +30,32 @@ class RecipeList extends Component{
         searchMode : "likes",
         searchOptionsClicked : false,
     }
+
+
     
     componentDidMount() {
         
         const {search} = this.props.location;
+        let query = this.state;
         if(search){
-            const query = queryString.parse(search);
-            const {minPrice, maxPrice, keyword} = query;
-            this.setState({minPrice: minPrice});
-            this.setState({maxPrice: maxPrice});
-            this.setState({searchWord: keyword});
-            this.setState({searchOptionsClicked : false});
+            query = queryString.parse(search);
+            this.setState(query);
         }
-        this.props.onGetRecipes(this.state);
+        // changed state doen't applied...
+        this.props.onGetRecipes(query);
     }
     
     componentDidUpdate(prevProps, prevState){
         
         if(prevState){
             if(this.state.pageStart !== prevState.pageStart){
-                this.props.onGetRecipes(this.state);
+                const {search} = this.props.location;
+                let query = this.state;
+                if(search){
+                    query = queryString.parse(search);
+                    this.setState(query);
+                }
+                this.props.onGetRecipes(query);
             }
         }
             
@@ -87,11 +92,7 @@ class RecipeList extends Component{
 
     clickSearchHandler = () => {
         this.checkInputHandler();
-        this.props.history.push(`category1=${this.state.category1}&category2=${this.state.category2}&category3=${this.state.category3}
-            &category4=${this.state.category4}&category5=${this.state.category5}&category6=${this.state.category6}
-            &minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&minDuration=${this.state.minDuration}
-            &maxDuration=${this.state.minDuration}&keyword=${this.state.searchWord}&pageStart=${this.state.pageStart}
-            &pageNumber=${this.state.pageNumber}&searchMode=${this.state.searchMode}&searchOptionsClicked=false`);
+        this.props.history.push(`/search?category1=${this.state.category1}&category2=${this.state.category2}&category3=${this.state.category3}&category4=${this.state.category4}&category5=${this.state.category5}&category6=${this.state.category6}&minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&minDuration=${this.state.minDuration}&maxDuration=${this.state.minDuration}&searchWord=${this.state.searchWord}&pageStart=${this.state.pageStart}&pageNumber=${this.state.pageNumber}&searchMode=${this.state.searchMode}&searchOptionsClicked=false`);
         this.props.onGetRecipes(this.state);
     }
 
