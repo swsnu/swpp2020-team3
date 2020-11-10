@@ -9,31 +9,13 @@ import Createpage from '../Createpage/Createpage';
 
 class Navbar extends Component{
     state = {
-        minPrice : '하한',
-        maxPrice : '상한',
-        keyword : '키워드',
-    }
-
-    maxPriceClickHandler = () => {
-        if(this.state.maxPrice == '상한'){
-            this.setState({maxPrice: ''})
-        }
-    }
-
-    minPriceClickHandler = () => {
-        if(this.state.minPrice == '하한'){
-            this.setState({minPrice: ''})
-        }
-    }
-
-    keywordClickHandler = () => {
-        if(this.state.keyword == '키워드'){
-            this.setState({keyword: ''})
-        }
+        minPrice : '',
+        maxPrice : '',
+        keyword : '',
     }
 
     searchConfirmHandler = () => {
-        this.props.history.push('/search')
+        this.props.history.push(`/search?category1=true&category2=true&category3=true&category4=true&category5=true&category6=true&minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}&maxPrice=${this.state.maxPrice == '' ? Number.MAX_SAFE_INTEGER : this.state.maxPrice}&minDuration=0&maxDuration=${Number.MAX_SAFE_INTEGER}&searchWord=${this.state.keyword}&pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`);
         window.location.reload();
     }
 
@@ -51,10 +33,10 @@ class Navbar extends Component{
                     <li><NavLink to='/create' exact>Create</NavLink></li>
                 </ul>
                 <div className='SearchBar'>
-                    <div className= 'searchbar'> <input type='text' placeholder = "하한" onChange={(event) =>  this.setState({minPrice: event.target.value})}/></div>
+                    <div className= 'searchbar'> <input type='text' placeholder = "하한" value = {this.state.minPrice}  onChange={(event) =>  this.setState({minPrice: event.target.value})}/></div>
                     <div className= 'searchbar'>~</div>  
-                    <div className= 'searchbar'><input type='text'  placeholder = "상한" onChange={(event) =>  this.setState({maxPrice: event.target.value})}/></div> 
-                    <div className= 'searchbar'><input type='text'  placeholder = "키워드" onChange={(event) =>  this.setState({keyword: event.target.value})}/></div> 
+                    <div className= 'searchbar'><input type='text'  placeholder = "상한" value = {this.state.maxPrice}  onChange={(event) =>  this.setState({maxPrice: event.target.value})}/></div> 
+                    <div className= 'searchbar'><input type='text'  placeholder = "키워드" value = {this.state.keyword}  onChange={(event) =>  this.setState({keyword: event.target.value})}/></div> 
                     <div className= 'searchbar'><img className = 'Search_Confirm' onClick={() => this.searchConfirmHandler()} src={require('../../Image/Search_Confirm.png')}/></div>
                 </div>
             </div>
