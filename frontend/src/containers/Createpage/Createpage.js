@@ -254,11 +254,11 @@ class Createpage extends Component{
                             <div className='buttons'>
                                 <p>카테고리 선택</p>
                                 <button id='type' className = "type_first" onClick={(event)=>this.onClickChangeColor(event, 'Italian')}>Italian</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'American')}>Korean</button>
                                 <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
                                 <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Moroccan')}>Moroccan</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Italian')}>Mexican</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>Moroccan</button>
                             </div>
                         </div>
                         <div className = 'create_fourth'>
