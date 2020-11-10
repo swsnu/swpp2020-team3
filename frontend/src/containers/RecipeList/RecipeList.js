@@ -87,7 +87,7 @@ class RecipeList extends Component{
     }
 
     clickRecipeHandler = id => {
-        this.props.history.push('/recipe/'+id);
+        this.props.history.push('/detail-page/'+id);
     }
 
     clickSearchHandler = () => {
