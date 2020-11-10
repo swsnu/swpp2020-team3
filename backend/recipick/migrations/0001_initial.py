@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('img', models.ImageField(upload_to='')),
-                ('description_index', models.IntegerField(default=0)),
+                ('description_index', models.IntegerField(default=0, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -63,7 +63,8 @@ class Migration(migrations.Migration):
                 ('description_list', models.JSONField(null=True)),
                 ('tag_list', models.JSONField(null=True)),
                 ('price', models.IntegerField()),
-                ('duration', models.IntegerField()),
+                ('duration', models.IntegerField(default=0)),
+                ('thumbnail', models.ImageField(default='media/already.png', null=True, upload_to='blog/%Y/%m/%d')),
                 ('rating', models.FloatField(null=True)),
                 ('likes', models.IntegerField(null=True)),
                 ('created_date', models.DateField(null=True)),
