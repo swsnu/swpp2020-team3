@@ -225,12 +225,8 @@ def randomrecipe(request):
             recipes = [recipes for recipes in Recipe.objects.all()]
             newrecipes = []
             for recipe in recipes:
-                p_list = recipe.photo_list
-                new_list = []
-                for photo in p_list.all():
-                    encoded_string = base64.b64encode(photo.img.read())
-                    new_list.append(encoded_string.decode('utf-8'))
-                newrecipe = {'id': recipe.id, 'title': recipe.title, 'photo_list': new_list}
+                encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'thumbnail': encoded_thumbnail.decode('utf-8')}
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
         else :
@@ -239,12 +235,8 @@ def randomrecipe(request):
             newrecipes = []
             for n in s:
                 recipe = recipes[n]
-                p_list = recipe.photo_list
-                new_list = []
-                for photo in p_list.all():
-                    encoded_string = base64.b64encode(photo.img.read())
-                    new_list.append(encoded_string.decode('utf-8'))
-                newrecipe = {'id': recipe.id, 'title': recipe.title, 'photo_list': new_list}
+                encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'thumbnail': encoded_thumbnail.decode('utf-8')}
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
 
