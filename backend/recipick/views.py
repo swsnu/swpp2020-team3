@@ -157,29 +157,40 @@ def image(request):
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
         user = request.user
+        print(user)
         if not user.is_authenticated: # not authenticated --> 401
             return HttpResponse(status=401)
         try: # bad request (decode error) --> 400
             body = json.loads(request.body.decode())
             title = body['title']
-            price = body['price']   # normally should convert to int
+            price = body['totalPrice']   # normally should convert to int
             duration = body['duration']  # normally should convert to float
+            thumbnail = body['thumbnail']
             d_list = body['descriptionList']
             t_list = body['tagList']
-            i_list = body['imageList']  
+            #i_list = body['imageList']  
+            ingredient_list = body['ingredientList']  
             p_list = body['prevList']   # right now works with prev. Maybe there is a better method?
-            ##@@## these will be implemented later ##@@##
-            #summary = body['summary']
-            #likes = int(body['likes'])
-            #edited = bool(body['edited'])
-            #d = body['date']
+            summary = body['summary']
+            date = body['date']
         except (KeyError, JSONDecodeError) as e:
             return HttpResponse(status = 400)
-
-        # date = datetime.datetime.strptime(d, "%Y-%m-%d").date()
-        recipe = Recipe(user=user, title=title, price=price, duration=duration, description_list=d_list, tag_list=t_list)
+        # thumbnail
+        format, imgstr = thumbnail.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        recipe = Recipe(author=user, title=title, price=price, duration=duration, thumbnail=data,
+        description_list=d_list, tag_list=t_list, created_date=date, summary=summary)
+        recipe.save()
+        
+        # ingredients
+        for ing in ingredient_list:
+            temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
+                igd_type=ing['igd_type'], brand=ing['brand'])
+            recipe.ingredient_list.add(temp)
         recipe.save()
 
+        # photo_list
         cnt = 0;
         for img_64 in p_list:
             format, imgstr = img_64.split(';base64,')
@@ -188,25 +199,7 @@ def recipe_post(request):
             new_img = ImageModel.objects.create(img=data, description_index=cnt)
             recipe.photo_list.add(new_img)
             cnt = cnt + 1
-        
         recipe.save()
-
-
-# I don't know if we can use request.FILES.getlist(). Study and ask 조교님.
-        # c = 0
-        # img_idx = body['img_idx_list']
-        # for f in request.FILES.getlist('file'):
-        #     i = ImageModel(img = f, desc_index = img_idx[c])
-        #     i.save()
-        #     recipe.photo_list.add(i)
-        #     c = c+1
-        # num=0
-        # for i in body['ingredients']:
-        #     igd = Ingredient(name = i['name'], quantity = i['quantity'], price = i['price'], price_normalized = int(i['price'])/int(i['quantity']),
-        #     igd_type = i['igd_type'], brand = i['brand'], picture=igd_file[num])
-        #     igd.save()
-        #     recipe.ingredient_list.add(igd)
-        #     num = num + 1
         return HttpResponse(status = 201)
     else:
         return HttpResponseNotAllowed(['POST'])
