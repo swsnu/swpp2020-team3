@@ -75,10 +75,10 @@ class Mainpage extends Component{
         if(this.props.storedRecipes){
             dailyrandomList = this.props.storedRecipes.map((td) => {
                 console.log(td)
-                let d = 'data:image/png;base64,'+ td.photo_list[0]
+                let d = 'data:image/png;base64,'+ td.thumbnail
                 return (
                     <li className = 'random_content' id = 'r1'>
-                        <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='100'/>} title = {'td.title'} />
+                        <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='100'/>} title = {td.title} />
                     </li>
                 )   
             })

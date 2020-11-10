@@ -6,6 +6,7 @@ class DishResult extends Component {
     render() {
         console.log(this.props.ingredients)
         const showigd = this.props.ingredients
+        const tag = this.props.tag && this.props.tag.map((tag) => <span>{tag} </span>)
         return (
             <div className='dish_result'>
                 <div id = 'detailbox1'>
@@ -27,7 +28,7 @@ class DishResult extends Component {
                                 {this.props.category}
                                 <br/>
                                 <p id='detaillabel'>{'태그'}</p>
-                                {this.props.tag}
+                                {tag}
                             </div>
                         </div>
                         <div id = 'detailthumbnail'>{this.props.img}</div>
