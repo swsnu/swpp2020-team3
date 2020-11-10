@@ -8,6 +8,7 @@ import queryString from 'query-string';
 import './RecipeList.css'
 //TODO:
 //      중간 이후에 할 일 : like/unlike recipe User model, authentication?
+//      
 class RecipeList extends Component{
 
     state = {
@@ -44,6 +45,8 @@ class RecipeList extends Component{
             query.category4 = query.category4 == 'true' ? true : false;
             query.category5 = query.category5 == 'true' ? true : false;
             query.category6 = query.category6 == 'true' ? true : false;
+            query.pageStart = Number(query,pageStart);
+            query.pageNumber = Number(query.pageNumber);
             query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
 
             query = queryString.parse(search);
@@ -67,6 +70,8 @@ class RecipeList extends Component{
                     query.category4 = query.category4 == 'true' ? true : false;
                     query.category5 = query.category5 == 'true' ? true : false;
                     query.category6 = query.category6 == 'true' ? true : false;
+                    query.pageStart = Number(query,pageStart);
+                    query.pageNumber = Number(query.pageNumber);
                     query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
                     this.setState(query);
                 }
