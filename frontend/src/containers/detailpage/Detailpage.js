@@ -37,14 +37,16 @@ class Detailpage extends Component {
                             <div id='igdlabel'>{igd.quantity+igd.igd_type}</div>
                             <div id='igdlabel'>{igd.price+'원'}</div>
                         </div>
-                        {<img id = 'detailimg' src={img} width='100'/>}
+                        {<img id = 'detailimg' src={img} width='200'/>}
                     </div>
                 )
             })
         }
         let d = null;
         if(this.props.recipe){
-            d = 'data:image/png;base64,'+ this.props.recipe.photo_list[0]
+            console.log(this.props.recipe.photo_list[0])
+            console.log(this.props.recipe)
+            d = 'data:image/png;base64,'+ this.props.recipe.thumbnail;
         }
         const methodData = descriptions && descriptions.map((item, index) => ({img:'data:image/png;base64,'+ this.props.recipe.photo_list[index], explanation:item}))
         const methods = methodData && methodData.map((item) => <DishStep img={item.img} explanation={item.explanation}/>)
@@ -53,7 +55,7 @@ class Detailpage extends Component {
             <div id = 'detailBackground'>
                 <div className="Detailpage">
                     <div id = "detailBlock">
-                        <DishResult img={<img src = {d} width='300'/>} tag={tags} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
+                        <DishResult img={<img src = {d} width='500'/>} tag={tags} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>
