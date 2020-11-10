@@ -97,38 +97,49 @@ def ingredient_list(request):
 
 def recipe_page(request):
     if request.method == 'GET':
-        minCost = int(request.GET.get('minCost'))
-        maxCost = int(request.GET.get('maxCost'))
-        minTime = int(request.GET.get('minTime'))
-        maxTime = int(request.GET.get('maxTime'))
+        minCost = int(request.GET.get('minPrice'))
+        maxCost = int(request.GET.get('maxPrice'))
+        minTime = int(request.GET.get('minDuration'))
+        maxTime = int(request.GET.get('maxDuration'))
         pageStart = int(request.GET.get('pageStart'))
         searchMode = request.GET.get('searchMode')
+        searchWord = request.GET.get('searchWord')
         categories = []
         if request.GET.get('category1') == 'true':
-            categories.append(1)
+            categories.append('1')
         if request.GET.get('category2') == 'true':
-            categories.append(2)
+            categories.append('2')
         if request.GET.get('category3') == 'true':
-            categories.append(3)
+            categories.append('3')
         if request.GET.get('category4') == 'true':
-            categories.append(4)
+            categories.append('4')
         if request.GET.get('category5') == 'true':
-            categories.append(5)
+            categories.append('5')
         if request.GET.get('category6') == 'true':
-            categories.append(6)
+            categories.append('6')
         print(categories)
         recipelist = Recipe.objects.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
         if searchMode == 'uploaded-date':
-            recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)].values()
+            recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'likes':
-            recipepage = recipelist.order_by('-likes')[10*pageStart:(10*pageStart+51)].values()
+            recipepage = recipelist.order_by('-likes')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'cost':
-            recipepage = recipelist.order_by('-cost')[10*pageStart:(10*pageStart+51)].values()
+            recipepage = recipelist.order_by('cost')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'rating':
-            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)].values()
+            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)]
         else: # searchMode == 'relevance'
-            recipepage = recipelist[10*pageStart:(10*pageStart+51)].values()
-        return JsonResponse([recipe for recipe in recipepage], safe=False, status=200)
+            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)]
+            #vector = SearchVector('title')
+            #query = SearchQuery(searchWord)
+            #recipepage = recipelist.annotate(rank=SearchRank(vector,query)).order_by('-rank').filter(rank__gt = 0)[10*pageStart:(10*pageStart+51)]
+        newrecipepage = []
+        for recipe in recipepage:
+            tn = recipe.thumbnail
+            decoded_string = base64.b64encode(tn.read()).decode('utf-8')
+            newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': recipe.author.username, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': decoded_string}
+            newrecipepage.append(newrecipe)
+        
+        return JsonResponse(newrecipepage, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['GET'])
     
@@ -142,17 +153,6 @@ def image(request):
         return HttpResponse(status = 200)
     else:
         return HttpResponseNotAllowed(['GET'])
-
-
-    #if request.method == 'GET':
-    #    recipelist=[]
-    #    if Recipe.objects.all().count() < 10*id:
-    #        recipelist = []
-    #    else:
-    #        recipelist = [recipe for recipe in Recipe.objects.all()[10*id:(10*id+51)].values()]
-    #    return JsonResponse(recipelist, safe=False, status=200)
-    #else:
-    #    return HttpResponseNotAllowed(['GET'])
 
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
