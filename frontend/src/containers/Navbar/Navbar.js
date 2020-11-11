@@ -49,8 +49,8 @@ class Navbar extends Component{
                                 window.location.reload()
                                 }}> 양식 </a>
                     </li>
-                    <li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
-                    <li id = 'lisign'><NavLink to='/signup' exact>Sign Up</NavLink></li>
+                    <li id = 'lilogin'><NavLink to='/login' exact>Logout</NavLink></li>
+                    <li id = 'lisign'><NavLink to='/signup' exact>My Page</NavLink></li>
                     <li><NavLink to='/create' exact>Create</NavLink></li>
                 </ul>
                 <div className='SearchBar'>
