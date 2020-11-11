@@ -65,9 +65,10 @@ export const deleteRecipe = (id) => {
 }
 
 const createRecipe_ = (recipe) => {
-  return {type: actionTypes.CREATE_RECIPE}
+  return {type: actionTypes.CREATE_RECIPE, selectedRecipe: recipe}
 };
 export const createRecipe = (recipe) => {
+  var id;
   return dispatch => {
     return axios.post('/api/recipe/', recipe)
       .then(res => dispatch(createRecipe_(res.data)))

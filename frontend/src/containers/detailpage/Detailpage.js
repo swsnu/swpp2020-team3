@@ -14,6 +14,7 @@ class Detailpage extends Component {
 
     constructor(props) {
         super(props);
+        console.log(12)
         this.props.getRecipe(this.props.match.params.id);
     }
     render() {
