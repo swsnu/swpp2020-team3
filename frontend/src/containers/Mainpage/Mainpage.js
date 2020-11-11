@@ -62,8 +62,6 @@ class Mainpage extends Component{
         console.log(this.props.storedRecipes)
         if(this.props.storedRecipes && this.props.storedRecipes[0]){
             let c = this.props.storedRecipes[0]
-            console.log(this.props.storedRecipes)
-            console.log(c)
             if(this.props.storedRecipes[0].photo_list){
                 let d = c.photo_list[0]
                 let t = 'data:image/png;base64,'+ d
@@ -78,7 +76,7 @@ class Mainpage extends Component{
                 let d = 'data:image/png;base64,'+ td.thumbnail
                 return (
                     <li className = 'random_content' id = 'r1'>
-                        <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='100'/>} title = {td.title} />
+                        <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
                     </li>
                 )   
             })
@@ -104,8 +102,8 @@ class Mainpage extends Component{
                 <div className = 'Mainpage'>
                     <div className = 'mainblock'>
                         <div className = 'firstBlock'>
-                            <div className = 'list_title' id = 'title1'>{'오늘의 랜덤 레시피  &   레시피 등록하기'}</div>
-                            <ul className = 'first_list'> 
+                            <ul className = 'first_list'>
+                                <div className = 'list_title' id = 'title1'>{'오늘의 랜덤 레시피  &   레시피 등록하기'}</div> 
                                 {dailyrandomList}
                                 <li className = 'toCreate'>
                                     <div><img src = {require('../../Image/toCreate.png')} onClick = {() => this.toCreateHandler()}/></div>
@@ -114,14 +112,14 @@ class Mainpage extends Component{
                             </ul>
                         </div>
                         <div className = 'secondBlock' >
-                            <div className = 'list_title' id = 'title2' >{'최근 인기 레시피'}</div>
                             <ul className = 'second_list'>
+                                <div className = 'list_title' id = 'title2' >{'최근 인기 레시피'}</div>
                                 {secondlist}
                             </ul>
                         </div>
                         <div className = 'thirdBlock'>
-                            <div className = 'list_title' id = 'title3'>{'내 입맛 맞춤 레시피'}</div>
                             <ul className = 'third_list'>
+                            <div className = 'list_title' id = 'title3'>{'내 입맛 맞춤 레시피'}</div>
                             {thirdlist}
                             </ul>
                         </div>
