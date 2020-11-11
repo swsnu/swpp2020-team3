@@ -38,6 +38,7 @@ class RecipeList extends Component{
         let query = this.state;
         if(search){
             query = queryString.parse(search);
+            console.log(query)
             query.category1 = query.category1 == 'true' ? true : false;
             query.category2 = query.category2 == 'true' ? true : false;
             query.category3 = query.category3 == 'true' ? true : false;
@@ -49,6 +50,7 @@ class RecipeList extends Component{
             this.setState(query);
         }
         // changed state doen't applied...
+        console.log(query)
         this.props.onGetRecipes(query);
     }
     
