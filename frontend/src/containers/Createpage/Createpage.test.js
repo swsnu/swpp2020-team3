@@ -43,10 +43,18 @@ MockFile.prototype.create = function(name, size, mimeType) {
     return blob;
 };
 jest.mock('./CreateStep', () => {
-    return jest.fn(() => {
+    return jest.fn((props) => {
+        let inputHandler = (event) => {
+            props.event_text(event)
+        }
+        let imageHandler = (event) => {
+            props.event_image(event)
+        }
         return (
             <div className="CreateStep">
                 <h1>CreateStep</h1>
+                <textarea id="step-input" onChange={inputHandler}></textarea>
+                <input id="step-image" onChange={imageHandler}></input>
             </div>
         )
     })
@@ -92,90 +100,111 @@ describe('<Createpage />', () => {
       expect(wrapper.length).toBe(1)
     });
 
-    it('should redirect', () => {
+    it('should sumbit', () => {
+        const stub = {'name': 'ingredient1', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
+        'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
         var spyHistory = jest.spyOn(history, 'push')
             .mockImplementation(() => {})
         const component = mount(createpage)
         const wrapper = component.find('#submit')
+        // length of list = 0
         wrapper.simulate('click')
         expect(spyHistory).toHaveBeenCalledTimes(1)
+        // length of list is bigger than 0
+        let instance = component.find(Createpage.WrappedComponent).instance()
+        instance.setState({selectedIngredientList: [stub]})
+        wrapper.simulate('click')
+        expect(spyHistory).toHaveBeenCalledTimes(2)
     })
 /////////////
-    it('should test title, summary and cooking time, addStep', () => {
+    it('should test title, summary, cooking time and type', () => {
         const component = mount(createpage)
+        // title
         let wrapper = component.find('#recipe-title-input')
         wrapper.simulate('change', {target: {value: 'test_title'}})
         let instance = component.find(Createpage.WrappedComponent).instance()
         expect(instance.state.title).toBe('test_title')
-
+        // summary
         wrapper = component.find('#recipe-summary-input')
         wrapper.simulate('change', {target: {value: 'test_summary'}})
         instance = component.find(Createpage.WrappedComponent).instance()
         expect(instance.state.summary).toBe('test_summary')
-
+        // cooking time
         wrapper = component.find('#recipe-cooking-time-input')
         wrapper.simulate('change', {target: {value: 'test_cooking_time'}})
         instance = component.find(Createpage.WrappedComponent).instance()
         expect(instance.state.duration).toBe('test_cooking_time')
-
+        // type
         component.find('#type').forEach((node)=>{
             node.simulate('click')
         })
         component.find('#type').forEach((node)=>{
             node.simulate('click')
         })
-
-        wrapper = component.find('#addStep')
-        wrapper.simulate('click')
-    })
-
-    // must complete -- hard 
-    xit('should set thumbnail', () => {
-        var mock = new MockFile();
-        var file = mock.create();
-        const component = mount(createpage)
-        const wrapper = component.find('#recipe-thumbnail-input')
-        wrapper.simulate('change', {target: {files: ['test_thumbnailURI']}})
-        const instance = component.find(Createpage.WrappedComponent).instance()
-        expect(instance.state.thumbnail).toBe('test_thumbnailURI')
     })
 
     it('should retrieve Select', () => {
-        const stub = {'name': 'ingredient0', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
+        const stub = {'name': 'ingredient1', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
         'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
         const stubList = [
-            {'name': 'ingredient1', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
-        'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'},
-        {'name': 'ingredient2', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
-        'igd_type': 'g', 'brand': 'GS', 'picutre': 'image'}
+            {'name': 'ingredient0', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
+        'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
         ]
         const component = mount(createpage)
         let wrapper = component.find('select')
         const instance = component.find(Createpage.WrappedComponent).instance()
+        // ingredientList == null
+        wrapper.simulate('change', stub)
+        expect(instance.state.selectedIngredientList.length).toBe(1)
+        // ingredientList not null
         instance.setState({selectedIngredientList: stubList})
-        wrapper.simulate('change', {'name': 'ingredient0', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
-        'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'})
-        expect(instance.state.selectedIngredientList.length).toBe(3)
-
-        instance.setState({ingredientList: stubList})
-        wrapper.simulate('change', {'name': 'ingredient0', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
-        'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'})
-        expect(instance.state.selectedIngredientList.length).toBe(4)
-    })
-
-    it('should test delete ingredient', () => {
-        const stubList = [
-            {'name': 'ingredient1', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
-        'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'},
-        {'name': 'ingredient2', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
-        'igd_type': 'g', 'brand': 'GS', 'picutre': 'image'}
-        ]
-        const component = mount(createpage)
-        const instance = component.find(Createpage.WrappedComponent).instance()
-        instance.setState({selectedIngredientList: stubList})
-        let wrapper = component.find('#ingredient')
-        console.log(component.debug())
+        wrapper.simulate('change', stub)
+        expect(instance.state.selectedIngredientList.length).toBe(2)
+        // add quantity
+        wrapper = component.find('#ingredient input').at(0)
+        wrapper.simulate('change', {target: {value: 5}})
+        expect(instance.state.selectedIngredientList[0]['amount']).toBe(5)
+        // delete ingredient
+        wrapper = component.find('#ingredient .deleteIngredient').at(0)
         wrapper.simulate('click')
+        expect(instance.state.selectedIngredientList.length).toBe(1)
     })
+
+    it('should test thumbnail uploading', () => {
+        const mockReader = {
+            onloadend: jest.fn(),
+            result: 'test_result',
+            readAsDataURL: jest.fn(() => {
+                return mockReader.onloadend()
+            })
+        }
+        window.FileReader = jest.fn(() => {
+            return mockReader
+        })
+        const component = mount(createpage)
+        let wrapper = component.find('#recipe-thumbnail-input')
+        wrapper.simulate('change', {target: {files: ['hello', 'adele']}})
+    })
+
+    it('should test add step', () => {
+        let component = mount(createpage)
+        const instance = component.find(Createpage.WrappedComponent).instance()
+        let wrapper = component.find('#addStep')
+        wrapper.simulate('click')
+        expect(instance.state.descriptionList.length).toBe(1)
+        // check input handler
+        wrapper = component.find('#step-input')
+        wrapper.simulate('change', {target: {value: 'test'}})
+        // expect
+        // check image handler
+        wrapper = component.find('#step-image')
+        wrapper.simulate('change', {target: {value: 'image'}})
+        // expect
+        // check delete step
+        wrapper = component.find('#delete-step')
+        wrapper.simulate('click')    
+        // expect
+    })
+
 })
        
