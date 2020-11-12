@@ -117,8 +117,8 @@ class Createpage extends Component{
             thumbnail: state.thumbnailURL,
             date: date
         }
-        this.props.onCreate(recipe)
-        this.props.history.push('/main-page')
+
+        this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
     }
     
     onClickChangeColor(event, param){
