@@ -181,13 +181,14 @@ class Createpage extends Component{
         let selectedIngredientList;
         selectedIngredientList = this.state.selectedIngredientList.map((item, index) => (
             <div id='ingredient' key={index}>
+                {console.log("delete")}
                 {item.brand}
                 {item.name}
                 {item.price}
                 <input idx={index} type='number' placeholder='양' 
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
-                <button onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
+                <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
         let totalPrice = 0;
@@ -199,7 +200,6 @@ class Createpage extends Component{
                 totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
             }
         }
-        console.log(this.state.ingredientList)
         
         return(
             <div className="CreateBackground">
@@ -218,7 +218,7 @@ class Createpage extends Component{
                             <br/>
 
                             <p> 썸네일 사진 추가 </p>
-                            <input type="file" accept='.jpg, .png, .jpeg'
+                            <input id="recipe-thumbnail-input" type="file" accept='.jpg, .png, .jpeg'
                                 onChange={(event) => this.thumbnailHandler(event.target.files[0])}/>
                             <img src={this.state.thumbnailURL} width='250' height='200' />
                             <br/>
@@ -235,6 +235,7 @@ class Createpage extends Component{
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
 
                             {selectedIngredientList}
+                            {console.log("hello")}
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
                                 value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
