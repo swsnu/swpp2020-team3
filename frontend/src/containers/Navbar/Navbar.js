@@ -60,8 +60,7 @@ class Navbar extends Component{
                                 window.location.reload()
                                 }}> 양식 </a>
                     </li>
-                    <li id = 'lilogin'><NavLink to='/login' exact>Logout</NavLink></li>
-                    <li id = 'lisign'><NavLink to='/signup' exact>My Page</NavLink></li>
+                    
                     <li><NavLink to='/create' exact>Create</NavLink></li>
                     <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=false&category3=false&category4=true&category5=false&category6=false
                                 &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
