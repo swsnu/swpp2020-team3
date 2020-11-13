@@ -1,5 +1,6 @@
 import React from 'react';
 import './Recipe.css'
+import StarRatings from 'react-star-ratings';
 const Recipe = (props) => {
     return (
         <div className='Recipe'>
@@ -11,12 +12,20 @@ const Recipe = (props) => {
                 {props.author}
             </div>   
             <div className='recipe_rating'>
-                {props.rating}
+                <StarRatings
+                    rating={props.rating}
+                    starRatedColor="orange"
+                    numberOfStars={5}
+                    name='rating'
+                    starDimension = {15}
+                    starSpacing = {2}
+                />
+                {"("+props.rating+")"}
             </div>
             <div className='recipe_cost'>
-                {props.cost}
+                {props.cost+"원"}
             </div>
-            <button className='recipe_likes' onClick={props.clickedLikes}>{props.likes}</button>
+             {"추천수: "+props.likes}
         </div>
     );
 };

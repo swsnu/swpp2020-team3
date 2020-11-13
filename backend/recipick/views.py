@@ -114,7 +114,7 @@ def recipe_page(request):
         if request.GET.get('category4') == 'true':
             categories.append('Japanese')
         if request.GET.get('category5') == 'true':
-            categories.append('Mexican')
+            categories.append('ConvienceStore')
         if request.GET.get('category6') == 'true':
             categories.append('Dessert')
 
@@ -208,7 +208,8 @@ def recipe_post(request):
             recipe.photo_list.add(new_img)
             cnt = cnt + 1
         recipe.save()
-        return HttpResponse(status = 201)
+        return_id = {'id': recipe.id}
+        return JsonResponse(return_id, status = 201)
     else:
         return HttpResponseNotAllowed(['POST'])
 
