@@ -33,11 +33,19 @@ class RecipeList extends Component{
 
     
     componentDidMount() {
-        
         const {search} = this.props.location;
         let query = this.state;
         if(search){
             query = queryString.parse(search);
+            console.log(query)
+            query.category1 = query.category1 == 'true' ? true : false;
+            query.category2 = query.category2 == 'true' ? true : false;
+            query.category3 = query.category3 == 'true' ? true : false;
+            query.category4 = query.category4 == 'true' ? true : false;
+            query.category5 = query.category5 == 'true' ? true : false;
+            query.category6 = query.category6 == 'true' ? true : false;
+            query.pageStart = Number(query.pageStart);
+            query.pageNumber = Number(query.pageNumber);
             this.setState(query);
         }
         this.props.onGetRecipes(query);
@@ -50,6 +58,15 @@ class RecipeList extends Component{
                 let query = this.state;
                 if(search){
                     query = queryString.parse(search);
+                    query.category1 = query.category1 == 'true' ? true : false;
+                    query.category2 = query.category2 == 'true' ? true : false;
+                    query.category3 = query.category3 == 'true' ? true : false;
+                    query.category4 = query.category4 == 'true' ? true : false;
+                    query.category5 = query.category5 == 'true' ? true : false;
+                    query.category6 = query.category6 == 'true' ? true : false;
+                    query.pageStart = Number(query.pageStart);
+                    query.pageNumber = Number(query.pageNumber);
+                    query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
                     this.setState(query);
                 }
                 this.props.onGetRecipes(query);
@@ -174,6 +191,21 @@ class RecipeList extends Component{
                                 <input className = "search-word-input" id='list-input' placeholder = "키워드" value = {this.state.searchWord} 
                                     onChange={(event) => this.setState({searchWord: event.target.value})}></input>
                             </div>
+                        </div>
+                        <div className = "search-options" id = "list-option">
+                                <div className = "options">
+                                    <button className ="search-options-button" onClick={() => this.clickOptionsHandler()}>분류</button>
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("relevance")}>관련성</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("likes")}>좋아요순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("uploaded date")}>최신순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("rating")}>평점순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("cost")}>비용순</button>}
+                                </div>
                         </div>
                         <div className = "search-options" id = "list-option">
                                 <div className = "options">
