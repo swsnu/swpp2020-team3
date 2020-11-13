@@ -186,11 +186,9 @@ def recipe_post(request):
         
         # ingredients
         ingList = Ingredient.objects
-        print(ingList.count())
 
         for ing in ingredient_list:
             target = list(ingList.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type']).values())
-            print(target)
             # print(type(target.values()))
             temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
                 igd_type=ing['igd_type'], brand=ing['brand'])
