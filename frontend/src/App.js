@@ -1,6 +1,7 @@
 //React imports
 import React from 'react';
-import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
+import {ConnectedRouter} from 'connected-react-router';
 
 //Local imports:
 import './App.css';
@@ -14,8 +15,8 @@ import Login from './containers/Authentication/Login/Login';
 
 function App(props) {
   return(
-    <BrowserRouter history={props.history}>
-      
+    <ConnectedRouter history={props.history}>
+      <Router>
       <div className="App">
         <Navbar history={props.history}/>
         <Switch>
@@ -29,7 +30,8 @@ function App(props) {
           <Route render = {() => <h1>Not Found</h1>} />
         </Switch>
       </div>
-    </BrowserRouter>
+      </Router>
+    </ConnectedRouter>
   );
 }
 

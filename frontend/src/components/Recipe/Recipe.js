@@ -4,7 +4,7 @@ import StarRatings from 'react-star-ratings';
 const Recipe = (props) => {
     return (
         <div className='Recipe'>
-            <img src = {props.thumbnail} width={200} onClick={props.clickedRecipe}></img>
+            <img className = 'recipe_thumbnail' src = {props.thumbnail} width={200} onClick={props.clickedRecipe}></img>
             <div className='recipe_title'>
                 {props.title}
             </div>
@@ -24,7 +24,7 @@ const Recipe = (props) => {
             </div>
             <div className='recipe_cost'>
                 {props.cost+"원"}
-            </div>
+            </div >
              {"추천수: "+props.likes}
         </div>
     );

@@ -31,7 +31,6 @@ class RecipeList extends Component{
         searchOptionsClicked : false,
     }
 
-
     
     componentDidMount() {
         const {search} = this.props.location;
@@ -39,44 +38,17 @@ class RecipeList extends Component{
         if(search){
             query = queryString.parse(search);
             console.log(query)
-            query.category1 = query.category1 == 'true' ? true : false;
-            query.category2 = query.category2 == 'true' ? true : false;
-            query.category3 = query.category3 == 'true' ? true : false;
-            query.category4 = query.category4 == 'true' ? true : false;
-            query.category5 = query.category5 == 'true' ? true : false;
-            query.category6 = query.category6 == 'true' ? true : false;
+            query.category1 = query.category1 == 'true';
+            query.category2 = query.category2 == 'true';
+            query.category3 = query.category3 == 'true';
+            query.category4 = query.category4 == 'true';
+            query.category5 = query.category5 == 'true';
+            query.category6 = query.category6 == 'true';
             query.pageStart = Number(query.pageStart);
             query.pageNumber = Number(query.pageNumber);
             this.setState(query);
         }
-        // changed state doen't applied...
-        console.log(query)
         this.props.onGetRecipes(query);
-    }
-    
-    componentDidUpdate(prevProps, prevState){
-        
-        if(prevState){
-            if(this.state.pageStart !== prevState.pageStart){
-                const {search} = this.props.location;
-                let query = this.state;
-                if(search){
-                    query = queryString.parse(search);
-                    query.category1 = query.category1 == 'true' ? true : false;
-                    query.category2 = query.category2 == 'true' ? true : false;
-                    query.category3 = query.category3 == 'true' ? true : false;
-                    query.category4 = query.category4 == 'true' ? true : false;
-                    query.category5 = query.category5 == 'true' ? true : false;
-                    query.category6 = query.category6 == 'true' ? true : false;
-                    query.pageStart = Number(query.pageStart);
-                    query.pageNumber = Number(query.pageNumber);
-                    query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
-                    this.setState(query);
-                }
-                this.props.onGetRecipes(query);
-            }
-        }
-            
     }
     
     clickSearchModeHandler = searchmode => {
@@ -93,11 +65,13 @@ class RecipeList extends Component{
         else this.setState({category6 : !this.state.category6});
     }
 
-    checkInputHandler = () =>{
-        if(this.state.maxPrice === '') this.setState({maxPrice: 100000});
-        if(this.state.minPrice === '') this.setState({minPrice: 0});
-        if(this.state.maxDuration === '') this.setState({maxDuration: 100});
-        if(this.state.minDuration === '') this.setState({minDuration: 0});
+    checkInputHandler = (state) =>{
+        let st=state;
+        if(this.state.maxPrice === '') st.maxPrice=100000;
+        if(this.state.minPrice === '') st.minPrice=0;
+        if(this.state.maxDuration === '') st.maxDuration=100;
+        if(this.state.minDuration === '') st.minDuration=0;
+        return st;
     }
 
     clickOptionsHandler = () => {
@@ -108,28 +82,35 @@ class RecipeList extends Component{
         this.props.history.push('/detail-page/'+id);
     }
 
+    getURL(st){
+        return `/search?category1=${st.category1}&category2=${st.category2}&category3=${st.category3}&category4=${st.category4}&category5=${st.category5}&category6=${st.category6}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageStart=${st.pageStart}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}&searchOptionsClicked=${st.searchOptionsClicked}`;
+    }
+
     clickSearchHandler = () => {
-        this.checkInputHandler();
-        this.props.history.push(`/search?category1=${this.state.category1}&category2=${this.state.category2}
-        &category3=${this.state.category3}&category4=${this.state.category4}&category5=${this.state.category5}
-        &category6=${this.state.category6}&minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}
-        &minDuration=${this.state.minDuration}&maxDuration=${this.state.minDuration}&searchWord=${this.state.searchWord}
-        &pageStart=${this.state.pageStart}&pageNumber=${this.state.pageNumber}&searchMode=${this.state.searchMode}&searchOptionsClicked=false`);
+        let newState=this.checkInputHandler(this.state);
+        this.props.history.push(this.getURL(newState));
         this.props.onGetRecipes(this.state);
     }
 
     clickPagePreviousHandler = () => {
-        this.setState({pageStart: this.state.pageStart-5});
-        this.setState({pageNumber: this.state.pageStart-4});
+        let newState={...this.state, pageStart: this.state.pageStart-5, pageNumber: this.state.pageStart-4};
+        this.setState(newState)
+        this.props.history.push(this.getURL(newState));
+        this.props.onGetRecipes(newState);
     }
 
     clickPageNumberHandler = (id) => {
-        this.setState({pageNumber: this.state.pageStart+id});
+        let newState={...this.state, pageNumber: this.state.pageStart+id};
+        this.setState(newState)
+        this.props.history.push(this.getURL(newState));
+        this.props.onGetRecipes(newState);
     }
 
     clickPageNextHandler = () => {
-        this.setState({pageStart: this.state.pageStart+5});
-        this.setState({pageNumber: this.state.pageStart+6});
+        let newState={...this.state, pageStart: this.state.pageStart+5, pageNumber: this.state.pageStart+6};
+        this.setState(newState);
+        this.props.history.push(this.getURL(newState));
+        this.props.onGetRecipes(newState);
     }
 
 
@@ -233,10 +214,10 @@ class RecipeList extends Component{
                                 onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
                         {this.props.storedRecipes.length >= 11 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==2 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+2}</button>}
+                                onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>}
                         {this.props.storedRecipes.length >= 21 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==3 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+3}</button>}
+                                onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>}
                         {this.props.storedRecipes.length >= 31 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==4 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
@@ -269,3 +250,4 @@ const mapDispatchToProps = dispatch => {
 
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(RecipeList));
+

@@ -61,7 +61,6 @@ class Createpage extends Component{
             })
         }
         reader.readAsDataURL(file)
-        console.log(this.state)
     }
     thumbnailHandler(file){
         let reader = new FileReader();
@@ -91,12 +90,12 @@ class Createpage extends Component{
     }
 
     submitHandler(){
-        //this.props.history.push('/main-page');
         let state = this.state;
         let priceList = []
         let totalPrice = 0;
         let list = this.state.selectedIngredientList
         if(list.length > 0){
+            console.log("length 0")
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
             for(let i = 0; i < priceList.length; i++){
                 totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
@@ -117,6 +116,7 @@ class Createpage extends Component{
             thumbnail: state.thumbnailURL,
             date: date
         }
+
         this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
     }
     
@@ -168,25 +168,26 @@ class Createpage extends Component{
 
     render(){
         let displayStepList;
+        if(this.state.descriptionList.length > 0){
         displayStepList = this.state.descriptionList.map((item, index) => (
-            <div>
-                {console.log(this.state.descriptionList[index])}
+            <div className="description-list">
                 <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
                             value_text={this.state.descriptionList[index]}/>
                 <img src={this.state.imagePreviewList[index]} width='250' height='200'/>
-                <button onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
+                <button id="delete-step" onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
             </div>
         ))
+                        }
         let selectedIngredientList;
         selectedIngredientList = this.state.selectedIngredientList.map((item, index) => (
             <div id='ingredient' key={index}>
                 {item.brand}
                 {item.name}
                 {item.price}
-                <input idx={index} type='number' placeholder='양' 
+                <input id={index} type='number' placeholder='양' 
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
-                <button onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
+                <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
         let totalPrice = 0;
@@ -198,7 +199,6 @@ class Createpage extends Component{
                 totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
             }
         }
-        console.log(this.state.ingredientList)
         
         return(
             <div className="CreateBackground">
@@ -217,7 +217,7 @@ class Createpage extends Component{
                             <br/>
 
                             <p> 썸네일 사진 추가 </p>
-                            <input type="file" accept='.jpg, .png, .jpeg'
+                            <input id="recipe-thumbnail-input" type="file" accept='.jpg, .png, .jpeg'
                                 onChange={(event) => this.thumbnailHandler(event.target.files[0])}/>
                             <img src={this.state.thumbnailURL} width='250' height='200' />
                             <br/>
@@ -234,6 +234,7 @@ class Createpage extends Component{
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
 
                             {selectedIngredientList}
+
                             <p>예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' 
                                 value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
