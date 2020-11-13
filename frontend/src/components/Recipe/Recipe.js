@@ -24,7 +24,7 @@ const Recipe = (props) => {
             </div>
             <div className='recipe_cost'>
                 {props.cost+"원"}
-            </div>
+            </div >
              {"추천수: "+props.likes}
         </div>
     );
