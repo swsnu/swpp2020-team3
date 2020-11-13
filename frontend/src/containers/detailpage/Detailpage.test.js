@@ -9,6 +9,7 @@ import Detailpage from './Detailpage'
 
 const history = createBrowserHistory()
 
+jest.mock('./')
 
 describe('<Detailpage />', () => {
     let detailpage;

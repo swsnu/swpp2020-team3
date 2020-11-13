@@ -4,9 +4,8 @@ import './DishResult.css'
 
 class DishResult extends Component {
     render() {
-        console.log(this.props.ingredients)
         const showigd = this.props.ingredients
-        const tag = this.props.tag && this.props.tag.map((tag) => <span>{tag} </span>)
+        const tag = this.props.tag && this.props.tag.map((tag) => <span id='tag'>{tag} </span>)
         return (
             <div className='dish_result'>
                 <div id = 'detailbox1'>
