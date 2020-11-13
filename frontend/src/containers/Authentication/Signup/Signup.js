@@ -35,11 +35,11 @@ class Signup extends Component{
                         <label>비밀번호</label>
                         <input type="text" name="id" onChange={(event) => this.setState({id: event.target.value})}></input>
                         <label>이메일</label>
-                        <input type="text" name="email" onChange={(event) => this.setState({text: event.target.value})}></input>
+                        <input type="text" name="email" onChange={(event) => this.setState({email: event.target.value})}></input>
                         <label>비밀번호</label>
                         <input type="text" name="password" onChange={(event) => this.setState({password: event.target.value})}></input>
                         <label>비밀번호 재확인</label>
-                        <input type="text" name="password-confirm" onChange={(event) => this.setState({password_confirm: event.target.value})}></input>
+                        <input type="text" name="password_confirm" onChange={(event) => this.setState({password_confirm: event.target.value})}></input>
                     </form>
                     <button className = "SignupButton" onClick={()=>this.onClickSubmit()}>가입하기</button>
                 </div>

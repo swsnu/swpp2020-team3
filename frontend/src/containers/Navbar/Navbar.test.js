@@ -10,19 +10,23 @@ import Navbar from './Navbar'
 const history = createBrowserHistory()
 
 describe('<Navbar />', () => {
-    let navBar;
+    let navBar, spyWindow;
   
     beforeEach(() => {
       navBar = (
         <Router history={history}>
             <Navbar history={history}/>
         </Router>
-      );;
+      );
+      const { location } = window;
+      delete window.location;
+      window.location = { reload: jest.fn() };
     })
   
     it('should render Navbar', () => {
       const component = mount(navBar);
-      const wrapper = component.find('NavBar');
+      const wrapper = component.find('.BackNavBar');
+      expect(wrapper.length).toBe(1);
     });
 
     it('should render input', () => {
@@ -52,6 +56,13 @@ describe('<Navbar />', () => {
         wrapper.simulate('click')
         expect(wrapper.length).toBe(1);
       });
+
+    it('should test categories', () => {
+      const component = mount(navBar);
+      let wrapper = component.find('a').forEach((wrap) => {
+        wrap.simulate('click')
+      })
+    })
 
 
 })
