@@ -114,7 +114,7 @@ def recipe_page(request):
         if request.GET.get('category4') == 'true':
             categories.append('Japanese')
         if request.GET.get('category5') == 'true':
-            categories.append('Mexican')
+            categories.append('ConvienceStore')
         if request.GET.get('category6') == 'true':
             categories.append('Dessert')
 

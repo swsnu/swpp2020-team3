@@ -8,6 +8,7 @@ import RecipeList from './RecipeList';
 import { getMockStore } from '../../test-utils/mocks';
 import { history } from '../../store/store';
 import * as actionCreators from '../../store/actions/recipe';
+import Recipe from '../../components/Recipe/Recipe';
 
 jest.mock('../../components/Recipe/Recipe', () => {
   return jest.fn(props => {
@@ -88,26 +89,6 @@ describe('<RecipeList />', () => {
       wrapper.at(0).simulate('click');
       expect(spyHistoryPush).toHaveBeenCalledTimes(1);
     });
-    
-    it(`should render categories`, () => {
-        const component = mount(recipeList);
-        let wrapper = component.find('.category-select-button');
-        let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
-        expect(wrapper.length).toBe(6);
-        wrapper.at(0).simulate('click');
-        expect(newRecipeInstance.state.category1).toEqual(false);
-        wrapper.at(1).simulate('click');
-        expect(newRecipeInstance.state.category2).toEqual(false);
-        wrapper.at(2).simulate('click');
-        expect(newRecipeInstance.state.category3).toEqual(false);
-        wrapper.at(3).simulate('click');
-        expect(newRecipeInstance.state.category4).toEqual(false);
-        wrapper.at(4).simulate('click');
-        expect(newRecipeInstance.state.category5).toEqual(false);
-        wrapper.at(5).simulate('click');
-        expect(newRecipeInstance.state.category6).toEqual(false);
-        
-    });
 
     it(`should render pages`, () => {
       const component = mount(recipeList);
@@ -142,9 +123,28 @@ describe('<RecipeList />', () => {
       wrapper.simulate('click');
       expect(newRecipeInstance.state.pageStart).toEqual(0);
   });
+    
+    it(`should render categories`, () => {
+        const component = mount(recipeList);
+        let wrapper = component.find('.category-select-button');
+        let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
+        expect(wrapper.length).toBe(6);
+        wrapper.at(0).simulate('click');
+        expect(newRecipeInstance.state.category1).toEqual(false);
+        wrapper.at(1).simulate('click');
+        expect(newRecipeInstance.state.category2).toEqual(false);
+        wrapper.at(2).simulate('click');
+        expect(newRecipeInstance.state.category3).toEqual(false);
+        wrapper.at(3).simulate('click');
+        expect(newRecipeInstance.state.category4).toEqual(false);
+        wrapper.at(4).simulate('click');
+        expect(newRecipeInstance.state.category5).toEqual(false);
+        wrapper.at(5).simulate('click');
+        expect(newRecipeInstance.state.category6).toEqual(false); 
+    });
 
     it(`should render search mode`, () => {
-        let searchModeList = ['relevance','likes','uploaded-date','rating','cost']
+        let searchModeList = ['relevance','likes','uploaded date','rating','cost']
         const component = mount(recipeList);
         let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
 
@@ -165,34 +165,8 @@ describe('<RecipeList />', () => {
         wrapper.simulate('click');
         //expect(component.state('search')).toBe(1);
     });
+
     
-    it('should parses URL params and correctly updates the state', () => {
-      // state 바꾸고 search confirm => page 오른쪽
-      const component = mount(recipeList);
-      let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
-
-      wrapper = component.find('.list-page-next-button');
-      expect(wrapper.length).toBe(1);
-      expect(newRecipeInstance.state.pageStart).toEqual(0);
-      wrapper.simulate('click');
-      expect(newRecipeInstance.state.pageStart).toEqual(5);
-
-
-      
-      expect(newRecipeInstance.state.category1).toEqual(true);
-      expect(newRecipeInstance.state.category2).toEqual(true);
-      expect(newRecipeInstance.state.category3).toEqual(true);
-      expect(newRecipeInstance.state.category4).toEqual(true);
-      expect(newRecipeInstance.state.category5).toEqual();
-      expect(newRecipeInstance.state.category6).toEqual(true);
-      expect(newRecipeInstance.state.minPrice).toEqual(10);
-      expect(newRecipeInstance.state.maxPrice).toEqual(20);
-      expect(newRecipeInstance.state.minDuration).toEqual(100);
-      expect(newRecipeInstance.state.maxDuration).toEqual(200);
-      expect(newRecipeInstance.state.searchWord).toEqual('mother');
-      expect(newRecipeInstance.state.searchMode).toEqual('likes');
-      expect(newRecipeInstance.state.searchOptionsClicked).toEqual(false);
-    });
-  
+    
     
 });
