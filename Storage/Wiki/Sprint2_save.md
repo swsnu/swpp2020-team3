@@ -1,8 +1,5 @@
 # Document revision history
 Rev 1.0 -- initial version <br/>
-Rev 1.1 -- ~ Improved views, changed a few urls. <br/>
-&emsp; &emsp; &emsp;&ensp; ~ Added implementation details about meal-planner (url, views, controller, ...)
-&emsp; &emsp; &emsp;&ensp; ~ Fixed frontend algorithms to match our implementation (improved).
 
 # System architecture
 Major interfaces between components:
