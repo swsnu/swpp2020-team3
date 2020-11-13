@@ -1,13 +1,10 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter} from 'connected-react-router';
 import {BrowserRouter, Router,Route, Redirect, Switch} from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
-import Select from 'react-select'
 
 import Createpage from './Createpage'
-import CreateStep from './CreateStep'
 import {getMockStore} from '../../test-utils/mocks.js'
 import * as actionCreators from '../../store/actions/recipe';
 
@@ -18,7 +15,7 @@ const stubState = {
     ]
 }
 
-const history = createBrowserHistory()
+const mockHistory = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
 jest.mock('./CreateStep', () => {
@@ -64,7 +61,7 @@ describe('<Createpage />', () => {
     beforeEach(() => {
       createpage = (
           <Provider store={mockStore}>
-            <Router history={history}>
+            <Router history={mockHistory}>
                 <Createpage />
             </Router>
           </Provider>
@@ -79,23 +76,28 @@ describe('<Createpage />', () => {
       expect(wrapper.length).toBe(1)
     });
 
+    // should correct (use async )
     it('should sumbit', () => {
         const stub = {'name': 'ingredient1', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
         'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
-        var spyHistory = jest.spyOn(history, 'push')
+        var spyHistory = jest.spyOn(mockHistory, 'push')
             .mockImplementation(() => {})
+        //var spyCreate = jest.spyOn(actionCreators, 'createRecipe')
+          //  .mockImplementation((props) => {return dispatch => {}})
         const component = mount(createpage)
         const wrapper = component.find('#submit')
         // length of list = 0
         wrapper.simulate('click')
         // expect(spyHistory).toHaveBeenCalledTimes(1) // this is right
         expect(spyHistory).toHaveBeenCalledTimes(0)
+     
         // length of list is bigger than 0
         let instance = component.find(Createpage.WrappedComponent).instance()
         instance.setState({selectedIngredientList: [stub]})
         wrapper.simulate('click')
         // expect(spyHistory).toHaveBeenCalledTimes(2) // this is right
         expect(spyHistory).toHaveBeenCalledTimes(0)
+
     })
 /////////////
     it('should test title, summary, cooking time and type', () => {

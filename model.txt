@@ -12,3 +12,4 @@ main page, detail page, create page, list page 완료
 comment의 좋아요는 추후 개발
 
 
+ㄹㅇ나러ㅗㅇㄴ
