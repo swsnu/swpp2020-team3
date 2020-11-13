@@ -31,7 +31,6 @@ class RecipeList extends Component{
         searchOptionsClicked : false,
     }
 
-
     
     componentDidMount() {
         const {search} = this.props.location;
@@ -49,13 +48,10 @@ class RecipeList extends Component{
             query.pageNumber = Number(query.pageNumber);
             this.setState(query);
         }
-        // changed state doen't applied...
-        console.log(query)
         this.props.onGetRecipes(query);
     }
     
     componentDidUpdate(prevProps, prevState){
-        
         if(prevState){
             if(this.state.pageStart !== prevState.pageStart){
                 const {search} = this.props.location;
@@ -76,7 +72,6 @@ class RecipeList extends Component{
                 this.props.onGetRecipes(query);
             }
         }
-            
     }
     
     clickSearchModeHandler = searchmode => {
@@ -110,17 +105,15 @@ class RecipeList extends Component{
 
     clickSearchHandler = () => {
         this.checkInputHandler();
-        this.props.history.push(`/search?category1=${this.state.category1}&category2=${this.state.category2}
-        &category3=${this.state.category3}&category4=${this.state.category4}&category5=${this.state.category5}
-        &category6=${this.state.category6}&minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}
-        &minDuration=${this.state.minDuration}&maxDuration=${this.state.maxDuration}&searchWord=${this.state.searchWord}
-        &pageStart=${this.state.pageStart}&pageNumber=${this.state.pageNumber}&searchMode=${this.state.searchMode}&searchOptionsClicked=false`);
+        this.props.history.push(`/search?minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&searchWord=${this.state.searchWord}`);
         this.props.onGetRecipes(this.state);
     }
 
     clickPagePreviousHandler = () => {
         this.setState({pageStart: this.state.pageStart-5});
         this.setState({pageNumber: this.state.pageStart-4});
+        this.props.history.push(`/search?minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&searchWord=${this.state.searchWord}`);
+        this.props.onGetRecipes(this.state);
     }
 
     clickPageNumberHandler = (id) => {
@@ -130,6 +123,8 @@ class RecipeList extends Component{
     clickPageNextHandler = () => {
         this.setState({pageStart: this.state.pageStart+5});
         this.setState({pageNumber: this.state.pageStart+6});
+        this.props.history.push(`/search?minPrice=${this.state.minPrice}&maxPrice=${this.state.maxPrice}&searchWord=${this.state.searchWord}`);
+        this.props.onGetRecipes(this.state);
     }
 
 
@@ -212,6 +207,21 @@ class RecipeList extends Component{
                                             onClick={() => this.clickSearchModeHandler("cost")}>비용순</button>}
                                 </div>
                         </div>
+                        <div className = "search-options" id = "list-option">
+                                <div className = "options">
+                                    <button className ="search-options-button" onClick={() => this.clickOptionsHandler()}>분류</button>
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("relevance")}>관련성</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("likes")}>좋아요순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("uploaded date")}>최신순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("rating")}>평점순</button>}
+                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
+                                            onClick={() => this.clickSearchModeHandler("cost")}>비용순</button>}
+                                </div>
+                        </div>
                     </div>
                 </div>
                 <div className = "search">
@@ -233,10 +243,10 @@ class RecipeList extends Component{
                                 onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
                         {this.props.storedRecipes.length >= 11 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==2 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+2}</button>}
+                                onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>}
                         {this.props.storedRecipes.length >= 21 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==3 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+3}</button>}
+                                onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>}
                         {this.props.storedRecipes.length >= 31 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==4 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
@@ -269,3 +279,4 @@ const mapDispatchToProps = dispatch => {
 
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(RecipeList));
+
