@@ -31,8 +31,6 @@ class RecipeList extends Component{
         searchOptionsClicked : false,
     }
 
-
-    
     componentDidMount() {
         
         const {search} = this.props.location;
@@ -45,14 +43,11 @@ class RecipeList extends Component{
             query.category4 = query.category4 == 'true' ? true : false;
             query.category5 = query.category5 == 'true' ? true : false;
             query.category6 = query.category6 == 'true' ? true : false;
-            query.pageStart = Number(query,pageStart);
+            query.pageStart = Number(query.pageStart);
             query.pageNumber = Number(query.pageNumber);
             query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
-
-            query = queryString.parse(search);
             this.setState(query);
         }
-        // changed state doen't applied...
         this.props.onGetRecipes(query);
     }
     
@@ -70,7 +65,7 @@ class RecipeList extends Component{
                     query.category4 = query.category4 == 'true' ? true : false;
                     query.category5 = query.category5 == 'true' ? true : false;
                     query.category6 = query.category6 == 'true' ? true : false;
-                    query.pageStart = Number(query,pageStart);
+                    query.pageStart = Number(query.pageStart);
                     query.pageNumber = Number(query.pageNumber);
                     query.searchOptionsClicked = query.searchOptionsClicked == 'true' ? true : false;
                     this.setState(query);
@@ -119,6 +114,7 @@ class RecipeList extends Component{
     clickPagePreviousHandler = () => {
         this.setState({pageStart: this.state.pageStart-5});
         this.setState({pageNumber: this.state.pageStart-4});
+        //onget
     }
 
     clickPageNumberHandler = (id) => {
@@ -128,6 +124,7 @@ class RecipeList extends Component{
     clickPageNextHandler = () => {
         this.setState({pageStart: this.state.pageStart+5});
         this.setState({pageNumber: this.state.pageStart+6});
+        //onget
     }
 
 
@@ -202,7 +199,7 @@ class RecipeList extends Component{
                                 {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                         onClick={() => this.clickSearchModeHandler("likes")}>likes</button>}
                                 {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                        onClick={() => this.clickSearchModeHandler("uploaded date")}>most recent</button>}
+                                        onClick={() => this.clickSearchModeHandler("uploaded-date")}>most recent</button>}
                                 {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                         onClick={() => this.clickSearchModeHandler("rating")}>rating</button>}
                                 {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
@@ -228,10 +225,10 @@ class RecipeList extends Component{
                                 onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
                         {this.props.storedRecipes.length >= 11 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==2 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+2}</button>}
+                                onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>}
                         {this.props.storedRecipes.length >= 21 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==3 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler()}>{this.state.pageStart+3}</button>}
+                                onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>}
                         {this.props.storedRecipes.length >= 31 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==4 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
