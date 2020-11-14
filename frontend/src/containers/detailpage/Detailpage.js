@@ -14,7 +14,6 @@ class Detailpage extends Component {
 
     constructor(props) {
         super(props);
-        console.log(12)
         this.props.getRecipe(this.props.match.params.id);
     }
     render() {
@@ -27,7 +26,6 @@ class Detailpage extends Component {
         const category = this.props.recipe && this.props.recipe.category
         const tags = this.props.recipe && this.props.recipe.tag_list
         let igd;
-        console.log(this.props.recipe)
         if(this.props.recipe){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
                 let img = 'data:image/png;base64,'+igd.picture
@@ -46,8 +44,6 @@ class Detailpage extends Component {
         }
         let d = null;
         if(this.props.recipe){
-            console.log(this.props.recipe.photo_list[0])
-            console.log(this.props.recipe)
             d = 'data:image/png;base64,'+ this.props.recipe.thumbnail;
         }
         const methodData = descriptions && descriptions.map((item, index) => ({img:'data:image/png;base64,'+ this.props.recipe.photo_list[index], explanation:item}))

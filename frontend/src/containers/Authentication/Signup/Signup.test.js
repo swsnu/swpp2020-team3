@@ -46,7 +46,6 @@ describe('Signup', () => {
         let wrapper = component.find('input').forEach((wrap) => {
             //wrap.simulate('change', {target: {value: wrap.find('name')}})
             let testVal = wrap.props()['name']
-            console.log(testVal)
             wrap.simulate('change', {target: {value: `test_${testVal}`}})
             expect(instance.state[testVal]).toBe(`test_${testVal}`)
         })

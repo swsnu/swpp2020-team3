@@ -16,7 +16,6 @@ export const getRandom = () => {
 }
 
 const getRecipes_ = (recipes) => {
-  console.log(recipes)
   return { type: actionTypes.GET_RECIPES, recipes: recipes };
 };
 

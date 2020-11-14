@@ -7,7 +7,6 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 
 const getReplies_ = (replies) => {
-    console.log(replies)
   return { type: actionTypes.GET_REPLIES, replies: replies };
 };
 
@@ -51,7 +50,6 @@ export const editReply = (reply) => {
   return dispatch => {
     return axios.put('/api/reply/'+reply.id+'/', reply)
       .then(res => {
-        console.log(res)
         dispatch(editReply_(res.data))
       })
   }

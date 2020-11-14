@@ -18,15 +18,12 @@ state={
         this.props.event_text({description: event.target.value, index: this.props.index})
     }
     imageHandler(event){
-        console.log("change image")
-        console.log(this.props.index)
         this.props.event_image({file: event.target.files[0], index: this.props.index})
     }
 
     render(){
         return(
             <div className="step">
-                {console.log(this.props.value_text)} 
                 <input type="file" accept='.jpg, .png, .jpeg' value={this.state.value} 
                     onChange={(event) => this.imageHandler(event)}/>
                 <br/>

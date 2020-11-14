@@ -12,13 +12,11 @@ class Comment extends Component {
         let newContent = prompt("new comment", this.props.content); // edit comment prompt
         // if valid editing, change comment
         if(newContent){
-            console.log(newContent)
             this.props.onEditComment(newContent)
         }
     }
     
     render() {
-        console.log(this.state.toggleReply)
         const replies = <Replies replies={this.props.replies} commentId={this.props.id}/>
         return(
             <div>

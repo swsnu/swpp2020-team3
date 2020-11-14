@@ -37,7 +37,6 @@ class RecipeList extends Component{
         let query = this.state;
         if(search){
             query = queryString.parse(search);
-            console.log(query)
             query.category1 = query.category1 == 'true';
             query.category2 = query.category2 == 'true';
             query.category3 = query.category3 == 'true';

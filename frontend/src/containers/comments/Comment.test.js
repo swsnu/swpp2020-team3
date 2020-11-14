@@ -41,7 +41,6 @@ describe('<Comment/>', () => {
         expect(wrapper.find('.spyReplies').length).toBe(0);
         const toggle = wrapper.find('#toggle-reply-button');
         toggle.simulate('click');
-        console.log(component.debug());
         expect(component.find('.spyReplies').length).toBe(1);
     })
 

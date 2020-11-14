@@ -42,7 +42,6 @@ class Createpage extends Component{
         let newList = this.state.descriptionList;
         newList[index] = description
         this.setState({descriptionList: newList})
-        console.log(this.state)
     }
     imageHandler(params){
         let index = params['index']
@@ -53,7 +52,6 @@ class Createpage extends Component{
             let newImgList = this.state.imageList;
             let newPreviewList = this.state.imagePreviewList;
             newImgList[index] = file;
-            console.log(file)
             newPreviewList[index] = reader.result
             this.setState({
                 imageList: newImgList,
@@ -66,7 +64,6 @@ class Createpage extends Component{
         let reader = new FileReader();
         reader.onloadend = () => {
             this.setState({thumbnailURL: reader.result})
-            console.log(file)
             this.setState({thumbnail: file})
         }
         reader.readAsDataURL(file)
@@ -74,9 +71,7 @@ class Createpage extends Component{
 
     addStepHandler(){
         let newList = this.state.descriptionList
-        console.log(newList)
         newList.push('')
-        console.log(newList)
         this.setState({descriptionList: newList})
     }
     deleteStepHandler(event){
@@ -95,7 +90,6 @@ class Createpage extends Component{
         let totalPrice = 0;
         let list = this.state.selectedIngredientList
         if(list.length > 0){
-            console.log("length 0")
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
             for(let i = 0; i < priceList.length; i++){
                 totalPrice+=(priceList[i]['price']*priceList[i]['amount'])

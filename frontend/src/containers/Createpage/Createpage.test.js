@@ -40,7 +40,6 @@ jest.mock("react-select", () => ({ options, value, onChange, getOptionLabel }) =
       onChange(event);
     }
     function optionLabel(option){
-        console.log(option)
         getOptionLabel(option)
     }
     return (
