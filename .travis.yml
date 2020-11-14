@@ -17,12 +17,12 @@ matrix:
       install:
         - yarn install
         - yarn add coveralls
+        - gem install coveralls-lcov
         - cd ..
         - cd backend
         - source ~/virtualenv/python3.7/bin/activate
         - pip install -r requirements.txt
         - python -m pip install Pillow
-        - gem install coveralls-lcov
       script:
         - cd ..
         - cd frontend
@@ -36,5 +36,5 @@ matrix:
         - cd ..
         - sonar-scanner
       after_success:
-        - cd backend
+        - cd frontend
         - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
