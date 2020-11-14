@@ -49,13 +49,13 @@
     background-color: #111111;
   }
 
-  logo {
+  #logo {
     float: left;
     color: white;
     padding: 12px;
   }
   
-  logo a {
+  #logo a {
     display: block;
     color: white;
     text-align: center;
