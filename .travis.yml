@@ -38,5 +38,5 @@ matrix:
         - cd ..
         - sonar-scanner
       after_success:
-        - cd frontend
+        - cd backend
         - coveralls --merge=../frontend/coverage/coverage.json
