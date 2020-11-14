@@ -21,8 +21,8 @@ class Replies extends Component {
         return (
             <div className='replies'>
                 {replylist}
-                <input value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
-                <button disabled={this.state.content==''} onClick={() => {this.setState({content: ''}); this.props.addReply({date:'2020-11-05', edited:false, content: this.state.content, commentId: this.props.commentId});}}>confirm</button>
+                <input className='reply-content-input' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
+                <button className='create-reply-button' disabled={this.state.content==''} onClick={() => {this.setState({content: ''}); this.props.addReply({date:'2020-11-05', edited:false, content: this.state.content, commentId: this.props.commentId});}}>confirm</button>
             </div>
         )
     }
@@ -30,13 +30,12 @@ class Replies extends Component {
 
 const mapStateToProps = state => {
     return {
-
-        }
+        
+    }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getReplies: (commentId) => dispatch(actionCreators.getReplies(commentId)),
         onEditReply: (reply) => dispatch(actionCreators.editReply(reply)),
         onDeleteReply: (reply) => dispatch(actionCreators.deleteReply(reply)),
         addReply: (reply) => dispatch(actionCreators.addReply(reply)),
