@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types';
 import './Login.css'
 //Local imports
 import * as actionCreators from '../../../store/actions/index';
@@ -43,7 +44,8 @@ const mapDispatchToProps = dispatch => {
         }
     }
 
-
-
+Login.propTypes = {
+    onLogin: PropTypes.func,
+}
 
 export default connect(null,mapDispatchToProps)(withRouter(Login));
