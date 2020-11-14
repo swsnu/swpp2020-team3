@@ -232,7 +232,7 @@ class RecipeList extends Component{
 
         )        
     }
-};
+}
 
 
 const mapStateToProps = state => {
