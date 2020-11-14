@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './DisplayRecipe.css'
+import PropTypes from "prop-types";
 
 class DisplayRecipe extends Component {
     onClickRandomImage(id){
@@ -15,5 +16,9 @@ class DisplayRecipe extends Component {
         )
     }
 }
+
+DisplayRecipe.propTypes = {
+    history: PropTypes.object,
+};
 
 export default DisplayRecipe;

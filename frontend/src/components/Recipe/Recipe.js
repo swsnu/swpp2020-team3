@@ -1,6 +1,7 @@
 import React from 'react';
 import './Recipe.css';
 import StarRatings from 'react-star-ratings';
+import PropTypes from "prop-types";
 const Recipe = (props) => {
     return (
         <div className='Recipe'>
@@ -28,6 +29,16 @@ const Recipe = (props) => {
              {"추천수: "+props.likes}
         </div>
     );
+};
+
+Recipe.propTypes = {
+    thumbnail: PropTypes.string,
+    clickedRecipe: PropTypes.func,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    rating: PropTypes.number,
+    cost: PropTypes.number,
+    likes: PropTypes.number,
 };
 
 export default Recipe;
