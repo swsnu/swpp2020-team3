@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import Select from 'react-select'
 // Local imports
 import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
 import CreateStep from './CreateStep';
-import Ingredient from '../../components/Ingredient/Ingredient';
 
 
 class Createpage extends Component{
@@ -153,7 +151,7 @@ class Createpage extends Component{
         newList.push(deleted[0])
         this.setState({ingredientList: newList})
     }
-    addIngredientQuantity(event, id, itemPrice){
+    addIngredientQuantity(event, id){
         let list = this.state.selectedIngredientList
         let amount = event.target.value
         if(list[id]['amount']!=undefined){

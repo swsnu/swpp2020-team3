@@ -1,6 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import {BrowserRouter, Router, Route, Redirect, Switch} from 'react-router-dom';
+import { mount } from 'enzyme';
 import { createBrowserHistory } from 'history' ;
 import { Provider } from 'react-redux';
 

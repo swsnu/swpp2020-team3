@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { NavLink } from 'react-router-dom';
 //Local imports
 import './Navbar.css'
-import Createpage from '../Createpage/Createpage';
 
 class Navbar extends Component{
     state = {

@@ -1,9 +1,7 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import { mount } from 'enzyme';
 
 import Comment from './Comment';
-import Replies from '../reply/Replies';
-
 
 jest.mock('../reply/Replies', () => {
     return jest.fn(props => {
@@ -51,6 +49,7 @@ describe('<Comment/>', () => {
         const component = mount(comment);
         const wrapper = component.find('#edit-comment-button');
         wrapper.simulate('click');
+        expect(spyPrompt).toHaveBeenCalledTimes(1);
         expect(spyEdit).toHaveBeenCalledTimes(1);
     })
 
@@ -60,6 +59,7 @@ describe('<Comment/>', () => {
         const component = mount(comment);
         const wrapper = component.find('#edit-comment-button');
         wrapper.simulate('click');
+        expect(spyPrompt).toHaveBeenCalledTimes(1);
         expect(spyEdit).toHaveBeenCalledTimes(0);
     })
 

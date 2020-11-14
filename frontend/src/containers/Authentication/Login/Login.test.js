@@ -1,8 +1,7 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter} from 'connected-react-router';
-import {BrowserRouter, Router,Route, Redirect, Switch} from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
 import {getMockStore} from '../../../test-utils/mocks.js'
@@ -30,7 +29,7 @@ describe('Login', () => {
             </Provider>
         );
         spyOnLogin = jest.spyOn(actionCreators, 'signIn')
-        .mockImplementation(() => {return dispatch => {}})
+        .mockImplementation(() => {return () => {}})
     });
 
     it('should render Login', () => {

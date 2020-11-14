@@ -1,13 +1,12 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter } from 'connected-react-router';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
+import { Route, Switch } from 'react-router-dom';
 import { getMockStore } from '../../test-utils/mocks';
 import { history } from '../../store/store';
 import * as actionCreators from '../../store/actions/reply';
 import Replies from './Replies';
-import Reply from './Reply';
 
 jest.mock('./Reply', () => {
     return jest.fn(props => {
@@ -57,13 +56,13 @@ describe('<Replies />', () => {
             </Provider>
         );
         spyGetReplies = jest.spyOn(actionCreators, 'getReplies')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
         spyEditReply = jest.spyOn(actionCreators, 'editReply')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
         spyDeleteReply = jest.spyOn(actionCreators, 'deleteReply')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
         spyAddReply = jest.spyOn(actionCreators, 'addReply')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
     });
 
     afterEach(() => {

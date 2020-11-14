@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import './Mainpage.css';
 import * as actionCreators from '../../store/actions/index'
+
 class Mainpage extends Component{
 
     state={
@@ -56,13 +57,11 @@ class Mainpage extends Component{
 
 
     render(){
-        let test;
         if(this.props.storedRecipes && this.props.storedRecipes[0]){
             let c = this.props.storedRecipes[0]
             if(this.props.storedRecipes[0].photo_list){
                 let d = c.photo_list[0]
                 let t = 'data:image/png;base64,'+ d
-                test = <img src = {t} width = '100' ></img>
             }
         }
 

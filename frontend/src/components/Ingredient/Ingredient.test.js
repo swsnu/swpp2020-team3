@@ -1,8 +1,7 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter} from 'connected-react-router';
-import {BrowserRouter, Router,Route, Redirect, Switch} from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
 import Ingredient from './Ingredient';
@@ -28,7 +27,7 @@ jest.mock("react-dropdown", () => ({  }) => {
   });
 
 describe('Ingredient', () => {
-    let ingredient, spyOnGetIgrList;
+    let ingredient;
     beforeEach(() => {
         ingredient = (
             <Provider store={mockStore}>
@@ -37,8 +36,6 @@ describe('Ingredient', () => {
               </Router>
             </Provider>
           );
-        spyOnGetIgrList = jest.spyOn(actionCreators, 'getIngredients')
-            .mockImplementation(() => {return dispatch => {}})
       })
 
     it('should render Ingredient', () => {

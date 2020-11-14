@@ -1,8 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter} from 'connected-react-router';
-import {BrowserRouter, Router,Route, Redirect, Switch} from 'react-router-dom';
+import { shallow } from 'enzyme';
 import { createBrowserHistory } from 'history' ;
 import DisplayRecipe from './DisplayRecipe';
 
