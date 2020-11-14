@@ -148,12 +148,14 @@ class Createpage extends Component{
     addIngredientQuantity(event, id){
         let list = this.state.selectedIngredientList
         let amount = event.target.value
-        if(list[id]['amount']!=undefined){
-            list[id]['amount'] = parseInt(amount)
-        }
-        else{
-            list[id]['amount'] = parseInt(amount)
-        }
+        // was this: removed because of lint
+        // if(list[id]['amount']!=undefined){
+        //     list[id]['amount'] = parseInt(amount)
+        // }
+        // else{
+        //     list[id]['amount'] = parseInt(amount)
+        // }
+        list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
     }
 
