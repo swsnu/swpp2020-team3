@@ -1,16 +1,12 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter } from 'connected-react-router';
-import {BrowserRouter, Router, Route, Redirect, Switch} from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 import {getMockStore} from '../../test-utils/mocks.js'
 import * as actionCreators from '../../store/actions/recipe';
 
 import Detailpage from './Detailpage'
-import DishResult from '../../components/detail/DishResult';
-import DishStep from '../../components/detail/DishStep';
-import Comments from '../comments/Comments';
 
 const stubState = {
   selectedRecipe: {
@@ -25,7 +21,7 @@ const history = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
 jest.mock('../../components/detail/DishResult', () => {
-  return jest.fn((props) => {
+  return jest.fn(() => {
       return (
           <div className="DishResult">
               <h1>DishResult</h1>
@@ -34,7 +30,7 @@ jest.mock('../../components/detail/DishResult', () => {
   })
 })
 jest.mock('../../components/detail/DishStep', () => {
-  return jest.fn((props) => {
+  return jest.fn(() => {
       return (
           <div className="DishStep">
               <h1>DishStep</h1>
@@ -43,7 +39,7 @@ jest.mock('../../components/detail/DishStep', () => {
   })
 })
 jest.mock('../comments/Comments', () => {
-  return jest.fn((props) => {
+  return jest.fn(() => {
       return (
           <div className="Comments">
               <h1>Comments</h1>
@@ -52,8 +48,7 @@ jest.mock('../comments/Comments', () => {
   })
 })
 describe('<Detailpage />', () => {
-  const stub = {'name': 'test_name', 'brand': 'test_branch', 'quantity': 'test_quantity', 'price': 'test_price', 'igd_type': 'test_type'}
-    let detailpage, spyGetRecipe, spyDeleteRecipe;
+    let detailpage, spyDeleteRecipe;
     beforeEach(() => {
       detailpage = (
         <Provider store={mockStore}>
@@ -62,10 +57,8 @@ describe('<Detailpage />', () => {
           </Router>
         </Provider>
       );
-      spyGetRecipe = jest.spyOn(actionCreators, 'getRecipe')
-      .mockImplementation((id) => {return dispatch => {}})
       spyDeleteRecipe = jest.spyOn(actionCreators, 'deleteRecipe')
-      .mockImplementation(() => {return dispatch => {}})
+      .mockImplementation(() => {return () => {}})
     })
   
     it('should render Createpage', () => {

@@ -7,7 +7,6 @@ import { getMockStore } from '../../test-utils/mocks';
 import { history } from '../../store/store';
 import * as actionCreators from '../../store/actions/reply';
 import Replies from './Replies';
-import Reply from './Reply';
 
 jest.mock('./Reply', () => {
     return jest.fn(props => {
@@ -57,13 +56,13 @@ describe('<Replies />', () => {
             </Provider>
         );
         spyGetReplies = jest.spyOn(actionCreators, 'getReplies')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
         spyEditReply = jest.spyOn(actionCreators, 'editReply')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
         spyDeleteReply = jest.spyOn(actionCreators, 'deleteReply')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
         spyAddReply = jest.spyOn(actionCreators, 'addReply')
-        .mockImplementation(() => { return dispatch => {}; });
+        .mockImplementation(() => { return () => {}; });
     });
 
     afterEach(() => {

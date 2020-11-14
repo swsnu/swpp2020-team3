@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-
+import PropTypes from "prop-types";
 import * as actionCreators from '../../store/actions/index';
 import Reply from './Reply';
 
@@ -38,3 +38,14 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(null, mapDispatchToProps)(Replies);
+
+Replies.propTypes = {
+    onEditReply: PropTypes.func,
+    onDeleteReply: PropTypes.func,
+    addReply: PropTypes.func,
+    replies: PropTypes.array,
+    commentId: PropTypes.string
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Replies);
+

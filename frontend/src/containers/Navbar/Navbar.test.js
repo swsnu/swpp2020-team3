@@ -1,8 +1,6 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter } from 'connected-react-router';
-import {BrowserRouter, Router, Route, Redirect, Switch} from 'react-router-dom';
+import { mount } from 'enzyme';
+import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
 import Navbar from './Navbar'
@@ -10,7 +8,7 @@ import Navbar from './Navbar'
 const history = createBrowserHistory()
 
 describe('<Navbar />', () => {
-    let navBar, spyWindow;
+    let navBar;
   
     beforeEach(() => {
       navBar = (
@@ -18,7 +16,6 @@ describe('<Navbar />', () => {
             <Navbar history={history}/>
         </Router>
       );
-      const { location } = window;
       delete window.location;
       window.location = { reload: jest.fn() };
     })
@@ -59,7 +56,7 @@ describe('<Navbar />', () => {
 
     it('should test categories', () => {
       const component = mount(navBar);
-      let wrapper = component.find('a').forEach((wrap) => {
+      component.find('a').forEach((wrap) => {
         wrap.simulate('click')
       })
     })

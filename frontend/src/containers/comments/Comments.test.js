@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'connected-react-router'
 
-import Comment from './Comment';
+
 import Comments from './Comments';
 import { getMockStore } from '../../test-utils/mocks';
 import * as replyCreators from '../../store/actions/reply'
@@ -59,17 +58,17 @@ describe('<Comments/>', () => {
 
     it('should mount well', async () => {
         const spyGetReplySet = jest.spyOn(replyCreators, 'getReplySet')
-            .mockImplementation((id) => {
-                return dispatch => {}
+            .mockImplementation(() => {
+                return () => {};
             })
         const spyGetComments = jest.spyOn(commentCreators, 'getComments')
-            .mockImplementation((id) => {
-                return dispatch => new Promise((resolve, reject) => {
+            .mockImplementation(() => {
+                return () => new Promise((resolve) => {
                     const result = {comments: [{'id': 1}]}
                     setImmediate(resolve(result))
                 })
             })
-        const component = mount(comments);
+        mount(comments);
         await fflushPromises();
         expect(spyGetReplySet).toHaveBeenCalledTimes(1);
         expect(spyGetComments).toHaveBeenCalledTimes(1);

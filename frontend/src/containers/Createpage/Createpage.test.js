@@ -1,7 +1,7 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import {BrowserRouter, Router,Route, Redirect, Switch} from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
 import Createpage from './Createpage'
@@ -55,7 +55,7 @@ jest.mock("react-select", () => ({ options, value, onChange, getOptionLabel }) =
   });
 
 describe('<Createpage />', () => {
-    let createpage, spyOnGetIgrList;
+    let createpage;
 
     beforeEach(() => {
       createpage = (
@@ -65,8 +65,6 @@ describe('<Createpage />', () => {
             </Router>
           </Provider>
         );
-        spyOnGetIgrList = jest.spyOn(actionCreators, 'getIngredients')
-            .mockImplementation(() => {return dispatch => {}})
     })
   
     it('should render Createpage', () => {

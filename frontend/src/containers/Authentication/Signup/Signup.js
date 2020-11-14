@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import { withRouter } from 'react-router-dom'
 //Local imports
 import * as actionCreators from '../../../store/actions/index';
@@ -46,13 +44,6 @@ class Signup extends Component{
         )
     }
 }
-
-
-const mapStateToProps = state => {
-    return {
-       
-    };
-}
   
 const mapDispatchToProps = dispatch => {
     return {
@@ -60,4 +51,4 @@ const mapDispatchToProps = dispatch => {
         }
     }
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Signup));
+export default connect(null,mapDispatchToProps)(withRouter(Signup));

@@ -33,7 +33,7 @@ const editComment_ = (comment) => {
 export const editComment = (comment) => {
   return dispatch => {
     return axios.put('/api/comment/'+comment.id+'/', comment)
-      .then(res => dispatch(editComment_(comment)))
+      .then(() => dispatch(editComment_(comment)))
   }
 }
 
@@ -44,6 +44,6 @@ const deleteComment_ = (id) => {
 export const deleteComment = (id) => {
   return dispatch => {
     return axios.delete('/api/comment/'+id)
-      .then(res => dispatch(deleteComment_(id)))
+      .then(() => dispatch(deleteComment_(id)))
   }
 }

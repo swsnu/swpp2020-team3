@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Recipe from '../../components/Recipe/Recipe';
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import { withRouter } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 import queryString from 'query-string';

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 // Local imports
 import './Createpage.css'
 import './CreateStep.css'
@@ -32,12 +31,6 @@ state={
         )
     }
 }
-
-const mapStateToProps = state => {
-    return {
-       
-    };
-}
   
 const mapDispatchToProps = dispatch => {
     return {
@@ -46,5 +39,5 @@ const mapDispatchToProps = dispatch => {
         }
     }
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(CreateStep));
+export default connect(null,mapDispatchToProps)(withRouter(CreateStep));
 

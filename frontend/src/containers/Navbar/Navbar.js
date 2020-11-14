@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 //Local imports
 import './Navbar.css'
 import Createpage from '../Createpage/Createpage';
+import PropTypes from "prop-types";
 
 class Navbar extends Component{
     state = {
@@ -92,5 +93,11 @@ class Navbar extends Component{
         )        
     }
 }
+
+Navbar.propTypes = {
+    history: PropTypes.object,
+    storedRecipes: PropTypes.array,
+    history: PropTypes.object
+};
 
 export default Navbar

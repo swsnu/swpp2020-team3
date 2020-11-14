@@ -24,6 +24,7 @@ describe('<Reply />', () => {
     const wrapper = component.find('#edit-reply-button');
     wrapper.simulate('click');
     //expect(component.onEdit()).toHaveBeenCalledTimes(1);
+    expect(spyPrompt).toHaveBeenCalledTimes(1);
     expect(mockClickEdit).toHaveBeenCalledTimes(1);
   });
 
@@ -34,6 +35,7 @@ describe('<Reply />', () => {
     const wrapper = component.find('#edit-reply-button');
     wrapper.simulate('click');
     //expect(component.onEdit()).toHaveBeenCalledTimes(1);
+    expect(spyPrompt).toHaveBeenCalledTimes(1); 
     expect(mockClickEdit).toHaveBeenCalledTimes(0);
   });
   

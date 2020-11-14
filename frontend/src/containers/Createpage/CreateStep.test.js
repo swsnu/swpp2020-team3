@@ -1,14 +1,11 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter} from 'connected-react-router';
-import {BrowserRouter, Router,Route, Redirect, Switch} from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
-import Createpage from './Createpage'
 import CreateStep from './CreateStep'
 import {getMockStore} from '../../test-utils/mocks.js'
-import * as actionCreators from '../../store/actions/recipe';
 
 const stubState = {
     ingredientList: [

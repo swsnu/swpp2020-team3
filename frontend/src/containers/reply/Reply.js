@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import PropTypes from "prop-types";
 
 class Reply extends Component {
     state = {
@@ -23,5 +23,12 @@ class Reply extends Component {
         ) 
     }
 }
+
+Reply.propTypes = {
+    onEditReply: PropTypes.func,
+    onDeleteReply: PropTypes.func,
+    content: PropTypes.string,
+    author: PropTypes.string
+};
 
 export default Reply;
