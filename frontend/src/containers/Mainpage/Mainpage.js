@@ -7,7 +7,7 @@ import * as actionCreators from '../../store/actions/index'
 
 class Mainpage extends Component{
 
-    state = {
+    state={
         search: {category1: false,
             category2: false,
             category3: false,
@@ -57,7 +57,6 @@ class Mainpage extends Component{
 
 
     render(){
-        console.log(this.props.storedRecipes)
         if(this.props.storedRecipes && this.props.storedRecipes[0]){
             let c = this.props.storedRecipes[0]
             if(this.props.storedRecipes[0].photo_list){
@@ -126,12 +125,12 @@ class Mainpage extends Component{
             </div>
         )        
     }
-};
+}
 
 const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.randomRecipe,
-    };
+    }
 }
   
 const mapDispatchToProps = dispatch => {
