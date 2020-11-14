@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import * as actionCreators from '../../store/actions/index';
 import queryString from 'query-string';
 import './RecipeList.css'
+import PropTypes from "prop-types";
 //TODO:
 //      중간 이후에 할 일 : like/unlike recipe User model, authentication?
 //      query string doesn't work...
@@ -246,6 +247,12 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
+RecipeList.propTypes = {
+    history: PropTypes.object,
+    location: PropTypes.object,
+    storedRecipes: PropTypes.array,
+    onGetRecipes: PropTypes.func,
+};
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(RecipeList));
 

@@ -6,7 +6,7 @@ import Select from 'react-select'
 import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
 import CreateStep from './CreateStep';
-
+import PropTypes from "prop-types";
 
 class Createpage extends Component{
    
@@ -283,6 +283,13 @@ const mapDispatchToProps = dispatch => {
         onGetIgrList: () => dispatch(actionCreators.getIngredients())
         }
     }
+
+Createpage.propTypes = {
+    history: PropTypes.object,
+    ingredientList: PropTypes.array,
+    onGetIgrList: PropTypes.func,
+    onCreate: PropTypes.func,
+};
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Createpage));
 
