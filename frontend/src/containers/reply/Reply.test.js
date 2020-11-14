@@ -18,24 +18,24 @@ describe('<Reply />', () => {
   });
 
   it('should handle editReply 1', () => {
-    const spyPrompt = jest.spyOn(window, 'prompt').mockImplementation(() => 'yes');
+    const spyPrompt1 = jest.spyOn(window, 'prompt').mockImplementation(() => 'yes');
     const mockClickEdit = jest.fn();
     const component = shallow(<Reply onEditReply={mockClickEdit}/>);
     const wrapper = component.find('#edit-reply-button');
     wrapper.simulate('click');
     //expect(component.onEdit()).toHaveBeenCalledTimes(1);
-    expect(spyPrompt).toHaveBeenCalledTimes(1);
+    expect(spyPrompt1).toHaveBeenCalledTimes(1);
     expect(mockClickEdit).toHaveBeenCalledTimes(1);
   });
 
   it('should handle editReply 2', () => {
-    const spyPrompt = jest.spyOn(window, 'prompt').mockImplementation(() => '');
+    const spyPrompt2 = jest.spyOn(window, 'prompt').mockImplementation(() => '');
     const mockClickEdit = jest.fn();
     const component = shallow(<Reply onEditReply={mockClickEdit}/>);
     const wrapper = component.find('#edit-reply-button');
     wrapper.simulate('click');
     //expect(component.onEdit()).toHaveBeenCalledTimes(1);
-    expect(spyPrompt).toHaveBeenCalledTimes(1); 
+    expect(spyPrompt2).toHaveBeenCalledTimes(2); 
     expect(mockClickEdit).toHaveBeenCalledTimes(0);
   });
   

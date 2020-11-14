@@ -58,13 +58,6 @@ class Mainpage extends Component{
 
 
     render(){
-        if(this.props.storedRecipes && this.props.storedRecipes[0]){
-            let c = this.props.storedRecipes[0]
-            if(this.props.storedRecipes[0].photo_list){
-                let d = c.photo_list[0]
-                let t = 'data:image/png;base64,'+ d
-            }
-        }
 
         let dailyrandomList;
         if(this.props.storedRecipes){

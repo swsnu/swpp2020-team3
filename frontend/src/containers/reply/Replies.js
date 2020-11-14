@@ -46,4 +46,4 @@ Replies.propTypes = {
     commentId: PropTypes.string
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Replies);
+export default connect(null, mapDispatchToProps)(Replies);

@@ -6,7 +6,6 @@ import { createBrowserHistory } from 'history' ;
 
 import Ingredient from './Ingredient';
 import {getMockStore} from '../../test-utils/mocks.js'
-import * as actionCreators from '../../store/actions/recipe';
 
 const stubState = {
     ingredientList: [
