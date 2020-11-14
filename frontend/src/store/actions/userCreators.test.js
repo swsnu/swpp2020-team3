@@ -4,8 +4,6 @@ import * as userCreators from './userCreators'
 
 const stubCurrentUser = {"id": 1, "email": "edsger@dijkstra.com", "password": "iluvswpp",
 "name": "Edsger Dijkstra", "logged_in": true}
-const stubUserList= [{"id": 1, "email": "edsger@dijkstra.com", "password": "iluvswpp",
-"name": "Edsger Dijkstra", "logged_in": true}]
 
 describe('userCreators', () => {
     const fflushPromises = () => {

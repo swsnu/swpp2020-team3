@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-//import './DishStep.css';
+import './DishStep.css';
 
 class DishStep extends Component {
     render() {
