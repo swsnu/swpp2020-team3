@@ -24,7 +24,7 @@ class Navbar extends Component{
         return(
             <div className = 'BackNavBar'>
                 <div className='SearchBar'>
-                    <logo> <NavLink to='/main-page' exact><p id = 'Logo'>RECIPICK</p></NavLink> </logo>
+                    <div id='logo'> <NavLink to='/main-page' exact><p id = 'Logo'>RECIPICK</p></NavLink> </div>
                     <div className= 'searchbar'> <input type='text' placeholder = "하한" value = {this.state.minPrice}  onChange={(event) =>  this.setState({minPrice: event.target.value})}/></div>
                     <div className= 'searchbar'>~</div>  
                     <div className= 'searchbar'><input type='text'  placeholder = "상한" value = {this.state.maxPrice}  onChange={(event) =>  this.setState({maxPrice: event.target.value})}/></div> 
