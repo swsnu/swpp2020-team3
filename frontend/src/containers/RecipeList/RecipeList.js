@@ -66,10 +66,10 @@ class RecipeList extends Component{
 
     checkInputHandler = (state) =>{
         let st=state;
-        if(this.state.maxPrice === '') st.maxPrice=100000;
-        if(this.state.minPrice === '') st.minPrice=0;
-        if(this.state.maxDuration === '') st.maxDuration=100;
-        if(this.state.minDuration === '') st.minDuration=0;
+        if(this.state.maxPrice == '') st.maxPrice=100000;
+        if(this.state.minPrice == '') st.minPrice=0;
+        if(this.state.maxDuration == '') st.maxDuration=100;
+        if(this.state.minDuration == '') st.minDuration=0;
         return st;
     }
 
