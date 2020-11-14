@@ -22,6 +22,7 @@ matrix:
         - source ~/virtualenv/python3.7/bin/activate
         - pip install -r requirements.txt
         - python -m pip install Pillow
+        - gem install coveralls-lcov
       script:
         - cd ..
         - cd frontend
