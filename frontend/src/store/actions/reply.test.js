@@ -13,8 +13,8 @@ describe('reply', () => {
     })
 
     it('should get list of reply', async () => {
-        axios.get = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.get = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 200,
                     data: stubUserList
@@ -27,8 +27,8 @@ describe('reply', () => {
     })
 
     it('should get reply set', async () => {
-        axios.get = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.get = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 200,
                     data: stubUserList
@@ -41,8 +41,8 @@ describe('reply', () => {
     })
 
     it('should add reply', async () => {
-        axios.post = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.post = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 200,
                     data: stubCurrentUser
@@ -51,12 +51,12 @@ describe('reply', () => {
             })
         })
         await store.dispatch(replyCreators.addReply({'commentId': 1}));
-        expect(axios.post).toHaveBeenCalledTimes(1)
+        expect(axios.post).toHaveBeenCalledTimes(1);
     })
 
     it('should edit reply', () => {
-        axios.put = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.put = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 200,
                 }
@@ -68,8 +68,8 @@ describe('reply', () => {
     })
 
     it('should delete reply', () => {
-        axios.delete = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.delete = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 200,
                 }

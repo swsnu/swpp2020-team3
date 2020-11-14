@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { connectRouter } from 'connected-react-router';
 import { history, middlewares } from '../store/store';
 
 const mockFunction = jest.fn(

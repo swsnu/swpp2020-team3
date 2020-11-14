@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import Dropdown, {MenuItem} from 'react-dropdown';
+import Dropdown from 'react-dropdown';
 
 // Local imports
 import * as actionCreators from '../../store/actions/index'

@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
-import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import { NavLink } from 'react-router-dom';
 //Local imports
 import './Navbar.css'
-import Createpage from '../Createpage/Createpage';
 
 class Navbar extends Component{
     state = {

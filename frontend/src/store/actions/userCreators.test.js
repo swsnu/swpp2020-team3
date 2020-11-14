@@ -4,8 +4,6 @@ import * as userCreators from './userCreators'
 
 const stubCurrentUser = {"id": 1, "email": "edsger@dijkstra.com", "password": "iluvswpp",
 "name": "Edsger Dijkstra", "logged_in": true}
-const stubUserList= [{"id": 1, "email": "edsger@dijkstra.com", "password": "iluvswpp",
-"name": "Edsger Dijkstra", "logged_in": true}]
 
 describe('userCreators', () => {
     const fflushPromises = () => {
@@ -15,8 +13,8 @@ describe('userCreators', () => {
         jest.clearAllMocks();
     })
     it('should get a single user', async () => {
-        axios.get = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.get = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 200,
                     data: stubCurrentUser
@@ -30,8 +28,8 @@ describe('userCreators', () => {
     })
 
     it('should sign in', async() => {
-        axios.post = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.post = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 204
                 }
@@ -44,8 +42,8 @@ describe('userCreators', () => {
     })
 
     it('should sign up', async() => {
-        axios.post = jest.fn(url => {
-            return new Promise((resolve, reject) => {
+        axios.post = jest.fn(() => {
+            return new Promise((resolve) => {
                 const result = {
                     status: 204
                 }

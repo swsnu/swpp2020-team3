@@ -16,8 +16,8 @@ describe('comment', () => {
     const stubCommentList = [stubComment];
 
     const spy = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubCommentList
@@ -37,8 +37,8 @@ describe('comment', () => {
 
   it(`'deleteComment' should delete article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'delete')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: null,
@@ -55,8 +55,8 @@ describe('comment', () => {
 
   it(`'addComment' should add article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'post')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubComment,
@@ -73,8 +73,8 @@ describe('comment', () => {
 
   it(`'editComment' should edit article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'put')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubComment,
