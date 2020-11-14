@@ -19,6 +19,9 @@ class DisplayRecipe extends Component {
 
 DisplayRecipe.propTypes = {
     history: PropTypes.object,
+    id: PropTypes.number,
+    img: PropTypes.string,
+    title: PropTypes.string,
 };
 
 export default DisplayRecipe;
