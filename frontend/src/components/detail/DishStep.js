@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+
 import './DishStep.css';
 
 class DishStep extends Component {
@@ -16,4 +18,8 @@ class DishStep extends Component {
     }
 }
 
+DishStep.PropTypes = {
+    img: PropTypes.string,
+    explanation: PropTypes.string,
+}
 export default DishStep;

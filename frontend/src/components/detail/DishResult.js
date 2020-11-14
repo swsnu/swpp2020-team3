@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import './DishResult.css'
 import './DishResult.css'
 
@@ -46,4 +47,15 @@ class DishResult extends Component {
     }
 }
 
+DishResult.propTypes = {
+    ingredients: PropTypes.array,
+    tag: PropTypes.string,
+    price: PropTypes.number,
+    likes: PropTypes.number,
+    title: PropTypes.string,
+    rating: PropTypes.number,
+    category: PropTypes.string,
+    img: PropTypes.string,
+    abstraction: PropTypes.string,
+}
 export default DishResult;

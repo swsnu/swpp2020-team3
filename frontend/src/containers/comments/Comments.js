@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import * as actionCreators from '../../store/actions/index';
 import Comment from './Comment';
@@ -49,4 +50,16 @@ const mapDispatchToProps = dispatch => {
         getReplySet: (comment_id_list) => dispatch(actionCreators.getReplySet(comment_id_list))
     }
 }
+
+Comments.propTypes = {
+    getComments: PropTypes.func,
+    getReplySet: PropTypes.func,
+    onEditComment: PropTypes.func,
+    onDeleteComment: PropTypes.func,
+    addComment: PropTypes.func,
+    comments: PropTypes.array,
+    replies: PropTypes.array,
+    recipeId: PropTypes.number
+}
+
 export default connect(mapStateToProps, mapDispatchToProps)(Comments);

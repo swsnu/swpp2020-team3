@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types';
 
 import * as actionCreators from '../../store/actions/index';
 
@@ -83,5 +84,11 @@ const mapDispatchToProps = dispatch => {
     };
 }
 
+Detailpage.propTypes = {
+    getRecipe: PropTypes.func,
+    deleteRecipe: PropTypes.func,
+    recipe: PropTypes.object,
+    match: PropTypes.object,
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Detailpage));

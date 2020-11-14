@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import Replies from '../reply/Replies';
+import PropTypes from 'prop-types';
 
 import './Comment.css'
 
@@ -29,5 +30,14 @@ class Comment extends Component {
         ) 
     }
 }
+
+Comment.propTypes = {
+    onEditComment: PropTypes.func,
+    onDeleteComment: PropTypes.func,
+    content: PropTypes.string,
+    replies: PropTypes.array,
+    id: PropTypes.number,
+    author: PropTypes.number,
+};
 
 export default Comment;
