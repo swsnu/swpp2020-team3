@@ -13,8 +13,6 @@ const reducer = (state = initialState, action) => {
       return {...state, selectedRecipe: action.selectedRecipe}
     case actionTypes.GET_RECIPES:
       return { ...state, recipes: action.recipes };
-    case actionTypes.GET_RECIPE:
-      return { ...state, selectedRecipe: action.recipe};
     case actionTypes.DELETE_RECIPE:
       const afterDeleted = state.recipes.filter((item) => item.id!=action.id);
       return { ...state, recipes: afterDeleted}
