@@ -26,7 +26,7 @@ class Comment extends Component {
                 <p>{this.props.content} - {this.props.author}</p>
                 {<button id='edit-comment-button' onClick={this.onEdit}>edit</button>}
                 {<button id='delete-comment-button' onClick={() => this.props.onDeleteComment()}>delete</button>}
-                <button onClick={()  => this.setState({toggleReply: !this.state.toggleReply})}>replies</button>
+                <button id='toggle-reply-button' onClick={()  => this.setState({toggleReply: !this.state.toggleReply})}>replies</button>
                 {this.state.toggleReply?replies:null}
             </div>
         ) 

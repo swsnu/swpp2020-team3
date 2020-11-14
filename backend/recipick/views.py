@@ -59,7 +59,7 @@ def ingredient_post(request):
             igd_type = body['igd_type']
             brand = body['brand']
             picture = request.FILES['file']
-        except:
+        except Exception as e:
             return HttpResponse(status = 400)
         igd = Ingredient(name = name, quantity = quantity, price = price, price_normalized = int(price)/int(quantity),
         igd_type = igd_type, brand = brand, picture = picture)
@@ -120,7 +120,6 @@ def recipe_page(request):
 
         listOfRecipes = Recipe.objects
         recipelist = listOfRecipes.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
-        
         if searchMode == 'uploaded-date':
             recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)]
         elif searchMode == 'likes':
@@ -136,10 +135,12 @@ def recipe_page(request):
             #recipepage = recipelist.annotate(rank=SearchRank(vector,query)).order_by('-rank').filter(rank__gt = 0)[10*pageStart:(10*pageStart+51)]
         newrecipepage = []
         for recipe in recipepage:
-
             tn = recipe.thumbnail
             decoded_string = base64.b64encode(tn.read()).decode('utf-8')
-            newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': recipe.author.username, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': decoded_string}
+            author = "none"
+            if recipe.author:
+                author = recipe.author.username
+            newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': author, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': decoded_string}
             newrecipepage.append(newrecipe)
         return JsonResponse(newrecipepage, safe=False, status=200)
     else:
@@ -149,7 +150,6 @@ def image(request):
     if request.method == 'GET':
         try: # if bad request --> 400
             imgList = ImageModel.objects.all().values()
-            print(imgList)
         except:
             return HttpResponse(status = 400)
         return HttpResponse(status = 200)
@@ -215,7 +215,6 @@ def recipe_post(request):
 
 def randomrecipe(request):
      if request.method == 'GET':
-        print('check')
         cnt = Recipe.objects.all().count()
         if cnt <= 4:
             recipes = [recipes for recipes in Recipe.objects.all()]
@@ -248,14 +247,7 @@ def recipe(request, id):
         igd = recipe.ingredient_list
         newigdlist = []
         for item in igd.all():
-            newitem = {
-                'name':item.name,
-                'quantity': item.quantity,
-                'price': item.price,
-                'price_normalized': item.price_normalized,
-                'igd_type': item.igd_type,
-                'brand': item.brand,
-            }
+            newitem = {'name':item.name, 'quantity': item.quantity, 'price': item.price, 'price_normalized': item.price_normalized, 'igd_type': item.igd_type, 'brand': item.brand,}
             newigdphoto = base64.b64encode(item.picture.read())
             newitem['picture'] = newigdphoto.decode('utf-8')
             newigdlist.append(newitem)

@@ -19,7 +19,6 @@ const stubState = {
       'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}],
     'photo_list': ['test_image'    ]
   }
-
 }
 
 const history = createBrowserHistory()
