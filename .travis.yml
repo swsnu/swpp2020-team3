@@ -27,6 +27,7 @@ matrix:
         - cd frontend
         - ./node_modules/.bin/eslint src/
         - yarn test --coverage --watchAll=false
+        - coveralls-lcov -c -n coverage/lcov.info > coverage/coverage.json
         - cd ..
         - cd backend
         - pylint **/*.py --load-plugins pylint_django
