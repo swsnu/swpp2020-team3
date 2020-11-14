@@ -6,9 +6,10 @@ import {ConnectedRouter} from 'connected-react-router'
 
 import Comment from './Comment';
 import Comments from './Comments';
-import { getMockStore } from '../test-utils/mocks';
-import * as actionCreators from '../store/actions/actionCreators';
-import { history } from '../store/store';
+import { getMockStore } from '../../test-utils/mocks';
+import * as replyCreators from '../../store/actions/reply'
+import * as commentCreators from '../../store/actions/comment';
+import { history } from '../../store/store'
 
 jest.mock('./Comment', () => {
     return jest.fn(props => {
@@ -32,6 +33,9 @@ const mockStore = getMockStore(stubInitialState);
 
 describe('<Comments/>', () => {
     let comments;
+    const fflushPromises = () => {
+        return new Promise(resolve => setImmediate(resolve));
+    }
     
     beforeEach(() => {
         comments = <Provider store={mockStore}>
@@ -47,8 +51,62 @@ describe('<Comments/>', () => {
 
     it('should render comments', () => {
         const component = mount(comments);
-        const wrapepr = component.find('Comments');
+        let wrapper = component.find('Comments');
         expect(wrapper.length).toBe(1);
-        
+        wrapper = component.find('.spyComment');
+        expect(wrapper.length).toBe(1);
     })    
+
+    it('should mount well', async () => {
+        const spyGetReplySet = jest.spyOn(replyCreators, 'getReplySet')
+            .mockImplementation((id) => {
+                return dispatch => {}
+            })
+        const spyGetComments = jest.spyOn(commentCreators, 'getComments')
+            .mockImplementation((id) => {
+                return dispatch => new Promise((resolve, reject) => {
+                    const result = {comments: [{'id': 1}]}
+                    setImmediate(resolve(result))
+                })
+            })
+        const component = mount(comments);
+        await fflushPromises();
+        expect(spyGetReplySet).toHaveBeenCalledTimes(1);
+        expect(spyGetComments).toHaveBeenCalledTimes(1);
+    })
+
+    it('should input new comment', () => {
+        const component = mount(comments);
+        const wrapper = component.find('#new-comment');
+        wrapper.simulate('change', {target: {value: 'test_comment'}})
+        let newInstance = component.find(Comments.WrappedComponent).instance();
+        expect(newInstance.state.content).toBe('test_comment');
+    })
+
+    it('should add comment', () => {
+        const spyAddComment = jest.spyOn(commentCreators, 'addComment');
+        
+        const component = mount(comments);
+        let wrapper = component.find('#new-comment');
+        wrapper.simulate('change', {target: {value: 'test_comment'}})
+        wrapper = component.find('#add-comment');
+        wrapper.simulate('click');
+        expect(spyAddComment).toHaveBeenCalledTimes(1);
+    })
+
+    it('should pass edit well', () => {
+        const spyEdit = jest.spyOn(commentCreators, 'editComment');
+        const component = mount(comments);
+        const wrapper = component.find('#edit-comment-button')
+        wrapper.simulate('click');
+        expect(spyEdit).toHaveBeenCalledTimes(1);
+    })
+
+    it('should pass delete well', () => {
+        const spyDelete = jest.spyOn(commentCreators, 'deleteComment');
+        const component = mount(comments);
+        const wrapper = component.find('#delete-comment-button')
+        wrapper.simulate('click');
+        expect(spyDelete).toHaveBeenCalledTimes(1);
+    })
 })
