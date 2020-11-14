@@ -2,13 +2,11 @@ import React, {Component} from 'react';
 import DisplayRecipe from '../../components/Recipe/DisplayRecipe'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import './Mainpage.css';
 import * as actionCreators from '../../store/actions/index'
-import Recipe from '../../components/Recipe/Recipe';
 class Mainpage extends Component{
 
-    state = {
+    state={
         search: {category1: false,
             category2: false,
             category3: false,
@@ -59,7 +57,6 @@ class Mainpage extends Component{
 
     render(){
         let test;
-        console.log(this.props.storedRecipes)
         if(this.props.storedRecipes && this.props.storedRecipes[0]){
             let c = this.props.storedRecipes[0]
             if(this.props.storedRecipes[0].photo_list){
@@ -129,12 +126,12 @@ class Mainpage extends Component{
             </div>
         )        
     }
-};
+}
 
 const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.randomRecipe,
-    };
+    }
 }
   
 const mapDispatchToProps = dispatch => {

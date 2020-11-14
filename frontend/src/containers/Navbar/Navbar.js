@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
-import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import { NavLink } from 'react-router-dom';
 //Local imports
 import './Navbar.css'
@@ -94,6 +91,6 @@ class Navbar extends Component{
             </div>
         )        
     }
-};
+}
 
-export default Navbar;
+export default Navbar

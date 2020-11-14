@@ -1,8 +1,10 @@
 module.exports = {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "jest": true,
     },
     "extends": [
         "eslint:recommended",
@@ -23,5 +25,11 @@ module.exports = {
         "react"
     ],
     "rules": {
+        "react/prop-types":0,
+        "no-unused-vars":0,
+        "no-case-declarations":0,
+        "react/jsx-key":0,
+        "no-empty-pattern":0,
+        "react/display-name":0,
     }
 };

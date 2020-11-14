@@ -5,7 +5,6 @@ import * as actionCreators from './recipe';
 import store from '../store';
 
 const stubRecipe = {id: 1, author_id: 1, title: "TEST_ARTICLE_TITLE", content: 'TEST_ARTICLE_CONTENT'};
-const newStubRecipe= {id: 1, author_id: 1, title: "NEW_TEST_ARTICLE_TITLE", content: 'NEW_TEST_ARTICLE_CONTENT'};
 
 describe('rcp', () => {
   afterEach(() => {
@@ -16,8 +15,8 @@ describe('rcp', () => {
     const stubRecipeList = [stubRecipe];
 
     const spy = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubRecipeList
@@ -36,8 +35,8 @@ describe('rcp', () => {
 
   it(`'getRecipe' should fetch article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubRecipe
@@ -56,8 +55,8 @@ describe('rcp', () => {
 
   it(`'deleteRecipe' should delete article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'delete')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: null,
@@ -74,8 +73,8 @@ describe('rcp', () => {
 
   it(`'createRecipe' should delete article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'post')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubRecipe,
@@ -95,8 +94,8 @@ describe('rcp', () => {
   it(`'getIngredients' should delete article correctly`, (done) => {
     const stubIngredientList = [stubRecipe];
     const spy = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubIngredientList,
@@ -116,8 +115,8 @@ describe('rcp', () => {
   it(`'getRandom' should delete article correctly`, (done) => {
     const stubRandomList = [stubRecipe];
     const spy = jest.spyOn(axios, 'get')
-      .mockImplementation(url => {
-        return new Promise((resolve, reject) => {
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
           const result = {
             status: 200,
             data: stubRandomList,
