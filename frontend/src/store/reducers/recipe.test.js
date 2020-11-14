@@ -1,9 +1,7 @@
-import React from 'react';
 import reducer from './recipe';
 import * as actionTypes from '../actions/actionTypes';
 
 const stubRecipe = {id: 1, author_id: 1, title: "TEST_ARTICLE_TITLE", content: 'TEST_ARTICLE_CONTENT'};
-const stubUser = {id:1, email: 'swpp@snu.ac.kr', password: 'iluvswpp', name:"swpp lover", logged_in:true};
 
 describe('Recipe Reducer', () => {
   it('should return default state', () => {
@@ -29,12 +27,6 @@ describe('Recipe Reducer', () => {
   });
 
   it('should get Recipe', () => {
-    const stubInitialState = {
-        recipes: [],
-        selectedRecipe: null,
-        ingredientList: [],
-        randomRecipe: null
-    };
     const newState = reducer(undefined, {
       type: actionTypes.GET_RECIPE,
       selectedRecipe: stubRecipe,
