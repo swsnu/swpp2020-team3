@@ -1,5 +1,5 @@
 import React from 'react';
-import './Recipe.css'
+import './Recipe.css';
 import StarRatings from 'react-star-ratings';
 const Recipe = (props) => {
     return (
