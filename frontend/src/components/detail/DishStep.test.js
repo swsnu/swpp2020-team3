@@ -1,22 +1,17 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
-
+import { shallow, mount } from 'enzyme';
+import { Provider } from 'react-redux';
+import { connectRouter, ConnectedRouter} from 'connected-react-router';
+import {BrowserRouter, Router,Route, Redirect, Switch} from 'react-router-dom';
+import { createBrowserHistory } from 'history' ;
 import DishStep from './DishStep';
 
-describe('<DishStep />', () => {
-    let dishstep;
 
-    beforeEach(() => {
-        dishstep = (
-            <DishStep img={'test_img'} explanation={'test_explanation'}/>
-        )
-    })
+describe('DishStep', () => {
 
     it('should render DishStep', () => {
-        const component = mount(dishstep);
-        const wrapper = component.find('DishStep');
-        expect(wrapper.length).toBe(1);
-        expect(wrapper.find('img').prop("src")).toEqual('test_img');
-        expect(wrapper.find('.dish_explanation').text()).toEqual('test_explanation')
+        const component = shallow(<DishStep />);
+        const wrapper = component.find('.dish_step');
+        expect(wrapper.length).toBe(1)
     })
 })

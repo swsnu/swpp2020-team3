@@ -27,6 +27,7 @@ class Detailpage extends Component {
         const category = this.props.recipe && this.props.recipe.category
         const tags = this.props.recipe && this.props.recipe.tag_list
         let igd;
+        console.log(this.props.recipe)
         if(this.props.recipe){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
                 let img = 'data:image/png;base64,'+igd.picture
@@ -62,7 +63,7 @@ class Detailpage extends Component {
                             <div id = 'detailmethod'>
                                 {methods}
                                 <button>Edit</button>
-                                <button onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
+                                <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
                             </div>
                         </div>
                         <Comments recipeId={this.props.match.params.id}/>

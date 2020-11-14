@@ -50,7 +50,14 @@ describe('Signup', () => {
             wrap.simulate('change', {target: {value: `test_${testVal}`}})
             expect(instance.state[testVal]).toBe(`test_${testVal}`)
         })
-        
+    })
+
+    it('should test submit', () => {
+        const component = mount(signup);
+        let instance = component.find(Signup.WrappedComponent).instance()
+        let wrapper = component.find('.SignupButton')
+        wrapper.simulate('click')
+        expect(spyOnSignup).toHaveBeenCalledTimes(1)
     })
     
     
