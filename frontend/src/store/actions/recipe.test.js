@@ -107,7 +107,7 @@ describe('rcp', () => {
 
       store.dispatch(actionCreators.getIngredients()).then(() => {
         const newState = store.getState();
-        expect(newState.rcp.ingredientList).toBe(stubRecipeList);
+        expect(newState.rcp.ingredientList).toBe(stubIngredientList);
         expect(spy).toHaveBeenCalledTimes(1);
         done();
       });
@@ -128,7 +128,7 @@ describe('rcp', () => {
 
       store.dispatch(actionCreators.getRandom()).then(() => {
         const newState = store.getState();
-        expect(newState.rcp.randomRecipes).toBe(stubRandomList);
+        expect(newState.rcp.randomRecipe).toBe(stubRandomList);
         expect(spy).toHaveBeenCalledTimes(1);
         done();
       });
