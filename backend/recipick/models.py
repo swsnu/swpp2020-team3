@@ -1,5 +1,5 @@
+import django
 from django.db import models
-from django.db.models import Model
 from django.contrib.auth.models import User
 # Create your models here.
 
@@ -28,7 +28,6 @@ class Recipe(models.Model):
     thumbnail = models.ImageField(upload_to='blog/%Y/%m/%d', null=True, default='media/already.png')
     duration= models.IntegerField()
 
-    # This should be foreign key for the one to many field. However, when we use foreign key, we can't implement list. How to handle this?
     photo_list = models.ManyToManyField(
         ImageModel,
     )
@@ -41,9 +40,8 @@ class Recipe(models.Model):
     rating = models.FloatField(null=True)
     likes = models.IntegerField(null=True)
     created_date = models.DateField(null=True)
-    edited = models.BooleanField(null=True)    
+    edited = models.BooleanField(null=True)
     summary = models.TextField(null=True)
-
 class Comment(models.Model):
     recipe = models.ForeignKey(
         Recipe,
@@ -73,5 +71,3 @@ class Reply(models.Model):
     )
     created_date = models.DateField()
     edited = models.BooleanField()
-
-
