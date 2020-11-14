@@ -22,6 +22,8 @@ class Ingredient extends Component{
         ingr: ''
     }
     componentDidMount(){
+        console.log("hello")
+        this.props.onGetIgrList()
         this.setState({data: this.props.igrdList})
         this.setState({name: this.state.data['name']})
         this.setState({quantity: this.state.data['quantity']})
@@ -31,10 +33,7 @@ class Ingredient extends Component{
         this.setState({brand: this.state.data['brand']})
         this.setState({picture: this.state.data['picture']})
     }
-    componentDidMount(){
-        this.props.onGetIgrList()
-    }
-
+    
     _onSelect(event){
         this.setState({ingr: event['label']})
         //console.log()
