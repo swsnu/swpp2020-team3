@@ -18,7 +18,7 @@ class DishStep extends Component {
     }
 }
 
-DishStep.PropTypes = {
+DishStep.propTypes = {
     img: PropTypes.string,
     explanation: PropTypes.string,
 }
