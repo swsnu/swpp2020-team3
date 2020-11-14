@@ -16,6 +16,7 @@ matrix:
         - cd frontend
       install:
         - yarn install
+        - yarn add coveralls
         - cd ..
         - cd backend
         - source ~/virtualenv/python3.7/bin/activate
