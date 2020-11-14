@@ -2,6 +2,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 import {ConnectedRouter} from 'connected-react-router';
+import PropTypes from "prop-types";
 
 //Local imports:
 import './App.css';
@@ -34,5 +35,7 @@ function App(props) {
     </ConnectedRouter>
   );
 }
-
+App.propTypes = {
+  history: PropTypes.object
+};
 export default App;

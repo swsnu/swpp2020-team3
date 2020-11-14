@@ -25,7 +25,6 @@ module.exports = {
         "react"
     ],
     "rules": {
-
         "no-case-declarations":0,
         "react/jsx-key":0,
         "no-empty-pattern":0,

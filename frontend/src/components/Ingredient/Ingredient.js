@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import Dropdown from 'react-dropdown';
+import PropTypes from "prop-types";
 
 // Local imports
 import * as actionCreators from '../../store/actions/index'
@@ -89,6 +90,11 @@ const mapDispatchToProps = dispatch => {
         onGetIgrList: () => dispatch(actionCreators.getIngredients())
         }
     }
+
+Ingredient.propTypes = {
+    igrdList: PropTypes.array,
+    onGetIgrList: PropTypes.func
+};
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Ingredient));
 

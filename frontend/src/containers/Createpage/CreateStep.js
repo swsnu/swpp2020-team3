@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import './Createpage.css'
 import './CreateStep.css'
 import * as actionCreators from '../../store/actions/index'
+import PropTypes from "prop-types";
 
 // TODO: must retreive ingredients
 // TODO: must implement preview of image
@@ -38,6 +39,13 @@ const mapDispatchToProps = dispatch => {
 
         }
     }
+
+CreateStep.propTypes = {
+    value_text: PropTypes.string,
+    event_text: PropTypes.func,
+    index: PropTypes.number,
+    event_image: PropTypes.func,
+};
 
 export default connect(null,mapDispatchToProps)(withRouter(CreateStep));
 
