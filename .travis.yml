@@ -1,8 +1,9 @@
 matrix:
   include:
-    - language: node_js
+    - language: node_js, python
       node_js: '12'
       python: '3.7'
+      dist: bionic
       addons: 
         sonarcloud:
           organization: "swsnu"
@@ -17,6 +18,7 @@ matrix:
         - yarn install
         - cd ..
         - cd backend
+        - source ~/virtualenv/python3.7/bin/activate
         - pip install -r requirements.txt
         - python -m pip install Pillow
       script:
@@ -31,3 +33,6 @@ matrix:
         - coverage xml
         - cd ..
         - sonar-scanner
+      after_success:
+        - cd backend
+        - coveralls --merge=../frontend/coverage/coverage.json
