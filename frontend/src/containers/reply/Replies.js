@@ -29,7 +29,6 @@ class Replies extends Component {
 }
 
 
-
 const mapDispatchToProps = dispatch => {
     return {
         onEditReply: (reply) => dispatch(actionCreators.editReply(reply)),
@@ -37,6 +36,8 @@ const mapDispatchToProps = dispatch => {
         addReply: (reply) => dispatch(actionCreators.addReply(reply)),
     }
 }
+
+export default connect(null, mapDispatchToProps)(Replies);
 
 Replies.propTypes = {
     onEditReply: PropTypes.func,

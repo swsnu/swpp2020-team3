@@ -18,10 +18,8 @@ const reducer = (state = initialState, action) => {
         author_id: action.reply.author_id,
         id: action.reply.id
       }
-      console.log(newReply)
       return {...state, replies: [...state.replies, newReply]}
     case actionTypes.EDIT_REPLY:
-      console.log(123)
       const afterEdited = state.replies.map((item) => {
         if(item.id==action.reply.id){
           return {...item, content: action.reply.content};

@@ -62,7 +62,6 @@ class Mainpage extends Component{
         let dailyrandomList;
         if(this.props.storedRecipes){
             dailyrandomList = this.props.storedRecipes.map((td) => {
-                console.log(td)
                 let d = 'data:image/png;base64,'+ td.thumbnail
                 return (
                     <li className = 'random_content' id = 'r1'>

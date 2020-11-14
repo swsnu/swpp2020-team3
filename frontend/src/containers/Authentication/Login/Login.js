@@ -19,7 +19,6 @@ class Login extends Component{
         var userCredentials = this.state;
         var tempuserCredentials = {"username": userCredentials.id, "password": userCredentials.password} // this shouldn't be here
         userCredentials = tempuserCredentials; // this shouldn't be here
-        console.log(userCredentials)
         this.props.onLogin(userCredentials)
     }
     render(){

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './DishResult.css'
-//import './DishResult.css'
+import './DishResult.css'
 
 class DishResult extends Component {
     render() {

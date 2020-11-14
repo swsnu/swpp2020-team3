@@ -3,7 +3,6 @@ import './DisplayRecipe.css'
 
 class DisplayRecipe extends Component {
     onClickRandomImage(id){
-        console.log('/detail-page/'+id)
         this.props.history.push('/detail-page/'+id)
     }
 
