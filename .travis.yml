@@ -38,4 +38,5 @@ matrix:
         - sonar-scanner
       after_success:
         - cd backend
+        - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
         - coveralls --merge=../frontend/coverage/coverage.json
