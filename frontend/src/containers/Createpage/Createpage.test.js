@@ -34,7 +34,8 @@ jest.mock('./CreateStep', () => {
         )
     })
 })
-jest.mock("react-select", () => ({ options, value, onChange, getOptionLabel }) => {
+//put parantheses
+jest.mock("react-select", () => {( {options, value, onChange, getOptionLabel} ) => {
     function handleChange(event) {
       onChange(event);
     }
@@ -50,7 +51,7 @@ jest.mock("react-select", () => ({ options, value, onChange, getOptionLabel }) =
           </option>
         ))}
       </select>
-    );
+    );}
   });
 
 describe('<Createpage />', () => {

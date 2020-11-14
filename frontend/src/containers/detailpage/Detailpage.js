@@ -31,7 +31,7 @@ class Detailpage extends Component {
             igd = this.props.recipe.ingredient_list.map( (igd) => {
                 let img = 'data:image/png;base64,'+igd.picture
                 return (
-                    <div id='detailigd'>
+                    <div key={igd.id} id='detailigd'>
                         <div id = 'detailigdinfo'>
                             <div id='igdlabel'>{igd.name}</div>
                             <div id='igdlabel'>{'('+igd.brand+')'}</div>
@@ -48,7 +48,7 @@ class Detailpage extends Component {
             d = 'data:image/png;base64,'+ this.props.recipe.thumbnail;
         }
         const methodData = descriptions && descriptions.map((item, index) => ({img:'data:image/png;base64,'+ this.props.recipe.photo_list[index], explanation:item}))
-        const methods = methodData && methodData.map((item) => <DishStep img={item.img} explanation={item.explanation}/>)
+        const methods = methodData && methodData.map((item) => <DishStep key={item.id} img={item.img} explanation={item.explanation}/>)
 
         return (
             <div id = 'detailBackground'>

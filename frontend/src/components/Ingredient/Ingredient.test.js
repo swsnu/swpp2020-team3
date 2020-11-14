@@ -17,12 +17,13 @@ const stubState = {
 const mockHistory = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
-jest.mock("react-dropdown", () => ({  }) => {
+//put parantheses
+jest.mock("react-dropdown", () => {() => {
     return (
       <div className='dropdown'>
           <h1>dropdown</h1>
       </div>
-    );
+    );}
   });
 
 describe('Ingredient', () => {

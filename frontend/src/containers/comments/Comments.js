@@ -22,7 +22,7 @@ class Comments extends Component {
     }
 
     render() {
-        const commentlist = this.props.comments.map( (item) => <Comment replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} id={item.id}
+        const commentlist = this.props.comments.map( (item) => <Comment key={item.id} replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} id={item.id}
             onEditComment={(content) => this.props.onEditComment({id: item.id, content, edited: true})} onDeleteComment={() => this.props.onDeleteComment(item.id)}/>)
         return (
             <div className='comments'>

@@ -64,7 +64,7 @@ class Mainpage extends Component{
             dailyrandomList = this.props.storedRecipes.map((td) => {
                 let d = 'data:image/png;base64,'+ td.thumbnail
                 return (
-                    <li className = 'random_content' id = 'r1'>
+                    <li key={td.id} className = 'random_content' id = 'r1'>
                         <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
                     </li>
                 )   
@@ -73,14 +73,14 @@ class Mainpage extends Component{
         
         const secondlist = this.state.secondList.map( (td) => {
             return (
-                <li className = 'random_content' id = 'r2'>
+                <li key={td.id} className = 'random_content' id = 'r2'>
                     <DisplayRecipe img = {<img src = {td.image}/>} title = {td.title} />
                 </li>
             )   
         })
         const thirdlist = this.state.thirdList.map( (td) => {
             return (
-                <li className = 'random_content' id = 'r3'>
+                <li key={td.id} className = 'random_content' id = 'r3'>
                     <DisplayRecipe img = {<img src = {td.image} width='150'/>} title = {td.title} />
                 </li>
             )   

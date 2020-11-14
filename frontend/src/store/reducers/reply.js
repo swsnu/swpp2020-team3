@@ -7,11 +7,12 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
+  let newReply, afterEdited, deleted;
   switch (action.type) {
     case actionTypes.GET_REPLIES:
       return { ...state, replies: action.replies };
     case actionTypes.ADD_REPLY:
-      const newReply={
+      newReply={
         content: action.reply.content,
         comment_id: action.reply.comment_id,
         edited: false,
@@ -20,7 +21,7 @@ const reducer = (state = initialState, action) => {
       }
       return {...state, replies: [...state.replies, newReply]}
     case actionTypes.EDIT_REPLY:
-      const afterEdited = state.replies.map((item) => {
+      afterEdited = state.replies.map((item) => {
         if(item.id==action.reply.id){
           return {...item, content: action.reply.content};
         }
@@ -30,7 +31,7 @@ const reducer = (state = initialState, action) => {
       })
       return { ...state, replies: afterEdited}
     case actionTypes.DELETE_REPLY:
-      const deleted = state.replies.filter((reply) => reply.id!=action.id)
+      deleted = state.replies.filter((reply) => reply.id!=action.id)
       return {...state, replies: deleted}
     default:
       break;

@@ -162,7 +162,7 @@ class Createpage extends Component{
         let displayStepList;
         if(this.state.descriptionList.length > 0){
         displayStepList = this.state.descriptionList.map((item, index) => (
-            <div className="description-list">
+            <div key={index} className="description-list">
                 <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
                             value_text={this.state.descriptionList[index]}/>
                 <img src={this.state.imagePreviewList[index]} width='250' height='200'/>

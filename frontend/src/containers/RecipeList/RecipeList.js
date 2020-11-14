@@ -121,7 +121,7 @@ class RecipeList extends Component{
             slicedRecipes = this.props.storedRecipes.slice(10*(this.state.pageNumber%5-1), 10*(this.state.pageNumber%5));
         const recipes = slicedRecipes.map((recipe) => {
             return (
-                <Recipe
+                <Recipe key={recipe.id}
                     author={recipe.author__username}
                     thumbnail={'data:image/png;base64,'+recipe.thumbnail}
                     title={recipe.title}

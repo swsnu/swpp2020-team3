@@ -16,7 +16,7 @@ class Replies extends Component {
     }
 
     render() {
-        const replylist = this.props.replies.map( (item) => <Reply content={item.content} author={item.author_id} 
+        const replylist = this.props.replies.map( (item) => <Reply key={item.id} content={item.content} author={item.author_id} 
             onEditReply={(content) => this.props.onEditReply({id: item.id, content, edited: true})} onDeleteReply={() => this.props.onDeleteReply(item.id)}/>)
         return (
             <div className='replies'>
