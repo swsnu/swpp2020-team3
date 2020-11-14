@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import './Mainpage.css';
 import * as actionCreators from '../../store/actions/index'
+import PropTypes from "prop-types";
 
 class Mainpage extends Component{
 
@@ -141,5 +142,11 @@ const mapDispatchToProps = dispatch => {
             dispatch(actionCreators.getUser(td)),
     }
 }
+
+Mainpage.propTypes = {
+    onGetRandom: PropTypes.func,
+    storedRecipes: PropTypes.array,
+    history: PropTypes.object
+};
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Mainpage));
