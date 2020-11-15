@@ -188,10 +188,11 @@ def recipe_post(request):
         ingList = Ingredient.objects
 
         for ing in ingredient_list:
+            # make sure picture field isn't empty
             target = list(ingList.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type']).values())
             # print(type(target.values()))
-            temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
-                igd_type=ing['igd_type'], brand=ing['brand'])
+            # temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
+            #     igd_type=ing['igd_type'], brand=ing['brand'])
             # print(type(temp))
             value = target[0]['id']
             #print(value)
