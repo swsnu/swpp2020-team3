@@ -10,10 +10,21 @@ class EditDishResult extends Component {
         rating: this.props.rating,
         category: this.props.category,
         abstraction: this.props.abstraction,
+        thumbnail_preview: null,
+    }
+    imageHandler(event){
+        let file = event.target.files[0]
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            this.setState({thumbnail_preview: reader.result})
+            this.setState({thumbnail_file: file})
+        }
+        reader.readAsDataURL(file)
     }
     render() {
         const showigd = this.props.ingredients
         const tag = this.props.tag && this.props.tag.map((tag) => <span key={tag} id='tag'>{tag} </span>)
+        let thumbnail = this.state.thumbnail_preview ? <img src={this.state.thumbnail_preview} width='250' height='200' /> : this.props.img
         return (
             <div className='dish_result'>
                 <div id = 'detailbox1'>
@@ -39,8 +50,11 @@ class EditDishResult extends Component {
                                 {tag}
                             </div>
                         </div>
-                        <p>{"must be able to change thumbnail"}</p>
-                        <div id = 'detailthumbnail'>{this.props.img}</div>
+                        <div id = 'detailthumbnail'>
+                            
+                            {thumbnail}
+                            <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event)}/>
+                        </div>
                     </div>
                     <div id = 'detailtitle2'>{'레시피 간단 설명'}</div>
                     <div id = 'detailsummary'>
