@@ -8,8 +8,7 @@ import * as actionCreators from '../../store/actions/index';
 import DishResult from '../../components/detail/DishResult';
 import DishStep from '../../components/detail/DishStep';
 import Comments from '../comments/Comments';
-import './Detailpage.css'
-//import './Detailpage.css';
+import EditDishResult from './EditDishResult';
 
 class Detailpage extends Component {
 
@@ -53,16 +52,12 @@ class Detailpage extends Component {
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
-                    
-                    <button onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
-
                     <div id = "detailBlock">
-                        <DishResult img={<img src = {d} width='500'/>} tag={tags} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
+                        <EditDishResult img={<img src = {d} width='500'/>} tag={tags} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>
                                 {methods}
-                                <button>Edit</button>
                                 <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
                             </div>
                         </div>
