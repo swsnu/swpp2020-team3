@@ -1,30 +1,53 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-
+import * as actionCreators from '../../store/actions/index';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom'
+import Select from 'react-select'
 
 class EditDishResult extends Component {
     state = {
-        title: this.props.title,
-        price: this.props.price,
-        likes: this.props.likes,
-        rating: this.props.rating,
-        category: this.props.category,
-        abstraction: this.props.abstraction,
-        thumbnail_preview: null,
+        title: this.props.recipe && this.props.recipe.title,
+        price: this.props.recipe && this.props.recipe.price,
+        likes: this.props.recipe && this.props.recipe.likes,
+        rating: this.props.recipe && this.props.recipe.rating,
+        category: this.props.recipe && this.props.recipe.category,
+        abstraction: this.props.recipe && this.props.recipe.summary,
+        selectedIngredientList: this.props.recipe && this.props.recipe.ingredient_list,
+        tags: this.props.recipe && this.props.recipe.tag_list,
+        thumbnail_preview: this.props.recipe && 'data:image/png;base64,'+ this.props.recipe.thumbnail,
+
+        ingredientList: this.props.ingredientList,
     }
-    imageHandler(event){
-        let file = event.target.files[0]
-        let reader = new FileReader();
-        reader.onloadend = () => {
-            this.setState({thumbnail_preview: reader.result})
-            this.setState({thumbnail_file: file})
-        }
-        reader.readAsDataURL(file)
+
+    componentDidMount(){
+        console.log("mount child")
+        console.log(this.props.ingredientList)
+        this.props.getRecipe(parseInt(this.props.match.params.id)).then((res) => {
+            res = res.selectedRecipe
+            this.setState({
+            title: res.title,
+            price: res.price,
+            likes: res.likes,
+            rating: res.rating,
+            category: res.category,
+            abstraction: res.summary,
+            selectedIngredientList: res.ingredient_list,
+            tags: res.tag_list,
+            thumbnail_preview: 'data:image/png;base64,'+ res.thumbnail,
+        })});
+        this.props.onGetIgrList().then((res) => {
+            console.log(res)
+            this.setState({ingredientList: res.ingredients})
+        })
     }
+
+    updateState(key, value){
+        this.props.updateState(key, value)
+    }
+
     render() {
-        const showigd = this.props.ingredients
-        const tag = this.props.tag && this.props.tag.map((tag) => <span key={tag} id='tag'>{tag} </span>)
-        let thumbnail = this.state.thumbnail_preview ? <img src={this.state.thumbnail_preview} width='250' height='200' /> : this.props.img
+        console.log(this.state)
         return (
             <div className='dish_result'>
                 <div id = 'detailbox1'>
@@ -37,22 +60,21 @@ class EditDishResult extends Component {
                                 {this.state.price}
                                 <br/>
                                 <p id='detaillabel'>{'추천수'}</p>
-                                {this.props.likes}
+                                {this.state.likes}
                                 <br/>
                                 <p id='detaillabel'>{'평점'}</p>
-                                {this.props.rating}
+                                {this.state.rating}
                                 <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
                                 {"make into select"}
                                 <input id='detailcategory' value={this.state.category} onChange={(event) => {this.setState({category: event.target.value})}}/>
                                 <br/>
                                 <p id='detaillabel'>{'태그'}</p>
-                                {tag}
+                                {/* {tag} */}
                             </div>
                         </div>
                         <div id = 'detailthumbnail'>
-                            
-                            {thumbnail}
+                            {/* {thumbnail} */}
                             <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event)}/>
                         </div>
                     </div>
@@ -61,25 +83,31 @@ class EditDishResult extends Component {
                         <textarea id='detailabstraction' value={this.state.abstraction} onChange={(event) => {this.setState({abstraction: event.target.value})}}/>
                     </div>
                 </div>
-                <div id = 'detailbox2'>
-                    <div id = 'detailtitle3'>{'레시피 재료'}</div>
-                    {"must be able to add, delete an ingredient"}
-                    {showigd}
-                </div>
             </div>
         )
     }
 }
 
-EditDishResult.propTypes = {
-    ingredients: PropTypes.array,
-    tag: PropTypes.string,
-    price: PropTypes.number,
-    likes: PropTypes.number,
-    title: PropTypes.string,
-    rating: PropTypes.number,
-    category: PropTypes.string,
-    img: PropTypes.string,
-    abstraction: PropTypes.string,
+const mapStateToProps = state => {
+    return {
+        recipe: state.rcp.selectedRecipe,
+        ingredientList: state.rcp.ingredientList
+    };
 }
-export default EditDishResult;
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
+        onGetIgrList: () => dispatch(actionCreators.getIngredients())
+        // deleteRecipe: (id) => dispatch(actionCreators.deleteRecipe(id))
+    };
+}
+
+EditDishResult.propTypes = {
+    getRecipe: PropTypes.func,
+    deleteRecipe: PropTypes.func,
+    recipe: PropTypes.object,
+    match: PropTypes.object,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EditDishResult));

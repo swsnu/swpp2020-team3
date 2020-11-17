@@ -78,9 +78,11 @@ const getIngredients_ = (result) => {
 }
 export const getIngredients = () => {
   return dispatch => {
-    return axios.get('api/ingredient/')
+    return axios.get('/api/ingredient/')
       .then(res => {
-        dispatch(getIngredients_(res.data))})
+        return dispatch(getIngredients_(res.data));
+        
+      })
   }
 }
 
