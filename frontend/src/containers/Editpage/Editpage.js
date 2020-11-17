@@ -9,13 +9,15 @@ import DishResult from '../../components/detail/DishResult';
 import DishStep from '../../components/detail/DishStep';
 import Comments from '../comments/Comments';
 import EditDishResult from './EditDishResult';
+import EditDishStep from './EditDishStep';
 
 class Editpage extends Component {
 state = {
 
 
 }
-    componentDidMount(){
+    constructor(props){
+        super(props);
         this.props.getRecipe(this.props.match.params.id)
             .then((res) => {
                 this.setState({
@@ -28,12 +30,30 @@ state = {
                     ingredient_list: res['selectedRecipe'].ingredient_list,
                     tag_list: res['selectedRecipe'].tag_list,
                     thumbnail: res['selectedRecipe'].thumbnail,
+                    description_list: res['selectedRecipe'].description_list,
+                    photo_list: res['selectedRecipe'].photo_list
                 })
             })
     }
 
     setParentState(key, value){
         this.setState({[key]: value})
+    }
+    setParentStateList(key, value=-1, index){
+        if(typeof value == typeof 1){
+            console.log("delete")
+            let newDList = this.state.description_list;
+            let newIList = this.state.photo_list;
+            newDList.splice(index, 1)
+            newIList.splice(index, 1)
+            console.log(newDList)
+            console.log(newIList)
+            this.setState({description_list: newDList})
+            this.setState({image_list: newIList})
+        }
+        let list = this.state[key]
+        list[index] = value
+        this.setState({[key]: list})
     }
 
     onSubmit(){
@@ -42,6 +62,13 @@ state = {
 
     render() {
         console.log(this.state)
+        const methodData = this.state.description_list && this.state.description_list.map((item, index) => ({img:'data:image/png;base64,'+ this.state.photo_list[index], explanation:item}))
+        const methods = methodData && methodData.map((item, index) => <div>
+                                <EditDishStep key={index} explanation={this.state.description_list[index]} 
+                                            updateState={(key,value) => this.setParentStateList(key, value, index)} />
+                                <img src={item.img}  width='600'/>
+                                </div>)
+
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
@@ -51,8 +78,7 @@ state = {
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>
-                                {/* {methods} */}
-                                {/* <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button> */}
+                                {methods}
                             </div>
                         </div>
 

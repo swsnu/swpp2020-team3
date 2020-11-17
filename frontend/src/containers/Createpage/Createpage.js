@@ -78,6 +78,7 @@ class Createpage extends Component{
         let newIList = this.state.imageList;
         newDList.splice(index, 1)
         newIList.splice(index, 1)
+        console.log(newDList)
         this.setState({descriptionList: newDList})
         this.setState({imageList: newIList})
     }
