@@ -11,6 +11,7 @@ import base64
 from django.core.files.base import ContentFile
 from random import *
 import random
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 def getuser(request, id):
     if(request.method) == 'GET':
@@ -97,13 +98,13 @@ def ingredient_list(request):
 
 def recipe_page(request):
     if request.method == 'GET':
-        minCost = int(request.GET.get('minPrice'))
-        maxCost = int(request.GET.get('maxPrice'))
-        minTime = int(request.GET.get('minDuration'))
-        maxTime = int(request.GET.get('maxDuration'))
-        pageStart = int(request.GET.get('pageStart'))
-        searchMode = request.GET.get('searchMode')
-        searchWord = request.GET.get('searchWord')
+        min_cost = int(request.GET.get('minPrice'))
+        max_cost = int(request.GET.get('maxPrice'))
+        min_time = int(request.GET.get('minDuration'))
+        max_time = int(request.GET.get('maxDuration'))
+        page_start = int(request.GET.get('pageStart'))
+        search_mode = request.GET.get('searchMode')
+        search_word = request.GET.get('searchWord')
         categories = []
         if request.GET.get('category1') == 'true':
             categories.append('American')
@@ -118,21 +119,26 @@ def recipe_page(request):
         if request.GET.get('category6') == 'true':
             categories.append('Dessert')
 
-        listOfRecipes = Recipe.objects
-        recipelist = listOfRecipes.filter(price__gte = minCost, price__lte = maxCost, duration__gte = minTime, duration__lte = maxTime, category__in = categories)
-        if searchMode == 'uploaded-date':
-            recipepage = recipelist.order_by('-created_date')[10*pageStart:(10*pageStart+51)]
-        elif searchMode == 'likes':
-            recipepage = recipelist.order_by('-likes')[10*pageStart:(10*pageStart+51)]
-        elif searchMode == 'cost':
-            recipepage = recipelist.order_by('price')[10*pageStart:(10*pageStart+51)]
-        elif searchMode == 'rating':
-            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)]
-        else: # searchMode == 'relevance'
-            recipepage = recipelist.order_by('-rating')[10*pageStart:(10*pageStart+51)]
-            #vector = SearchVector('title')
-            #query = SearchQuery(searchWord)
-            #recipepage = recipelist.annotate(rank=SearchRank(vector,query)).order_by('-rank').filter(rank__gt = 0)[10*pageStart:(10*pageStart+51)]
+        list_of_recipes = Recipe.objects
+        vector = SearchVector('title')
+        query = SearchQuery(search_word)
+        if search_word:
+            recipelist = list_of_recipes.annotate(rank=SearchRank(vector,query)).filter(rank__gt = 0,price__gte = min_cost, price__lte = max_cost, duration__gte = min_time, duration__lte = max_time, category__in = categories)
+        else:
+            recipelist = list_of_recipes.filter(price__gte = min_cost, price__lte = max_cost, duration__gte = min_time, duration__lte = max_time, category__in = categories)
+        if search_mode == 'uploaded-date':
+            recipepage = recipelist.order_by('-created_date')[10*page_start:(10*page_start+51)]
+        elif search_mode == 'likes':
+            recipepage = recipelist.order_by('-likes')[10*page_start:(10*page_start+51)]
+        elif search_mode == 'cost':
+            recipepage = recipelist.order_by('price')[10*page_start:(10*page_start+51)]
+        elif search_mode == 'rating':
+            recipepage = recipelist.order_by('-rating')[10*page_start:(10*page_start+51)]
+        else: # search_mode == 'relevance'
+            if search_word:
+                recipepage = recipelist.order_by('-rank')[10*page_start:(10*page_start+51)]
+            else:
+                recipepage = recipelist.order_by('-likes')[10*page_start:(10*page_start+51)]
         newrecipepage = []
         for recipe in recipepage:
             tn = recipe.thumbnail
