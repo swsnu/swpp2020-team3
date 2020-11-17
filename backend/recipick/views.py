@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel
+from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, ConnectRecipeIngredient
 from django.contrib import auth
 import json
 from json import JSONDecodeError
@@ -185,18 +185,15 @@ def recipe_post(request):
         recipe.save()
         
         # ingredients
-        ingList = Ingredient.objects
+        ingList = Ingredient.objects.all()
 
         for ing in ingredient_list:
             # make sure picture field isn't empty
-            target = list(ingList.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type']).values())
-            # print(type(target.values()))
-            # temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
-            #     igd_type=ing['igd_type'], brand=ing['brand'])
-            # print(type(temp))
-            value = target[0]['id']
-            #print(value)
-            recipe.ingredient_list.add(value)
+            # normally should try except for decoding each ingredient
+            target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
+            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=target[0], amount=ing['amount'])
+            connection.save()
+            value = target.values()[0]['id']
         recipe.save()
 
         # photo_list
@@ -248,7 +245,9 @@ def recipe(request, id):
         igd = recipe.ingredient_list
         newigdlist = []
         for item in igd.all():
-            newitem = {'name':item.name, 'quantity': item.quantity, 'price': item.price, 'price_normalized': item.price_normalized, 'igd_type': item.igd_type, 'brand': item.brand,}
+            membership = ConnectRecipeIngredient.objects.get(recipe=recipe, ingredient=item)
+            newitem = {'name':item.name, 'quantity': item.quantity, 'price': item.price, 'price_normalized': item.price_normalized, 
+                        'igd_type': item.igd_type, 'brand': item.brand, 'amount': membership.amount}
             newigdphoto = base64.b64encode(item.picture.read())
             newitem['picture'] = newigdphoto.decode('utf-8')
             newigdlist.append(newitem)

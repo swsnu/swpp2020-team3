@@ -12,13 +12,23 @@ import EditDishResult from './EditDishResult';
 
 class Editpage extends Component {
 state = {
-    recipe: this.props.recipe && this.props.recipe
+
 
 }
     componentDidMount(){
         this.props.getRecipe(this.props.match.params.id)
             .then((res) => {
-                this.setState({recipe: res['selectedRecipe']})
+                this.setState({
+                    title: res['selectedRecipe'].title,
+                    price: res['selectedRecipe'].price,
+                    rating: res['selectedRecipe'].rating,
+                    likes: res['selectedRecipe'].likes,
+                    category: res['selectedRecipe'].category,
+                    summary: res['selectedRecipe'].summary,
+                    ingredient_list: res['selectedRecipe'].ingredient_list,
+                    tag_list: res['selectedRecipe'].tag_list,
+                    thumbnail: res['selectedRecipe'].thumbnail,
+                })
             })
     }
 
@@ -27,6 +37,7 @@ state = {
     }
 
     render() {
+
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
