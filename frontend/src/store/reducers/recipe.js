@@ -22,7 +22,9 @@ const reducer = (state = initialState, action) => {
     case actionTypes.GET_INGREDIENTS:
       return {...state, ingredientList: action.ingredients}
     case actionTypes.GET_RANDOM:
-      return {...state, randomRecipe: action.randomRecipe}
+      return {...state, randomRecipe: action.randomRecipe};
+    case actionTypes.EDIT_RECIPE:
+      return {...state, selectedRecipe: action.modifiedRecipe}
     default:
       break;
   }

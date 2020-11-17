@@ -11,6 +11,7 @@ import Comments from '../comments/Comments';
 import EditDishResult from './EditDishResult';
 import EditDishStep from './EditDishStep';
 
+// Don't need editdishstep
 class Editpage extends Component {
     state = {
     }
@@ -76,7 +77,7 @@ class Editpage extends Component {
     }
 
     onSubmit(){
-        // this.props.editRecipe(this.props.match.params.id)
+        this.props.editRecipe(this.state, this.props.match.params.id)
         console.log('submit')
         console.log(this.state)
     }
@@ -128,7 +129,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
         onGetIgrList: () => dispatch(actionCreators.getIngredients()),
-        // editRecipe: (id) => dispatch(actionCreators.putRecipe(id))
+        editRecipe: (data, id) => dispatch(actionCreators.editRecipe(data, id))
     };
 }
 

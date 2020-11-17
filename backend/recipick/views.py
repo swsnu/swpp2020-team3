@@ -283,6 +283,47 @@ def recipe(request, id):
                 comment.delete()
         recipe.delete()
         return HttpResponse(status = 200)
+    elif request.method == 'PUT':
+        user = request.user
+        if not user.is_authenticated: # not authenticated --> 401
+            return HttpResponse(status=401)
+        try: 
+            recipe = Recipe.objects.get(id = id)
+        except:
+            return HttpResponse(status = 404)
+        if user.id != recipe.author_id: # non author --> 403
+            return HttpResponse(status=403)
+        try:
+            body = json.loads(request.body.decode())
+            title = body['title']
+            price = body['price']   # normally should convert to int
+            # duration = body['duration']  # normally should convert to float
+            thumbnail = body['thumbnail']
+            d_list = body['description_list']
+            t_list = body['tag_list']
+            #i_list = body['imageList']  
+            ingredient_list = body['ingredient_list']  
+            p_list = body['photo_list']   # right now works with prev. Maybe there is a better method?
+            summary = body['summary']
+            # date = body['date'] ==> implement edited time            
+        except:
+            return HttpResponse(status = 400)
+        recipe.title = title
+        recipe.price = price
+        recipe.t
+        format, imgstr = thumbnail.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        recipe.thumbnail = data
+        recipe.description_list = d_list
+        recipe.tag_list = t_list
+        recipe.summary = summary
+        # created_date = ? 
+        # duration = ? 
+        recipe.save()
+        
+
+        return HttpResponse(status = 200)
     else:
         return HttpResponseNotAllowed(['GET','PUT','DELETE'])
 

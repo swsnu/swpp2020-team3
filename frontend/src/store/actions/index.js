@@ -3,6 +3,7 @@ export {
     getRecipe,
     deleteRecipe,
     createRecipe,
+    editRecipe,
     getIngredients,
     getRandom,
 } from './recipe';
