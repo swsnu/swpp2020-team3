@@ -36,8 +36,12 @@ state = {
         this.setState({[key]: value})
     }
 
-    render() {
+    onSubmit(){
+        // put
+    }
 
+    render() {
+        console.log(this.state)
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
@@ -52,7 +56,7 @@ state = {
                             </div>
                         </div>
 
-                        <button onClick={() => this.setState({submit: true})}>Submit</button>
+                        <button onClick={() => this.onSubmit()}>Submit</button>
                     </div>
                     <Comments recipeId={parseInt(this.props.match.params.id)}/>
                 </div>

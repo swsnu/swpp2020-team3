@@ -12,7 +12,7 @@ class EditDishResult extends Component {
         price: this.props.recipe && this.props.recipe.price,
         likes: this.props.recipe && this.props.recipe.likes,
         rating: this.props.recipe && this.props.recipe.rating,
-        category: this.props.recipe && this.props.recipe.category,
+        tag_list: this.props.recipe && this.props.recipe.tag_list,
         abstraction: this.props.recipe && this.props.recipe.summary,
         selectedIngredientList: this.props.recipe && this.props.recipe.ingredient_list,
         tags: this.props.recipe && this.props.recipe.tag_list,
@@ -29,7 +29,7 @@ class EditDishResult extends Component {
             price: res.price,
             likes: res.likes,
             rating: res.rating,
-            category: res.category,
+            tag_list: res.tag_list,
             summary: res.summary,
             selectedIngredientList: res.ingredient_list,
             tags: res.tag_list,
@@ -66,22 +66,41 @@ class EditDishResult extends Component {
         this.setState({summary: event.target.value})
         this.updateState('summary', event.target.value)
     }
-
+    calculatePrice(){
+        let totalPrice = 0;
+        let list = this.state.selectedIngredientList
+        let priceList = []
+        if(list && list.length > 0){
+            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
+            for(let i = 0; i < priceList.length; i++){
+                if(priceList[i]['amount']){
+                    totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
+                }
+            }
+        }
+        return totalPrice
+    }
     addIngredientQuantity(event, id){
         let list = this.state.selectedIngredientList
         let amount = event.target.value
         list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
-        this.updateState('selectedIngredientList', list)
+        this.updateState('ingredient_list', list)
+        let price = this.calculatePrice()
+        this.updateState('price', price)
     }
     deleteSelectedIngredientHandler(index){
         let newList = this.state.selectedIngredientList;
         let deleted = newList.splice(index, 1)
         this.setState({selectedIngredientList: newList})
+        this.updateState('ingredient_list', newList)
         newList = this.state.ingredientList;
         
         newList.push(deleted[0])
         this.setState({ingredientList: newList})
+
+        let price = this.calculatePrice()
+        this.updateState('price', price)
     }
     addSelectedIngredientHandler(event){
         if(this.state.ingredientList == null){
@@ -89,11 +108,21 @@ class EditDishResult extends Component {
         }
         let list1 = this.state.selectedIngredientList.concat(event)
         this.setState({selectedIngredientList: list1})
+        this.updateState('ingredient_list', list1)
         let list2 = this.props.ingredientList
         let list = list2.filter((ing) => {
             return !list1.includes(ing)
         })
         this.setState({ingredientList: list})
+
+        let price = this.calculatePrice()
+        this.updateState('price', price)
+    }
+    changeCategory(event){
+        let list = []
+        list = event.map((val) => val['label'])
+        this.setState({tag_list: list})
+        this.updateState('tag_list', list)
     }
 
     render() {
@@ -124,7 +153,19 @@ class EditDishResult extends Component {
                 }
             }
         }
-        
+
+        const categoryOptions = [{value: 'American', label: 'American'}, {value: 'Mexican', label: 'Mexican'}, {value: 'Korean', label: 'Korean'},
+        {value: 'Chinese', label: 'Chinese'}, {value: 'Japanese', label: 'Japanese'},{value: 'Dessert', label: 'Dessert'}]
+        let defaultOptions = [];
+        if(this.state.tag_list){
+            for(let i = 0; i<this.state.tag_list.length; i++){
+                for(let j = 0; j<categoryOptions.length; j++){
+                    if(categoryOptions[j].value == this.state.tag_list[i])
+                        defaultOptions.push(categoryOptions[j])
+                }
+            }
+        }
+
         return (
             <div className='dish_result'>
                 <div id = 'detailbox1'>
@@ -144,7 +185,8 @@ class EditDishResult extends Component {
                                 {this.state.rating}
                                 <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
-                                {"make into select"}
+                                <Select defaultValue={defaultOptions} isMulti name="category" options={categoryOptions} 
+                                className="select-category" onChange={(event) => {this.changeCategory(event)}}/>
                                 <input id='detailcategory' value={this.state.category} onChange={(event) => {this.changeCategory(event)}}/>
                                 <br/>
                                 <p id='detaillabel'>{'태그'}</p>

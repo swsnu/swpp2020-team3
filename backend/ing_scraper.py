@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import os
 import re
+import sys
 import json
 # from urlparse import urlparse 
 import urllib.request
@@ -77,8 +78,13 @@ if __name__=='__main__':
     # img_url = 'http://i.ytimg.com/vi/GPpN5YUNDeI/default.jpg'
     # name = urllib.parse(img_url)
     # print(name)
+    args = (sys.argv)
+    cnt = 0 
     result_list = noBrandScraper()
     for ing in result_list:
+        if len(args) > 1 and cnt >= int(args[1]):
+            print(f"finish scraping {args[1]} ingredients")
+            break
         temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
                 igd_type=ing['igd_type'], brand=ing['brand'], picture=ing['picture'])
         temp.save()
