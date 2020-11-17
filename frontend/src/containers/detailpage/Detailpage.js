@@ -35,7 +35,7 @@ class Detailpage extends Component {
                         <div id = 'detailigdinfo'>
                             <div id='igdlabel'>{igd.name}</div>
                             <div id='igdlabel'>{'('+igd.brand+')'}</div>
-                            <div id='igdlabel'>{igd.quantity+igd.igd_type}</div>
+                            <div id='igdlabel'>{igd.quantity+igd.igd_type+' * '+igd.amount}</div>
                             <div id='igdlabel'>{igd.price+'원'}</div>
                         </div>
                         {<img id = 'detailimg' src={img} width='200'/>}
