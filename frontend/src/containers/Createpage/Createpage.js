@@ -5,9 +5,9 @@ import Select from 'react-select'
 // Local imports
 import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
-import CreateStep from './CreateStep';
 import PropTypes from "prop-types";
 
+// I don't think we need createstep anymore --> delete it after verfication (end-to-end) test
 class Createpage extends Component{
    
    state = {
@@ -34,18 +34,16 @@ class Createpage extends Component{
         this.props.onGetIgrList()
     }
 
-    inputHandler(params){
-        let description = params['description']
-        let index = params['index']
+    inputHandler(event, index){
+        let description = event.target.value
         let newList = this.state.descriptionList;
         newList[index] = description
         this.setState({descriptionList: newList})
+        console.log(this.state.descriptionList)
     }
-    imageHandler(params){
-        let index = params['index']
-        let file = params['file']
+    imageHandler(event, index){
+        let file = event.target.files[0]
         let reader = new FileReader();
-    // console.log(reader.readyState) // 0 is for empty, 1 is for loading, and 2 is for completed
         reader.onloadend = () => {
             let newImgList = this.state.imageList;
             let newPreviewList = this.state.imagePreviewList;
@@ -76,11 +74,14 @@ class Createpage extends Component{
         let index = event.target.index
         let newDList = this.state.descriptionList;
         let newIList = this.state.imageList;
+        let newPList = this.state.imagePreviewList;
         newDList.splice(index, 1)
         newIList.splice(index, 1)
-        console.log(newDList)
+
+        newPList.splice(index, 1)
         this.setState({descriptionList: newDList})
         this.setState({imageList: newIList})
+        this.setState({imagePreviewList: newPList})
     }
 
     submitHandler(){
@@ -142,8 +143,8 @@ class Createpage extends Component{
         let deleted = newList.splice(index, 1)
         this.setState({selectedIngredientList: newList})
         newList = this.state.ingredientList;
-        
         newList.push(deleted[0])
+        console.log(deleted[0])
         this.setState({ingredientList: newList})
     }
     addIngredientQuantity(event, id){
@@ -156,6 +157,7 @@ class Createpage extends Component{
         // else{
         //     list[id]['amount'] = parseInt(amount)
         // }
+        console.log(amount)
         list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
     }
@@ -166,8 +168,9 @@ class Createpage extends Component{
         if(this.state.descriptionList.length > 0){
         displayStepList = this.state.descriptionList.map((item, index) => (
             <div key={index} className="description-list">
-                <CreateStep data={item} event_text={this.inputHandler} event_image={this.imageHandler} index={index} 
-                            value_text={this.state.descriptionList[index]}/>
+                <textarea type="text" onChange={(event) => this.inputHandler(event, index)} value={this.state.descriptionList[index]} />
+                <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
+                <br/>
                 <img src={this.state.imagePreviewList[index]} width='250' height='200'/>
                 <button id="delete-step" onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
             </div>
@@ -179,7 +182,7 @@ class Createpage extends Component{
                 {item.brand}
                 {item.name}
                 {item.price}
-                <input id={index} type='number' placeholder='양' 
+                <input id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
                 <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
@@ -191,7 +194,7 @@ class Createpage extends Component{
         if(list.length > 0){
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
             for(let i = 0; i < priceList.length; i++){
-                totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
+                totalPrice+= isNaN(priceList[i]['price']*priceList[i]['amount'])? 0 : (priceList[i]['price']*priceList[i]['amount'])
             }
         }
         
@@ -231,7 +234,7 @@ class Createpage extends Component{
                             {selectedIngredientList}
 
                             <p>예상 조리 시간</p>
-                            <input id="recipe-cooking-time-input" type='number' 
+                            <input id="recipe-cooking-time-input" type='number' min="0"
                                 value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
                                 placeholder='minutes' name='cooking-time' />
                             {"  분"}

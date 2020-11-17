@@ -10,11 +10,20 @@ import PropTypes from "prop-types";
 // TODO: must retreive ingredients
 // TODO: must implement preview of image
 // TODO(?): abstract the add image part, but the problem is later, I will have to add a delete part...
+let value;
 class CreateStep extends Component{
-state={
-    value: this.props.value_text
-}
+    constructor(props){
+        super(props)
+        const value = {props}
+        this.state = {value: this.props.value_text}
+        console.log(this.state)
+    }
+    componentDidMount(){
+        this.setState({value: this.props.value_text})
+    }
+    
     inputHandler(event){
+        this.setState({value: event.target.value})
         this.props.event_text({description: event.target.value, index: this.props.index})
     }
     imageHandler(event){
@@ -22,12 +31,12 @@ state={
     }
 
     render(){
+        
         return(
             <div className="step">
-                <input type="file" accept='.jpg, .png, .jpeg' value={this.state.value} 
-                    onChange={(event) => this.imageHandler(event)}/>
+                <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event)}/>
                 <br/>
-                <textarea type="text" onChange={(event) => this.inputHandler(event)}/>
+                <textarea type="text" onChange={(event) => this.inputHandler(event)} value={value} />
             </div>     
         )
     }

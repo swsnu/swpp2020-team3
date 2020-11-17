@@ -22,12 +22,14 @@ matrix:
         - cd backend
         - source ~/virtualenv/python3.7/bin/activate
         - pip install -r requirements.txt
+        - pip install coveralls
         - python -m pip install Pillow
       script:
         - cd ..
         - cd frontend
         - ./node_modules/.bin/eslint src/
         - yarn test --coverage --watchAll=false
+        - coveralls-lcov -v -n coverage/lcov.info > coverage/coverage.json
         - cd ..
         - cd backend
         - pylint **/*.py --load-plugins pylint_django
@@ -36,5 +38,5 @@ matrix:
         - cd ..
         - sonar-scanner
       after_success:
-        - cd frontend
-        - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+        - cd backend
+        - coveralls --merge=../frontend/coverage/coverage.json
