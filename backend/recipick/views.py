@@ -345,12 +345,8 @@ def recipe(request, id):
             new_img = ImageModel.objects.create(img=data, description_index=cnt)
             new_photo_list.append(new_img)
             cnt = cnt + 1
-        print(new_photo_list)
+        recipe.photo_list.all().delete()
         recipe.photo_list.set(new_photo_list)
-        recipe.save()
-        return_id = {'id': recipe.id}
-        
-        
         
         return HttpResponse(recipe, status = 200)
     else:

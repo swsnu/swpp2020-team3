@@ -48,7 +48,6 @@ class EditDishResult extends Component {
         let file = event.target.files[0]
         let reader = new FileReader();
         reader.onloadend = () => {
-            // console.log({key: reader.result})
             this.updateState('thumbnail', reader.result)
             this.setState({thumbnail_preview: reader.result})
             this.setState({thumbnail_file: file})

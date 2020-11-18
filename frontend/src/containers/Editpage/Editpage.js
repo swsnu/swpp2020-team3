@@ -16,7 +16,6 @@ class Editpage extends Component {
     state = {
     }
     componentDidMount(){
-        console.log('ds')
         this.props.getRecipe(this.props.match.params.id)
             .then((res) => {
                 this.setState({
@@ -78,7 +77,6 @@ class Editpage extends Component {
 
     onSubmit(){
         this.props.editRecipe(this.state, this.props.match.params.id)
-        console.log('submit')
         console.log(this.state)
     }
 

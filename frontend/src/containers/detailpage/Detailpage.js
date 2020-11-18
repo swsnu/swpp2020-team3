@@ -28,7 +28,6 @@ class Detailpage extends Component {
         const tags = this.props.recipe && this.props.recipe.tag_list
         let igd;
         if(this.props.recipe){
-            console.log(this.props.recipe)
             igd = this.props.recipe.ingredient_list.map( (igd) => {
                 let img = 'data:image/png;base64,'+igd.picture
                 return (
