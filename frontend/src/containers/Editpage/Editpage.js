@@ -76,7 +76,7 @@ class Editpage extends Component {
     }
 
     onSubmit(){
-        this.props.editRecipe(this.state, this.props.match.params.id)
+        this.props.editRecipe(this.state, this.props.match.params.id).then((res) => this.props.history.push('/detail-page/'+this.props.match.params.id))
         console.log(this.state)
     }
 
