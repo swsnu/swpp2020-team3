@@ -14,6 +14,7 @@ import Createpage from './containers/Createpage/Createpage';
 import Signup from './containers/Authentication/Signup/Signup';
 import Login from './containers/Authentication/Login/Login';
 import Editpage from './containers/Editpage/Editpage';
+import Mealplanner from './containers/Mealplanner/Mealplanner';
 
 function App(props) {
   return(
@@ -29,6 +30,7 @@ function App(props) {
           <Route path='/create' exact render={()=> <Createpage history={props.history}/>} />
           <Route path='/signup' exact render={() => <Signup history={props.history} />} />
           <Route path='/login' exact render={() => <Login history={props.history} />} />
+          <Route path='/meal-planner' exact render={() => <Mealplanner history={props.history} />} />
           <Redirect from='/' exact to='/main-page'/>
           <Route render = {() => <h1>Not Found</h1>} />
         </Switch>

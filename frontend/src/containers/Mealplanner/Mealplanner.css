@@ -1,0 +1,26 @@
+#numOfDays {
+    width:4.4em;
+}
+
+.day{
+    border: solid blue;
+    width: 900px;
+    overflow: hidden;
+    display: flex;
+    float: left
+}
+.singleBlock{
+    width: 200px;
+    height: 100px;
+    display: inline-flex;
+    float: left;
+    overflow: hidden;
+    border: solid red;
+}
+
+.cookbook{
+    border: solid black;
+    float: right;
+    height: 100px;
+    display: inline-flex;
+}
