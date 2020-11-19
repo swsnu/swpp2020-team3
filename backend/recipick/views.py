@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User
+from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient
 from django.contrib import auth
 import json
 from json import JSONDecodeError
@@ -9,6 +9,7 @@ import datetime
 import base64
 from django.core.files.base import ContentFile
 from random import *
+from django.forms.models import model_to_dict
 import random
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
@@ -190,18 +191,14 @@ def recipe_post(request):
         recipe.save()
         
         # ingredients
-        ingList = Ingredient.objects
+        ingList = Ingredient.objects.all()
 
         for ing in ingredient_list:
             # make sure picture field isn't empty
-            target = list(ingList.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type']).values())
-            # print(type(target.values()))
-            # temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
-            #     igd_type=ing['igd_type'], brand=ing['brand'])
-            # print(type(temp))
-            value = target[0]['id']
-            #print(value)
-            recipe.ingredient_list.add(value)
+            # normally should try except for decoding each ingredient
+            target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
+            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=target[0], amount=ing['amount'])
+            connection.save()
         recipe.save()
 
         # photo_list
@@ -253,7 +250,9 @@ def recipe(request, id):
         igd = recipe.ingredient_list
         newigdlist = []
         for item in igd.all():
-            newitem = {'name':item.name, 'quantity': item.quantity, 'price': item.price, 'price_normalized': item.price_normalized, 'igd_type': item.igd_type, 'brand': item.brand,}
+            membership = ConnectRecipeIngredient.objects.get(recipe=recipe, ingredient=item)
+            newitem = {'name':item.name, 'quantity': item.quantity, 'price': item.price, 'price_normalized': item.price_normalized, 
+                        'igd_type': item.igd_type, 'brand': item.brand, 'amount': membership.amount}
             newigdphoto = base64.b64encode(item.picture.read())
             newitem['picture'] = newigdphoto.decode('utf-8')
             newigdlist.append(newitem)
@@ -289,6 +288,73 @@ def recipe(request, id):
                 comment.delete()
         recipe.delete()
         return HttpResponse(status = 200)
+    elif request.method == 'PUT':
+        user = request.user
+        if not user.is_authenticated: # not authenticated --> 401
+            return HttpResponse(status=401)
+        try: 
+            recipe = Recipe.objects.get(id = id)
+        except:
+            return HttpResponse(status = 404)
+        if user.id != recipe.author_id: # non author --> 403
+            return HttpResponse(status=403)
+        try:
+            body = json.loads(request.body.decode())
+            title = body['title']
+            price = body['price']   # normally should convert to int
+            # duration = body['duration']  # normally should convert to float
+            thumbnail = body['thumbnail']
+            d_list = body['description_list']
+            t_list = body['tag_list']
+            #i_list = body['imageList']  
+            ingredient_list = body['ingredient_list']  
+            p_list = body['photo_list']   # right now works with prev. Maybe there is a better method?
+            summary = body['summary']
+            # date = body['date'] ==> implement edited time   
+        except:
+            return HttpResponse(status = 400)
+        recipe.title = title
+        recipe.price = price
+        format, imgstr = thumbnail.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        recipe.thumbnail.delete()
+        recipe.thumbnail = data
+        recipe.description_list = d_list
+        recipe.tag_list = t_list
+        recipe.summary = summary
+        # created_date = ? 
+        # duration = ? 
+        recipe.save()
+        # ingredients: 
+        ingList = Ingredient.objects.all()
+        origin_ingredient_list = recipe.ingredient_list
+        for ing in ingredient_list:
+            # make sure picture field isn't empty
+            # normally should try except for decoding each ingredient
+            target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
+            exist = 0
+            for ingredient in origin_ingredient_list.iterator():
+                if ingredient.id == target[0].id:
+                    exist = 1
+            if exist == 0:
+                connection = ConnectRecipeIngredient(recipe=recipe, ingredient=target[0], amount=ing['amount'])
+                connection.save()
+        recipe.save()
+        # photos for steps:
+        cnt = 0;
+        new_photo_list = []
+        for img_64 in p_list:
+            format, imgstr = img_64.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            new_img = ImageModel.objects.create(img=data, description_index=cnt)
+            new_photo_list.append(new_img)
+            cnt = cnt + 1
+        recipe.photo_list.all().delete()
+        recipe.photo_list.set(new_photo_list)
+        
+        return HttpResponse(recipe, status = 200)
     else:
         return HttpResponseNotAllowed(['GET','PUT','DELETE'])
 

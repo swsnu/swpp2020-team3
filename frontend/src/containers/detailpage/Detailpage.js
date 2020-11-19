@@ -27,7 +27,7 @@ class Detailpage extends Component {
         const category = this.props.recipe && this.props.recipe.category
         const tags = this.props.recipe && this.props.recipe.tag_list
         let igd;
-        if(this.props.recipe){
+        if(this.props.recipe && this.props.recipe.ingredient_list){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
                 let img = 'data:image/png;base64,'+igd.picture
                 return (
@@ -35,7 +35,7 @@ class Detailpage extends Component {
                         <div id = 'detailigdinfo'>
                             <div id='igdlabel'>{igd.name}</div>
                             <div id='igdlabel'>{'('+igd.brand+')'}</div>
-                            <div id='igdlabel'>{igd.quantity+igd.igd_type}</div>
+                            <div id='igdlabel'>{igd.quantity+igd.igd_type+' * '+igd.amount}</div>
                             <div id='igdlabel'>{igd.price+'원'}</div>
                         </div>
                         {<img id = 'detailimg' src={img} width='200'/>}
@@ -53,6 +53,9 @@ class Detailpage extends Component {
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
+                    
+                    <button onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
+
                     <div id = "detailBlock">
                         <DishResult img={<img src = {d} width='500'/>} tag={tags} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
                         <div className='dish_method'>

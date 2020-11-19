@@ -73,14 +73,26 @@ export const createRecipe = (recipe) => {
   }
 }
 
+const editRecipe_ = (recipe) => {
+  return {type: actionTypes.EDIT_RECIPE, modifiedRecipe: recipe}
+}
+export const editRecipe = (recipe, id) => {
+  return dispatch => {
+    return axios.put(`/api/recipe/${id}/`, recipe)
+      .then(res => dispatch(editRecipe_(res.data)))
+  }
+}
+
 const getIngredients_ = (result) => {
   return {type: actionTypes.GET_INGREDIENTS, ingredients: result}
 }
 export const getIngredients = () => {
   return dispatch => {
-    return axios.get('api/ingredient/')
+    return axios.get('/api/ingredient/')
       .then(res => {
-        dispatch(getIngredients_(res.data))})
+        return dispatch(getIngredients_(res.data));
+        
+      })
   }
 }
 

@@ -57,6 +57,13 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='ConnectRecipeIngredient',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('amount', models.IntegerField(default=0)),
+            ],
+        ),
+        migrations.CreateModel(
             name='ImageModel',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -105,11 +112,21 @@ class Migration(migrations.Migration):
                 ('edited', models.BooleanField(null=True)),
                 ('summary', models.TextField(null=True)),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
-                ('ingredient_list', models.ManyToManyField(to='recipick.Ingredient')),
+                ('ingredient_list', models.ManyToManyField(through='recipick.ConnectRecipeIngredient', to='recipick.Ingredient')),
                 ('liked_user', models.ManyToManyField(related_name='like', to=settings.AUTH_USER_MODEL)),
                 ('photo_list', models.ManyToManyField(to='recipick.ImageModel')),
                 ('scrapped_user', models.ManyToManyField(related_name='scrap', to=settings.AUTH_USER_MODEL)),
             ],
+        ),
+        migrations.AddField(
+            model_name='connectrecipeingredient',
+            name='ingredient',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='recipick.ingredient'),
+        ),
+        migrations.AddField(
+            model_name='connectrecipeingredient',
+            name='recipe',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='recipick.recipe'),
         ),
         migrations.AddField(
             model_name='comment',
