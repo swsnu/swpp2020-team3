@@ -313,6 +313,7 @@ def recipe(request, id):
         format, imgstr = thumbnail.split(';base64,')
         ext = format.split('/')[-1]
         data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        recipe.thumbnail.delete()
         recipe.thumbnail = data
         recipe.description_list = d_list
         recipe.tag_list = t_list
