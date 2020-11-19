@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import Ingredient, Recipe, Comment, Reply, ImageModel, ConnectRecipeIngredient
+from django.contrib.auth.admin import UserAdmin
+from .models import Ingredient, Recipe, Comment, Reply, ImageModel, User, ConnectRecipeIngredient
 # Register your models here.
 
+admin.site.register(User)
 admin.site.register(Ingredient)
 admin.site.register(Recipe)
 admin.site.register(Reply)
