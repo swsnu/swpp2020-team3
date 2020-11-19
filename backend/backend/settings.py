@@ -91,7 +91,7 @@ DATABASES = {
     }
 }
 
-
+AUTH_USER_MODEL = 'recipick.User'
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
