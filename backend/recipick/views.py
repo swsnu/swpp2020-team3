@@ -174,7 +174,7 @@ def recipe_post(request):
             duration = body['duration']  # normally should convert to float
             thumbnail = body['thumbnail']
             d_list = body['descriptionList']
-            t_list = body['tagList']
+            t_list = body['category']
             #i_list = body['imageList']  
             ingredient_list = body['ingredientList']  
             p_list = body['prevList']   # right now works with prev. Maybe there is a better method?
@@ -187,7 +187,7 @@ def recipe_post(request):
         ext = format.split('/')[-1]
         data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
         recipe = Recipe(author=user, title=title, price=price, duration=duration, thumbnail=data,
-        description_list=d_list, tag_list=t_list, created_date=date, summary=summary)
+        description_list=d_list, category=t_list, created_date=date, summary=summary)
         recipe.save()
         
         # ingredients
@@ -263,7 +263,6 @@ def recipe(request, id):
             'photo_list': new_list,
             'thumbnail': thumbnail,
             'description_list': recipe.description_list,
-            'tag_list': recipe.tag_list,
             'ingredient_list': newigdlist,
             'category': recipe.category,
             'rating': recipe.rating,
@@ -321,7 +320,7 @@ def recipe(request, id):
         recipe.thumbnail.delete()
         recipe.thumbnail = data
         recipe.description_list = d_list
-        recipe.tag_list = t_list
+        recipe.category = t_list
         recipe.summary = summary
         # created_date = ? 
         # duration = ? 

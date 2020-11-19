@@ -15,7 +15,7 @@ class Createpage extends Component{
        summary:'',
        ingredient: '',
        duration: '',
-       tagList: [],
+       category: [],
        ////////
        descriptionList: [],
        imageList: [],
@@ -102,7 +102,7 @@ class Createpage extends Component{
             totalPrice: totalPrice,
             descriptionList: state.descriptionList,
             //imageList: state.imageList,
-            tagList: state.tagList,
+            category: state.category,
             prevList: state.imagePreviewList,
             summary: state.summary,
             ingredientList: state.selectedIngredientList,
@@ -114,13 +114,13 @@ class Createpage extends Component{
     }
     
     onClickChangeColor(event, param){
-        if (!this.state.tagList.includes(param)){
+        if (!this.state.category.includes(param)){
             event.target.style.backgroundColor = 'grey'
-            this.setState({tagList: this.state.tagList.concat(param)})
+            this.setState({category: this.state.category.concat(param)})
         }
         else{
             event.target.style.backgroundColor = null
-            this.setState({tagList: this.state.tagList.filter((type)=>{if(type!=param) return type})})
+            this.setState({category: this.state.category.filter((type)=>{if(type!=param) return type})})
         }
     }
 
