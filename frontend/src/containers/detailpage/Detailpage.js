@@ -25,7 +25,6 @@ class Detailpage extends Component {
         const likes = this.props.recipe && this.props.recipe.likes
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
-        const tags = this.props.recipe && this.props.recipe.tag_list
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
@@ -57,7 +56,7 @@ class Detailpage extends Component {
                     <button onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
 
                     <div id = "detailBlock">
-                        <DishResult img={<img src = {d} width='500'/>} tag={tags} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
+                        <DishResult img={<img src = {d} width='500'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>

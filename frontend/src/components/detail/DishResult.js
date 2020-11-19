@@ -27,8 +27,6 @@ class DishResult extends Component {
                                 <p id='detaillabel'>{'카테고리'}</p>
                                 {this.props.category}
                                 <br/>
-                                <p id='detaillabel'>{'태그'}</p>
-                                {tag}
                             </div>
                         </div>
                         <div id = 'detailthumbnail'>{this.props.img}</div>

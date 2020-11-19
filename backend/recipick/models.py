@@ -50,12 +50,11 @@ class Recipe(models.Model):
         ImageModel,
     )
     description_list = models.JSONField(null=True)
-    tag_list = models.JSONField(null=True)
+    category = models.JSONField(null=True)
     ingredient_list = models.ManyToManyField(
         Ingredient,
         through='ConnectRecipeIngredient'
     )
-    category = models.TextField(null=True)
     rating = models.FloatField(null=True)
     likes = models.IntegerField(null=True)
     created_date = models.DateField(null=True)
