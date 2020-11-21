@@ -15,7 +15,16 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 def getuser(request, id):
     if(request.method) == 'GET':
-        user = [user for user in User.objects.filter(id = id).values()]
+        print(1)
+        user_1 = User.objects.get(id = id)
+        user_info = [user for user in User.objects.filter(id = id).values()]
+        liked_recipes = [recipe for recipe in user_1.like.all().values()]
+        recipe_basket = [recipe for recipe in user_1.scrap.all().values()]
+        written_recipes = [recipe for recipe in Recipe.objects.filter(author = user_1).values()]
+        follower = [user for user in user_1.follower.all().values()]
+        following = [user for user in user_1.following.all().values()]
+        user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
+            'written_recipes': written_recipes, 'follower': follower, 'following': following}
         return JsonResponse(user, safe=False, status=200)
 
 def signup(request):

@@ -9,6 +9,7 @@ import './App.css';
 import Mainpage from './containers/Mainpage/Mainpage';
 import RecipeList from './containers/RecipeList/RecipeList'
 import Detailpage from './containers/detailpage/Detailpage'
+import MyPage from './containers/MyPage/MyPage'
 import Navbar from './containers/Navbar/Navbar';
 import Createpage from './containers/Createpage/Createpage';
 import Signup from './containers/Authentication/Signup/Signup';
@@ -29,6 +30,7 @@ function App(props) {
           <Route path='/create' exact render={()=> <Createpage history={props.history}/>} />
           <Route path='/signup' exact render={() => <Signup history={props.history} />} />
           <Route path='/login' exact render={() => <Login history={props.history} />} />
+          <Route path='/user/:id' exact render={() => <MyPage history={props.history} />} />
           <Redirect from='/' exact to='/main-page'/>
           <Route render = {() => <h1>Not Found</h1>} />
         </Switch>
