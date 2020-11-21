@@ -6,6 +6,8 @@ export {
     editRecipe,
     getIngredients,
     getRandom,
+    getScrappedRecipes,
+    getMLRecipes,
 } from './recipe';
 
 export {
