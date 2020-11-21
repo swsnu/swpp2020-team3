@@ -1,7 +1,12 @@
-/* #numOfDays {
+ #numOfDays {
     width:4.4em;
 }
-
+.emptyImage{
+    width:100px;
+    height:100px;
+    border: solid black;
+}
+/*
 .day{
     border: solid blue;
     width: 900px;
@@ -24,8 +29,3 @@
     height: 100px;
     display: inline-flex;
 } */
-.emptyImage{
-    width:100px;
-    height:100px;
-    border: solid black;
-}
