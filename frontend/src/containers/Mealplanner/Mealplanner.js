@@ -142,7 +142,9 @@ class Mealplanner extends Component {
         }
     }
 
-    /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능*/ 
+    /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.
+        하지만 완벽하지 않음. 이 부분은 추후에 해결해야할것.
+    */ 
     render() {
         console.log(this.state)
         return (
