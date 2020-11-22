@@ -1,8 +1,13 @@
 #detailBackground {
     background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .Detailpage {
+    float: left;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +20,7 @@
 }
 
 .dish_method {
-    width: 120vh;
+    width: 100vh;
     padding-top: 30px;
     padding-bottom: 30px;
     text-align: left;
@@ -25,6 +30,64 @@
 }
 
 #detailmethod {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#detailigd {
+    width: 40vh;
+}
+
+#igdlabel {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+#detailimg {
+    margin-left: 5vh;
+}
+
+#edit-button {
+    background-color: #fcc051; /* Green */
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-left: 80vh;
+    margin-bottom: 2vh;
+}
+
+#delete-button {
+    background-color: #fcc051; /* Green */
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-left: 1vh;
+}
+
+#detailcomment {
+    display: block;
+    float: right;
+    align-self: flex-start;
+    margin-top: 11vh;
+    padding-left: 5vh;
+    width: 20vh;
+}
+
+#comment {
     display: flex;
     justify-content: center;
     align-items: center;

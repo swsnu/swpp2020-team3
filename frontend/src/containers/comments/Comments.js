@@ -25,10 +25,10 @@ class Comments extends Component {
         const commentlist = this.props.comments.map( (item) => <Comment key={item.id} replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} id={item.id}
             onEditComment={(content) => this.props.onEditComment({id: item.id, content, edited: true})} onDeleteComment={() => this.props.onDeleteComment(item.id)}/>)
         return (
-            <div className='comments'>
-                {commentlist}
+            <div id='scrollcomment' className='comments'>
                 <input id='new-comment' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
                 <button id='add-comment' disabled={this.state.content==''} onClick={() => {this.setState({content: ''}); this.props.addComment({date:'2020-11-05', edited:false, content: this.state.content, recipeId: this.props.recipeId});}}>confirm</button>
+                {commentlist}
             </div>
         )
     }

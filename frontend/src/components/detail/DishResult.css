@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 120vh;
+    width: 100vh;
     padding-top: 30px;
     padding-bottom: 30px;
     text-align: center;
@@ -14,7 +14,7 @@
 
 #detailbox2{
     
-    width: 120vh;
+    width: 100vh;
     padding-top: 30px;
     padding-bottom: 30px;
     text-align: left;
@@ -89,6 +89,7 @@
     display: block;
     text-align: left;
     width: 30vh;
+    margin-left: 2vh;
 }
 
 #detailsummary {
