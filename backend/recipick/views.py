@@ -196,7 +196,7 @@ def recipe_post(request):
         ext = format.split('/')[-1]
         data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
         recipe = Recipe(author=user, title=title, price=price, duration=duration, thumbnail=data,
-        description_list=d_list, category=t_list, created_date=date, summary=summary)
+        description_list=d_list, category=t_list, created_date=date, summary=summary, rating=0, likes=0)
         recipe.save()
         
         # ingredients
