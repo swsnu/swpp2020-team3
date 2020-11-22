@@ -12,10 +12,9 @@ class EditDishResult extends Component {
         price: this.props.recipe && this.props.recipe.price,
         likes: this.props.recipe && this.props.recipe.likes,
         rating: this.props.recipe && this.props.recipe.rating,
-        tag_list: this.props.recipe && this.props.recipe.tag_list,
+        category: this.props.recipe && this.props.recipe.category,
         abstraction: this.props.recipe && this.props.recipe.summary,
         selectedIngredientList: this.props.recipe && this.props.recipe.ingredient_list,
-        tags: this.props.recipe && this.props.recipe.tag_list,
         thumbnail_preview: this.props.recipe && 'data:image/png;base64,'+ this.props.recipe.thumbnail,
 
         ingredientList: this.props.ingredientList,
@@ -29,10 +28,9 @@ class EditDishResult extends Component {
             price: res.price,
             likes: res.likes,
             rating: res.rating,
-            tag_list: res.tag_list,
+            category: res.category,
             summary: res.summary,
             selectedIngredientList: res.ingredient_list,
-            tags: res.tag_list,
             thumbnail_preview: 'data:image/png;base64,'+ res.thumbnail,
         })});
         this.props.onGetIgrList().then((res) => {
@@ -118,11 +116,20 @@ class EditDishResult extends Component {
         let price = this.calculatePrice()
         this.updateState('price', price)
     }
-    changeCategory(event){
-        let list = []
-        list = event.map((val) => val['label'])
-        this.setState({tag_list: list})
-        this.updateState('tag_list', list)
+    onClickChangeColor(event, param){
+        if (!this.state.category.includes(param)){
+            event.target.style.backgroundColor = 'grey'
+            const newlist =  this.state.category.concat(param)
+            console.log(newlist)
+            this.setState({category: newlist})
+            this.updateState('category', newlist)
+            console.log(this.state.category)
+            console.log(param)
+        }
+        else{
+            event.target.style.backgroundColor = null
+            this.setState({category: this.state.category.filter((type)=>{if(type!=param) return type})})
+        }
     }
 
     render() {
@@ -157,10 +164,10 @@ class EditDishResult extends Component {
         const categoryOptions = [{value: 'American', label: 'American'}, {value: 'Mexican', label: 'Mexican'}, {value: 'Korean', label: 'Korean'},
         {value: 'Chinese', label: 'Chinese'}, {value: 'Japanese', label: 'Japanese'},{value: 'Dessert', label: 'Dessert'}]
         let defaultOptions = [];
-        if(this.state.tag_list){
-            for(let i = 0; i<this.state.tag_list.length; i++){
+        if(this.state.category){
+            for(let i = 0; i<this.state.category.length; i++){
                 for(let j = 0; j<categoryOptions.length; j++){
-                    if(categoryOptions[j].value == this.state.tag_list[i])
+                    if(categoryOptions[j].value == this.state.category[i])
                         defaultOptions.push(categoryOptions[j])
                 }
             }
@@ -185,12 +192,19 @@ class EditDishResult extends Component {
                                 {this.state.rating}
                                 <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
-                                <Select defaultValue={defaultOptions} isMulti name="category" options={categoryOptions} 
-                                className="select-category" onChange={(event) => {this.changeCategory(event)}}/>
-                                <input id='detailcategory' value={this.state.category} onChange={(event) => {this.changeCategory(event)}}/>
+                                <button id='type' className = "type_first" style = {{background: (this.state.category&&this.state.category.includes('Korean'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('American'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'American')}>American</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Japanese'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Chinese'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Mexican'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Dessert'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>Dessert</button>
                                 <br/>
-                                <p id='detaillabel'>{'태그'}</p>
-                                {/* {tag} */}
                             </div>
                         </div>
                         <div id = 'detailthumbnail'>

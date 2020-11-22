@@ -335,13 +335,15 @@ def recipe(request, id):
             # duration = body['duration']  # normally should convert to float
             thumbnail = body['thumbnail']
             d_list = body['description_list']
-            t_list = body['tag_list']
+            t_list = body['category']
             #i_list = body['imageList']  
             ingredient_list = body['ingredient_list']  
             p_list = body['photo_list']   # right now works with prev. Maybe there is a better method?
             summary = body['summary']
             # date = body['date'] ==> implement edited time   
-        except:
+        except Exception as e:
+            print(e)
+            print(1)
             return HttpResponse(status = 400)
         recipe.title = title
         recipe.price = price
