@@ -15,6 +15,7 @@ export {
     signUp,
     signIn,
     getUser,
+    changePassword,
 } from './userCreators';
 
 export {

@@ -15,7 +15,6 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 def getuser(request, id):
     if(request.method) == 'GET':
-        print(1)
         user_1 = User.objects.get(id = id)
         user_info = [user for user in User.objects.filter(id = id).values()]
         liked_recipes = [recipe for recipe in user_1.like.all().values()]
@@ -25,6 +24,22 @@ def getuser(request, id):
         following = [user for user in user_1.following.all().values()]
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
             'written_recipes': written_recipes, 'follower': follower, 'following': following}
+        return JsonResponse(user, safe=False, status=200)
+    elif(request.method) == 'PUT':
+        body = json.loads(request.body.decode())
+        print(body)
+        user_1 = User.objects.get(id = id)
+        user_1.set_password(body['password'])
+        user_1.save()
+        user_info = [user for user in User.objects.filter(id = id).values()]
+        liked_recipes = [recipe for recipe in user_1.like.all().values()]
+        recipe_basket = [recipe for recipe in user_1.scrap.all().values()]
+        written_recipes = [recipe for recipe in Recipe.objects.filter(author = user_1).values()]
+        follower = [user for user in user_1.follower.all().values()]
+        following = [user for user in user_1.following.all().values()]
+        user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
+            'written_recipes': written_recipes, 'follower': follower, 'following': following}
+        print(user)
         return JsonResponse(user, safe=False, status=200)
 
 def signup(request):
@@ -124,7 +139,7 @@ def recipe_page(request):
         if request.GET.get('category4') == 'true':
             categories.append('Japanese')
         if request.GET.get('category5') == 'true':
-            categories.append('ConvienceStore')
+            categories.append('ConvenienceStore')
         if request.GET.get('category6') == 'true':
             categories.append('Dessert')
 
@@ -133,21 +148,24 @@ def recipe_page(request):
         query = SearchQuery(search_word)
         if search_word:
             recipelist = list_of_recipes.annotate(rank=SearchRank(vector,query)).filter(rank__gt = 0,price__gte = min_cost, price__lte = max_cost, duration__gte = min_time, duration__lte = max_time, category__in = categories)
+            if search_mode == 'likes':
+                recipepage = recipelist.order_by('-likes','-rank','price','-rating')[10*page_start:(10*page_start+51)]
+            elif search_mode == 'cost':
+                recipepage = recipelist.order_by('price','-rank','-likes','-rating')[10*page_start:(10*page_start+51)]
+            elif search_mode == 'rating':
+                recipepage = recipelist.order_by('-rating','-rank','price','-likes')[10*page_start:(10*page_start+51)]
+            else: # search_mode == 'recommended'
+                recipepage = recipelist.order_by('-rank','price','-likes','-rating')[10*page_start:(10*page_start+51)]
         else:
             recipelist = list_of_recipes.filter(price__gte = min_cost, price__lte = max_cost, duration__gte = min_time, duration__lte = max_time, category__in = categories)
-        if search_mode == 'uploaded-date':
-            recipepage = recipelist.order_by('-created_date')[10*page_start:(10*page_start+51)]
-        elif search_mode == 'likes':
-            recipepage = recipelist.order_by('-likes')[10*page_start:(10*page_start+51)]
-        elif search_mode == 'cost':
-            recipepage = recipelist.order_by('price')[10*page_start:(10*page_start+51)]
-        elif search_mode == 'rating':
-            recipepage = recipelist.order_by('-rating')[10*page_start:(10*page_start+51)]
-        else: # search_mode == 'relevance'
-            if search_word:
-                recipepage = recipelist.order_by('-rank')[10*page_start:(10*page_start+51)]
-            else:
-                recipepage = recipelist.order_by('-likes')[10*page_start:(10*page_start+51)]
+            if search_mode == 'likes':
+                recipepage = recipelist.order_by('-likes','price','-rating')[10*page_start:(10*page_start+51)]
+            elif search_mode == 'cost':
+                recipepage = recipelist.order_by('price','-likes','-rating')[10*page_start:(10*page_start+51)]
+            elif search_mode == 'rating':
+                recipepage = recipelist.order_by('-rating','price','-likes')[10*page_start:(10*page_start+51)]
+            else: # search_mode == 'recommended'
+                recipepage = recipelist.order_by('price','-likes','-rating')[10*page_start:(10*page_start+51)]
         newrecipepage = []
         for recipe in recipepage:
             tn = recipe.thumbnail

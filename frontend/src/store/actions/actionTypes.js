@@ -12,6 +12,7 @@ export const GET_INGREDIENTS = 'GET_INGREDIENTS'
 export const SIGN_UP = 'SIGN_UP';
 export const LOGIN = 'LOGIN';
 export const GET_USER = 'GET_USER';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 
 export const GET_COMMENTS = 'GET_COMMENTS';
 export const ADD_COMMENT = 'ADD_COMMENT';
