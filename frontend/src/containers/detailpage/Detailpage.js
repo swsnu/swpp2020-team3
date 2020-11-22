@@ -56,7 +56,7 @@ class Detailpage extends Component {
                     <button onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
 
                     <div id = "detailBlock">
-                        <DishResult img={<img src = {d} width='500'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
+                        <DishResult img={<img src = {d} width='360' height='300'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>

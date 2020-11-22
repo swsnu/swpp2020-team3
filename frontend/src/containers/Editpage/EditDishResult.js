@@ -128,7 +128,10 @@ class EditDishResult extends Component {
         }
         else{
             event.target.style.backgroundColor = null
-            this.setState({category: this.state.category.filter((type)=>{if(type!=param) return type})})
+            const newlist = this.state.category.filter((type)=>{if(type!=param) return type})
+            this.setState({category: newlist})
+            this.updateState('category', newlist)
+            console.log(this.state.category)
         }
     }
 

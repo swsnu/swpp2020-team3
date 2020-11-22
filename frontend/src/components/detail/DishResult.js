@@ -7,6 +7,12 @@ class DishResult extends Component {
     render() {
         const showigd = this.props.ingredients
         const tag = this.props.tag && this.props.tag.map((tag) => <span key={tag} id='tag'>{tag} </span>)
+        let categories;
+        if(this.props.category){
+            categories = this.props.category.map((td) => {
+                return td+"  "
+            })
+        }
         return (
             <div className='dish_result'>
                 <div id = 'detailbox1'>
@@ -25,7 +31,9 @@ class DishResult extends Component {
                                 {this.props.rating}
                                 <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
-                                {this.props.category}
+                                {categories && categories.slice(0,2)}
+                                <div id='categsplit'>{categories && categories.slice(2,4)}</div>
+                                <div id='categsplit'>{categories && categories.slice(4,6)}</div>
                                 <br/>
                             </div>
                         </div>

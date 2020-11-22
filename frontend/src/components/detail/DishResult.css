@@ -23,6 +23,13 @@
     margin-bottom:20px;
 }
 
+#categsplit {
+    display: block;
+    width: 15vh;
+    margin-left: 108px;
+    height: 3vh;
+}
+
 #detailbox1area1 {
     display: flex;
 }
@@ -62,7 +69,7 @@
 }
 
 #detailthumbnail {
-    
+    margin-left: 10px;
 }
 
 #detaillabel{
@@ -81,7 +88,7 @@
 #detailinfo{
     display: block;
     text-align: left;
-    width: 20vh;
+    width: 30vh;
 }
 
 #detailsummary {
