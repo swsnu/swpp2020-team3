@@ -225,6 +225,28 @@ def recipe_post(request):
     else:
         return HttpResponseNotAllowed(['POST'])
 
+def hotrecipe(request):
+    if request.method == 'GET':
+        cnt = Recipe.objects.all().count()
+        if cnt <= 4:
+            recipes = [recipes for recipes in Recipe.objects.all()]
+            newrecipes = []
+            for recipe in recipes:
+                encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'thumbnail': encoded_thumbnail.decode('utf-8')}
+                newrecipes.append(newrecipe)
+            return JsonResponse(newrecipes, safe=False)
+        else :
+            recipes = [recipes for recipes in Recipe.objects.all()]
+            s = sorted(recipes, key = lambda recipe: recipe.likes)
+            newrecipes = []
+            for n in range(1,5):
+                recipe = s[n-1]
+                encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+                newrecipe = {'id': recipe.id, 'title': recipe.title, 'thumbnail': encoded_thumbnail.decode('utf-8')}
+                newrecipes.append(newrecipe)
+            return JsonResponse(newrecipes, safe=False)
+
 def randomrecipe(request):
      if request.method == 'GET':
         cnt = Recipe.objects.all().count()

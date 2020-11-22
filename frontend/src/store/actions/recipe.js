@@ -15,6 +15,16 @@ export const getRandom = () => {
   }
 }
 
+const getHot_ = (recipe) => {
+  return {type: actionTypes.GET_HOT, hotRecipe: recipe}
+};
+export const getHot = () => {
+  return dispatch => {
+    return axios.get('api/hot/')
+      .then(res => dispatch(getHot_(res.data)))
+  }
+}
+
 const getRecipes_ = (recipes) => {
   return { type: actionTypes.GET_RECIPES, recipes: recipes };
 };
