@@ -15,6 +15,16 @@ export const getRandom = () => {
   }
 }
 
+const getHot_ = (recipe) => {
+  return {type: actionTypes.GET_HOT, hotRecipe: recipe}
+};
+export const getHot = () => {
+  return dispatch => {
+    return axios.get('api/hot/')
+      .then(res => dispatch(getHot_(res.data)))
+  }
+}
+
 const getRecipes_ = (recipes) => {
   return { type: actionTypes.GET_RECIPES, recipes: recipes };
 };
@@ -92,6 +102,31 @@ export const getIngredients = () => {
       .then(res => {
         return dispatch(getIngredients_(res.data));
         
+      })
+  }
+}
+
+// get entire list of scrapped articles of logged in user
+const getScrappedRecipes_ = (result) => {
+  return {type: actionTypes.GET_RECIPES, list: result}
+}
+export const getScrappedRecipes = () => {
+  return dispatch => {
+    return axios.get('/api/scrapped-article-list')
+      .then(res => {
+        return dispatch(getScrappedRecipes_(res.data))
+      })
+  }
+}
+
+const getMLRecipes_ = (result) => {
+  return {type: actionTypes.GET_ML_RECIPES, list: result}
+}
+export const getMLRecipes = () => {
+  return dispatch => {
+    return axios.get('/api/mltempurl')
+      .then(res => {
+        return dispatch(getMLRecipes_(res.data))
       })
   }
 }

@@ -65,5 +65,13 @@ export const isLogin = () => {
   return dispatch => {
     return axios.get('/api/curuser/')
     .then(res => dispatch(isLogin_(res.data)))
+  }}
+const changePassword_ = (userCredentials) => {
+  return { type: actionTypes.CHANGE_PASSWORD, getuser: userCredentials};
+};
+export const changePassword = (userCredentials) => {
+  return dispatch => {
+    return axios.put('/api/getuser/'+userCredentials.id+'/',{password: userCredentials.new_password})
+    .then(res => dispatch(changePassword_(res.data)))
   }
 }

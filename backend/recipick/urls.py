@@ -34,7 +34,9 @@ urlpatterns = [
     path('reply/<int:id>/', views.reply, name='reply'),                             
     
     # for getting a radomrecipe (mainpage)
-    path('random/', views.randomrecipe, name='randomrecipe'),                       
+    path('random/', views.randomrecipe, name='randomrecipe'),   
+    # for getting hot recipe (mainpage)
+    path('hot/', views.hotrecipe, name='hotrecipe'),                    
     # for getting an image
     path('image/', views.image, name='image'),                                      
 

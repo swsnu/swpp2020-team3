@@ -17,6 +17,9 @@ class Detailpage extends Component {
         super(props);
         this.props.getRecipe(this.props.match.params.id);
     }
+
+    
+
     render() {
         const title = this.props.recipe && this.props.recipe.title;
         const abstraction = this.props.recipe && this.props.recipe.summary;
@@ -25,6 +28,7 @@ class Detailpage extends Component {
         const likes = this.props.recipe && this.props.recipe.likes
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
+
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
@@ -32,10 +36,10 @@ class Detailpage extends Component {
                 return (
                     <div key={igd.id} id='detailigd'>
                         <div id = 'detailigdinfo'>
-                            <div id='igdlabel'>{igd.name}</div>
-                            <div id='igdlabel'>{'('+igd.brand+')'}</div>
-                            <div id='igdlabel'>{igd.quantity+igd.igd_type+' * '+igd.amount}</div>
-                            <div id='igdlabel'>{igd.price+'원'}</div>
+                            <div id='igdlabel'>{"이름: "+igd.name}</div>
+                            <div id='igdlabel'>{'브랜드: '+igd.brand}</div>
+                            <div id='igdlabel'>{"수량: "+igd.quantity+igd.igd_type+' * '+igd.amount}</div>
+                            <div id='igdlabel'>{"가격: "+igd.price+'원'}</div>
                         </div>
                         {<img id = 'detailimg' src={img} width='200'/>}
                     </div>
@@ -52,22 +56,20 @@ class Detailpage extends Component {
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
-                    
-                    <button onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
-
                     <div id = "detailBlock">
-                        <DishResult img={<img src = {d} width='500'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
+                        <button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
+                        <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
+                        <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>
                                 {methods}
-                                <button>Edit</button>
-                                <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
                             </div>
                         </div>
                         <Comments history={this.props.history} recipeId={this.props.match.params.id}/>
                     </div>
                 </div>
+                <div id='detailcomment'><Comments id='comment' recipeId={this.props.match.params.id}/></div>
             </div>
         )
     }

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import Recipe from '../../components/Recipe/Recipe';
 import SimpleUserInfo from '../../components/UserInfo/SimpleUserInfo';
+import MyInfo from '../MyInfo/MyInfo';
 //import './MyPage.css';
 import * as actionCreators from '../../store/actions/index';
 
@@ -22,8 +23,13 @@ class MyPage extends Component{
         this.props.onGetUser(id);
     }
 
+    clickRecipeHandler = id => {
+        this.props.history.push('/detail-page/'+id);
+    }
+
     render(){
         let myInfo=[];
+        let simpleMyInfo=[];
         let likedRecipes=[];
         let recipeBasket=[];
         let writtenRecipes=[];
@@ -31,6 +37,17 @@ class MyPage extends Component{
         let following = [];
         if(this.props.storedUser){
             myInfo = this.props.storedUser.user_info.map((user) => {
+                return (
+                    <MyInfo key={user.id}
+                        id = {user.id}
+                        username = {user.username}
+                        first_name = {user.first_name}
+                        last_name = {user.last_name}
+                        email = {user.email}
+                    />
+                );
+            });
+            simpleMyInfo = this.props.storedUser.user_info.map((user) => {
                 return (
                     <SimpleUserInfo key={user.id}
                         username = {user.username}
@@ -138,13 +155,13 @@ class MyPage extends Component{
             <div className='right'>
                 {this.state.tab=='my-profile' && <div className = 'my-profile'>
                 <p>my Info</p>
-                {myInfo}
+                {simpleMyInfo}
                 <p>liked recipes</p>
-                {likedRecipes.slice(0,10)}
+                {likedRecipes.slice(0,5)}
                 <p>recipe basket</p>
-                {recipeBasket.slice(0,10)}
+                {recipeBasket.slice(0,5)}
                 <p>written recipes</p>
-                {writtenRecipes.slice(0,10)}
+                {writtenRecipes.slice(0,5)}
                 </div>}
                 {this.state.tab=='my-info' && <div className = 'my-info'>
                 <p>my Info</p>

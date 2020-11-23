@@ -5,6 +5,7 @@ const initialState = {
   selectedRecipe: null,
   ingredientList: [],
   randomRecipe: null,
+  hotRecipe: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -23,6 +24,8 @@ const reducer = (state = initialState, action) => {
       return {...state, ingredientList: action.ingredients}
     case actionTypes.GET_RANDOM:
       return {...state, randomRecipe: action.randomRecipe};
+    case actionTypes.GET_HOT:
+      return {...state, hotRecipe: action.hotRecipe};
     case actionTypes.EDIT_RECIPE:
       return {...state, selectedRecipe: action.modifiedRecipe}
     default:

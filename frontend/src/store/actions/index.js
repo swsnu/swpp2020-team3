@@ -6,6 +6,9 @@ export {
     editRecipe,
     getIngredients,
     getRandom,
+    getHot,
+    getScrappedRecipes,
+    getMLRecipes,
 } from './recipe';
 
 export {
@@ -14,6 +17,7 @@ export {
     signOut,
     getUser,
     isLogin,
+    changePassword,
 } from './userCreators';
 
 export {

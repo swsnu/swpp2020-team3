@@ -48,6 +48,7 @@ class Mainpage extends Component{
 
     componentDidMount() {
         this.props.onGetRandom()
+        this.props.onGetHot()
     }
 
     toCreateHandler() {
@@ -70,14 +71,17 @@ class Mainpage extends Component{
                 )   
             })
         }
-        
-        const secondlist = this.state.secondList.map( (td) => {
-            return (
-                <li key={td.id} className = 'random_content' id = 'r2'>
-                    <DisplayRecipe img = {<img src = {td.image}/>} title = {td.title} />
-                </li>
-            )   
-        })
+        let hotlist;
+        if(this.props.hotRecipes){
+            hotlist= this.props.hotRecipes.map( (td) => {
+                let d = 'data:image/png;base64,'+ td.thumbnail
+                return (
+                    <li key={td.id} className = 'random_content' id = 'r2'>
+                        <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
+                    </li>
+                )   
+            })
+        }
         const thirdlist = this.state.thirdList.map( (td) => {
             return (
                 <li key={td.id} className = 'random_content' id = 'r3'>
@@ -103,7 +107,7 @@ class Mainpage extends Component{
                         <div className = 'secondBlock' >
                             <ul className = 'second_list'>
                                 <div className = 'list_title' id = 'title2' >{'최근 인기 레시피'}</div>
-                                {secondlist}
+                                {hotlist}
                             </ul>
                         </div>
                         <div className = 'thirdBlock'>
@@ -123,6 +127,7 @@ class Mainpage extends Component{
 const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.randomRecipe,
+        hotRecipes: state.rcp.hotRecipe,
     }
 }
   
@@ -132,12 +137,15 @@ const mapDispatchToProps = dispatch => {
             dispatch(actionCreators.getRandom()),
         onGetUser: (td) =>
             dispatch(actionCreators.getUser(td)),
+        onGetHot: () =>
+            dispatch(actionCreators.getHot()),
     }
 }
 
 Mainpage.propTypes = {
     onGetRandom: PropTypes.func,
     storedRecipes: PropTypes.array,
+    hotRecipes: PropTypes.array,
     history: PropTypes.object
 };
 

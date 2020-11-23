@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 120vh;
+    width: 100vh;
     padding-top: 30px;
     padding-bottom: 30px;
     text-align: center;
@@ -14,13 +14,20 @@
 
 #detailbox2{
     
-    width: 120vh;
+    width: 100vh;
     padding-top: 30px;
     padding-bottom: 30px;
     text-align: left;
     background: white;
     border-radius: 20px;
     margin-bottom:20px;
+}
+
+#categsplit {
+    display: block;
+    width: 15vh;
+    margin-left: 108px;
+    height: 3vh;
 }
 
 #detailbox1area1 {
@@ -62,7 +69,7 @@
 }
 
 #detailthumbnail {
-    
+    margin-left: 10px;
 }
 
 #detaillabel{
@@ -81,7 +88,8 @@
 #detailinfo{
     display: block;
     text-align: left;
-    width: 20vh;
+    width: 30vh;
+    margin-left: 2vh;
 }
 
 #detailsummary {
