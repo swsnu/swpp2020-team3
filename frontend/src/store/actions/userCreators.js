@@ -53,7 +53,7 @@ const getUser_ = (userCredentials) => {
 };
 export const getUser = (id) => {
   return dispatch => {
-    return axios.get('api/getuser/'+id)
+    return axios.get('/api/getuser/'+id)
     .then(res => dispatch(getUser_(res.data)))
   }
 }
