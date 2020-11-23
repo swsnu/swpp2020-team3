@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 
 // I don't think we need createstep anymore --> delete it after verfication (end-to-end) test
 class Createpage extends Component{
-   
    state = {
        title:'',
        summary:'',
@@ -31,6 +30,18 @@ class Createpage extends Component{
    imageHandler = this.imageHandler.bind(this);
 
     componentDidMount(){
+        this.props.isLogin().then(res => {
+            console.log(res.is_authenticated)
+            if(!res.is_authenticated){
+                let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
+                if(input){
+                    this.props.history.push('/login')
+                }
+                else{
+                    this.props.history.push('/main-page')
+                }
+            }
+        })
         this.props.onGetIgrList()
     }
 
@@ -278,14 +289,16 @@ class Createpage extends Component{
 
 const mapStateToProps = state => {
     return {
-       ingredientList: state.rcp.ingredientList
+       ingredientList: state.rcp.ingredientList,
+       is_authenticated: state.user.is_authenticated
     };
 }
   
 const mapDispatchToProps = dispatch => {
     return {
         onCreate: (recipe) => dispatch(actionCreators.createRecipe(recipe)),
-        onGetIgrList: () => dispatch(actionCreators.getIngredients())
+        onGetIgrList: () => dispatch(actionCreators.getIngredients()),
+        isLogin: () => dispatch(actionCreators.isLogin())
         }
     }
 

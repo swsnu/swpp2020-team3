@@ -1,11 +1,14 @@
 //React imports
-import React from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
+import {connect} from 'react-redux';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 import {ConnectedRouter} from 'connected-react-router';
 import PropTypes from "prop-types";
 
 //Local imports:
 import './App.css';
+import AuthRoute from './components/Router/AuthRoute';
+import * as actionCreators from './store/actions/index';
 import Mainpage from './containers/Mainpage/Mainpage';
 import RecipeList from './containers/RecipeList/RecipeList'
 import Detailpage from './containers/detailpage/Detailpage'
@@ -16,12 +19,17 @@ import Login from './containers/Authentication/Login/Login';
 import Editpage from './containers/Editpage/Editpage';
 
 function App(props) {
+  useEffect(() => {
+    props.isLogin();
+  })
   return(
     <ConnectedRouter history={props.history}>
       <Router>
       <div className="App">
         <Navbar history={props.history}/>
         <Switch>
+          {/*{props.is_authenticated==true?<Redirect from='/login' exact to='/main-page'/>:null}
+          {props.is_authenticated==false?<Redirect from='/create' exact to='/login'/>:null}*/}
           <Route path='/search' component={RecipeList} />
           <Route path='/main-page' exact render={() => <Mainpage history={props.history}/>} />
           <Route path='/detail-page/:id' exact render={() => <Detailpage history={props.history}/>}/>
@@ -30,6 +38,7 @@ function App(props) {
           <Route path='/signup' exact render={() => <Signup history={props.history} />} />
           <Route path='/login' exact render={() => <Login history={props.history} />} />
           <Redirect from='/' exact to='/main-page'/>
+          
           <Route render = {() => <h1>Not Found</h1>} />
         </Switch>
       </div>
@@ -37,7 +46,19 @@ function App(props) {
     </ConnectedRouter>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    is_authenticated: state.user.is_authenticated
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    isLogin: () => dispatch(actionCreators.isLogin())
+  }
+}
 App.propTypes = {
   history: PropTypes.object
 };
-export default App;
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

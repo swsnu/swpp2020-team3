@@ -11,7 +11,9 @@ export {
 export {
     signUp,
     signIn,
+    signOut,
     getUser,
+    isLogin,
 } from './userCreators';
 
 export {

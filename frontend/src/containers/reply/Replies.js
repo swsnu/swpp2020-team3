@@ -15,6 +15,21 @@ class Replies extends Component {
         super(props);
     }
 
+    onAddReply = () => {
+        this.props.isLogin().then(res => {
+            if(!res.is_authenticated){
+                let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
+                if(input){
+                    this.props.history.push('/login')
+                }
+            }
+            else{
+                this.props.addReply({date:'2020-11-05', edited:false, content: this.state.content, commentId: this.props.commentId});
+                this.setState({content: ''});
+            }
+        })
+        
+    }
     render() {
         const replylist = this.props.replies.map( (item) => <Reply key={item.id} content={item.content} author={item.author_id} 
             onEditReply={(content) => this.props.onEditReply({id: item.id, content, edited: true})} onDeleteReply={() => this.props.onDeleteReply(item.id)}/>)
@@ -22,7 +37,7 @@ class Replies extends Component {
             <div className='replies'>
                 {replylist}
                 <input className='reply-content-input' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
-                <button className='create-reply-button' disabled={this.state.content==''} onClick={() => {this.setState({content: ''}); this.props.addReply({date:'2020-11-05', edited:false, content: this.state.content, commentId: this.props.commentId});}}>confirm</button>
+                <button className='create-reply-button' disabled={this.state.content==''} onClick={() => this.onAddReply()}>confirm</button>
             </div>
         )
     }
@@ -34,6 +49,7 @@ const mapDispatchToProps = dispatch => {
         onEditReply: (reply) => dispatch(actionCreators.editReply(reply)),
         onDeleteReply: (reply) => dispatch(actionCreators.deleteReply(reply)),
         addReply: (reply) => dispatch(actionCreators.addReply(reply)),
+        isLogin: () => dispatch(actionCreators.isLogin())
     }
 }
 

@@ -18,7 +18,7 @@ class Comment extends Component {
     }
     
     render() {
-        const replies = <Replies replies={this.props.replies} commentId={this.props.id}/>
+        const replies = <Replies history={this.props.history} replies={this.props.replies} commentId={this.props.id}/>
         return(
             <div>
                 <p>{this.props.content} - {this.props.author}</p>
