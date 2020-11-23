@@ -4,33 +4,53 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 //import './Login.css'
 //Local imports
-import * as actionCreators from '../../../store/actions/index';
+import * as actionCreators from '../../store/actions/index';
 
 
 //TODO:
 //should connect to store
 class MyInfo extends Component{
     state = {
-        id: "아이디",
-        password: "비밀번호",
+        new_password: "",
+        password_confirm: "",
     }
 
     onClickSubmit(){
-        //this.props.onSignup
-        var userCredentials = this.state;
-        var tempuserCredentials = {"username": userCredentials.id, "password": userCredentials.password} // this shouldn't be here
-        userCredentials = tempuserCredentials; // this shouldn't be here
-        this.props.onLogin(userCredentials)
+        
+        if(this.state.new_password == this.state.password_confirm){
+            var userCredentials = {"id": this.props.id, "new_password": this.state.new_password}; // this shouldn't be here
+            this.props.onChangePassword(userCredentials);
+        }
+        else{
+            window.prompt("two passwords are not equal!");
+        }   
     }
     render(){
         return(
-            <div className = 'LoginBackground'>
-                <div className="Login">
-                    <form className="Login" >
-                        <label>RECIPICK</label>
-                        <input type="text" name="id"  placeholder = "아이디" onChange={(event) => this.setState({id: event.target.value})}></input>
-                        <input type="text" name="password" placeholder = "비밀번호" onChange={(event) => this.setState({password: event.target.value})}></input>
-                        <button className="LoginButton" onClick={()=>this.onClickSubmit()}>로그인</button>
+            <div className = 'MyInfo'>
+                <div className="MyInfo">
+                    <form className="MyInfo">
+                        <p>Username</p>
+                        <div className = "username">
+                        {this.props.username}
+                        </div>
+                        <p>first name</p>
+                        <div className = "first_name">
+                        {this.props.first_name}
+                        </div>
+                        <p>last name</p>
+                        <div className = "last_name">
+                        {this.props.last_name}
+                        </div>
+                        <p>email</p>
+                        <div className = "email">
+                        {this.props.email}
+                        </div>
+                        <p>new password</p>
+                        <input type="text" name="new_password"  placeholder = "새 비밀번호" onChange={(event) => this.setState({new_password: event.target.value})}></input>
+                        <p>new password(confirm)</p>
+                        <input type="text" name="password_confirm" placeholder = "비밀번호 확인" onChange={(event) => this.setState({password_confirm: event.target.value})}></input>
+                        <button className="changePassword" disabled = {!this.state.new_password || !this.state.password_confirm} onClick={()=>this.onClickSubmit()}>비밀번호 변경</button>
                     </form>
                 </div>
             </div>
@@ -40,12 +60,12 @@ class MyInfo extends Component{
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLogin: (userCredentials) => dispatch(actionCreators.signIn(userCredentials)),
+        onChangePassword: (userCredentials) => dispatch(actionCreators.changePassword(userCredentials)),
         }
     }
 
-Login.propTypes = {
-    onLogin: PropTypes.func,
+MyInfo.propTypes = {
+    onChangePassword: PropTypes.func,
 }
 
 export default connect(null,mapDispatchToProps)(withRouter(MyInfo));
