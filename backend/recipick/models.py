@@ -9,6 +9,7 @@ class User(AbstractUser):
         related_name = 'follower',
         blank=True
     )
+    is_active = models.BooleanField(default=False)
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=64)

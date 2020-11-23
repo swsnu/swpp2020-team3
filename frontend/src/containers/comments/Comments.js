@@ -21,14 +21,30 @@ class Comments extends Component {
             })
     }
 
+    onAddComment = () => {
+        this.props.isLogin().then(res => {
+            if(!res.is_authenticated){
+                let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
+                if(input){
+                    this.props.history.push('/login')
+                }
+            }
+            else{
+                this.props.addComment({date:'2020-11-05', edited:false, content: this.state.content, recipeId: this.props.recipeId});
+                this.setState({content: ''});
+            }
+        })
+    }
+
     render() {
-        const commentlist = this.props.comments.map( (item) => <Comment key={item.id} replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} id={item.id}
+        const commentlist = this.props.comments.map( (item) => 
+            <Comment key={item.id} history={this.props.history} replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} id={item.id}
             onEditComment={(content) => this.props.onEditComment({id: item.id, content, edited: true})} onDeleteComment={() => this.props.onDeleteComment(item.id)}/>)
         return (
             <div className='comments'>
                 {commentlist}
                 <input id='new-comment' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
-                <button id='add-comment' disabled={this.state.content==''} onClick={() => {this.setState({content: ''}); this.props.addComment({date:'2020-11-05', edited:false, content: this.state.content, recipeId: this.props.recipeId});}}>confirm</button>
+                <button id='add-comment' disabled={this.state.content==''} onClick={() => this.onAddComment()}>confirm</button>
             </div>
         )
     }
@@ -47,7 +63,8 @@ const mapDispatchToProps = dispatch => {
         onEditComment: (comment) => dispatch(actionCreators.editComment(comment)),
         onDeleteComment: (commentId) => dispatch(actionCreators.deleteComment(commentId)),
         addComment: (comment) => dispatch(actionCreators.addComment(comment)),
-        getReplySet: (comment_id_list) => dispatch(actionCreators.getReplySet(comment_id_list))
+        getReplySet: (comment_id_list) => dispatch(actionCreators.getReplySet(comment_id_list)),
+        isLogin: () => dispatch(actionCreators.isLogin())
     }
 }
 

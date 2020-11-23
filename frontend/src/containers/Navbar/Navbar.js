@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 //Local imports
 import './Navbar.css'
 import PropTypes from "prop-types";
+import {connect} from 'react-redux';
+import * as actionCreators from '../../store/actions/index';
 
 class Navbar extends Component{
     state = {
@@ -10,7 +12,10 @@ class Navbar extends Component{
         maxPrice : '',
         keyword : '',
     }
-
+    
+    componentDidMount() {
+        this.props.isLogin()
+    }
     searchConfirmHandler = () => {
         this.props.history.push(`/search?category1=true&category2=true&category3=true&category4=true&category5=true&category6=true
         &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
@@ -26,12 +31,13 @@ class Navbar extends Component{
                 <div className='SearchBar'>
                     <div id='logo'> <NavLink to='/main-page' exact><p id = 'Logo'>RECIPICK</p></NavLink> </div>
                     <div className= 'searchbar'> <input type='text' placeholder = "하한" value = {this.state.minPrice}  onChange={(event) =>  this.setState({minPrice: event.target.value})}/></div>
-                    <div className= 'searchbar'>~</div>  
+                    <div className= 'searchbar'>~</div>
                     <div className= 'searchbar'><input type='text'  placeholder = "상한" value = {this.state.maxPrice}  onChange={(event) =>  this.setState({maxPrice: event.target.value})}/></div> 
                     <div className= 'searchbar'><input type='text'  placeholder = "키워드" value = {this.state.keyword}  onChange={(event) =>  this.setState({keyword: event.target.value})}/></div> 
                     <div className= 'searchbar'><img className = 'Search_Confirm' onClick={() => this.searchConfirmHandler()} src={require('../../Image/Search_Confirm.png')}/></div>
-                    <div id = 'subblock'> 
-                    <li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
+                    <div id = 'subblock'>
+                    {!this.props.is_authenticated?<li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
+                    :<li id='lilogout' onClick={() => this.props.onLogout().then(() => this.props.isLogin())}><NavLink to='/main-page' exact>Log out</NavLink></li>}
                     <li id = 'lisign'><NavLink to='/signup' exact>Sign Up</NavLink></li>
                     <li id = 'licreate'><NavLink to='/create' exact>Create</NavLink></li>
                     </div>
@@ -92,10 +98,20 @@ class Navbar extends Component{
         )        
     }
 }
-
+const mapStateToProps = (state) => {
+    return {
+        is_authenticated: state.user.is_authenticated
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        isLogin: () => dispatch(actionCreators.isLogin()),
+        onLogout: () => dispatch(actionCreators.signOut())
+    }
+}
 Navbar.propTypes = {
     history: PropTypes.object,
     storedRecipes: PropTypes.array,
 };
 
-export default Navbar
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar)

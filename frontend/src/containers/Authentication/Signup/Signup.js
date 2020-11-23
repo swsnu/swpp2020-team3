@@ -9,18 +9,33 @@ import './Signup.css'
 //should connect to store
 class Signup extends Component{
     state = {
-        name: "",
-        id: "",
+        name: "name",
+        id: "id",
         email: "",
         password: "",
-        password_confirm: ""
+        password_confirm: "",
+        loading: false
     }
     onClickSubmit(){
         //this should be the one --> discuss
         var userCredentials = this.state;
-        var tempuserCredentials = {"username": userCredentials.name, "password": userCredentials.password} // this shouldn't be here
-        userCredentials = tempuserCredentials; // this shouldn't be here
-        this.props.onSignup(userCredentials)
+        if(userCredentials.password!=userCredentials.password_confirm){
+            window.alert('Recheck password!')
+        }
+        else {
+            var tempuserCredentials = {"username": userCredentials.name, "password": userCredentials.password, "email": userCredentials.email} // this shouldn't be here
+            userCredentials = tempuserCredentials; // this shouldn't be here
+            this.props.onSignup(userCredentials).then(res => {
+                if(res){
+                    window.alert('Check your mail to activate your accont!');
+                    this.props.history.push('/main-page');
+                }
+                else{
+                    window.alert('This username is already used!');
+                }
+            })
+        }
+        
     }
     render(){
         return(

@@ -2,7 +2,20 @@ from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient
+from django.core.mail import EmailMessage
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from django.contrib import auth
+from django.views import View
+from django.views.generic import TemplateView
+from django.urls import reverse
+from .utils import token_generator
+from .forms import SignupForm
+import logging
+import jwt
 import json
 from json import JSONDecodeError
 import datetime
@@ -27,13 +40,35 @@ def getuser(request, id):
             'written_recipes': written_recipes, 'follower': follower, 'following': following}
         return JsonResponse(user, safe=False, status=200)
 
+def curuser(request):
+    if(request.method) == 'GET':
+        is_authenticated = request.user.is_authenticated
+        return JsonResponse(is_authenticated, safe=False, status=200)
+
 def signup(request):
     if request.method == 'POST':
         req_data = json.loads(request.body.decode())
         username = req_data['username']
         password = req_data['password']
+        email = req_data['email']
         user = User.objects.create_user(username = username, password = password)
+        user.is_active = False
         user.save()
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = token_generator.make_token(user)
+        domain = get_current_site(request).domain
+        link = reverse('activate', kwargs={'uidb64': uidb64, 'token': token})
+        activate_url = 'http://'+domain+link
+        mail_subject = 'Activate your account'
+        mail_body = 'Hi ' + user.username + \
+            'Please use this link to verify your account\n' + activate_url
+        mail = EmailMessage(
+            mail_subject,
+            mail_body,
+            'swppsend@gmail.com',
+            [email],
+        )
+        mail.send(fail_silently=False)
         return HttpResponse(status=201)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -41,6 +76,7 @@ def signup(request):
 def signin(request):
     if request.method == 'POST':
         req_data = json.loads(request.body.decode())
+        print(req_data)
         username = req_data['username']
         password = req_data['password']
         user = auth.authenticate(request, username = username, password = password)
@@ -464,6 +500,20 @@ def reply(request, id):
     else:
         return HttpResponseNotAllowed(['GET', 'PUT', 'DELETE'])
 
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        signin(request)
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 
 @ensure_csrf_cookie

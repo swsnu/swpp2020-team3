@@ -65,7 +65,7 @@ class Detailpage extends Component {
                                 <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
                             </div>
                         </div>
-                        <Comments recipeId={this.props.match.params.id}/>
+                        <Comments history={this.props.history} recipeId={this.props.match.params.id}/>
                     </div>
                 </div>
             </div>
