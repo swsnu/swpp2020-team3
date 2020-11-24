@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
-//import './Login.css'
+import './MyInfo.css'
 //Local imports
 import * as actionCreators from '../../store/actions/index';
 
@@ -27,28 +27,31 @@ class MyInfo extends Component{
     }
     render(){
         return(
-            <div className = 'MyInfo'>
-                <div className="MyInfo">
+            <div className = 'Info'>
+                <div className="MInfo">
                     <form className="MyInfo">
-                        <p>Username</p>
                         <div className = "username">
-                        {this.props.username}
+                        <p id='infolabel'>Username</p>
+                        {'\u00A0'.repeat(33)+this.props.username}
                         </div>
-                        <p>first name</p>
-                        <div className = "first_name">
-                        {this.props.first_name}
+                        <div  className = "first_name">
+                        <p id='infolabel'>first name</p>
+                        {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'+this.props.first_name}
                         </div>
-                        <p>last name</p>
-                        <div className = "last_name">
-                        {this.props.last_name}
+                        <div  className = "last_name">
+                        <p id='infolabel'>last name</p>
+                        {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'+this.props.last_name}
                         </div>
-                        <p>email</p>
-                        <div className = "email">
-                        {this.props.email}
+                        <div  className = "email">
+                        <p id='infolabel'>email</p>
+                        {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'+this.props.email}
                         </div>
-                        <p>new password</p>
+                        <p id='infolabel'>new password</p>
+                        {'\u00A0'.repeat(26)}
                         <input type="text" name="new_password"  placeholder = "새 비밀번호" onChange={(event) => this.setState({new_password: event.target.value})}></input>
-                        <p>new password(confirm)</p>
+                        <br/>
+                        <p id='infolabel' >new password(confirm)</p>
+                        {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'}
                         <input type="text" name="password_confirm" placeholder = "비밀번호 확인" onChange={(event) => this.setState({password_confirm: event.target.value})}></input>
                         <button className="changePassword" disabled = {!this.state.new_password || !this.state.password_confirm} onClick={()=>this.onClickSubmit()}>비밀번호 변경</button>
                     </form>
