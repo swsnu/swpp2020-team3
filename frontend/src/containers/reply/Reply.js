@@ -17,8 +17,12 @@ class Reply extends Component {
         return(
             <div className = 'reply'>
                 <p>{this.props.content} - {this.props.author}</p>
-                {<button id='edit-reply-button' onClick={this.onEdit}>edit</button>}
-                {<button id='delete-reply-button' onClick={() => this.props.onDeleteReply()}>delete</button>}
+                {(this.props.login_id==this.props.author)?
+                <div>
+                    <button id='edit-reply-button' onClick={this.onEdit}>edit</button>
+                    <button id='delete-reply-button' onClick={() => this.props.onDeleteReply()}>delete</button>
+                </div>:
+                null}
             </div>
         ) 
     }

@@ -12,7 +12,7 @@ import * as actionCreators from '../../../store/actions/index';
 class Login extends Component{
     componentDidMount() {
         this.props.isLogin().then(res => {
-            if(res.is_authenticated){
+            if(res.login_id){
                 this.props.history.push('/main-page')
             }
         })

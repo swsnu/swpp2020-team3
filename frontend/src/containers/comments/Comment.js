@@ -18,13 +18,14 @@ class Comment extends Component {
     }
     
     render() {
-        const replies = <Replies history={this.props.history} replies={this.props.replies} commentId={this.props.id}/>
+        const replies = <Replies login_id={this.props.login_id} history={this.props.history} replies={this.props.replies} commentId={this.props.id}/>
         return(
             <div>
                 <p>{this.props.content} - {this.props.author}</p>
-                {<button id='edit-comment-button' onClick={this.onEdit}>edit</button>}
-                {<button id='delete-comment-button' onClick={() => this.props.onDeleteComment()}>delete</button>}
                 <button id='toggle-reply-button' onClick={()  => this.setState({toggleReply: !this.state.toggleReply})}>replies</button>
+                {(this.props.login_id==this.props.author)?<div><button id='edit-comment-button' onClick={this.onEdit}>edit</button>
+                <button id='delete-comment-button' onClick={() => this.props.onDeleteComment()}>delete</button></div>:null}
+                
                 {this.state.toggleReply?replies:null}
             </div>
         ) 

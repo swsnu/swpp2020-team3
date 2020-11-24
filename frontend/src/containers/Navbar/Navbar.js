@@ -36,9 +36,10 @@ class Navbar extends Component{
                     <div className= 'searchbar'><input type='text'  placeholder = "키워드" value = {this.state.keyword}  onChange={(event) =>  this.setState({keyword: event.target.value})}/></div> 
                     <div className= 'searchbar'><img className = 'Search_Confirm' onClick={() => this.searchConfirmHandler()} src={require('../../Image/Search_Confirm.png')}/></div>
                     <div id = 'subblock'>
-                    {!this.props.is_authenticated?<li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
+                    {!this.props.login_id?<li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
                     :<li id='lilogout' onClick={() => this.props.onLogout().then(() => this.props.isLogin())}><NavLink to='/main-page' exact>Log out</NavLink></li>}
-                    <li id = 'lisign'><NavLink to='/signup' exact>Sign Up</NavLink></li>
+                    {!this.props.login_id?<li id = 'lisign'><NavLink to='/signup' exact>Sign Up</NavLink></li>
+                    :<li id = 'lisign'><NavLink to={'/user/'+this.props.login_id} exact>My Page</NavLink></li>}
                     <li id = 'licreate'><NavLink to='/create' exact>Create</NavLink></li>
                     </div>
                 </div>
@@ -102,7 +103,7 @@ class Navbar extends Component{
 }
 const mapStateToProps = (state) => {
     return {
-        is_authenticated: state.user.is_authenticated
+        login_id: state.user.login_id
     }
 }
 const mapDispatchToProps = (dispatch) => {

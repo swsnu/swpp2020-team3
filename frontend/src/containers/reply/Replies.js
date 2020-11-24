@@ -17,7 +17,7 @@ class Replies extends Component {
 
     onAddReply = () => {
         this.props.isLogin().then(res => {
-            if(!res.is_authenticated){
+            if(!res.login_id){
                 let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
                 if(input){
                     this.props.history.push('/login')
@@ -31,7 +31,7 @@ class Replies extends Component {
         
     }
     render() {
-        const replylist = this.props.replies.map( (item) => <Reply key={item.id} content={item.content} author={item.author_id} 
+        const replylist = this.props.replies.map( (item) => <Reply login_id={this.props.login_id} key={item.id} content={item.content} author={item.author_id} 
             onEditReply={(content) => this.props.onEditReply({id: item.id, content, edited: true})} onDeleteReply={() => this.props.onDeleteReply(item.id)}/>)
         return (
             <div className='replies'>

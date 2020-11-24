@@ -57,8 +57,10 @@ def getuser(request, id):
 
 def curuser(request):
     if(request.method) == 'GET':
-        is_authenticated = request.user.is_authenticated
-        return JsonResponse(is_authenticated, safe=False, status=200)
+        login_id = request.user.id
+        if(not login_id):
+            login_id=0
+        return JsonResponse(login_id, safe=False, status=200)
 
 def signup(request):
     if request.method == 'POST':
@@ -355,6 +357,7 @@ def recipe(request, id):
             'created_date': recipe.created_date,
             'edited': recipe.edited,
             'summary': recipe.summary,
+            'author': recipe.author.id,
         }
         return JsonResponse(newrecipe, safe=False)
     elif request.method == 'DELETE':

@@ -58,14 +58,15 @@ export const getUser = (id) => {
   }
 }
 
-const isLogin_ = (is_authenticated) => {
-  return {type: actionTypes.IS_AUTHENTICATED, is_authenticated}
+const isLogin_ = (login_id) => {
+  return {type: actionTypes.IS_AUTHENTICATED, login_id}
 }
 export const isLogin = () => {
   return dispatch => {
     return axios.get('/api/curuser/')
     .then(res => dispatch(isLogin_(res.data)))
-  }}
+}}
+
 const changePassword_ = (userCredentials) => {
   return { type: actionTypes.CHANGE_PASSWORD, getuser: userCredentials};
 };

@@ -32,7 +32,7 @@ class Createpage extends Component{
     componentDidMount(){
         this.props.isLogin().then(res => {
             console.log(res.is_authenticated)
-            if(!res.is_authenticated){
+            if(!res.login_id){
                 let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
                 if(input){
                     this.props.history.push('/login')
@@ -290,7 +290,7 @@ class Createpage extends Component{
 const mapStateToProps = state => {
     return {
        ingredientList: state.rcp.ingredientList,
-       is_authenticated: state.user.is_authenticated
+       login_id: state.user.login_id
     };
 }
   

@@ -13,10 +13,19 @@ import './Detailpage.css'
 
 class Detailpage extends Component {
 
+    state = {
+        login_id: -1
+    };
     constructor(props) {
         super(props);
         this.props.getRecipe(this.props.match.params.id);
+        this.props.isLogin().then(res => {
+            this.setState({
+                login_id: res.login_id
+            })
+        })
     }
+    
 
     
 
@@ -28,6 +37,8 @@ class Detailpage extends Component {
         const likes = this.props.recipe && this.props.recipe.likes
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
+        const author = this.props.recipe && this.props.recipe.author
+        console.log(likes)
 
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){
@@ -46,19 +57,20 @@ class Detailpage extends Component {
                 )
             })
         }
+        console.log(this.state.login_id);
+        console.log(this.props.recipe)
         let d = null;
         if(this.props.recipe){
             d = 'data:image/png;base64,'+ this.props.recipe.thumbnail;
         }
         const methodData = descriptions && descriptions.map((item, index) => ({img:'data:image/png;base64,'+ this.props.recipe.photo_list[index], explanation:item}))
         const methods = methodData && methodData.map((item) => <DishStep key={item.id} img={item.img} explanation={item.explanation}/>)
-
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
                     <div id = "detailBlock">
-                        <button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
-                        <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button>
+                        {(this.state.login_id==author)?<div><button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
+                        <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button></div>:null}
                         <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
@@ -66,10 +78,9 @@ class Detailpage extends Component {
                                 {methods}
                             </div>
                         </div>
-                        <Comments history={this.props.history} recipeId={this.props.match.params.id}/>
                     </div>
                 </div>
-                <div id='detailcomment'><Comments id='comment' recipeId={this.props.match.params.id}/></div>
+                <div id='detailcomment'><Comments id='comment' login_id={this.state.login_id} history={this.props.history} recipeId={this.props.match.params.id}/></div>
             </div>
         )
     }
@@ -84,7 +95,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
-        deleteRecipe: (id) => dispatch(actionCreators.deleteRecipe(id))
+        deleteRecipe: (id) => dispatch(actionCreators.deleteRecipe(id)),
+        isLogin: () => dispatch(actionCreators.isLogin())
     };
 }
 
