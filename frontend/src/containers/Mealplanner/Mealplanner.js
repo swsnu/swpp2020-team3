@@ -24,7 +24,7 @@ const updateIndex = (list) => {
     let newIndex = 1;
     let temp = list.flat()
     temp.map((element) => {
-        element.index = newIndex
+        element.id = newIndex
         newIndex++
     })
 }
@@ -43,9 +43,10 @@ class Mealplanner extends Component {
         min: '',
         max: '',
         numOfDays: '',
-        recipeArray: [[{ id: 1, thumbnail: 0 }, { id: 2, thumbnail: 0 }, { id: 3, thumbnail: 0 }],
-        [{ id: 4, thumbnail: 0 }, { id: 5, thumbnail: 0 }, { id: 6, thumbnail: 0 }],
-        [{ id: 7, thumbnail: 0 }, { id: 8, thumbnail: 0 }, { id: 9, thumbnail: 0 }]],
+        // link to recipe of real_id = 0 will give us a 404 error or display that it's an empty recipe or should not be clickable
+        recipeArray: [[{ id: 1, thumbnail: 0, real_id: 0 }, { id: 2, thumbnail: 0, real_id: 0}, { id: 3, thumbnail: 0, real_id: 0}],
+        [{ id: 4, thumbnail: 0, real_id: 0 }, { id: 5, thumbnail: 0, real_id: 0 }, { id: 6, thumbnail: 0, real_id: 0 }],
+        [{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }]],
         scrappedRecipes: [{ id: 1, thumbnail: 'hana' }, { id: 2, thumbnail: 'duna' },
         { id: 3, thumbnail: 'sena' }, { id: 4, thumbnail: 'nena' }],
         recipes: []
@@ -56,7 +57,13 @@ class Mealplanner extends Component {
         // this.props.getScrappedRecipes().then((res) => console.log('"retrieved list of scrapped article"'));//this.setState({recipeArrays: list})
         
         // temporary function to get temp getrecipes
-        this.props.getRecipes().then((res) => this.setState({scrappedRecipes: res.randomRecipe}))
+        this.props.getRecipes().then((res) => {
+            console.log(res);
+            let new_list = res.randomRecipe.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
+            console.log(new_list)
+            this.setState({scrappedRecipes: new_list})
+        })
+
     }
 
     addDayAbove(index) {
@@ -76,6 +83,7 @@ class Mealplanner extends Component {
             console.log("can't make empty list")
         }
         else{
+            console.log("shift")
             let list = this.state.recipeArray;
             list.splice(index, 1)
             this.setState({recipeArray: list})
@@ -112,6 +120,7 @@ class Mealplanner extends Component {
                 let d_index = destination.index +3*day
                 let recipeArray = this.state.recipeArray.flat();
                 if(s_index-d_index==1 || s_index-d_index==-1){
+                    console.log("swap")
                     let source = recipeArray[s_index].thumbnail
                     let dest = recipeArray[d_index].thumbnail
                     recipeArray[d_index]['thumbnail'] = source
@@ -120,7 +129,12 @@ class Mealplanner extends Component {
                     this.setState({recipeArray: newList})
                 }
                 else{
-                    console.log('shift')
+                    const [removed] = recipeArray.splice(s_index, 1);
+                    recipeArray.splice(d_index, 0, removed);
+                    updateIndex(recipeArray)
+                    console.log(recipeArray)
+                    let newList = (chunk(recipeArray, 3))
+                    this.setState({recipeArray: newList})
                 }
                 return;
             }
@@ -178,7 +192,7 @@ class Mealplanner extends Component {
                                                     <div className='singleBlock' >
                                                         {meal.thumbnail == 0 
                                                             ? <div className='emptyImage'/>
-                                                            :<img src={`data:image/png;base64,${meal.thumbnail}`} width='100' height='100'/>}
+                                                            :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={`data:image/png;base64,${meal.thumbnail}`} width='100' height='100'/>}
                                                     </div>
                                                 </div>
                                             )}
@@ -198,7 +212,7 @@ class Mealplanner extends Component {
                                         {(provided) => (
                                             <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                 <div className='scrappedRecipe'>
-                                                    <img src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
+                                                    <img onClick={() =>this.props.history.push(`/detail-page/${recipe.real_id}/`)} src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
                                                 </div>
                                             </div>
                                         )}
