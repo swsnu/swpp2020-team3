@@ -7,7 +7,7 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),               # for /signin
 
     path('signout/', views.signout, name='signout'),
-    path('getuser/<int:id>', views.getuser, name='getuser'),
+    path('getuser/<int:id>/', views.getuser, name='getuser'),
     path('curuser/', views.curuser, name='curuser'),
 
 

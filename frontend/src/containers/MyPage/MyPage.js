@@ -48,6 +48,7 @@ class MyPage extends Component{
                 );
             });
             simpleMyInfo = this.props.storedUser.user_info.map((user) => {
+                console.log(user)
                 return (
                     <SimpleUserInfo key={user.id}
                         username = {user.username}
