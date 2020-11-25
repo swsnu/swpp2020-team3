@@ -17,7 +17,13 @@ urlpatterns = [
     path('recipepage/', views.recipe_page, name='recipe_page'),                     
     path('recipe/<int:id>/', views.recipe, name='recipe'),
     # for posting a comment
-    path('recipe/<int:id>/comment/', views.recipe_comment, name='recipe_comment'),  
+    path('recipe/<int:id>/comment/', views.recipe_comment, name='recipe_comment'),
+    # like recipe
+    path('recipe/<int:id>/like/', views.recipe_like, name='recipe_like'),
+    path('recipe/<int:id>/removelike/', views.recipe_removelike, name='recipe_remomvelike'),
+    # scrap recipe
+    path('recipe/<int:id>/scrap/', views.recipe_scrap, name='recipe_scrap'),
+    path('recipe/<int:id>/removescrap/', views.recipe_removescrap, name='recipe_remomvescrap'),
     
     # for posting an ingredient
     path('ingredient', views.ingredient_post, name='ingredient_post'),              

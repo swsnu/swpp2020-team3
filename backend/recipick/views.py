@@ -227,6 +227,8 @@ def image(request):
     else:
         return HttpResponseNotAllowed(['GET'])
 
+
+
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
         user = request.user
@@ -324,6 +326,54 @@ def randomrecipe(request):
                 newrecipe = {'id': recipe.id, 'title': recipe.title, 'thumbnail': encoded_thumbnail.decode('utf-8')}
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
+
+def recipe_like(request, id):
+    if request.method == 'POST':
+        user = request.user
+        if not user.is_authenticcated:
+            return HttpResponse(status=401)
+        recipe = Recipe.objects.get(id=id)
+        recipe.liked_user.add(user)
+        recipe.save()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
+def recipe_removelike(request, id):
+    if request.method == 'POST':
+        user = request.user
+        if not user.is_authenticcated:
+            return HttpResponse(status=401)
+        recipe = Recipe.objects.get(id=id)
+        recipe.liked_user.remove(user)
+        recipe.save()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
+def recipe_scrap(request, id):
+    if request.method == 'POST':
+        user = request.user
+        if not user.is_authenticcated:
+            return HttpResponse(status=401)
+        recipe = Recipe.objects.get(id=id)
+        recipe.scrapped_user.add(user)
+        recipe.save()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
+def recipe_removescrap(request, id):
+    if request.method == 'POST':
+        user = request.user
+        if not user.is_authenticcated:
+            return HttpResponse(status=401)
+        recipe = Recipe.objects.get(id=id)
+        recipe.scrapped_user.remove(user)
+        recipe.save()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed(['POST'])
 
 def recipe(request, id):
     if request.method == 'GET':

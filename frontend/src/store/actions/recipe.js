@@ -140,3 +140,39 @@ export const getRecipes = (pageID, searchMode) => {
   };
 };
 */
+
+export const likeRecipe = (id) => {
+  return dispatch => {
+    return axios.post('/api/'+id+'/like/')
+      .then(res => {
+
+      })
+  }
+}
+
+export const removelikeRecipe = (id) => {
+  return dispatch => {
+    return axios.post('/api/'+id+'/removelike/')
+      .then(res => {
+        
+      })
+  }
+}
+
+export const scrapRecipe = (id) => {
+  return dispatch => {
+    return axios.post('/api/'+id+'/scrap/')
+      .then(res => {
+        
+      })
+  }
+}
+
+export const removescrapRecipe = (id) => {
+  return dispatch => {
+    return axios.post('/api/'+id+'/removescrap/')
+      .then(res => {
+        
+      })
+  }
+}

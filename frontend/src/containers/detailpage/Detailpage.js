@@ -38,7 +38,7 @@ class Detailpage extends Component {
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
         const author = this.props.recipe && this.props.recipe.author
-        console.log(likes)
+        
 
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){

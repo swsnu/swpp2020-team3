@@ -9,6 +9,10 @@ export {
     getHot,
     getScrappedRecipes,
     getMLRecipes,
+    likeRecipe,
+    removelikeRecipe,
+    scrapRecipe,
+    removescrapRecipe,
 } from './recipe';
 
 export {
