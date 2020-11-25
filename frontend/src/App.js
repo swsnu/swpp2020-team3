@@ -40,7 +40,7 @@ function App(props) {
           <Route path='/signup' exact render={() => <Signup history={props.history} />} />
           <Route path='/login' exact render={() => <Login history={props.history} />} />
           <Route path='/meal-planner' exact render={() => <Mealplanner history={props.history} />} />
-          <Route path='/user/:id' exact render={() => <MyPage history={props.history} />} />
+          <Route path='/user/:id' component={MyPage} />
           <Redirect from='/' exact to='/main-page'/>
           
           <Route render = {() => <h1>Not Found</h1>} />
