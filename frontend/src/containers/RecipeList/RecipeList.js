@@ -120,7 +120,7 @@ class RecipeList extends Component{
         const recipes = slicedRecipes.map((recipe) => {
             return (
                 <Recipe key={recipe.id}
-                    author={recipe.author__username}
+                    author={recipe.author}
                     thumbnail={'data:image/png;base64,'+recipe.thumbnail}
                     title={recipe.title}
                     rating={recipe.rating}
@@ -199,11 +199,11 @@ class RecipeList extends Component{
                 </div>
                 <div className = "pages">
                     <div className = "page">
-                        <p>Page</p>
+                        {this.props.storedRecipes.length >= 1 && <p>Page</p>}
                     </div>
                     <div className = "row">
-                        {this.props.storedRecipes.length >= 1 && <button className="list-page-previous-button"
-                                disabled ={this.state.pageStart == 0} onClick={() => this.clickPagePreviousHandler()}>left</button>}
+                        {this.state.pageStart != 0 && this.props.storedRecipes.length >= 1 && <button className="list-page-previous-button"
+                                onClick={() => this.clickPagePreviousHandler()}>left</button>}
                         {this.props.storedRecipes.length >= 1 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==1 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}

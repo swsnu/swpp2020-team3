@@ -61,7 +61,7 @@ class MyPage extends Component{
             likedRecipes = this.props.storedUser.liked_recipes.map((recipe) => {
                 return (
                     <Recipe key={recipe.id}
-                        author={recipe.author__username}
+                        author={recipe.author}
                         thumbnail={'data:image/png;base64,'+recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
@@ -75,7 +75,7 @@ class MyPage extends Component{
             recipeBasket = this.props.storedUser.recipe_basket.map((recipe) => {
                 return (
                     <Recipe key={recipe.id}
-                        author={recipe.author__username}
+                        author={recipe.author}
                         thumbnail={'data:image/png;base64,'+recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
@@ -89,7 +89,7 @@ class MyPage extends Component{
             writtenRecipes = this.props.storedUser.written_recipes.map((recipe) => {
                 return (
                     <Recipe key={recipe.id}
-                        author={recipe.author__username}
+                        author={recipe.author}
                         thumbnail={'data:image/png;base64,'+recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
@@ -165,14 +165,17 @@ class MyPage extends Component{
                                 </div>
                                 <div id = 'infoblock'>
                                     <p id='mylabel'>liked recipes</p>
+                                    <button onClick = {() => this.onClickTabHandler('liked-recipes')}>detail</button>
                                     {likedRecipes.slice(0,5)}
                                 </div>
                                 <div id='infoblock'> 
                                     <p id='mylabel'>recipe basket</p>
+                                    <button onClick = {() => this.onClickTabHandler('recipe-basket')}>detail</button>
                                     {recipeBasket.slice(0,5)}
                                 </div>
                                 <div id='infoblock'> 
                                     <p id='mylabel'>written recipes</p>
+                                    <button onClick = {() => this.onClickTabHandler('written-recipes')}>detail</button>
                                     <div id='wr'>{writtenRecipes.slice(0,5)}</div>
                                 </div>
                             </div>
@@ -189,7 +192,7 @@ class MyPage extends Component{
                     {recipeBasket}
                     </div>}
                     {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
-                    <p></p>
+                    <p>written recipes</p>
                     <div id='wr'>{writtenRecipes}</div>
                     </div>}
                     {this.state.tab=='follower' && <div className = 'follower'>
