@@ -1,0 +1,15 @@
+.MInfo{
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    margin-left: -30vh;
+}
+
+.MyInfo{
+    font-size: 18px;
+}
+
+#infolabel {
+    font-size: 20px;
+    color: gray;
+}

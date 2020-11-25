@@ -128,3 +128,8 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+#basket {
+    display: block;
+    width:100px;
+}

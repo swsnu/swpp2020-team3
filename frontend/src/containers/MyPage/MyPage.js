@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Recipe from '../../components/Recipe/Recipe';
 import SimpleUserInfo from '../../components/UserInfo/SimpleUserInfo';
 import MyInfo from '../MyInfo/MyInfo';
-//import './MyPage.css';
+import './MyPage.css';
 import * as actionCreators from '../../store/actions/index';
 
 class MyPage extends Component{
@@ -48,6 +48,7 @@ class MyPage extends Component{
                 );
             });
             simpleMyInfo = this.props.storedUser.user_info.map((user) => {
+                console.log(user)
                 return (
                     <SimpleUserInfo key={user.id}
                         username = {user.username}
@@ -121,74 +122,88 @@ class MyPage extends Component{
             });
         }
         
-        return <div className='MyPage'>
-            <div className='left'>
-                <div className = 'my-profile-button' onClick = {() => this.onClickTabHandler('my-profile')}
-                    style = {{backgroundColor: this.state.tab=='my-profile' ? "grey" : null}}>
-                My Profile
+        return (
+        <div id = 'mypageBack'>
+            <div className='MyPage'>
+                <div className='left'>
+                    <div id = "mypagetab" className = 'my-profile-button' onClick = {() => this.onClickTabHandler('my-profile')}
+                        style = {{backgroundColor: this.state.tab=='my-profile' ? "grey" : null}}>
+                    My Profile
+                    </div>
+                    <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
+                        style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
+                    My Info
+                    </div>
+                    <div id = "mypagetab" className = 'liked-recipes-button' onClick = {() => this.onClickTabHandler('liked-recipes')}
+                        style = {{backgroundColor: this.state.tab=='liked-recipes' ? "grey" : null}}> 
+                    Liked recipes
+                    </div>
+                    <div id = "mypagetab" className = 'recipe-basket-button' onClick = {() => this.onClickTabHandler('recipe-basket')}
+                        style = {{backgroundColor: this.state.tab=='recipe-basket' ? "grey" : null}}> 
+                    Recipe basket
+                    </div>
+                    <div id = "mypagetab" className = 'written-recipes-button' onClick = {() => this.onClickTabHandler('written-recipes')}
+                        style = {{backgroundColor: this.state.tab=='written-recipes' ? "grey" : null}}>
+                    Written recipes   
+                    </div>
+                    <div id = "mypagetab" className = 'follower-button' onClick = {() => this.onClickTabHandler('follower')}
+                        style = {{backgroundColor: this.state.tab=='follower' ? "grey" : null}}>
+                    Follower
+                    </div>
+                    <div id = "mypagetab" className = 'following-button' onClick = {() => this.onClickTabHandler('following')}
+                        style = {{backgroundColor: this.state.tab=='following' ? "grey" : null}}>
+                    Following
+                    </div>
                 </div>
-                <div className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
-                    style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
-                My Info
+                <div className='right'>
+                    {
+                        this.state.tab=='my-profile' && 
+                            <div className = 'my-profile'>
+                                <div  id = 'infoblock'>
+                                    <p id='mylabel' >my Info</p>
+                                    {simpleMyInfo}
+                                </div>
+                                <div id = 'infoblock'>
+                                    <p id='mylabel'>liked recipes</p>
+                                    {likedRecipes.slice(0,5)}
+                                </div>
+                                <div id='infoblock'> 
+                                    <p id='mylabel'>recipe basket</p>
+                                    {recipeBasket.slice(0,5)}
+                                </div>
+                                <div id='infoblock'> 
+                                    <p id='mylabel'>written recipes</p>
+                                    <div id='wr'>{writtenRecipes.slice(0,5)}</div>
+                                </div>
+                            </div>
+                    }
+                    {this.state.tab=='my-info' && <div className = 'my-info'>
+                    {myInfo}
+                    </div>}
+                    {this.state.tab=='liked-recipes' && <div className = 'liked-recipes'>
+                    <p>liked recipes</p>
+                    {likedRecipes}
+                    </div>}
+                    {this.state.tab=='recipe-basket' && <div className = 'recipe-basket'>
+                    <p>recipe basket</p>
+                    {recipeBasket}
+                    </div>}
+                    {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
+                    <p></p>
+                    <div id='wr'>{writtenRecipes}</div>
+                    </div>}
+                    {this.state.tab=='follower' && <div className = 'follower'>
+                    <p>follower</p>
+                    {follower}
+                    </div>}
+                    {this.state.tab=='following' && <div className = 'following'>
+                    <p>following</p>
+                    {following}
+                    </div>}
                 </div>
-                <div className = 'liked-recipes-button' onClick = {() => this.onClickTabHandler('liked-recipes')}
-                    style = {{backgroundColor: this.state.tab=='liked-recipes' ? "grey" : null}}> 
-                Liked recipes
-                </div>
-                <div className = 'recipe-basket-button' onClick = {() => this.onClickTabHandler('recipe-basket')}
-                    style = {{backgroundColor: this.state.tab=='recipe-basket' ? "grey" : null}}> 
-                Recipe basket
-                </div>
-                <div className = 'written-recipes-button' onClick = {() => this.onClickTabHandler('written-recipes')}
-                    style = {{backgroundColor: this.state.tab=='written-recipes' ? "grey" : null}}>
-                Written recipes   
-                </div>
-                <div className = 'follower-button' onClick = {() => this.onClickTabHandler('follower')}
-                    style = {{backgroundColor: this.state.tab=='follower' ? "grey" : null}}>
-                Follower
-                </div>
-                <div className = 'following-button' onClick = {() => this.onClickTabHandler('following')}
-                    style = {{backgroundColor: this.state.tab=='following' ? "grey" : null}}>
-                Following
-                </div>
-            </div>
-            <div className='right'>
-                {this.state.tab=='my-profile' && <div className = 'my-profile'>
-                <p>my Info</p>
-                {simpleMyInfo}
-                <p>liked recipes</p>
-                {likedRecipes.slice(0,5)}
-                <p>recipe basket</p>
-                {recipeBasket.slice(0,5)}
-                <p>written recipes</p>
-                {writtenRecipes.slice(0,5)}
-                </div>}
-                {this.state.tab=='my-info' && <div className = 'my-info'>
-                <p>my Info</p>
-                {myInfo}
-                </div>}
-                {this.state.tab=='liked-recipes' && <div className = 'liked-recipes'>
-                <p>liked recipes</p>
-                {likedRecipes}
-                </div>}
-                {this.state.tab=='recipe-basket' && <div className = 'recipe-basket'>
-                <p>recipe basket</p>
-                {recipeBasket}
-                </div>}
-                {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
-                <p>written recipes</p>
-                {writtenRecipes}
-                </div>}
-                {this.state.tab=='follower' && <div className = 'follower'>
-                <p>follower</p>
-                {follower}
-                </div>}
-                {this.state.tab=='following' && <div className = 'following'>
-                <p>following</p>
-                {following}
-                </div>}
             </div>
         </div>
+        )
     }
 }
 

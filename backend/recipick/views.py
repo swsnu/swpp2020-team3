@@ -32,11 +32,16 @@ def getuser(request, id):
         user_info = [user for user in User.objects.filter(id = id).values()]
         liked_recipes = [recipe for recipe in user_1.like.all().values()]
         recipe_basket = [recipe for recipe in user_1.scrap.all().values()]
-        written_recipes = [recipe for recipe in Recipe.objects.filter(author = user_1).values()]
+        recipes = [recipe for recipe in Recipe.objects.filter(author = user_1)]
+        newrecipes = []
+        for recipe in recipes:
+            encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+            newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': recipe.author_id, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': encoded_thumbnail.decode('utf-8')}
+            newrecipes.append(newrecipe)
         follower = [user for user in user_1.follower.all().values()]
         following = [user for user in user_1.following.all().values()]
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
-            'written_recipes': written_recipes, 'follower': follower, 'following': following}
+            'written_recipes': newrecipes, 'follower': follower, 'following': following}
         return JsonResponse(user, safe=False, status=200)
     elif(request.method) == 'PUT':
         body = json.loads(request.body.decode())
@@ -47,7 +52,11 @@ def getuser(request, id):
         user_info = [user for user in User.objects.filter(id = id).values()]
         liked_recipes = [recipe for recipe in user_1.like.all().values()]
         recipe_basket = [recipe for recipe in user_1.scrap.all().values()]
-        written_recipes = [recipe for recipe in Recipe.objects.filter(author = user_1).values()]
+        newrecipes = []
+        for recipe in recipes:
+            encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
+            newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': recipe.author_id, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': encoded_thumbnail.decode('utf-8')}
+            newrecipes.append(newrecipe)
         follower = [user for user in user_1.follower.all().values()]
         following = [user for user in user_1.following.all().values()]
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
