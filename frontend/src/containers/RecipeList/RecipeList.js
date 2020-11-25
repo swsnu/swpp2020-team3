@@ -6,18 +6,16 @@ import * as actionCreators from '../../store/actions/index';
 import queryString from 'query-string';
 import './RecipeList.css'
 import PropTypes from "prop-types";
-//TODO:
-//      중간 이후에 할 일 : like/unlike recipe User model, authentication?
-//      query string doesn't work...
+
 class RecipeList extends Component{
 
     state = {
-        category1: true,
-        category2: true,
-        category3: true,
-        category4: true,
-        category5: true,
-        category6: true,
+        American: true,
+        Korean: true,
+        Chinese: true,
+        Japanese: true,
+        ConvenienceStore: true,
+        Dessert: true,
 
         minPrice : 0,
         maxPrice : 100000,
@@ -37,12 +35,12 @@ class RecipeList extends Component{
         let query = this.state;
         if(search){
             query = queryString.parse(search);
-            query.category1 = query.category1 == 'true';
-            query.category2 = query.category2 == 'true';
-            query.category3 = query.category3 == 'true';
-            query.category4 = query.category4 == 'true';
-            query.category5 = query.category5 == 'true';
-            query.category6 = query.category6 == 'true';
+            query.American = query.American == 'true';
+            query.Korean = query.Korean == 'true';
+            query.Chinese = query.Chinese == 'true';
+            query.Japanese = query.Japanese == 'true';
+            query.ConvenienceStore = query.ConvenienceStore == 'true';
+            query.Dessert = query.Dessert == 'true';
             query.pageStart = Number(query.pageStart);
             query.pageNumber = Number(query.pageNumber);
             this.setState(query);
@@ -56,12 +54,12 @@ class RecipeList extends Component{
     }
 
     clickCategoryHandler = (event,id) => {
-        if(id == 1) this.setState({category1 : !this.state.category1});
-        else if(id == 2) this.setState({category2 : !this.state.category2});
-        else if(id == 3) this.setState({category3 : !this.state.category3});
-        else if(id == 4) this.setState({category4 : !this.state.category4});
-        else if(id == 5) this.setState({category5 : !this.state.category5});
-        else this.setState({category6 : !this.state.category6});
+        if(id == 1) this.setState({American : !this.state.American});
+        else if(id == 2) this.setState({Korean : !this.state.Korean});
+        else if(id == 3) this.setState({Chinese : !this.state.Chinese});
+        else if(id == 4) this.setState({Japanese : !this.state.Japanese});
+        else if(id == 5) this.setState({ConvenienceStore : !this.state.ConvenienceStore});
+        else this.setState({Dessert : !this.state.Dessert});
     }
 
     checkInputHandler = (state) =>{
@@ -82,7 +80,7 @@ class RecipeList extends Component{
     }
 
     getURL(st){
-        return `/search?category1=${st.category1}&category2=${st.category2}&category3=${st.category3}&category4=${st.category4}&category5=${st.category5}&category6=${st.category6}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageStart=${st.pageStart}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}&searchOptionsClicked=${st.searchOptionsClicked}`;
+        return `/search?American=${st.American}&Korean=${st.Korean}&Chinese=${st.Chinese}&Japanese=${st.Japanese}&ConvenienceStore=${st.ConvenienceStore}&Dessert=${st.Dessert}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageStart=${st.pageStart}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}&searchOptionsClicked=${st.searchOptionsClicked}`;
     }
 
     clickSearchHandler = () => {
@@ -140,19 +138,19 @@ class RecipeList extends Component{
                         <div className = "categories">
                             <label id='option_label'>카테고리</label>
                             <div className = "row">
-                                <button className="category-select-button" style = {{backgroundColor: this.state.category1 ? "#fcc051" : null}}
+                                <button className="category-select-button" style = {{backgroundColor: this.state.American ? "#fcc051" : null}}
                                     onClick={(event) => this.clickCategoryHandler(event,1)}>양식</button>
-                                <button className="category-select-button" style = {{backgroundColor: this.state.category2 ? "#fcc051" : null}}
+                                <button className="category-select-button" style = {{backgroundColor: this.state.Korean ? "#fcc051" : null}}
                                     onClick={(event) => this.clickCategoryHandler(event,2)}>한식</button>
-                                <button className="category-select-button" style = {{backgroundColor: this.state.category3 ? "#fcc051" : null}}
+                                <button className="category-select-button" style = {{backgroundColor: this.state.Chinese ? "#fcc051" : null}}
                                     onClick={(event) => this.clickCategoryHandler(event,3)}>중식</button>
                             </div>
                             <div className = "row">
-                                <button className="category-select-button" style = {{backgroundColor: this.state.category4 ? "#fcc051" : null}}
+                                <button className="category-select-button" style = {{backgroundColor: this.state.Japanese ? "#fcc051" : null}}
                                     onClick={(event) => this.clickCategoryHandler(event,4)}>일식</button>
-                                <button className="category-select-button" style = {{backgroundColor: this.state.category5 ? "#fcc051" : null}}
+                                <button className="category-select-button" style = {{backgroundColor: this.state.ConvenienceStore ? "#fcc051" : null}}
                                 onClick={(event) => this.clickCategoryHandler(event,5)}>편의점</button>
-                                <button className="category-select-button" style = {{backgroundColor: this.state.category6 ? "#fcc051" : null}}
+                                <button className="category-select-button" style = {{backgroundColor: this.state.Dessert ? "#fcc051" : null}}
                                 onClick={(event) => this.clickCategoryHandler(event,6)}>디저트</button>
                             </div>
                         </div>

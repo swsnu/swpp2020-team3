@@ -17,12 +17,39 @@ class Navbar extends Component{
         this.props.isLogin()
     }
     searchConfirmHandler = () => {
-        this.props.history.push(`/search?category1=true&category2=true&category3=true&category4=true&category5=true&category6=true
-        &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-        &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
-        &minDuration=0&maxDuration=100&searchWord=${this.state.keyword}
-        &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`);
+        let query = {
+            American: true, Korean: true,
+            Chinese: true, Japanese: true,
+            ConvenienceStore: true, Dessert: true,
+            minPrice: this.state.minPrice == '' ? 0 : this.state.minPrice,
+            maxPrice: this.state.maxPrice == '' ? 100000 : this.state.maxPrice,
+            minDuration: 0, maxDuration: 100,
+            searchWord: this.state.keyword,
+            pageStart: 0, pageNumber: 1,
+            searchMode: 'likes', searchOptionsClicked: false,
+        }
+        this.props.history.push(this.getURL(query));
         window.location.reload();
+    }
+
+    clickCategoryHandler = (id) => {
+        let query = {
+            American: id == 1, Korean: id == 2,
+            Chinese: id == 3, Japanese: id == 4,
+            ConvenienceStore: id == 5, Dessert: id == 6,
+            minPrice: this.state.minPrice == '' ? 0 : this.state.minPrice,
+            maxPrice: this.state.maxPrice == '' ? 100000 : this.state.maxPrice,
+            minDuration: 0, maxDuration: 100,
+            searchWord: this.state.keyword,
+            pageStart: 0, pageNumber: 1,
+            searchMode: 'likes', searchOptionsClicked: false,
+        }
+        this.props.history.push(this.getURL(query));
+        window.location.reload();
+    }
+
+    getURL(st){
+        return `/search?American=${st.American}&Korean=${st.Korean}&Chinese=${st.Chinese}&Japanese=${st.Japanese}&ConvenienceStore=${st.ConvenienceStore}&Dessert=${st.Dessert}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageStart=${st.pageStart}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}&searchOptionsClicked=${st.searchOptionsClicked}`;
     }
 
     render(){
@@ -44,57 +71,21 @@ class Navbar extends Component{
                     </div>
                 </div>
                 <ul id = 'Navlist'>
-                    <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=false&category3=true&category4=false&category5=false&category6=false
-                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
-                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
-                                window.location.reload()
-                                }}> 중식 </a>
+                    <li> <a onClick={() => {this.clickCategoryHandler(1)}}> 중식 </a>
                     </li>
-                    <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=true&category3=false&category4=false&category5=false&category6=false
-                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
-                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
-                                window.location.reload()
-                                }}> 한식 </a>
+                    <li> <a onClick={() => {this.clickCategoryHandler(2)}}> 한식 </a>
                     </li>
-                    <li> <a onClick={() => {this.props.history.push(`/search?category1=true&category2=false&category3=false&category4=false&category5=false&category6=false
-                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
-                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
-                                window.location.reload()
-                                }}> 양식 </a>
+                    <li> <a onClick={() => {this.clickCategoryHandler(3)}}> 양식 </a>
                     </li>
                     
                     <li><NavLink to='/create' exact>Create</NavLink></li>
                     <li><NavLink to='/meal-planner' exact>Meal Planner</NavLink></li>
                     
-                    <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=false&category3=false&category4=true&category5=false&category6=false
-                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
-                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
-                                window.location.reload()
-                                }}> 일식 </a>
+                    <li> <a onClick={() => {this.clickCategoryHandler(4)}}> 일식 </a>
                     </li>
-                    <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=false&category3=false&category4=false&category6=true&category5=false
-                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
-                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
-                                window.location.reload()
-                                }}> 디저트 </a>
+                    <li> <a onClick={() => {this.clickCategoryHandler(5)}}> 디저트 </a>
                     </li>
-                    <li> <a onClick={() => {this.props.history.push(`/search?category1=false&category2=false&category3=false&category4=false&category5=true&category6=false
-                                &minPrice=${this.state.minPrice == '' ? 0 : this.state.minPrice}
-                                &maxPrice=${this.state.maxPrice == '' ? 100000 : this.state.maxPrice}
-                                &minDuration=0&maxDuration=${100}&searchWord=${this.state.keyword}
-                                &pageStart=0&pageNumber=1&searchMode='likes'&searchOptionsClicked=false`)
-                                window.location.reload()
-                                }}> 편의점 </a>
+                    <li> <a onClick={() => {this.clickCategoryHandler(6)}}> 편의점 </a>
                     </li>
                 </ul>
             </div>

@@ -23,6 +23,7 @@ import base64
 from django.core.files.base import ContentFile
 from random import *
 from django.forms.models import model_to_dict
+from django.db.models import Q
 import random
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
@@ -60,7 +61,7 @@ def getuser(request, id):
         follower = [user for user in user_1.follower.all().values()]
         following = [user for user in user_1.following.all().values()]
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
-            'written_recipes': written_recipes, 'follower': follower, 'following': following}
+            'written_recipes': newrecipes, 'follower': follower, 'following': following}
         print(user)
         return JsonResponse(user, safe=False, status=200)
 
@@ -176,35 +177,45 @@ def recipe_page(request):
         page_start = int(request.GET.get('pageStart'))
         search_mode = request.GET.get('searchMode')
         search_word = request.GET.get('searchWord')
-        categories = []
-        if request.GET.get('category1') == 'true':
-            categories.append('American')
-        if request.GET.get('category2') == 'true':
-            categories.append('Korean')
-        if request.GET.get('category3') == 'true':
-            categories.append('Chinese')
-        if request.GET.get('category4') == 'true':
-            categories.append('Japanese')
-        if request.GET.get('category5') == 'true':
-            categories.append('ConvenienceStore')
-        if request.GET.get('category6') == 'true':
-            categories.append('Dessert')
+        category_query = Q(category__contains = "dummy category")
+        if request.GET.get('American') == 'true':
+            category_query = category_query | Q(category__contains = "American")
+        if request.GET.get('Korean') == 'true':
+            category_query = category_query | Q(category__contains = "Korean")
+        if request.GET.get('Chinese') == 'true':
+            category_query = category_query | Q(category__contains = "Chinese")
+        if request.GET.get('Japanese') == 'true':
+            category_query = category_query | Q(category__contains = "Japanese")
+        if request.GET.get('ConvenienceStore') == 'true':
+            category_query = category_query | Q(category__contains = "ConvenienceStore")
+        if request.GET.get('Dessert') == 'true':
+            category_query = category_query | Q(category__contains = "Dessert")
+        
 
         list_of_recipes = Recipe.objects
         vector = SearchVector('title')
         query = SearchQuery(search_word)
         if search_word:
-            recipelist = list_of_recipes.annotate(rank=SearchRank(vector,query)).filter(rank__gt = 0,price__gte = min_cost, price__lte = max_cost, duration__gte = min_time, duration__lte = max_time, category__in = categories)
+            recipelist = list_of_recipes.annotate(rank=SearchRank(vector,query)).filter(
+                category_query,
+                price__gte = min_cost, price__lte = max_cost,
+                duration__gte = min_time, duration__lte = max_time,
+                rank__gt = 0
+            )
             if search_mode == 'likes':
-                recipepage = recipelist.order_by('-likes','-rank','price','-rating')[10*page_start:(10*page_start+51)]
+                recipepage = recipelist.order_by('-rank','-likes','price','-rating')[10*page_start:(10*page_start+51)]
             elif search_mode == 'cost':
-                recipepage = recipelist.order_by('price','-rank','-likes','-rating')[10*page_start:(10*page_start+51)]
+                recipepage = recipelist.order_by('-rank','price','-likes','-rating')[10*page_start:(10*page_start+51)]
             elif search_mode == 'rating':
-                recipepage = recipelist.order_by('-rating','-rank','price','-likes')[10*page_start:(10*page_start+51)]
+                recipepage = recipelist.order_by('-rank','-rating','price','-likes')[10*page_start:(10*page_start+51)]
             else: # search_mode == 'recommended'
                 recipepage = recipelist.order_by('-rank','price','-likes','-rating')[10*page_start:(10*page_start+51)]
         else:
-            recipelist = list_of_recipes.filter(price__gte = min_cost, price__lte = max_cost, duration__gte = min_time, duration__lte = max_time, category__in = categories)
+            recipelist = list_of_recipes.filter(
+                category_query,
+                price__gte = min_cost, price__lte = max_cost,
+                duration__gte = min_time, duration__lte = max_time,
+            )
             if search_mode == 'likes':
                 recipepage = recipelist.order_by('-likes','price','-rating')[10*page_start:(10*page_start+51)]
             elif search_mode == 'cost':
@@ -220,7 +231,12 @@ def recipe_page(request):
             author = "none"
             if recipe.author:
                 author = recipe.author.username
-            newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': author, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': decoded_string}
+            newrecipe = {
+                'id': recipe.id, 'title': recipe.title,
+                'author': author, 'price': recipe.price,
+                'rating': recipe.rating, 'likes': recipe.likes,
+                'thumbnail': decoded_string
+            }
             newrecipepage.append(newrecipe)
         return JsonResponse(newrecipepage, safe=False, status=200)
     else:

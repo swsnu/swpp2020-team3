@@ -38,7 +38,7 @@ def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_for
 class RecipickTestCase(TestCase):
     def setUp(self):
         self.client = Client(enforce_csrf_checks=True)
-        response = self.client.post('/api/signup/', json.dumps({'username': 'chris', 
+        response = self.client.post('/api/signup/', json.dumps({'username': 'chris' , 
             'password': 'chris'}),
                                content_type='application/json')
         self.assertEqual(response.status_code, 403)  # Request without csrf token returns 403 response
