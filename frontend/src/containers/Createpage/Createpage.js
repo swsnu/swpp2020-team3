@@ -19,12 +19,19 @@ class Createpage extends Component{
        descriptionList: [],
        imageList: [],
        imagePreviewList: [],
-       ingredientList: null,
+       ingredientList: [],
+       ingredientListSave: [],
        selectedIngredientList: [],
        //quantity: '',
        priceList: '',
        thumbnail: '',
-       thumbnailURL: ''
+       thumbnailURL: '',
+       // custom ingredient
+        customIngrName: '',
+        customIngrBrand: '',
+        customIngrQuantity: 0,
+        customIngrPrice: 0,
+        customIngrType: 0
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -42,7 +49,7 @@ class Createpage extends Component{
                 }
             }
         })
-        this.props.onGetIgrList()
+        this.props.onGetIgrList().then(res => this.setState({ingredientListSave: res.ingredients, ingredientList: res.ingredients}))
     }
 
     inputHandler(event, index){
@@ -136,28 +143,27 @@ class Createpage extends Component{
     }
 
     addSelectedIngredientHandler(event){
-        if(this.state.ingredientList == null){
-            this.setState({ingredientList: this.props.ingredientList})
-        }
+        console.log("addselected")
         let list1 = this.state.selectedIngredientList.concat(event)
         this.setState({selectedIngredientList: list1})
-        let list2 = this.props.ingredientList
+        let list2 = this.state.ingredientListSave
         let list = list2.filter((ing) => {
             return !list1.includes(ing)
         })
         this.setState({ingredientList: list})
-        //console.log(list1)
     }
     deleteSelectedIngredientHandler(index){
+        console.log("delete")
         let newList = this.state.selectedIngredientList;
         let deleted = newList.splice(index, 1)
         this.setState({selectedIngredientList: newList})
-        newList = this.state.ingredientList;
+        newList = this.state.ingredientListSave;
         newList.push(deleted[0])
         console.log(deleted[0])
         this.setState({ingredientList: newList})
     }
     addIngredientQuantity(event, id){
+        console.log("addingredient")
         let list = this.state.selectedIngredientList
         let amount = event.target.value
         // was this: removed because of lint
@@ -170,6 +176,22 @@ class Createpage extends Component{
         console.log(amount)
         list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
+    }
+    addCustomIngredient(){
+        console.log("addcustom")
+        let customIngr = {
+            brand: this.state.customIngrBrand,
+            name: this.state.customIngrName,
+            igd_type: this.state.customIngrType,
+            price: this.state.customIngrPrice,
+            amount: this.state.customIngrQuantity,
+        }
+        let listSelected = this.state.selectedIngredientList
+        let listTotal = this.state.ingredientListSave
+        listSelected = listSelected.concat(customIngr)
+        listTotal = listTotal.concat(customIngr)
+        this.setState({selectedIngredientList: listSelected})
+        this.setState({ingredientListSave: listTotal})
     }
 
 
@@ -207,7 +229,6 @@ class Createpage extends Component{
                 totalPrice+= isNaN(priceList[i]['price']*priceList[i]['amount'])? 0 : (priceList[i]['price']*priceList[i]['amount'])
             }
         }
-        
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -231,15 +252,31 @@ class Createpage extends Component{
                             <br/>
                             
                             <p>재료 추가</p>
-                            {this.state.ingredientList == null
+                            {/* {this.state.ingredientList == null
                             ? <Select options={this.props.ingredientList} 
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>
-                            : <Select options={this.state.ingredientList} 
+                            : <Select options={this.state.ingredientList}  */}
+                            {<Select options={this.state.ingredientList}
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
+
+                            {/* horizontal로 쭉 됐으면 함 */}
+                            <div id="add-custom-ingredient">
+                                <label>재료</label>
+                                <input type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
+                                <label>브랜드</label>
+                                <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
+                                <label>양 (상품)</label>
+                                <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
+                                <label>계량(igd_type)</label>
+                                <input type="text" value={this.state.customIngrType} onChange={(event) => this.setState({customIngrType: event.target.value})}/>
+                                <label>가격 (상품)</label>
+                                <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
+                                <button onClick={() => this.addCustomIngredient()}>재료 추가하기</button>
+                            </div>
 
                             {selectedIngredientList}
 
