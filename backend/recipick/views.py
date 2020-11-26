@@ -339,48 +339,50 @@ def randomrecipe(request):
 def recipe_like(request, id):
     if request.method == 'POST':
         user = request.user
-        if not user.is_authenticcated:
+        if not user.is_authenticated:
             return HttpResponse(status=401)
         recipe = Recipe.objects.get(id=id)
         recipe.liked_user.add(user)
+        recipe.likes = recipe.likes+1
         recipe.save()
-        return HttpResponse(status=200)
+        return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
 
 def recipe_removelike(request, id):
     if request.method == 'POST':
         user = request.user
-        if not user.is_authenticcated:
+        if not user.is_authenticated:
             return HttpResponse(status=401)
         recipe = Recipe.objects.get(id=id)
         recipe.liked_user.remove(user)
+        recipe.likes = recipe.likes-1
         recipe.save()
-        return HttpResponse(status=200)
+        return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
 
 def recipe_scrap(request, id):
     if request.method == 'POST':
         user = request.user
-        if not user.is_authenticcated:
+        if not user.is_authenticated:
             return HttpResponse(status=401)
         recipe = Recipe.objects.get(id=id)
         recipe.scrapped_user.add(user)
         recipe.save()
-        return HttpResponse(status=200)
+        return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
 
 def recipe_removescrap(request, id):
     if request.method == 'POST':
         user = request.user
-        if not user.is_authenticcated:
+        if not user.is_authenticated:
             return HttpResponse(status=401)
         recipe = Recipe.objects.get(id=id)
         recipe.scrapped_user.remove(user)
         recipe.save()
-        return HttpResponse(status=200)
+        return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
 
@@ -389,6 +391,8 @@ def recipe(request, id):
         recipe = Recipe.objects.get(id = id)
         p_list = recipe.photo_list
         thumbnail = base64.b64encode(recipe.thumbnail.read()).decode('utf-8')
+        liked_user = recipe.liked_user
+        scrapped_user = recipe.scrapped_user
         new_list = []
         for photo in p_list.all():
             encoded_string = base64.b64encode(photo.img.read())
@@ -402,7 +406,14 @@ def recipe(request, id):
             newigdphoto = base64.b64encode(item.picture.read())
             newitem['picture'] = newigdphoto.decode('utf-8')
             newigdlist.append(newitem)
+        newlikeduser = []
+        for user in liked_user.all():
+            newlikeduser.append(user.id)
+        newscrappeduser = []
+        for user in scrapped_user.all():
+            newscrappeduser.append(user.id)
         newrecipe = {
+            'id': recipe.id,
             'title': recipe.title,
             'price': recipe.price,
             'duration': recipe.duration,
@@ -417,6 +428,8 @@ def recipe(request, id):
             'edited': recipe.edited,
             'summary': recipe.summary,
             'author': recipe.author.id,
+            'liked_user': newlikeduser,
+            'scrapped_user': newscrappeduser,
         }
         return JsonResponse(newrecipe, safe=False)
     elif request.method == 'DELETE':

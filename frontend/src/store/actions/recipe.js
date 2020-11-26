@@ -141,38 +141,50 @@ export const getRecipes = (pageID, searchMode) => {
 };
 */
 
+const likeRecipe_ = (id) => {
+  return {type: actionTypes.LIKE_RECIPE, id}
+}
 export const likeRecipe = (id) => {
   return dispatch => {
-    return axios.post('/api/'+id+'/like/')
+    return axios.post('/api/recipe/'+id+'/like/')
       .then(res => {
-
+        dispatch(likeRecipe_(res.data))
       })
   }
 }
 
+const removelikeRecipe_ = (id) => {
+  return {type: actionTypes.REMOVE_LIKE_RECIPE, id}
+}
 export const removelikeRecipe = (id) => {
   return dispatch => {
-    return axios.post('/api/'+id+'/removelike/')
+    return axios.post('/api/recipe/'+id+'/removelike/')
       .then(res => {
-        
+        dispatch(removelikeRecipe_(res.data))
       })
   }
 }
 
+const scrapRecipe_ = (id) => {
+  return {type: actionTypes.SCRAP_RECIPE, id}
+}
 export const scrapRecipe = (id) => {
   return dispatch => {
-    return axios.post('/api/'+id+'/scrap/')
+    return axios.post('/api/recipe/'+id+'/scrap/')
       .then(res => {
-        
+        dispatch(scrapRecipe_(res.data))
       })
   }
 }
 
+const removescrapRecipe_ = (id) => {
+  return {type: actionTypes.REMOVE_SCRAP_RECIPE, id}
+}
 export const removescrapRecipe = (id) => {
   return dispatch => {
-    return axios.post('/api/'+id+'/removescrap/')
+    return axios.post('/api/recipe/'+id+'/removescrap/')
       .then(res => {
-        
+        dispatch(removescrapRecipe_(res.data))
       })
   }
 }

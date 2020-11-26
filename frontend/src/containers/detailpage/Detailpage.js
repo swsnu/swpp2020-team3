@@ -14,7 +14,9 @@ import './Detailpage.css'
 class Detailpage extends Component {
 
     state = {
-        login_id: -1
+        login_id: -1,
+        like: 0,
+        scrap: 0,
     };
     constructor(props) {
         super(props);
@@ -25,8 +27,55 @@ class Detailpage extends Component {
             })
         })
     }
-    
 
+    isLike = () => {
+        if(!this.props.recipe) return 0;
+        for(let id of this.props.recipe.liked_user){
+            if(id==this.state.login_id){
+                return 1;
+            }
+        }
+        return 0;
+    }
+    isScrap = () => {
+        if(!this.props.recipe) return 0;
+        for(let id of this.props.recipe.scrapped_user){
+            if(id==this.state.login_id){
+                return 1;
+            }
+        }
+        return 0;
+    }
+    
+    handleLike = () => {
+        let flag = 0;
+        for(let id of this.props.recipe.liked_user){
+            if(id==this.state.login_id){
+                flag = 1;
+            }
+        }
+        if(!flag){
+            this.props.likeRecipe(this.props.recipe.id);
+        }
+        else {
+            this.props.removelikeRecipe(this.props.recipe.id);
+        }
+    }
+
+    handleScrap = () => {
+        let flag = 0;
+        for(let id of this.props.recipe.scrapped_user){
+            if(id==this.state.login_id){
+                flag = 1;
+            }
+        }
+        if(!flag) {
+            this.props.scrapRecipe(this.props.recipe.id);
+        }
+        else {
+            this.props.removescrapRecipe(this.props.recipe.id);
+        }
+    }
     
 
     render() {
@@ -38,7 +87,11 @@ class Detailpage extends Component {
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
         const author = this.props.recipe && this.props.recipe.author
+        const liked_user = this.props.recipe && this.props.recipe.liked_user
+        const scrapped_user = this.props.recipe && this.props.recipe.scrapped_user
         
+
+        console.log(this.state);
 
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){
@@ -57,6 +110,7 @@ class Detailpage extends Component {
                 )
             })
         }
+        console.log(this.isLike())
         console.log(this.state.login_id);
         console.log(this.props.recipe)
         let d = null;
@@ -69,6 +123,8 @@ class Detailpage extends Component {
             <div id = 'detailBackground'>
                 <div className="Detailpage">
                     <div id = "detailBlock">
+                        {(this.state.login_id!=-1)?<div><button style={(this.isLike()?{'background-color':'blue'}:null)} onClick={() => this.handleLike()}>Like</button>
+                        <button style={(this.isScrap()?{'background-color':'blue'}:null)} onClick={() => this.handleScrap()}>Scrap</button></div>:null}
                         {(this.state.login_id==author)?<div><button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
                         <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button></div>:null}
                         <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
@@ -96,7 +152,11 @@ const mapDispatchToProps = dispatch => {
     return {
         getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
         deleteRecipe: (id) => dispatch(actionCreators.deleteRecipe(id)),
-        isLogin: () => dispatch(actionCreators.isLogin())
+        isLogin: () => dispatch(actionCreators.isLogin()),
+        likeRecipe: (id) => dispatch(actionCreators.likeRecipe(id)),
+        removelikeRecipe: (id) => dispatch(actionCreators.removelikeRecipe(id)),
+        scrapRecipe: (id) => dispatch(actionCreators.scrapRecipe(id)),
+        removescrapRecipe: (id) => dispatch(actionCreators.removescrapRecipe(id))
     };
 }
 
