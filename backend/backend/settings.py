@@ -85,12 +85,14 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # with open('credentials.json') as json_data:
 #     credentials = json.load(json_data)
 
+credentials = {'password': 'swpp2020'}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'recipick_database',
         'USER': 'root',
-        # 'PASSWORD': credentials['password'],
+        'PASSWORD': credentials['password'],
         'HOST': 'localhost',
         'PORT': '',
     }
