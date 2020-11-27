@@ -72,14 +72,14 @@ class Editpage extends Component {
     }
 
     onSubmit(){
-        this.props.editRecipe(this.state, this.props.match.params.id).then((res) => this.props.history.push('/detail-page/'+this.props.match.params.id))
+        this.props.editRecipe(this.state, this.props.match.params.id).then(() => this.props.history.push('/detail-page/'+this.props.match.params.id))
         console.log(this.state)
     }
 
     render() {
         const methodData = this.state.description_list && this.state.description_list.map((item, index) => ({img: this.state.photo_list[index], explanation:item}))
         const methods = methodData && methodData.map((item, index) => 
-        <div className='edit-dish_step' >
+        <div className='edit-dish_step' key = {index}>
             <br/>
             <img src={item.img} width='600'/>
             <input id="imageHandler" type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>

@@ -117,6 +117,7 @@ describe('<Replies />', () => {
         wrapper = component.find('.create-reply-button');
         wrapper.simulate('click');
         expect(spyAddReply).toHaveBeenCalledTimes(0);
+        expect(spyIsLogin).toHaveBeenCalledTimes(1)
         expect(spyHistoryPush).toHaveBeenCalledTimes(0);
     });
     

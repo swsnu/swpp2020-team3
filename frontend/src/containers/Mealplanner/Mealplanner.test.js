@@ -7,7 +7,6 @@ import {getMockStore} from '../../test-utils/mocks.js'
 
 import * as actionCreators from '../../store/actions/recipe';
 import Mealplanner from './Mealplanner'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const stubState = {
   selectedRecipe: {

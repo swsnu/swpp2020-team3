@@ -70,8 +70,8 @@ describe('<Detailpage />', () => {
       return new Promise(resolve => setImmediate(resolve));
     }
     const spyGetRecipe = jest.spyOn(recipeCreators, 'getRecipe')
-      .mockImplementation((id) => {
-        return dispatch => {}
+      .mockImplementation(() => {
+        return () => {}
       })
     beforeEach(() => {
       detailpage = (
@@ -93,6 +93,7 @@ describe('<Detailpage />', () => {
       const component = mount(detailpage);
       const wrapper = component.find('Detailpage');
       expect(wrapper.length).toBe(1)
+      expect(spyGetRecipe).toHaveBeenCalledTimes(1)
     });
 
     it('should delete recipe', async () => {
@@ -112,7 +113,7 @@ describe('<Detailpage />', () => {
     it('should work removelike', async () => {
       const spyRemoveLikeRecipe = jest.spyOn(recipeCreators, 'removelikeRecipe')
         .mockImplementation(() => {
-          return dispatch => {}
+          return () => {}
         })
       let component = mount(detailpage);
       await fflushPromises();
@@ -124,7 +125,7 @@ describe('<Detailpage />', () => {
     it('should work like', async () => {
       const spyLikeRecipe = jest.spyOn(recipeCreators, 'likeRecipe')
         .mockImplementation(() => {
-          return dispatch => {}
+          return () => {}
         })
       spyIsLogin = jest.spyOn(userCreators, 'isLogin')
         .mockImplementation(() => {
@@ -144,7 +145,7 @@ describe('<Detailpage />', () => {
     it('should work removescrap', async () => {
       const spyRemoveScrapRecipe = jest.spyOn(recipeCreators, 'removescrapRecipe')
         .mockImplementation(() => {
-          return dispatch => {}
+          return () => {}
         })
       let component = mount(detailpage);
       await fflushPromises();
@@ -157,7 +158,7 @@ describe('<Detailpage />', () => {
     it('should work scrap', async () => {
       const spyScrapRecipe = jest.spyOn(recipeCreators, 'scrapRecipe')
         .mockImplementation(() => {
-          return dispatch => {}
+          return () => {}
         })
       spyIsLogin = jest.spyOn(userCreators, 'isLogin')
         .mockImplementation(() => {
