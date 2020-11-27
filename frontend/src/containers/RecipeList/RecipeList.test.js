@@ -129,21 +129,21 @@ describe('<RecipeList />', () => {
         let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
         expect(wrapper.length).toBe(6);
         wrapper.at(0).simulate('click');
-        expect(newRecipeInstance.state.category1).toEqual(false);
+        expect(newRecipeInstance.state.American).toEqual(false);
         wrapper.at(1).simulate('click');
-        expect(newRecipeInstance.state.category2).toEqual(false);
+        expect(newRecipeInstance.state.Korean).toEqual(false);
         wrapper.at(2).simulate('click');
-        expect(newRecipeInstance.state.category3).toEqual(false);
+        expect(newRecipeInstance.state.Chinese).toEqual(false);
         wrapper.at(3).simulate('click');
-        expect(newRecipeInstance.state.category4).toEqual(false);
+        expect(newRecipeInstance.state.Japanese).toEqual(false);
         wrapper.at(4).simulate('click');
-        expect(newRecipeInstance.state.category5).toEqual(false);
+        expect(newRecipeInstance.state.ConvenienceStore).toEqual(false);
         wrapper.at(5).simulate('click');
-        expect(newRecipeInstance.state.category6).toEqual(false); 
+        expect(newRecipeInstance.state.Dessert).toEqual(false); 
     });
 
     it(`should render search mode`, () => {
-        let searchModeList = ['relevance','likes','uploaded date','rating','cost']
+        let searchModeList = ['likes','rating','cost']
         const component = mount(recipeList);
         let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
 
@@ -152,8 +152,8 @@ describe('<RecipeList />', () => {
         expect(newRecipeInstance.state.searchOptionsClicked).toBe(true);
         
         let wrapper2 = component.find('.search-mode-select-button');
-        expect(wrapper2.length).toBe(5);
-        for(let i=0;i<5;i++){
+        expect(wrapper2.length).toBe(3);
+        for(let i=0;i<3;i++){
           wrapper2 = component.find('.search-mode-select-button')
           wrapper2.at(i).simulate('click');
           expect(newRecipeInstance.state.searchMode).toEqual(searchModeList[i]);
