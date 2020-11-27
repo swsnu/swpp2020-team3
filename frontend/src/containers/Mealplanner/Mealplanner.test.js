@@ -79,7 +79,7 @@ describe('<Mealplanner />', () => {
       
     })
   
-    fit('should render Mealplanner', async() => {
+    it('should render Mealplanner', async() => {
       // let spyHistory = jest.spyOn(history, 'push')
       // .mockImplementation(() => {})
 

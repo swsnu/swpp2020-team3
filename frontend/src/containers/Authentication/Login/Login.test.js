@@ -29,7 +29,12 @@ describe('Login', () => {
             </Provider>
         );
         spyOnLogin = jest.spyOn(actionCreators, 'signIn')
-        .mockImplementation(() => {return () => "user"})
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {user: [{'id': 1}]}
+                setImmediate(resolve(result))
+            })
+        })
     });
 
     it('should render Login', () => {
