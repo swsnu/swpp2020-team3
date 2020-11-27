@@ -25,6 +25,7 @@ matrix:
         - pip install coveralls
         - python -m pip install Pillow
         - pip install django_cleanup
+        - pip install verify_email
       script:
         - cd ..
         - cd frontend
