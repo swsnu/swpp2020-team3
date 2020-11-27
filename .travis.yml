@@ -24,6 +24,7 @@ matrix:
         - pip install -r requirements.txt
         - pip install coveralls
         - python -m pip install Pillow
+        - pip install django_cleanup
       script:
         - cd ..
         - cd frontend
