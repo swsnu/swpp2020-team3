@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
-import PropTypes from "prop-types";
-// import { DragDropContext } from 'react-dnd';
-// import HTML5Backend from 'react-dnd-html5-backend';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -164,14 +161,14 @@ export class Mealplanner extends Component {
                     <label>상한</label>
                     <input id="max" type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
 ++                    <label>Number of days</label>
-                    <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays} id='numOfDays'
+                    <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
                         onChange={(event) => this.setState({numOfDays: event.target.value})} />
                     <button id="ml-generate" onClick={() => this.generateAllML()}>ML Generate</button>
                 </div>
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <div className='column'>
                     {this.state.recipeArray && this.state.recipeArray.map((dayBlock, ind) => (
-                        <div id='droppable'>
+                        <div id='droppable' key={ind}>
                             <Droppable droppableId={`day${ind}`} key={ind} direction='horizontal'> 
                             {(provided) => (
                                 <div className='day' ref={provided.innerRef} {...provided.droppableProps} style={{display : "flex"}}>

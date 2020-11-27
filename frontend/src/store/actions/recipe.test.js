@@ -210,7 +210,7 @@ describe('rcp', () => {
 
   it(`'likeRecipe' should delete article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'post')
-      .mockImplementation((id) => {
+      .mockImplementation(() => {
         return new Promise((resolve) => {
           const result = {
             status: 200,
@@ -246,7 +246,7 @@ describe('rcp', () => {
 
   it(`'scrapRecipe' should delete article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'post')
-      .mockImplementation((id) => {
+      .mockImplementation(() => {
         return new Promise((resolve) => {
           const result = {
             status: 200,

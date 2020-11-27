@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
-import { push } from 'connected-react-router';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -16,7 +15,7 @@ export const signUp = (userCredentials) => {
         dispatch(signUp_(res.data));
         return true;
       })
-      .catch(function(error) {
+      .catch(function() {
         return false;
       })
   };
@@ -28,10 +27,10 @@ const signIn_ = (userCredentials) => {
 export const signIn = (userCredentials) => {
   return dispatch => {
     return axios.post('api/signin/', userCredentials)
-      .then(res => {
+      .then(() => {
         dispatch(signIn_(userCredentials));
         return true;
-      }).catch(function(error) {
+      }).catch(function() {
         return false;
       })
   }
@@ -44,7 +43,7 @@ const signOut_ = () => {
 */
 
 export const signOut = () => {
-  return dispatch => {
+  return () => {
     return axios.get('/api/signout/')
     .then(res => console.log(res))
   }

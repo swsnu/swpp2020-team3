@@ -5,7 +5,6 @@ import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
 import {getMockStore} from '../../test-utils/mocks.js'
-import { editComment } from '../../store/actions/index.js';
 import Editpage from './Editpage'
 
 const stubState = {
@@ -21,8 +20,8 @@ const stubDescriptionList = ['text1', 'text2']
 const mockHistory = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
-jest.mock('../comments/Comments', (recipeId) => {
-    return jest.fn((props) => {
+jest.mock('../comments/Comments', () => {
+    return jest.fn(() => {
       return (
           <div className="Comments">
             <h1>Hello</h1>

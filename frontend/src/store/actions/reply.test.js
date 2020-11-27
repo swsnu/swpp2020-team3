@@ -8,12 +8,12 @@ const stubUserList= [{"id": 1, "email": "edsger@dijkstra.com", "password": "iluv
 "name": "Edsger Dijkstra", "logged_in": true}]
 
 describe('reply', () => {
-    const fflushPromises = () => {
-        return new Promise(resolve => setImmediate(resolve));
-    }
-    afterEach(() => {
-        jest.clearAllMocks();
-    })
+    // const fflushPromises = () => {
+    //     return new Promise(resolve => setImmediate(resolve));
+    // }
+    // afterEach(() => {
+    //     jest.clearAllMocks();
+    // })
 
     it('should get list of reply', async () => {
         axios.get = jest.fn(() => {

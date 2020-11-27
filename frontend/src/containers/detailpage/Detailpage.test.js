@@ -25,7 +25,7 @@ const history = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
 jest.mock('../../components/detail/DishResult', () => {
-  return jest.fn((props) => {
+  return jest.fn(() => {
       return (
           <div className="spyDishResult">
               <h1>DishResult</h1>
@@ -63,9 +63,9 @@ describe('<Detailpage />', () => {
     const fflushPromises = () => {
       return new Promise(resolve => setImmediate(resolve));
     }
-    const spyGetRecipe = jest.spyOn(actionCreators, 'getRecipe')
-      .mockImplementation((id) => {
-        return dispatch => {}
+    // const spyGetRecipe = jest.spyOn(actionCreators, 'getRecipe')
+      .mockImplementation(() => {
+        return () => {}
       })
     beforeEach(() => {
       detailpage = (

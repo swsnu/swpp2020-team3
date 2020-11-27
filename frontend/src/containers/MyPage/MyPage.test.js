@@ -22,7 +22,7 @@ jest.mock('../../components/Recipe/Recipe', () => {
 });
 
 jest.mock('../MyInfo/MyInfo', () => {
-  return jest.fn(props => {
+  return jest.fn(() => {
     return (
       <div className="spyMyInfo">
     </div>);
@@ -97,7 +97,7 @@ const stubInitialState = {
 const mockStore = getMockStore(stubInitialState);
 
 describe('<MyPage />', () => {
-    let myPage, spyGetUser;
+    let myPage;
     beforeEach(() => {  
         myPage = (
             <Provider store={mockStore}>

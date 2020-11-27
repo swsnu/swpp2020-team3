@@ -4,12 +4,8 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 import {getMockStore} from '../../test-utils/mocks.js'
+
 import * as actionCreators from '../../store/actions/recipe';
-
-import {horizontalDrag} from 'react-beautiful-dnd-tester'
-
-//import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
 import Mealplanner from './Mealplanner'
 
 const stubState = {
@@ -63,12 +59,12 @@ describe('<Mealplanner />', () => {
     })
   
     it('should render Mealplanner', async() => {
-      let spyHistory = jest.spyOn(history, 'push')
+      // let spyHistory = jest.spyOn(history, 'push')
       .mockImplementation(() => {})
 
       let spyOnGetRecipe = jest.spyOn(actionCreators, 'getRecipes')
         .mockImplementation(() => {
-        return dispatch => new Promise((resolve, reject) => {
+        return () => new Promise((resolve) => {
           const result = {randomRecipe: stubRecipeArray}
           setImmediate(resolve(result))
         })
