@@ -58,10 +58,10 @@ class Navbar extends Component{
                 <div className='SearchBar'>
                     <div id='logo'> <NavLink to='/main-page' exact><p id = 'Logo'>RECIPICK</p></NavLink> </div>
                     <div className= 'searchbar'> <input type='text' placeholder = "하한" value = {this.state.minPrice}  onChange={(event) =>  this.setState({minPrice: event.target.value})}/></div>
-                    <div className= 'searchbar'>~</div>
+                    <div className= 'searchbar' id='wave'>~</div>
                     <div className= 'searchbar'><input type='text'  placeholder = "상한" value = {this.state.maxPrice}  onChange={(event) =>  this.setState({maxPrice: event.target.value})}/></div> 
                     <div className= 'searchbar'><input type='text'  placeholder = "키워드" value = {this.state.keyword}  onChange={(event) =>  this.setState({keyword: event.target.value})}/></div> 
-                    <div className= 'searchbar'><img className = 'Search_Confirm' onClick={() => this.searchConfirmHandler()} src={require('../../Image/Search_Confirm.png')}/></div>
+                    <div className= 'searchbar'><img width='27' className = 'Search_Confirm' onClick={() => this.searchConfirmHandler()} src={require('../../Image/Search_Confirm.png')}/></div>
                     <div id = 'subblock'>
                     {!this.props.login_id?<li id = 'lilogin'><NavLink to='/login' exact>Login</NavLink></li>
                     :<li id='lilogout' onClick={() => this.props.onLogout().then(() => this.props.isLogin())}><NavLink to='/main-page' exact>Log out</NavLink></li>}
@@ -70,24 +70,23 @@ class Navbar extends Component{
                     <li id = 'licreate'><NavLink to='/create' exact>Create</NavLink></li>
                     </div>
                 </div>
+                <div id='nav'>
                 <ul id = 'Navlist'>
-                    <li> <a onClick={() => {this.clickCategoryHandler(1)}}> 중식 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(1)}}> 중식 </a>
                     </li>
-                    <li> <a onClick={() => {this.clickCategoryHandler(2)}}> 한식 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(2)}}> 한식 </a>
                     </li>
-                    <li> <a onClick={() => {this.clickCategoryHandler(3)}}> 양식 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(3)}}> 양식 </a>
                     </li>
-                    
-                    <li><NavLink to='/create' exact>Create</NavLink></li>
-                    <li><NavLink to='/meal-planner' exact>Meal Planner</NavLink></li>
-                    
-                    <li> <a onClick={() => {this.clickCategoryHandler(4)}}> 일식 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(4)}}> 일식 </a>
                     </li>
-                    <li> <a onClick={() => {this.clickCategoryHandler(5)}}> 디저트 </a>
+                    <li> <a id='navitem'onClick={() => {this.clickCategoryHandler(5)}}> 디저트 </a>
                     </li>
-                    <li> <a onClick={() => {this.clickCategoryHandler(6)}}> 편의점 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(6)}}> 편의점 </a>
                     </li>
+                    <li><NavLink id='navitem' to='/meal-planner' exact>식단표</NavLink></li>
                 </ul>
+                </div>
             </div>
         )        
     }

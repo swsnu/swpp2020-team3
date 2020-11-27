@@ -18,13 +18,13 @@ ul {
     margin-top: 2px;
     margin-bottom:2px;
     display: block;
-    width: 116vh;
+    width: 1000px;
 }
 
 .first_list, .second_list, .third_list {
-    padding-top: 2vh;
+    padding-top: 20px;
     display: inline-block;
-    width: 112vh;
+    width: 1000px;
     background-color:white;
     border-radius: 15px;
 }
@@ -51,8 +51,8 @@ ul {
     padding-left: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
-    width: 110vh;
+    width: 1000px;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 20px;
     border-radius: 10px;
 } 

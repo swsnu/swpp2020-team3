@@ -2,6 +2,13 @@
     height: 100%;
     background: #fafafa
   }
+  #nav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcc051;
+    margin-top: -10px;
+  }
   #Navlist {
     display: flex;
     justify-content: center;
@@ -9,11 +16,10 @@
     list-style-type: none;
     overflow: hidden;
     background-color: #fcc051;
-    margin-top: -10px;
   }
 
   #Logo {
-    font-size: 20px;
+    font-size: 35px;
     font-weight: bold;
     color:  #fcc051;
   }
@@ -23,10 +29,11 @@
     align-items: center;
     justify-content: center;
     list-style-type: none;
-    margin-top: -20px;
-    margin-bottom: -20px;
+    margin-top: -28px;
+    margin-bottom: -28px;
     overflow: hidden;
     background-color: white;
+    width: 100%
   }
 
   div .searchbar {
@@ -87,7 +94,23 @@
   #lisign, #lilogin, #licreate, #lilogout {
     padding: 3px;
     background:#d6961e;
-    margin-left:10px;
+    margin-left:15px;
     border-radius:10px;
     font-size: 6px;
   } 
+
+  #subblock{
+    margin-left: 30px;
+  }
+
+  #wave {
+    font-size: 30px;
+  }
+
+  #navitem {
+    font-size: 18px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
