@@ -124,6 +124,7 @@ def signin(request):
         username = req_data['username']
         password = req_data['password']
         user = auth.authenticate(request, username = username, password = password)
+        print(user)
         if user is not None:
             auth.login(request, user)
             return HttpResponse(status=204)

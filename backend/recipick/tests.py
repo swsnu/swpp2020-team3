@@ -46,7 +46,6 @@ class RecipickTestCase(TestCase):
         self.csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
         # Create dummy user
         User = get_user_model()
-        self.user1 = User.objects.create_user(username='swpp', password='iluvswpp')
 
 
     def test_csrf(self):
@@ -65,8 +64,12 @@ class RecipickTestCase(TestCase):
         HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 405)
 
-        response = client.post('/api/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post(
+            '/api/signup/', 
+            json.dumps({'username': 'chris', 'password': 'chris', 'email': 'gongon.snu.ac.kr'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 201)  # Pass csrf protection
         response = client.delete('/api/signup/', content_type='application/json', 
         HTTP_X_CSRFTOKEN=csrftoken) 
@@ -74,34 +77,64 @@ class RecipickTestCase(TestCase):
     def test_signin_out(self):
         client = Client(enforce_csrf_checks=True)
         response = client.get('/api/token')
-        csrftoken = response.cookies['csrftoken'].value  
         # Get csrf token from cookie
+        csrftoken = response.cookies['csrftoken'].value  
 
-
-        response = client.post('/api/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        # valid signup
+        response = client.post(
+            '/api/signup/', 
+            json.dumps({'username': 'chris', 'password': 'chris', 'email': 'gongon.snu.ac.kr'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 201)
-        response = client.post('/api/signin/', json.dumps({'username': 'chis', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+
+        # wrong id or password when signin
+        response = client.post(
+            '/api/signin/', 
+            json.dumps({'username': 'chis', 'password': 'chris'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 401)
-        response = client.get('/api/getuser/1', HTTP_X_CSRFTOKEN=csrftoken)
-        response = client.get('/api/token')
-        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
-        response = client.post('/api/signin/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        
+        # valid getuser
+        response = client.get('/api/getuser/2/', HTTP_X_CSRFTOKEN=csrftoken)
+
+        # valid signin
+
+        response = client.post(
+            '/api/signin/', 
+            json.dumps({'username': 'chris', 'password': 'chris'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 204)
 
+        # signin: wrong request method
         response = client.get('/api/token')
-        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
-        response = client.delete('/api/signin/', content_type='application/json', 
-        HTTP_X_CSRFTOKEN=csrftoken)
+        csrftoken = response.cookies['csrftoken'].value
+        response = client.delete(
+            '/api/signin/', 
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 405)
 
-        response = client.get('/api/signout',content_type='application/json', 
-        HTTP_X_CSRFTOKEN=csrftoken)
+        # valid signout
+        response = client.get(
+            '/api/signout',
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 204)
-        response = client.delete('/api/signout', content_type='application/json', 
-        HTTP_X_CSRFTOKEN=csrftoken)
+
+        # signout: wrong request method
+        response = client.delete(
+            '/api/signout', 
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
 
     def test_ingredient_post(self):
         client = Client(enforce_csrf_checks=True)
