@@ -111,7 +111,6 @@ class Detailpage extends Component {
                 )
             })
         }
-
         console.log(this.props.recipe)
         let d = null;
         if(this.props.recipe){
@@ -123,6 +122,7 @@ class Detailpage extends Component {
             <div id = 'detailBackground'>
                 <div className="Detailpage">
                     <div id = "detailBlock">
+                        {this.state.login_id}
                         {(this.state.login_id==author)?<div><button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
                         <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button></div>:null}
                         <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} 

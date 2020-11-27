@@ -16,7 +16,7 @@ class Comments extends Component {
     componentDidMount() {
         this.props.getComments(this.props.recipeId)
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 let list = res.comments.map(item => item.id)
                 this.props.getReplySet(list)
             })
