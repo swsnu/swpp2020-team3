@@ -63,6 +63,7 @@ def getuser(request, id):
         return JsonResponse(user, safe=False, status=200)
     elif(request.method) == 'PUT':
         body = json.loads(request.body.decode())
+        print('whatif')
         print(body)
         user_1 = User.objects.get(id = id)
         user_1.set_password(body['password'])
@@ -70,8 +71,9 @@ def getuser(request, id):
         user_info = [user for user in User.objects.filter(id = id).values()]
         liked_recipes = [recipe for recipe in user_1.like.all().values()]
         recipe_basket = [recipe for recipe in user_1.scrap.all().values()]
+        written_recipes = [recipe for recipe in Recipe.objects.filter(author = user_1)]
         newrecipes = []
-        for recipe in recipes:
+        for recipe in written_recipes:
             encoded_thumbnail = base64.b64encode(recipe.thumbnail.read())
             newrecipe = {'id': recipe.id, 'title': recipe.title, 'author': recipe.author_id, 'price': recipe.price, 'rating': recipe.rating, 'likes': recipe.likes, 'thumbnail': encoded_thumbnail.decode('utf-8')}
             newrecipes.append(newrecipe)
@@ -120,11 +122,9 @@ def signup(request):
 def signin(request):
     if request.method == 'POST':
         req_data = json.loads(request.body.decode())
-        print(req_data)
         username = req_data['username']
         password = req_data['password']
         user = auth.authenticate(request, username = username, password = password)
-        print(user)
         if user is not None:
             auth.login(request, user)
             return HttpResponse(status=204)
@@ -437,7 +437,10 @@ def recipe(request, id):
             membership = ConnectRecipeIngredient.objects.get(recipe=recipe, ingredient=item)
             newitem = {'name':item.name, 'quantity': item.quantity, 'price': item.price, 'price_normalized': item.price_normalized, 
                         'igd_type': item.igd_type, 'brand': item.brand, 'amount': membership.amount}
-            newigdphoto = base64.b64encode(item.picture.read())
+            try:
+                newigdphoto = base64.b64encode(item.picture.read())
+            except:
+                return HttpResponse(status = 400)
             newitem['picture'] = newigdphoto.decode('utf-8')
             newigdlist.append(newitem)
         newlikeduser = []
@@ -447,23 +450,12 @@ def recipe(request, id):
         for user in scrapped_user.all():
             newscrappeduser.append(user.id)
         newrecipe = {
-            'id': recipe.id,
-            'title': recipe.title,
-            'price': recipe.price,
-            'duration': recipe.duration,
-            'photo_list': new_list,
-            'thumbnail': thumbnail,
-            'description_list': recipe.description_list,
-            'ingredient_list': newigdlist,
-            'category': recipe.category,
-            'rating': recipe.rating,
-            'likes': recipe.likes,
-            'created_date': recipe.created_date,
-            'edited': recipe.edited,
-            'summary': recipe.summary,
-            'author': recipe.author.id,
-            'liked_user': newlikeduser,
-            'scrapped_user': newscrappeduser,
+            'id': recipe.id, 'title': recipe.title, 'price': recipe.price,
+            'duration': recipe.duration, 'photo_list': new_list, 'thumbnail': thumbnail,
+            'description_list': recipe.description_list, 'ingredient_list': newigdlist,
+            'category': recipe.category, 'rating': recipe.rating, 'likes': recipe.likes,
+            'created_date': recipe.created_date, 'edited': recipe.edited, 'summary': recipe.summary,
+            'author': recipe.author.id, 'liked_user': newlikeduser, 'scrapped_user': newscrappeduser,
         }
         return JsonResponse(newrecipe, safe=False)
     elif request.method == 'DELETE':
