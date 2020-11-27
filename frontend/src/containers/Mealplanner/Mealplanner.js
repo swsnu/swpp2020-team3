@@ -91,6 +91,7 @@ export class Mealplanner extends Component {
     }
 
     onDragEnd(result) {
+        console.log("dsldkja")
         const { source, destination } = result
         // no effect movements:
         if (!destination || destination.droppableId == 'scrappedArticles' 
@@ -234,9 +235,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getMLRecipes: () =>
-            dispatch(actionCreators.getMLRecipes()),
-        getScrappedRecipes: () => dispatch(actionCreators.getScrappedRecipes()),
+        // getMLRecipes: () =>
+        //     dispatch(actionCreators.getMLRecipes()),
+        // getScrappedRecipes: () => dispatch(actionCreators.getScrappedRecipes()),
         getRecipes: () => dispatch(actionCreators.getRandom()) // temp for getting sample recipes
         
     }

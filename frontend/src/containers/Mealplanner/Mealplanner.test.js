@@ -77,4 +77,10 @@ describe('<Mealplanner />', () => {
       })
     })
 
+    it('should simulate drag', () => {
+      const component = mount(mealplanner)
+      let wrapper = component.find('DragDropContext')
+      wrapper.simulate('dragend')
+    })
+
 });
