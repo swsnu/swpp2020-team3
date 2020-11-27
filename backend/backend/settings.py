@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # with open('credentials.json') as json_data:
 #     credentials = json.load(json_data)
 
-credentials = {'password': 'swpp2020'}
+# credentials = {'password': 'swpp2020'}
 
 DATABASES = {
     'default': {
