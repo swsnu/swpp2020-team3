@@ -82,15 +82,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-with open('credentials.json') as json_data:
-    credentials = json.load(json_data)
+# with open('credentials.json') as json_data:
+#     credentials = json.load(json_data)
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'recipick_database',
         'USER': 'root',
-        'PASSWORD': credentials['password'],
+        # 'PASSWORD': credentials['password'],
         'HOST': 'localhost',
         'PORT': '',
     }
