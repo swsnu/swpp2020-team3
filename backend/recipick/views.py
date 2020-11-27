@@ -533,10 +533,13 @@ def recipe(request, id):
                     exist = 1
             if exist == 0:
                 connection = ConnectRecipeIngredient(recipe=recipe, ingredient=target[0], amount=ing['amount'])
-                connection.save()
+            else:
+                connection = ConnectRecipeIngredient.objects.get(recipe=recipe,ingredient=target[0])
+                connection.amount = ing['amount']
+            connection.save()
         recipe.save()
         # photos for steps:
-        cnt = 0;
+        cnt = 0
         new_photo_list = []
         for img_64 in p_list:
             format, imgstr = img_64.split(';base64,')
@@ -547,8 +550,34 @@ def recipe(request, id):
             cnt = cnt + 1
         recipe.photo_list.all().delete()
         recipe.photo_list.set(new_photo_list)
-        
-        return HttpResponse(recipe, status = 200)
+        liked_user = recipe.liked_user
+        scrapped_user = recipe.scrapped_user
+        newlikeduser = []
+        for user in liked_user.all():
+            newlikeduser.append(user.id)
+        newscrappeduser = []
+        for user in scrapped_user.all():
+            newscrappeduser.append(user.id)
+        newrecipe = {
+            'id': recipe.id,
+            'title': recipe.title,
+            'price': recipe.price,
+            'duration': recipe.duration,
+            'photo_list': p_list,
+            'thumbnail': thumbnail,
+            'description_list': recipe.description_list,
+            'ingredient_list': ingredient_list,
+            'category': recipe.category,
+            'rating': recipe.rating,
+            'likes': recipe.likes,
+            'created_date': recipe.created_date,
+            'edited': recipe.edited,
+            'summary': recipe.summary,
+            'author': recipe.author.id,
+            'liked_user': newlikeduser,
+            'scrapped_user': newscrappeduser,
+        }
+        return JsonResponse(newrecipe, status = 200)
     else:
         return HttpResponseNotAllowed(['GET','PUT','DELETE'])
 
