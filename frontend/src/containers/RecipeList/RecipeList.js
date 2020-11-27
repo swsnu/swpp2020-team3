@@ -179,8 +179,6 @@ class RecipeList extends Component{
                                 <div className = "options">
                                     <button className ="search-options-button" onClick={() => this.clickOptionsHandler()}>분류</button>
                                     {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
-                                            onClick={() => this.clickSearchModeHandler("recommended")}>추천</button>}
-                                    {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                             onClick={() => this.clickSearchModeHandler("likes")}>좋아요순</button>}
                                     {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                             onClick={() => this.clickSearchModeHandler("rating")}>평점순</button>}
