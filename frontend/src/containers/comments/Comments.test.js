@@ -10,7 +10,6 @@ import * as replyCreators from '../../store/actions/reply'
 import * as commentCreators from '../../store/actions/comment';
 import * as userCreators from '../../store/actions/userCreators';
 import { history } from '../../store/store'
-import { useHistory } from 'react-router-dom'
 
 jest.mock('./Comment', () => {
     return jest.fn(props => {
@@ -22,7 +21,7 @@ jest.mock('./Comment', () => {
         )
     })
 })
-const historyMock = { push: jest.fn() };
+// const historyMock = { push: jest.fn() };
 const stubInitialState = {
     comments: [
         {id: 1, article_id: 1, author_id: 1, content:''},
@@ -113,11 +112,11 @@ describe('<Comments/>', () => {
                     setImmediate(resolve(result))
                 })
             })
-        const spyConfirm = jest.spyOn(window, 'confirm')
-            .mockImplementation(() => true)
-        const spyPush = jest.spyOn(history, 'push')
-            .mockImplementation(path => {})
-        const spyAddComment = jest.spyOn(commentCreators, 'addComment');
+        // const spyConfirm = jest.spyOn(window, 'confirm')
+        //     .mockImplementation(() => true)
+        // const spyPush = jest.spyOn(history, 'push')
+        //     .mockImplementation(path => {})
+        // const spyAddComment = jest.spyOn(commentCreators, 'addComment');
         const component = mount(comments);
         let wrapper = component.find('#new-comment');
         wrapper.simulate('change', {target: {value: 'test_comment'}})

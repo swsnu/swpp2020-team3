@@ -1,5 +1,5 @@
 //React imports
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import {connect} from 'react-redux';
 import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 import {ConnectedRouter} from 'connected-react-router';
@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 
 //Local imports:
 import './App.css';
-import AuthRoute from './components/Router/AuthRoute';
 import * as actionCreators from './store/actions/index';
 import Mainpage from './containers/Mainpage/Mainpage';
 import RecipeList from './containers/RecipeList/RecipeList'

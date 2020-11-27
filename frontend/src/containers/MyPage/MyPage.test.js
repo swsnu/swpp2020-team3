@@ -22,7 +22,7 @@ jest.mock('../../components/Recipe/Recipe', () => {
 });
 
 jest.mock('../MyInfo/MyInfo', () => {
-  return jest.fn(props => {
+  return jest.fn(() => {
     return (
       <div className="spyMyInfo">
     </div>);
@@ -97,7 +97,8 @@ const stubInitialState = {
 const mockStore = getMockStore(stubInitialState);
 
 describe('<MyPage />', () => {
-    let myPage, spyGetUser;
+    let myPage;
+    // let spyGetUser;
     beforeEach(() => {  
         myPage = (
             <Provider store={mockStore}>
@@ -108,8 +109,8 @@ describe('<MyPage />', () => {
                 </ConnectedRouter>
             </Provider>
         );
-        spyGetUser = jest.spyOn(actionCreators, 'getUser')
-        .mockImplementation(() => { return () => {}; });
+        // spyGetUser = jest.spyOn(actionCreators, 'getUser')
+        // .mockImplementation(() => { return () => {}; });
     });
 
     afterEach(() => {

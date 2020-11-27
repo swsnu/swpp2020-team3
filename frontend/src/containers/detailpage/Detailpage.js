@@ -4,12 +4,10 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 
 import * as actionCreators from '../../store/actions/index';
-
 import DishResult from '../../components/detail/DishResult';
 import DishStep from '../../components/detail/DishStep';
 import Comments from '../comments/Comments';
 import './Detailpage.css'
-//import './Detailpage.css';
 
 class Detailpage extends Component {
 
@@ -88,8 +86,8 @@ class Detailpage extends Component {
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
         const author = this.props.recipe && this.props.recipe.author
-        const liked_user = this.props.recipe && this.props.recipe.liked_user
-        const scrapped_user = this.props.recipe && this.props.recipe.scrapped_user
+        // const liked_user = this.props.recipe && this.props.recipe.liked_user
+        // const scrapped_user = this.props.recipe && this.props.recipe.scrapped_user
         
 
         console.log(this.state);

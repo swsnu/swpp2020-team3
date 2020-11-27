@@ -58,6 +58,7 @@ Replies.propTypes = {
     onEditReply: PropTypes.func,
     onDeleteReply: PropTypes.func,
     addReply: PropTypes.func,
+    isLogin: PropTypes.func,
     replies: PropTypes.array,
     commentId: PropTypes.string
 };
