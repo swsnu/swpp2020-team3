@@ -190,8 +190,8 @@ class Createpage extends Component{
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
         listTotal = listTotal.concat(customIngr)
-        this.setState({selectedIngredientList: listSelected})
-        this.setState({ingredientListSave: listTotal})
+        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
+        customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0})
     }
 
 
@@ -229,6 +229,7 @@ class Createpage extends Component{
                 totalPrice+= isNaN(priceList[i]['price']*priceList[i]['amount'])? 0 : (priceList[i]['price']*priceList[i]['amount'])
             }
         }
+        console.log(this.state.ingredientList)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
