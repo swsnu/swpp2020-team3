@@ -1,3 +1,5 @@
+services:
+  - postgresql
 matrix:
   include:
     - language: node_js
@@ -27,6 +29,9 @@ matrix:
         - pip install django_cleanup
         - pip install verify_email
         - pip install psycopg2
+      before_script:
+        - psql -c "CREATE DATABASE recipick_database;" -U postgres
+        - psql -c "CREATE USER root WITH PASSWORD 'root';" -U postgres
       script:
         - cd ..
         - cd frontend
