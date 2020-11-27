@@ -4,10 +4,12 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 import {getMockStore} from '../../test-utils/mocks.js'
-import * as actionCreators from '../../store/actions/recipe';
+import * as recipeCreators from '../../store/actions/recipe';
 import * as userCreators from '../../store/actions/userCreators';
 
 import Detailpage from './Detailpage'
+import DishStep from '../../components/detail/DishStep.js';
+import DishResult from '../../components/detail/DishResult.js';
 
 const stubState = {
   selectedRecipe: {
@@ -17,18 +19,22 @@ const stubState = {
       'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}],
     'photo_list': ['test_image'],
     'liked_user': [1, 2],
-    'scrapped_user': [1, 3]
+    'scrapped_user': [1, 3],
+    'description_list': ['des_1', 'des_2'],
+    'thumbnail': 'a'
   }
 }
 
 const history = createBrowserHistory()
-const mockStore = getMockStore(stubState)
+let mockStore = getMockStore(stubState)
 
 jest.mock('../../components/detail/DishResult', () => {
-  return jest.fn(() => {
+  return jest.fn((props) => {
       return (
           <div className="spyDishResult">
               <h1>DishResult</h1>
+              <button onClick={() => props.onlikeClicked()} id="spylike">Like</button>
+              <button onClick={() => props.onscrapClicked()} id="spyscrap">Scrap</button>
           </div>
       )
   })
@@ -63,9 +69,9 @@ describe('<Detailpage />', () => {
     const fflushPromises = () => {
       return new Promise(resolve => setImmediate(resolve));
     }
-    const spyGetRecipe = jest.spyOn(actionCreators, 'getRecipe')
-      .mockImplementation(() => {
-        return () => {}
+    const spyGetRecipe = jest.spyOn(recipeCreators, 'getRecipe')
+      .mockImplementation((id) => {
+        return dispatch => {}
       })
     beforeEach(() => {
       detailpage = (
@@ -75,7 +81,7 @@ describe('<Detailpage />', () => {
           </Router>
         </Provider>
       );
-      spyDeleteRecipe = jest.spyOn(actionCreators, 'deleteRecipe')
+      spyDeleteRecipe = jest.spyOn(recipeCreators, 'deleteRecipe')
       .mockImplementation(() => {return () => {}})
     })
 
@@ -90,13 +96,102 @@ describe('<Detailpage />', () => {
     });
 
     it('should delete recipe', async () => {
+      const spyPush = jest.spyOn(history, 'push');
       let component = mount(detailpage);
       await fflushPromises();
       component.update();
-      const wrapper = component.find('#delete-button');
+      let wrapper = component.find('#delete-button');
       expect(spyIsLogin).toHaveBeenCalledTimes(1);
-      console.log(component.debug())
       wrapper.simulate('click')
       expect(spyDeleteRecipe).toHaveBeenCalledTimes(1)
+      wrapper = component.find('#edit-button');
+      wrapper.simulate('click');
+      expect(spyPush).toHaveBeenCalledTimes(1);
+    })
+
+    it('should work removelike', async () => {
+      const spyRemoveLikeRecipe = jest.spyOn(recipeCreators, 'removelikeRecipe')
+        .mockImplementation(() => {
+          return dispatch => {}
+        })
+      let component = mount(detailpage);
+      await fflushPromises();
+      component.update();
+      const wrapper = component.find('#spylike');
+      wrapper.simulate('click');
+      expect(spyRemoveLikeRecipe).toHaveBeenCalledTimes(1);
+    })
+    it('should work like', async () => {
+      const spyLikeRecipe = jest.spyOn(recipeCreators, 'likeRecipe')
+        .mockImplementation(() => {
+          return dispatch => {}
+        })
+      spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: 3}
+                setImmediate(resolve(result))
+            })
+        })
+      let component = mount(detailpage);
+      await fflushPromises();
+      component.update();
+      const wrapper = component.find('#spylike');
+      wrapper.simulate('click');
+      expect(spyLikeRecipe).toHaveBeenCalledTimes(1);
+    })
+
+    it('should work removescrap', async () => {
+      const spyRemoveScrapRecipe = jest.spyOn(recipeCreators, 'removescrapRecipe')
+        .mockImplementation(() => {
+          return dispatch => {}
+        })
+      let component = mount(detailpage);
+      await fflushPromises();
+      component.update();
+      const wrapper = component.find('#spyscrap');
+      wrapper.simulate('click');
+      expect(spyRemoveScrapRecipe).toHaveBeenCalledTimes(1);
+    })
+
+    it('should work scrap', async () => {
+      const spyScrapRecipe = jest.spyOn(recipeCreators, 'scrapRecipe')
+        .mockImplementation(() => {
+          return dispatch => {}
+        })
+      spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: 4}
+                setImmediate(resolve(result))
+            })
+        })
+      let component = mount(detailpage);
+      await fflushPromises();
+      component.update();
+      const wrapper = component.find('#spyscrap');
+      wrapper.simulate('click');
+      expect(spyScrapRecipe).toHaveBeenCalledTimes(1);
+    })
+
+    it('show dishstep', async () => {
+      let component = mount(detailpage);
+      let wrapper = component.find(DishStep);
+      expect(wrapper.length).toBe(2);
+    })
+
+    it('should show image', () => {
+      mockStore = getMockStore({})
+      detailpage = (
+        <Provider store={mockStore}>
+          <Router history={history}>
+              <Detailpage match={{params:{id:1}}}/>
+          </Router>
+        </Provider>
+      );
+      let component = mount(detailpage);
+      let wrapper = component.find(DishResult).get(0);
+      let wrapper2 = wrapper.props.img;
+      expect(wrapper2.props.src).toBe(null)
     })
 });
