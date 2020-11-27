@@ -56,10 +56,10 @@ class EditDishResult extends Component {
         this.setState({title: event.target.value})
         this.updateState('title', event.target.value)
     }
-    changeCategory(event){
-        this.setState({category: event.target.value})
-        this.updateState('category', event.target.value)
-    }
+    // changeCategory(event){
+    //     this.setState({category: event.target.value})
+    //     this.updateState('category', event.target.value)
+    // }
     changeSummary(event){
         this.setState({summary: event.target.value})
         this.updateState('summary', event.target.value)
@@ -145,7 +145,7 @@ class EditDishResult extends Component {
                     <label>{item.name} | </label>
                     <label>{item.price} | </label>
                     <label>{item.amount}</label>
-                    <input id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
+                    <input className="add-ingredient-quantity" id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
                         onChange={(event) => this.addIngredientQuantity(event, index)}/>
                     {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
                     <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
@@ -212,7 +212,7 @@ class EditDishResult extends Component {
                         </div>
                         <div id = 'detailthumbnail'>
                             {thumbnail}
-                            <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event)}/>
+                            <input id="imageHandler" type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event)}/>
                         </div>
                     </div>
                     <div id = 'detailtitle2'>{'레시피 간단 설명'}</div>

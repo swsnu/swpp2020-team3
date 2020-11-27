@@ -5,11 +5,8 @@ import PropTypes from 'prop-types';
 
 import * as actionCreators from '../../store/actions/recipe';
 
-import DishResult from '../../components/detail/DishResult';
-import DishStep from '../../components/detail/DishStep';
 import Comments from '../comments/Comments';
 import EditDishResult from './EditDishResult';
-import EditDishStep from './EditDishStep';
 
 // Don't need editdishstep
 class Editpage extends Component {
@@ -85,7 +82,7 @@ class Editpage extends Component {
         <div className='edit-dish_step'>
             <br/>
             <img src={item.img} width='600'/>
-            <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
+            <input id="imageHandler" type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
             <div className='dish_explanation'>
                 <input id='detailtitle' value={this.state.description_list[index]} onChange={(event) => {this.changeExplanation(event, index)}}/>
                 <button id = "delete-button" onClick={() => this.deleteStep(index)}>Delete</button>
@@ -107,7 +104,7 @@ class Editpage extends Component {
                             </div>
                         </div>
 
-                        <button onClick={() => this.onSubmit()}>Submit</button>
+                        <button id="submit" onClick={() => this.onSubmit()}>Submit</button>
                     </div>
                     <Comments recipeId={parseInt(this.props.match.params.id)}/>
                 </div>

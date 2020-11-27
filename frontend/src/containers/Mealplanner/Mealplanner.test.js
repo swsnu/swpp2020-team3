@@ -78,30 +78,9 @@ describe('<Mealplanner />', () => {
       expect(spyOnGetRecipe).toHaveBeenCalledTimes(0)
       let wrapper = component.find('Mealplanner');
       expect(wrapper.length).toBe(1)
-
-      wrapper = component.find('.Searchbar #min')
-      wrapper.simulate('change', {target: {value: 'test'}})
-      wrapper = component.find('.Searchbar #max')
-      wrapper.simulate('change', {target: {value: 'test'}})
-      wrapper = component.find('.Searchbar #numOfDays')
-      wrapper.simulate('change', {target: {value: 'test'}})
-      wrapper = component.find('#ml-generate')
-      console.log(wrapper.debug())
-      wrapper.simulate('click')
-
-      wrapper = component.find('button')
-      wrapper.forEach((button) => {
-        button.simulate('click')
-      })
-      wrapper = component.find('.scrappedRecipe img')
-      // wrapper.forEach(image => {
-      //   image.simulate('click')
-      // })
-      wrapper.at(0).simulate('click')
-      expect(spyHistory).toHaveBeenCalledTimes(1)
     });
 
-    xit('should test searchbar', () => {
+    it('should test searchbar', () => {
       const component = mount(mealplanner)
       let wrapper = component.find('.Searchbar #min')
       wrapper.simulate('change', {target: {value: 'test'}})
@@ -113,7 +92,7 @@ describe('<Mealplanner />', () => {
       wrapper.simulate('click')
     })
 
-    xit('should test day', () => {
+    it('should test day', () => {
       const component = mount(mealplanner)
       let wrapper = component.find('button')
       wrapper.forEach((button) => {
@@ -121,7 +100,7 @@ describe('<Mealplanner />', () => {
       })
     })
 
-    xit('should test scrappedRecipe', () => {
+    it('should test scrappedRecipe', () => {
       let spyHistory = jest.spyOn(history, 'push')
       .mockImplementation(() => {})
       const component = mount(mealplanner)
