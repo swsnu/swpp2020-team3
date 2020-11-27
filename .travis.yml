@@ -26,6 +26,7 @@ matrix:
         - python -m pip install Pillow
         - pip install django_cleanup
         - pip install verify_email
+        - pip install psycopg2
       script:
         - cd ..
         - cd frontend
