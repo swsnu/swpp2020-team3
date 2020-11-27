@@ -1,20 +1,29 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history' ;
+import { getMockStore } from '../../test-utils/mocks';
 
 import Navbar from './Navbar'
 
 const history = createBrowserHistory()
+
+const stubInitialState = {
+  user : {login_id: 'hello'}
+};
+const mockStore = getMockStore(stubInitialState);
 
 describe('<Navbar />', () => {
     let navBar;
   
     beforeEach(() => {
       navBar = (
-        <Router history={history}>
-            <Navbar history={history}/>
-        </Router>
+        <Provider store={mockStore}>
+          <Router history={history}>
+              <Navbar history={history}/>
+          </Router>
+        </Provider>
       );
       delete window.location;
       window.location = { reload: jest.fn() };
