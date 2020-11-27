@@ -160,22 +160,28 @@ class MyPage extends Component{
                         this.state.tab=='my-profile' && 
                             <div className = 'my-profile'>
                                 <div  id = 'infoblock'>
-                                    <p id='mylabel' >my Info</p>
+                                    <div id='mylabel'><p id='my' >my Info</p></div>
                                     {simpleMyInfo}
                                 </div>
                                 <div id = 'infoblock'>
-                                    <p id='mylabel'>liked recipes</p>
-                                    <button onClick = {() => this.onClickTabHandler('liked-recipes')}>detail</button>
-                                    {likedRecipes.slice(0,5)}
+                                    <div id='mylabel'>
+                                    <p id='my'>liked recipes</p>
+                                    <button id='userdetail' onClick = {() => this.onClickTabHandler('liked-recipes')}>detail</button>
+                                </div>
+                                    <div id='lr'>{likedRecipes.slice(0,5)}</div>
                                 </div>
                                 <div id='infoblock'> 
-                                    <p id='mylabel'>recipe basket</p>
-                                    <button onClick = {() => this.onClickTabHandler('recipe-basket')}>detail</button>
-                                    {recipeBasket.slice(0,5)}
+                                    <div id='mylabel'>
+                                        <p id='my'>recipe basket</p>
+                                        <button id='userdetail' onClick = {() => this.onClickTabHandler('recipe-basket')}>detail</button>
+                                    </div>
+                                    <div id='lr'>{recipeBasket.slice(0,5)}</div>
                                 </div>
                                 <div id='infoblock'> 
-                                    <p id='mylabel'>written recipes</p>
-                                    <button onClick = {() => this.onClickTabHandler('written-recipes')}>detail</button>
+                                    <div id='mylabel'>
+                                        <p id='my'>written recipes</p>
+                                        <button id='userdetail' onClick = {() => this.onClickTabHandler('written-recipes')}>detail</button>
+                                    </div>
                                     <div id='wr'>{writtenRecipes.slice(0,5)}</div>
                                 </div>
                             </div>
@@ -185,11 +191,11 @@ class MyPage extends Component{
                     </div>}
                     {this.state.tab=='liked-recipes' && <div className = 'liked-recipes'>
                     <p>liked recipes</p>
-                    {likedRecipes}
+                    <div id='lr'>{likedRecipes}</div>
                     </div>}
                     {this.state.tab=='recipe-basket' && <div className = 'recipe-basket'>
                     <p>recipe basket</p>
-                    {recipeBasket}
+                    <div id='lr'>{recipeBasket}</div>
                     </div>}
                     {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
                     <p>written recipes</p>

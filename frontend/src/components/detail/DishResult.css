@@ -123,3 +123,22 @@
 #detailimg {
     padding-left: 20px;
 }
+
+#ub {
+    background-color: #f59278; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 20px;
+    border-radius: 10px;
+}
+
+#userbuttons {
+    margin-top:-20px;
+    margin-bottom: 10px;
+}

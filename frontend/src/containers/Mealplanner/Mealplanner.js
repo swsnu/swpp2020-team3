@@ -195,7 +195,7 @@ class Mealplanner extends Component {
                                                                 :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={`data:image/png;base64,${meal.thumbnail}`} width='100' height='100'/>}
                                                         </div>
                                                     </div>
-                                                )}
+                                                )} 
                                             </Draggable>
                                         ))}
                                         {provided.placeholder}

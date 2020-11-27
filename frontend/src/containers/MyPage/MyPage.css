@@ -59,3 +59,28 @@
     margin-top: 20px;
     border-top: solid 2px;
 }
+
+#my{
+    font-size: 24px;
+    margin-top: 14px;
+    margin-right: 10px;
+}
+
+#lr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#userdetail{
+    background-color: #b5b5b5;
+    border: none;
+    color: white;
+    padding: 8px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+}

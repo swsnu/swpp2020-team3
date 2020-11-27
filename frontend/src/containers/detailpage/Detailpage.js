@@ -123,11 +123,13 @@ class Detailpage extends Component {
             <div id = 'detailBackground'>
                 <div className="Detailpage">
                     <div id = "detailBlock">
-                        {(this.state.login_id!=-1)?<div><button style={(this.isLike()?{'background-color':'blue'}:null)} onClick={() => this.handleLike()}>Like</button>
-                        <button style={(this.isScrap()?{'background-color':'blue'}:null)} onClick={() => this.handleScrap()}>Scrap</button></div>:null}
                         {(this.state.login_id==author)?<div><button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
                         <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button></div>:null}
-                        <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}/>
+                        <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} 
+                            likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}
+                            loginid={this.state.login_id} onlikeClicked = {() =>  this.handleLike()} onscrapClicked = {() => this.handleScrap()}
+                            islike = {this.isLike()} isscrap = {this.isScrap()}
+                        />
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>
