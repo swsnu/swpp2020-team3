@@ -63,10 +63,10 @@ describe('<Detailpage />', () => {
     const fflushPromises = () => {
       return new Promise(resolve => setImmediate(resolve));
     }
-    // const spyGetRecipe = jest.spyOn(actionCreators, 'getRecipe')
-      // .mockImplementation(() => {
-      //   return () => {}
-      // })
+    const spyGetRecipe = jest.spyOn(actionCreators, 'getRecipe')
+      .mockImplementation(() => {
+        return () => {}
+      })
     beforeEach(() => {
       detailpage = (
         <Provider store={mockStore}>

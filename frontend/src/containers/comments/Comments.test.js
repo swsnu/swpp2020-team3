@@ -102,6 +102,7 @@ describe('<Comments/>', () => {
         wrapper.simulate('click');
         await fflushPromises();
         expect(spyAddComment).toHaveBeenCalledTimes(1);
+        expect(spyIsLogin).toHaveBeenCalledTimes(1);
     })
 
     it('should not add without login', async () => {

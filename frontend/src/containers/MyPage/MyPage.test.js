@@ -98,7 +98,7 @@ const mockStore = getMockStore(stubInitialState);
 
 describe('<MyPage />', () => {
     let myPage;
-    // let spyGetUser;
+    let spyGetUser;
     beforeEach(() => {  
         myPage = (
             <Provider store={mockStore}>
@@ -109,8 +109,8 @@ describe('<MyPage />', () => {
                 </ConnectedRouter>
             </Provider>
         );
-        // spyGetUser = jest.spyOn(actionCreators, 'getUser')
-        // .mockImplementation(() => { return () => {}; });
+        spyGetUser = jest.spyOn(actionCreators, 'getUser')
+        .mockImplementation(() => { return () => {}; });
     });
 
     afterEach(() => {
@@ -119,6 +119,7 @@ describe('<MyPage />', () => {
 
     it(`should set render properly on my profile tab`, () => {
         const component = mount(myPage);
+        expect(spyGetUser).toHaveBeenCalledTimes(1)
         let wrapper = component.find('.my-profile-button');
         wrapper.simulate('click');
         let newRecipeInstance = component.find(MyPage.WrappedComponent).instance();

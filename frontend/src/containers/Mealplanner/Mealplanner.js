@@ -55,6 +55,7 @@ export class Mealplanner extends Component {
     }
 
     addDayAbove(index) {
+        console.log(this.state.recipeArray)
         if (this.state.recipeArray.length >= 7) {
             console.log('max number is 7')
         }
@@ -172,8 +173,8 @@ export class Mealplanner extends Component {
                             <Droppable droppableId={`day${ind}`} key={ind} direction='horizontal'> 
                             {(provided) => (
                                 <div className='day' ref={provided.innerRef} {...provided.droppableProps} style={{display : "flex"}}>
-                                    <button onClick={() => this.addDayAbove(ind)}>Add a day</button>
-                                    <button onClick={() => this.deleteDay(ind)}>Delete day</button>
+                                    <button id="addDayAbove" onClick={() => this.addDayAbove(ind)}>Add a day</button>
+                                    <button id="deleteDay" onClick={() => this.deleteDay(ind)}>Delete day</button>
                                     <button onClick={() => this.generateSingleML(ind)}>Regenerate ML for single day</button>
                                     <div id ='drag'>
                                         {dayBlock && dayBlock.map((meal, index) => (

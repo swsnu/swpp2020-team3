@@ -7,6 +7,7 @@ import {getMockStore} from '../../test-utils/mocks.js'
 
 import * as actionCreators from '../../store/actions/recipe';
 import Mealplanner from './Mealplanner'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const stubState = {
   selectedRecipe: {
@@ -19,12 +20,20 @@ const stubState = {
 const stubRecipeArray = [[{ id: 1, thumbnail: 0, real_id: 0 }, { id: 2, thumbnail: 0, real_id: 0}, { id: 3, thumbnail: 0, real_id: 0}],
 [{ id: 4, thumbnail: 0, real_id: 0 }, { id: 5, thumbnail: 0, real_id: 0 }, { id: 6, thumbnail: 0, real_id: 0 }],
 [{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }]]
-
+const stubRecipeArrayOver = [[{ id: 1, thumbnail: 0, real_id: 0 }, { id: 2, thumbnail: 0, real_id: 0}, { id: 3, thumbnail: 0, real_id: 0}],
+[{ id: 4, thumbnail: 0, real_id: 0 }, { id: 5, thumbnail: 0, real_id: 0 }, { id: 6, thumbnail: 0, real_id: 0 }],
+[{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }],
+[{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }],
+[{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }],
+[{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }],
+[{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }],
+[{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }]]
+const stubRecipeArrayUnder = [[{ id: 1, thumbnail: 0, real_id: 0 }, { id: 2, thumbnail: 0, real_id: 0}, { id: 3, thumbnail: 0, real_id: 0}]]
 
 const history = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
-jest.mock('react-beautiful-dnd', () => ({
+jest.mock('react-beautiful-dnd', (onDragEnd) => ({
   Droppable: ({ children }) => children({
     draggableProps: {
       style: {},
@@ -37,12 +46,24 @@ jest.mock('react-beautiful-dnd', () => ({
     },
     innerRef: jest.fn(),
   }, {}),
-  DragDropContext: ({ children }) => children,
+  // DragDropContext: ({ children }) => children({
+  //   onDragEnd: jest.fn()
+  // }, {}),
+  DragDropContext: ({ children }) => {
+    children = {...children, onDragEnd: onDragEnd}
+    return children
+  },
 }));
 
 
-
 describe('<Mealplanner />', () => {
+  let spyOnGetRecipe = jest.spyOn(actionCreators, 'getRecipes')
+      .mockImplementation(() => {
+          return () => new Promise((resolve) => {
+              const result = stubRecipeArray
+              setImmediate(resolve(result))
+          })
+      })
   const fflushPromises = () => {
     return new Promise(resolve => setImmediate(resolve))
   }
@@ -58,25 +79,30 @@ describe('<Mealplanner />', () => {
       
     })
   
-    it('should render Mealplanner', async() => {
+    fit('should render Mealplanner', async() => {
       // let spyHistory = jest.spyOn(history, 'push')
       // .mockImplementation(() => {})
 
-      let spyOnGetRecipe = jest.spyOn(actionCreators, 'getRecipes')
-        .mockImplementation(() => {
-        return () => new Promise((resolve) => {
-          const result = {randomRecipe: stubRecipeArray}
-          setImmediate(resolve(result))
-        })
-      })
+      // let spyOnGetRecipe = jest.spyOn(actionCreators, 'getRecipes')
+      //   .mockImplementation(() => {
+      //   return () => new Promise((resolve) => {
+      //     const result = {randomRecipe: stubRecipeArray}
+      //     setImmediate(resolve(result))
+      //   })
+      // })
+
+      // const spyOnGetRecipe = jest.spyOn(actionCreators, 'getRecipes')
+      //     .mockImplementation(() => {})
+
       const component = mount(mealplanner);
       await fflushPromises();
+      component.update();
       expect(spyOnGetRecipe).toHaveBeenCalledTimes(0)
       let wrapper = component.find('Mealplanner');
       expect(wrapper.length).toBe(1)
     });
 
-    it('should test searchbar', () => {
+    it('should test searchbar and draggable', () => {
       const component = mount(mealplanner)
       let wrapper = component.find('.Searchbar #min')
       wrapper.simulate('change', {target: {value: 'test'}})
@@ -86,6 +112,15 @@ describe('<Mealplanner />', () => {
       wrapper.simulate('change', {target: {value: 'test'}})
       wrapper = component.find('.Searchbar button')
       wrapper.simulate('click')
+
+      let instance = component.find(Mealplanner.WrappedComponent).instance()
+      instance.setState({recipeArray: stubRecipeArrayOver})
+      wrapper = component.find('#addDayAbove')
+      wrapper.forEach((button) => button.simulate('click'))
+      instance = component.find(Mealplanner.WrappedComponent).instance()
+      instance.setState({recipeArray: stubRecipeArrayUnder})
+      wrapper = component.find('deleteDay')
+      wrapper.forEach((button) => button.simulate('click'))
     })
 
     it('should test day', () => {

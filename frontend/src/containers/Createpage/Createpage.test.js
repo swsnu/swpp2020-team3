@@ -20,23 +20,7 @@ const stubState = {
 const mockHistory = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
-jest.mock('./CreateStep', () => {
-    return jest.fn((props) => {
-        let inputHandler = (event) => {
-            props.event_text(event)
-        }
-        let imageHandler = (event) => {
-            props.event_image(event)
-        }
-        return (
-            <div className="CreateStep">
-                <h1>CreateStep</h1>
-                <textarea id="step-input" onChange={inputHandler}></textarea>
-                <input id="step-image" onChange={imageHandler}></input>
-            </div>
-        )
-    })
-})
+
 //put parantheses
 jest.mock("react-select", () => ( {options, value, onChange, getOptionLabel} ) => {
     function handleChange(event) {
