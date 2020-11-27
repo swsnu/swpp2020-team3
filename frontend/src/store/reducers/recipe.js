@@ -28,6 +28,18 @@ const reducer = (state = initialState, action) => {
       return {...state, hotRecipe: action.hotRecipe};
     case actionTypes.EDIT_RECIPE:
       return {...state, selectedRecipe: action.modifiedRecipe}
+    case actionTypes.LIKE_RECIPE:
+      const add_liked_user = state.selectedRecipe.liked_user.concat(action.id);
+      return {...state, selectedRecipe: {...state.selectedRecipe, likes: state.selectedRecipe.likes+1, liked_user: add_liked_user}}
+    case actionTypes.REMOVE_LIKE_RECIPE:
+      const remove_liked_user = state.selectedRecipe.liked_user.filter((id) => id!=action.id);
+      return {...state, selectedRecipe: {...state.selectedRecipe, likes: state.selectedRecipe.likes-1, liked_user: remove_liked_user}}
+    case actionTypes.SCRAP_RECIPE:
+      const add_scrapped_user = state.selectedRecipe.scrapped_user.concat(action.id);
+      return {...state, selectedRecipe: {...state.selectedRecipe, scrapped_user: add_scrapped_user}}
+    case actionTypes.REMOVE_SCRAP_RECIPE:
+      const remove_scrapped_user = state.selectedRecipe.scrapped_user.filter((id) => id!=action.id);
+      return {...state, selectedRecipe: {...state.selectedRecipe, scrapped_user: remove_scrapped_user}}
     default:
       break;
   }
