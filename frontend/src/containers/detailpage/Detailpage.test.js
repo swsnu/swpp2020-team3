@@ -64,9 +64,9 @@ describe('<Detailpage />', () => {
       return new Promise(resolve => setImmediate(resolve));
     }
     // const spyGetRecipe = jest.spyOn(actionCreators, 'getRecipe')
-      .mockImplementation(() => {
-        return () => {}
-      })
+      // .mockImplementation(() => {
+      //   return () => {}
+      // })
     beforeEach(() => {
       detailpage = (
         <Provider store={mockStore}>

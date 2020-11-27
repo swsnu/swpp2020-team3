@@ -37,13 +37,13 @@ describe('<Comments/>', () => {
     const fflushPromises = () => {
         return new Promise(resolve => setImmediate(resolve));
     }
-    let spyIsLogin = jest.spyOn(userCreators, 'isLogin')
-        .mockImplementation(() => {
-            return () => new Promise((resolve) => {
-                const result = {login_id: 1}
-                setImmediate(resolve(result))
-            })
-        })
+    // let spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+    //     .mockImplementation(() => {
+    //         return () => new Promise((resolve) => {
+    //             const result = {login_id: 1}
+    //             setImmediate(resolve(result))
+    //         })
+    //     })
     
     beforeEach(() => {
         comments = <Provider store={mockStore}>

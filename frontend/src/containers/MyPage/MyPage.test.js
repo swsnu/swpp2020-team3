@@ -97,7 +97,7 @@ const stubInitialState = {
 const mockStore = getMockStore(stubInitialState);
 
 describe('<MyPage />', () => {
-    let myPage;
+    let myPage, spyGetUser;
     beforeEach(() => {  
         myPage = (
             <Provider store={mockStore}>
