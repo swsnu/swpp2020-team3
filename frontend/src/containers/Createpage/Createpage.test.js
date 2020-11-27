@@ -11,7 +11,10 @@ const stubState = {
     ingredientList: [
         {'name': 'ingredient', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
         'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
-    ]
+    ],
+    user: {
+        login_id: 'root'
+    }
 }
 
 const mockHistory = createBrowserHistory()
@@ -94,6 +97,7 @@ describe('<Createpage />', () => {
         wrapper.simulate('click')
         // expect(spyHistory).toHaveBeenCalledTimes(2) // this is right
         expect(spyHistory).toHaveBeenCalledTimes(0)
+
 
     })
 /////////////
@@ -178,13 +182,25 @@ describe('<Createpage />', () => {
         // expect
         // check image handler
         wrapper = component.find('#step-image')
-        wrapper.simulate('change', {target: {value: 'image'}})
+        wrapper.simulate('change', {target: {files: ['image1', 'image2']}})
         // expect
         // check delete step
         wrapper = component.find('#delete-step')
         wrapper.simulate('click')    
         // expect
     })
+
+    // fit('shoud test for branch where totalPrice is not a number? or the other', () => {
+    //     const stub = {'name': 'ingredient1', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
+    //     'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
+
+    //     let component = mount(createpage)
+    //     const instance = component.find(Createpage.WrappedComponent).instance()
+    //     instance.setState({selectedIngredientList: [stub]})
+    //     let wrapper = component.find('.create_fourth')
+    //     console.log(wrapper.debug())
+
+    // })
 
 })
        

@@ -100,6 +100,7 @@ class Createpage extends Component{
         let totalPrice = 0;
         let list = this.state.selectedIngredientList
         if(list.length > 0){
+            console.log("larger")
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
             for(let i = 0; i < priceList.length; i++){
                 totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
@@ -178,8 +179,8 @@ class Createpage extends Component{
         if(this.state.descriptionList.length > 0){
         displayStepList = this.state.descriptionList.map((item, index) => (
             <div key={index} className="description-list">
-                <textarea type="text" onChange={(event) => this.inputHandler(event, index)} value={this.state.descriptionList[index]} />
-                <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
+                <textarea id='step-input' type="text" onChange={(event) => this.inputHandler(event, index)} value={this.state.descriptionList[index]} />
+                <input id='step-image' type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
                 <br/>
                 <img src={this.state.imagePreviewList[index]} width='250' height='200'/>
                 <button id="delete-step" onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>

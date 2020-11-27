@@ -10,16 +10,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import * as actionCreators from '../../store/actions/index'
 import './Mealplanner.css'
-import { DragSource } from 'react-dnd';
-
-
-
 
 /////
-const isFull = (list) => {
-    let temp = list.filter((element) => element.value != 0)
-    return temp.length
-}
+
 const updateIndex = (list) => {
     let newIndex = 1;
     let temp = list.flat()
@@ -34,7 +27,7 @@ const chunk = (arr, size) =>
     );
 
 // TODO: get articles and display thumbnail
-class Mealplanner extends Component {
+export class Mealplanner extends Component {
     constructor(props) {
         super(props)
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -160,19 +153,18 @@ class Mealplanner extends Component {
         하지만 완벽하지 않음. 이 부분은 추후에 해결해야할것.
     */ 
     render() {
-        console.log(this.state)
         return (
             <div className = 'Mealplanner'>
                 <button onClick={this.clickSave}>Save</button>
                 <div className='Searchbar'>
                     <label>하한</label>
-                    <input type='number' value={this.state.min} onChange={(event) => this.setState({min: event.target.value})}/>
+                    <input id="min" type='number' value={this.state.min} onChange={(event) => this.setState({min: event.target.value})}/>
                     <label>상한</label>
-                    <input type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
+                    <input id="max" type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
 ++                    <label>Number of days</label>
-                    <input type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays} id='numOfDays'
+                    <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays} id='numOfDays'
                         onChange={(event) => this.setState({numOfDays: event.target.value})} />
-                    <button onClick={this.generateAllML}>ML Generate</button>
+                    <button onClick={() => this.generateAllML}>ML Generate</button>
                 </div>
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <div className='column'>
