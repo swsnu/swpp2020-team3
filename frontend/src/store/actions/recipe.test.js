@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as actionCreators from './recipe';
 import store from '../store';
 
-const stubRecipe = {id: 1, author_id: 1, title: "TEST_ARTICLE_TITLE", content: 'TEST_ARTICLE_CONTENT'};
+const stubRecipe = {id: 1, author_id: 1, title: "TEST_ARTICLE_TITLE", content: 'TEST_ARTICLE_CONTENT', likes: 0, liked_user: [], scrapped_user: []};
 
 describe('rcp', () => {
   afterEach(() => {
@@ -71,6 +71,24 @@ describe('rcp', () => {
     });
   });
 
+  it(`'editRecipe' should delete article correctly`, (done) => {
+    const spy = jest.spyOn(axios, 'put')
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: stubRecipe,
+          };
+          resolve(result);
+        });
+      })
+
+    store.dispatch(actionCreators.editRecipe(stubRecipe,1)).then(() => {
+      expect(spy).toHaveBeenCalledTimes(1);
+      done();
+    });
+  });
+
   it(`'createRecipe' should delete article correctly`, (done) => {
     const spy = jest.spyOn(axios, 'post')
       .mockImplementation(() => {
@@ -131,6 +149,135 @@ describe('rcp', () => {
         expect(spy).toHaveBeenCalledTimes(1);
         done();
       });
+  });
+
+  it(`'getScrappedRecipes' should delete article correctly`, (done) => {
+    const stubMLList = [stubRecipe];
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: stubMLList,
+          };
+          resolve(result);
+        });
+      })
+
+      store.dispatch(actionCreators.getScrappedRecipes()).then(() => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it(`'getMLRecipes' should delete article correctly`, (done) => {
+    const stubMLList = [stubRecipe];
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: stubMLList,
+          };
+          resolve(result);
+        });
+      })
+
+      store.dispatch(actionCreators.getMLRecipes()).then(() => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it(`'getHot' should delete article correctly`, (done) => {
+    const stubHotList = [stubRecipe];
+    const spy = jest.spyOn(axios, 'get')
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: stubHotList,
+          };
+          resolve(result);
+        });
+      })
+
+      store.dispatch(actionCreators.getHot()).then(() => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it(`'likeRecipe' should delete article correctly`, (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation((id) => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: stubRecipe,
+          };
+          resolve(result);
+        });
+      })
+
+    store.dispatch(actionCreators.likeRecipe(1)).then(() => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+    });
+  });
+
+  it(`'removelikeRecipe' should delete article correctly`, (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: null,
+          };
+          resolve(result);
+        });
+      })
+
+    store.dispatch(actionCreators.removelikeRecipe(1)).then(() => {
+      expect(spy).toHaveBeenCalledTimes(1);
+      done();
+    });
+  });
+
+  it(`'scrapRecipe' should delete article correctly`, (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation((id) => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: stubRecipe,
+          };
+          resolve(result);
+        });
+      })
+
+    store.dispatch(actionCreators.scrapRecipe(1)).then(() => {
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+    });
+  });
+
+  it(`'removescrapRecipe' should delete article correctly`, (done) => {
+    const spy = jest.spyOn(axios, 'post')
+      .mockImplementation(() => {
+        return new Promise((resolve) => {
+          const result = {
+            status: 200,
+            data: null,
+          };
+          resolve(result);
+        });
+      })
+
+    store.dispatch(actionCreators.removescrapRecipe(1)).then(() => {
+      expect(spy).toHaveBeenCalledTimes(1);
+      done();
+    });
   });
 
 
