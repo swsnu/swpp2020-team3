@@ -51,9 +51,7 @@ export class Mealplanner extends Component {
         
         // temporary function to get temp getrecipes
         this.props.getRecipes().then((res) => {
-            console.log(res);
             let new_list = res.randomRecipe.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
-            console.log(new_list)
             this.setState({scrappedRecipes: new_list})
         })
 
@@ -76,7 +74,6 @@ export class Mealplanner extends Component {
             console.log("can't make empty list")
         }
         else{
-            console.log("shift")
             let list = this.state.recipeArray;
             list.splice(index, 1)
             this.setState({recipeArray: list})
@@ -150,6 +147,10 @@ export class Mealplanner extends Component {
         }
     }
 
+    historyPush(recipe){
+        this.props.history.push(`/detail-page/${recipe.real_id}/`)
+    }
+
     /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.
         하지만 완벽하지 않음. 이 부분은 추후에 해결해야할것.
     */ 
@@ -165,7 +166,7 @@ export class Mealplanner extends Component {
 ++                    <label>Number of days</label>
                     <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays} id='numOfDays'
                         onChange={(event) => this.setState({numOfDays: event.target.value})} />
-                    <button onClick={() => this.generateAllML}>ML Generate</button>
+                    <button id="ml-generate" onClick={() => this.generateAllML()}>ML Generate</button>
                 </div>
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <div className='column'>
@@ -181,7 +182,7 @@ export class Mealplanner extends Component {
                                         {dayBlock && dayBlock.map((meal, index) => (
                                             <Draggable draggableId={`day_${ind}/meal_${index}`} index={index} key={index} >
                                                 {(provided) => (
-                                                    <div  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                                                    <div  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} id="blabl" >
                                                         <div className='singleBlock' >
                                                             {meal.thumbnail == 0 
                                                                 ? <div className='emptyImage'/>
@@ -208,7 +209,7 @@ export class Mealplanner extends Component {
                                             {(provided) => (
                                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                     <div className='scrappedRecipe'>
-                                                        <img onClick={() =>this.props.history.push(`/detail-page/${recipe.real_id}/`)} src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
+                                                        <img onClick={() =>this.historyPush(recipe)} src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
                                                     </div>
                                                 </div>
                                             )}
