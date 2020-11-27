@@ -92,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'recipick_database',
         'USER': 'root',
-        'PASSWORD': credentials['password'],
+        # 'PASSWORD': credentials['password'],
         'HOST': 'localhost',
         'PORT': '',
     }
