@@ -5,7 +5,6 @@ import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
 import {getMockStore} from '../../test-utils/mocks.js'
-import { editComment } from '../../store/actions/index.js';
 import EditDishResult from './EditDishResult'
 
 const stubState = {
