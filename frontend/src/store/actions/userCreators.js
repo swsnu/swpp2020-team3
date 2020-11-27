@@ -37,9 +37,11 @@ export const signIn = (userCredentials) => {
   }
 }
 
+/*
 const signOut_ = () => {
   return {type: actionTypes.LOGOUT}
 }
+*/
 
 export const signOut = () => {
   return dispatch => {
