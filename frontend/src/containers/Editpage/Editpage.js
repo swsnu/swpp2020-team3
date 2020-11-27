@@ -93,7 +93,6 @@ class Editpage extends Component {
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
-                    <p>Hello</p>
                     <div id = "detailBlock">
                         <EditDishResult id={this.props.match.params.id} updateState={(key,value) => this.setParentState(key, value)}/>
                         <div className='dish_method'>

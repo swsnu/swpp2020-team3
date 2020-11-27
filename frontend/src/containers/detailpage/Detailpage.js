@@ -29,6 +29,7 @@ class Detailpage extends Component {
     }
 
     isLike = () => {
+        console.log(this.props.recipe)
         if(!this.props.recipe) return 0;
         for(let id of this.props.recipe.liked_user){
             if(id==this.state.login_id){
@@ -110,8 +111,7 @@ class Detailpage extends Component {
                 )
             })
         }
-        console.log(this.isLike())
-        console.log(this.state.login_id);
+
         console.log(this.props.recipe)
         let d = null;
         if(this.props.recipe){
