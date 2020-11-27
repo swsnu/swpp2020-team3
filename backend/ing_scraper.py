@@ -56,7 +56,6 @@ def noBrandScraper():
             print(prodName)
         else:
             if(len(numbers) == 0):
-                prodName = prodName
                 prodIngType = 'unKnown'
                 prodQuantity = -1
             else:
