@@ -1,7 +1,6 @@
 import json
-with open('backend/credentials.json') as json_data:
+with open('backend/credentials_email.json') as json_data:
     credentials = json.load(json_data)
-# credentials = {'word': 'swpp2020'}
 
 # Email settings
 EMAIL = {
