@@ -7,25 +7,41 @@ import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
 import PropTypes from "prop-types";
 
+const checkOutput = (recipe) => {
+    let message = ''
+    if(recipe.title.length == 0)
+        message = message.concat('제목을 입력해주세요.\n')
+    if(recipe.thumbnail.length == 0)
+        message = message.concat('대표사진을 추가해주세요.\n')
+    if(recipe.duration.length == 0)
+        message = message.concat('조리시간을 정해주세요.\n')
+    if(recipe.ingredientList.length == 0)
+        message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
+    if(recipe.descriptionList.length == 0)
+        message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
+    
+    return message
+}
+
 // I don't think we need createstep anymore --> delete it after verfication (end-to-end) test
 class Createpage extends Component{
    state = {
-       title:'',
-       summary:'',
-       ingredient: '',
-       duration: '',
-       category: [],
+       title:'',                        // must
+       summary:'',                      // not must
+       ingredient: '',                  
+       duration: '',                    // not must
+       category: [],                    // not must
        ////////
-       descriptionList: [],
-       imageList: [],
-       imagePreviewList: [],
-       ingredientList: [],
-       ingredientListSave: [],
-       selectedIngredientList: [],
+       descriptionList: [],             // must 
+       imageList: [],                   
+       imagePreviewList: [],            // not must
+       ingredientList: [],              
+       ingredientListSave: [],          
+       selectedIngredientList: [],      // must
        //quantity: '',
        priceList: '',
        thumbnail: '',
-       thumbnailURL: '',
+       thumbnailURL: '',                // must
        // custom ingredient
         customIngrName: '',
         customIngrBrand: '',
@@ -127,8 +143,11 @@ class Createpage extends Component{
             thumbnail: state.thumbnailURL,
             date: date
         }
-
-        this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
+        let pass = checkOutput(recipe);
+        
+        if(pass.length == 0)
+            this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
+        else console.log(pass)
     }
     
     onClickChangeColor(event, param){
@@ -167,13 +186,6 @@ class Createpage extends Component{
         console.log("addingredient")
         let list = this.state.selectedIngredientList
         let amount = event.target.value
-        // was this: removed because of lint
-        // if(list[id]['amount']!=undefined){
-        //     list[id]['amount'] = parseInt(amount)
-        // }
-        // else{
-        //     list[id]['amount'] = parseInt(amount)
-        // }
         console.log(amount)
         list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
