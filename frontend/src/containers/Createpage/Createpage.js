@@ -157,9 +157,10 @@ class Createpage extends Component{
         let newList = this.state.selectedIngredientList;
         let deleted = newList.splice(index, 1)
         this.setState({selectedIngredientList: newList})
-        newList = this.state.ingredientListSave;
-        newList.push(deleted[0])
+        newList = this.state.ingredientList;
+        newList = newList.concat(deleted[0])
         console.log(deleted[0])
+        console.log(newList)
         this.setState({ingredientList: newList})
     }
     addIngredientQuantity(event, id){
@@ -184,12 +185,15 @@ class Createpage extends Component{
             name: this.state.customIngrName,
             igd_type: this.state.customIngrType,
             price: this.state.customIngrPrice,
-            amount: this.state.customIngrQuantity,
+            quantity: this.state.customIngrQuantity,
+            amount: 0,
         }
         let listSelected = this.state.selectedIngredientList
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
         listTotal = listTotal.concat(customIngr)
+        console.log(listSelected)
+        console.log(listTotal)
         this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
         customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0})
     }
@@ -229,7 +233,6 @@ class Createpage extends Component{
                 totalPrice+= isNaN(priceList[i]['price']*priceList[i]['amount'])? 0 : (priceList[i]['price']*priceList[i]['amount'])
             }
         }
-        console.log(this.state.ingredientList)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -266,9 +269,9 @@ class Createpage extends Component{
 
                             {/* horizontal로 쭉 됐으면 함 */}
                             <div id="add-custom-ingredient">
-                                <label>재료</label>
+                                <label>재료 이름</label>
                                 <input type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
-                                <label>브랜드</label>
+                                <label>브랜드명</label>
                                 <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
                                 <label>양 (상품)</label>
                                 <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>

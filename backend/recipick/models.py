@@ -32,7 +32,7 @@ class Recipe(models.Model):
         on_delete = models.SET_NULL,
         null = True,
     )
-    price = models.IntegerField()
+    price = models.IntegerField()  # 재료들의 총 가격
     duration= models.IntegerField(default='0')
     thumbnail = models.ImageField(upload_to='blog/%Y/%m/%d', null=True, default='media/already.png')
     duration= models.IntegerField()
@@ -65,7 +65,7 @@ class Recipe(models.Model):
 class ConnectRecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    amount = models.IntegerField(default=0)
+    amount = models.IntegerField(default=0)     # 해당 레시피에 들어가는 해당 재료의 양
 
 
 class Comment(models.Model):
