@@ -85,7 +85,7 @@ if __name__=='__main__':
             print(f"finish scraping {args[1]} ingredients")
             break
         temp = Ingredient.objects.create(name=ing['name'], quantity=ing['quantity'], price=ing['price'],
-                igd_type=ing['igd_type'], brand=ing['brand'], picture=ing['picture'])
+                igd_type=ing['igd_type'], brand=ing['brand'], picture=ing['picture'], price_normalized=ing['price']/ing['quantity'])
         temp.save()
 
 

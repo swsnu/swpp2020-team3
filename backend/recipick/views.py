@@ -307,6 +307,12 @@ def recipe_post(request):
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
             target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
+            # If custom made ingredient, create ingredient
+            if len(target) == 0:
+                temp = 0
+                target[0] = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], price=ing['price'], igd_type=ing['igd_type'], 
+                picture=data, quantity=ing['quantity'], price_normalized=ing['price']/ing['quantity']) # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
+                print(target[0])
             connection = ConnectRecipeIngredient(recipe=recipe, ingredient=target[0], amount=ing['amount'])
             connection.save()
         recipe.save()
