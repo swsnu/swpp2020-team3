@@ -1,3 +1,5 @@
+
+
 import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
@@ -47,7 +49,6 @@ class Createpage extends Component{
         customIngrBrand: '',
         customIngrQuantity: 0,
         customIngrPrice: 0,
-        customIngrNormPrice: 0, // 3번 타입의 재료를 위한 제품의 총 가격 변수 - 호환을 위해 hardPrice 말고 NormPrice라고 함.
         customIngrType: 0
    }
    inputHandler = this.inputHandler.bind(this);
@@ -105,7 +106,8 @@ class Createpage extends Component{
         newList.push('')
         this.setState({descriptionList: newList})
     }
-    deleteStepHandler(event, index){
+    deleteStepHandler(event){
+        let index = event.target.index
         let newDList = this.state.descriptionList;
         let newIList = this.state.imageList;
         let newPList = this.state.imagePreviewList;
@@ -197,18 +199,18 @@ class Createpage extends Component{
             brand: this.state.customIngrBrand,
             name: this.state.customIngrName,
             igd_type: this.state.customIngrType,
-            price_normalized: this.state.customIngrNormPrice,
-            price: this.state.customIngrNormPrice != 0 ? 0 : this.state.customIngrPrice,
+            price: this.state.customIngrPrice,
             quantity: this.state.customIngrQuantity,
             amount: 0,
         }
-        console.log(customIngr)
         let listSelected = this.state.selectedIngredientList
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
         listTotal = listTotal.concat(customIngr)
+        console.log(listSelected)
+        console.log(listTotal)
         this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
-        customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0, customIngrNormPrice: 0})
+        customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0})
     }
 
 
@@ -221,7 +223,7 @@ class Createpage extends Component{
                 <input id='step-image' type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
                 <br/>
                 <img src={this.state.imagePreviewList[index]} width='250' height='200'/>
-                <button id="delete-step" onClick={(event) => this.deleteStepHandler(event, index)} >Delete step</button>
+                <button id="delete-step" onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
             </div>
         ))
                         }
@@ -231,13 +233,11 @@ class Createpage extends Component{
             <div id='ingredient' key={index}>
                 {item.brand} {" | "}
                 {item.name} {" | "}
-                {console.log(item)}
-                {item.price == 0 ? '?': item.price} {`/  ${item.price == 0 ? '?': item.igd_type} | `}
+                {item.price} {" | "}
                 <input id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {item.igd_type} {" | "}
-                {item.price == 0 ? item.price_normalized :
-                isNaN(parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 : parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)+'원'} 
+                {isNaN(parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 : parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)+'원'} 
                 <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
@@ -245,14 +245,9 @@ class Createpage extends Component{
         let list = this.state.selectedIngredientList
         let priceList = []
         if(list.length > 0){
-            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount, 'quantity': entry.quantity, 'price_normalized': entry.price_normalized}))
+            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
             for(let i = 0; i < priceList.length; i++){
-                let item = priceList[i]
-                console.log(item)
-                let parsed = parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)
-                console.log(parsed)
-                totalPrice+= item.price == 0 ? item.price_normalized :
-                (isNaN(parsed) ? 0 : parsed)
+                totalPrice+= isNaN(priceList[i]['price']*priceList[i]['amount'])? 0 : (priceList[i]['price']*priceList[i]['amount'])
             }
         }
         return(
@@ -277,16 +272,15 @@ class Createpage extends Component{
                             <img src={this.state.thumbnailURL} width='250' height='200' />
                             <br/>
                             
-                            <h4>재료 추가</h4>
-                            <p>레시피에 필요한 재료를 추가해주세요! 선택란에 없다면 직접 추가하실 수 있습니다.</p>
-                            <p>사용하시는 재료가 특정 브랜드의 상품이 아니고 신선한 재료라면 (야채, 과일...) 재료명과 '제품'의 가격을 입력해주세요!</p>
-                            <p>양 (상품) 칸에는 특정 브랜드의 상품을 입력할때만 사용해주세요! 즉, 시중에 파는 상품이 아니면 건너뛰시면 됩니다!</p>
-                            <p>할 수 있다면 사용하시는 브랜드의 명과 상품의 가격 및 총량을 입력해주세요. 입력하기 귀찮으시다면 위처럼 재료명과 가격('제품'칸)에 입력해주세요.</p>
-                            <p>제품칸에 입력을 안 하시고 상품칸에 재료의 가격을 입력하게 된다면 실제 가격보다 훨씬 더 많이 측정이 됩니다 ㅠㅠ</p>
-                            <p>둘 다 입력하게 되면 '제품' 칸이 채워진거기 때문에 제품의 가격이 먹힙니다.</p>
+                            <p>재료 추가</p>
+                            {/* {this.state.ingredientList == null
+                            ? <Select options={this.props.ingredientList} 
+                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
+                            onChange={(event) => this.addSelectedIngredientHandler(event)}
+                            isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>
+                            : <Select options={this.state.ingredientList}  */}
                             {<Select options={this.state.ingredientList}
-                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${option.price == 0 ? '?' 
-                                        : (option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
+                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${(option.price/option.quantity).toFixed(2)}원/${option.igd_type})`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
 
@@ -300,12 +294,8 @@ class Createpage extends Component{
                                 <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                 <label>계량(igd_type)</label>
                                 <input type="text" value={this.state.customIngrType} onChange={(event) => this.setState({customIngrType: event.target.value})}/>
-                                <div>
-                                    <label>가격 (상품)</label>
-                                    <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
-                                    <label>가격 (제품)</label>
-                                    <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
-                                </div>
+                                <label>가격 (상품)</label>
+                                <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
                                 <button onClick={() => this.addCustomIngredient()}>재료 추가하기</button>
                             </div>
 
@@ -340,7 +330,7 @@ class Createpage extends Component{
                         <div className = 'create_fourth'>
                             <p>총 예상 가격 :   </p>
                             <h3>계산된 가격</h3>
-                            <p>{isNaN(totalPrice) ? 0 : parseFloat(totalPrice)} 원</p>
+                            <p>{isNaN(totalPrice) ? 0 : totalPrice} 원</p>
                         </div>
                         <div className = 'create_fifth'>
                             <button id='submit' onClick={() => this.submitHandler()}>Submit</button>                        
