@@ -180,7 +180,7 @@ def ingredient_list(request):
         ingredientList = []
         for ing in ingredient_list:
             ingredientList.append({'name': ing['name'], 'quantity': ing['quantity'], 
-                    'price': ing['price'], 'igd_type': ing['igd_type'], 'brand': ing['brand']})
+                    'price': ing['price'], 'igd_type': ing['igd_type'], 'brand': ing['brand'], 'price_normalized': ing['price_normalized']})
         return JsonResponse(ingredientList, safe=False)
     else:
         return HttpResponseNotAllowed(['GET'])

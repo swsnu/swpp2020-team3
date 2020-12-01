@@ -88,7 +88,7 @@ if __name__=='__main__':
             continue
         print(int(int(ing['price'])/float(ing['quantity'])))
         temp = Ingredient.objects.create(name=ing['name'], quantity=float(ing['quantity']), price=int(ing['price']),
-                igd_type=ing['igd_type'], brand=ing['brand'], picture=ing['picture'], price_normalized=int(int(ing['price'])/float(ing['quantity'])))
+                igd_type=ing['igd_type'], brand=ing['brand'], picture=ing['picture'], price_normalized=round((int(ing['price'])/float(ing['quantity']),2)))
         temp.save()
 
 

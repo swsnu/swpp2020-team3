@@ -226,14 +226,16 @@ class Createpage extends Component{
         ))
                         }
         let selectedIngredientList;
+        // item.price/item.quantity 대신에 원래는 price_normalized 사용해야하는데, 그러고 위해서는 views를 고쳐야함
         selectedIngredientList = this.state.selectedIngredientList.map((item, index) => (
             <div id='ingredient' key={index}>
-                {item.brand}
-                {item.name}
-                {item.price}
+                {item.brand} {" | "}
+                {item.name} {" | "}
+                {item.price} {" | "}
                 <input id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
-                {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
+                {item.igd_type} {" | "}
+                {isNaN(parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 : parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)+'원'} 
                 <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
@@ -258,7 +260,7 @@ class Createpage extends Component{
                             onChange={(event) => this.setState({title: event.target.value})}/>
                             <br/>
                             <p>레시피의 간단한 설명</p>
-                            <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
+                            <textarea id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
                             onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
 
@@ -276,7 +278,7 @@ class Createpage extends Component{
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>
                             : <Select options={this.state.ingredientList}  */}
                             {<Select options={this.state.ingredientList}
-                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
+                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${(option.price/option.quantity).toFixed(2)}원/${option.igd_type})`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
 
