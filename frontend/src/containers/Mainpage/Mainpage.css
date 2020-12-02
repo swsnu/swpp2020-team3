@@ -11,6 +11,7 @@ ul {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    min-width: 1500px;
 }
 
 .firstBlock, .secondBlock, .thirdBlock {
@@ -19,12 +20,14 @@ ul {
     margin-bottom:2px;
     display: block;
     width: 1000px;
+    
 }
 
 .first_list, .second_list, .third_list {
     padding-top: 20px;
     display: inline-block;
     width: 1000px;
+    min-width: 1000px;
     background-color:white;
     border-radius: 15px;
 }

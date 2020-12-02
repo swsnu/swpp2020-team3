@@ -1,0 +1,16 @@
+.reply-content-input {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 140px;
+}
+
+.create-reply-button{
+    width: 50px;
+    font-size: 12px;
+    background-color: #05b0ff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 2px;
+    font-weight: 500;
+}

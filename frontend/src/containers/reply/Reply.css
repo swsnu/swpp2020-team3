@@ -1,54 +1,43 @@
-#Comment {
+.reply {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
 }
-
-#comauthor {
-    width:250px;
+#repauthor {
+    width:200px;
     margin-top: 5px;
     margin-bottom: 15px;
-    color: #e87613;
+    color: #05b0ff;
     text-align: center;
+    font-size:15px;
     font-weight: 600;
 }
 
-#comcontent {
-    width:250px;
-    max-width:250px;
+#repcontent {
+    width:200px;
+    max-width:200px;
     text-align: center;
     overflow: auto;
     background-color: #f5f5f5;
     border:1px solid #e1e1e1;
     margin-bottom: 20px;
     padding: 5px;
+    font-size:14px;
 }
 
-#bottomline {
-    margin-top: 20px;
-    width: 300px;
-}
-
-#edit-comment-button, #delete-comment-button, #toggle-reply-button {
-    background-color: #f59278;
+#edit-reply-button, #delete-reply-button {
+    background-color: #05b0ff;
     border: none;
     color: white;
-    padding: 5px 10px;
+    padding: 4px 8px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 10px;
-    margin-bottom: 10px;
-}
-
-#commentButtons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-left: 7px;
+    margin-bottom: 7px;
 }
