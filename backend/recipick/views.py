@@ -119,6 +119,7 @@ def signup(request):
     else:
         return HttpResponseNotAllowed(['POST'])
 
+@csrf_exempt
 def signin(request):
     if request.method == 'POST':
         req_data = json.loads(request.body.decode())

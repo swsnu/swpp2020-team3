@@ -26,7 +26,7 @@ SECRET_KEY = '@$(7l20qx*j1rqu9=s@=a3ey3pmn1wa5+n_85+b&075eis0%@$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.217.98.184']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','3.217.98.184']
 
 # Base url to serve media files
 MEDIA_URL = '/media/'
@@ -148,4 +148,4 @@ EMAIL_HOST_USER = my_settings.EMAIL['EMAIL_HOST_USER']
 
 STATIC_URL = '/static/'
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+DATA_UPLOAD_MAX_MEMORY_SIZE = None
