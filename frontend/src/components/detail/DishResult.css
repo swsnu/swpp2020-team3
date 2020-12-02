@@ -1,6 +1,144 @@
-.dish_result {
-    background-color: beige;
-    width: 500;
-    height: 500;
+#detailbox1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vh;
+    padding-top: 30px;
+    padding-bottom: 30px;
     text-align: center;
+    background: white;
+    border-radius: 20px;
+    margin-bottom:20px;
+}
+
+#detailbox2{
+    
+    width: 100vh;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    text-align: left;
+    background: white;
+    border-radius: 20px;
+    margin-bottom:20px;
+}
+
+#categsplit {
+    display: block;
+    width: 15vh;
+    margin-left: 108px;
+    height: 3vh;
+}
+
+#detailbox1area1 {
+    display: flex;
+}
+
+.area1text {
+    text-align: center;
+    display: block;
+    width: 38vh;
+    padding: 10px;
+    border: solid #fcc051;
+    border-width: 4px;
+    border-radius: 10px;
+}
+
+#detailtitle {
+    font-size: 36px;
+    padding-right: 35px;
+    padding-left: 35px;
+    font-weight: bold;
+}
+
+#detailtitle2 {
+    margin-right: 450px;
+    margin-top: 40px;
+    font-size: 20px;
+    padding-right: 35px;
+    font-weight: bold;
+    text-align: left;
+}
+
+#detailtitle3 {
+    margin-left: 50px;
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left;
+}
+
+#detailthumbnail {
+    margin-left: 10px;
+}
+
+#detaillabel{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+}
+
+#detailinfo{
+    display: block;
+    text-align: left;
+    width: 30vh;
+    margin-left: 2vh;
+}
+
+#detailsummary {
+    margin-top: 20px;
+    background:#f5f5f5; 
+    border:2px solid #e1e1e1; 
+    border-radius: 10px;
+    font-size:16px; 
+    width: 78vh;
+    text-align: left;
+    padding: 10px;
+}
+
+#detailigd {
+    margin-left: 50px;
+    display:flex;
+    width : 33vh;
+    padding: 10px;
+    border: solid #fcc051;
+    border-width: 4px;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#detailigdinfo {
+    display: flex;
+    flex-direction: column;
+}
+
+#detailimg {
+    padding-left: 20px;
+}
+
+#ub {
+    background-color: #f59278; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 20px;
+    border-radius: 10px;
+}
+
+#userbuttons {
+    margin-top:-20px;
+    margin-bottom: 10px;
 }

@@ -1,0 +1,135 @@
+.ListBackground {
+    background: #f2eded;
+}
+
+.RecipeList{
+    background: #f2eded;
+    padding-top:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    line-break: normal;
+}
+.search-confirm-button{
+    display: inline-block;
+    text-align: center;
+    background-color: #fcc051;
+    border: none;
+    border-radius: 3px;
+    color: black;
+    font-weight: bold;
+    padding:5px;
+    text-decoration: none;
+    font-size: 13px;
+    width: 10vh;
+    margin-top: 2px;
+    margin-bottom: 50px;
+}
+#categoryblock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 8vh;
+    padding-bottom: 5vh;
+}
+.category-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.options {
+    
+}
+
+.search-mode-select-button {
+    display: inline-block;
+    text-align: center;
+    background-color: #fcc051;
+    border: none;
+    border-radius: 3px;
+    color: black;
+    font-weight: bold;
+    padding:5px;
+    text-decoration: none;
+    font-size: 13px;
+    width: 10vh;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+#list-option {
+    padding: 10px;
+}
+
+#option_label{
+    display: inline-block;
+    text-align: center;
+    background-color: black;
+    border: none;
+    color: #fcc051;
+    border-radius: 10px;
+    font-weight: bold;
+    padding:10px;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+#list-input {
+    padding:6px;
+    margin: 10px;
+    border:2px solid #e1e1e1;
+    border-radius: 3px;
+}
+
+.search-options {
+    background: #f2eded;
+    display: block;
+    height: 18vh;
+    width: 14vh;
+}
+
+.search-options-button {
+    display: inline-block;
+    text-align: center;
+    background-color: black;
+    border: none;
+    border-radius: 3px;
+    color: #fcc051;
+    font-weight: bold;
+    padding:6px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+    .category-select-button {
+        display: inline-block;
+        text-align: center;
+        background-color: gray;
+        border: none;
+        border-radius: 3px;
+        color: black;
+        font-weight: bold;
+        padding:8px;
+        text-decoration: none;
+        font-size: 13px;
+        margin: 5px;
+    }
+.search-options {
+    margin-top: -30px;
+}
+
+#slice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#basket {
+    display: block;
+    width:100px;
+}

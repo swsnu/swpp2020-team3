@@ -1,0 +1,221 @@
+div .CreateBackground {
+    background: #fafafa;
+}
+
+div .CreatepageBlock {
+    height: 100%;
+    background: #fafafa;
+    padding-top:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    line-break: normal;
+}
+
+div .Createpage {
+    display: block;
+    width: 120vh;
+    background: #fafafa;
+}
+
+div .Createpage label{
+    display: inline-block;
+    text-align: left;
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 117.5vh;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+div .create_first {
+    padding: 15px;
+    margin-top: 10px;
+    display: block;
+    width: 116vh;
+    background: white;
+}
+
+div .create_second {
+    padding: 15px;
+    margin-top: 10px;
+    display: block;
+    width: 116vh;
+    background: white;
+}
+
+div .create_third {
+    padding: 15px;
+    margin-top: 10px;
+    display: block;
+    width: 116vh;
+    background: white;
+}
+
+div .create_fourth {
+    padding: 15px;
+    margin-top: 10px;
+    display: block;
+    width: 116vh;
+    background: white;
+}
+
+div .create_fifth {
+    padding: 15px;
+    margin-top: 10px;
+    display: flex;
+    width: 116vh;
+    background: white;
+    justify-content: center;
+    align-items: center;
+}
+
+div .Createpage h1, p{
+  background-color: white;
+  border: none;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  padding:5px 10px;
+  margin-left: 20px;
+}
+
+#deletestep {
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 7px;
+}
+
+#deletestep:hover {
+    background-color: #d6961e
+}
+
+#recipe-title-input {
+    background:#f5f5f5; 
+    border:2px solid #e1e1e1; 
+    border-radius: 5px;
+    font-size:16px; 
+    padding-left:15px; 
+    height:30px; 
+    width: 600px;
+    vertical-align:middle; 
+    margin-top:-1px;
+    margin-left: 34px;
+}
+
+#ingredients {
+    background:#f5f5f5;
+    border:2px solid #e1e1e1; 
+    border-radius: 5px;
+    font-size:14px; 
+    padding-left:15px; 
+    height:26px; 
+    vertical-align:middle; 
+    margin-top:-1px;
+    margin-left: 50px;
+}
+
+#recipe-cooking-time-input {
+    padding-left:15px; 
+    height:26px; 
+    width: 70px;
+    vertical-align:middle; 
+    margin-top:-1px;
+    margin-left: 18px;
+    text-align:center;
+}
+
+#addStep {
+    background:#f5f5f5;
+    border:2px solid #e1e1e1;
+    color: black;
+    padding: 5px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-left: 350px
+}
+
+#addStep:hover {
+    background-color: gray;
+  }
+
+div .Createpage h3{
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    padding:5px 10px;
+}
+
+.type_first {
+    margin-left: 20px;
+}
+
+#type {
+    color: black;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 2px;
+}
+
+#submit {
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    margin: 10px;
+}
+
+#submit:hover {
+    background-color: #d6961e;
+}
+
+#recipe-summary-input {
+    background:#f5f5f5; 
+    border:2px solid #e1e1e1; 
+    border-radius: 5px;
+    font-size:16px; 
+    padding-left:15px; 
+    height:30px; 
+    width: 600px;
+    vertical-align:middle; 
+    margin-top:-1px;
+}
+
+#step {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+textarea {
+    background:#f5f5f5; 
+    border:2px solid #e1e1e1; 
+    border-radius: 5px;
+    font-size:15px; 
+    padding-left:15px; 
+    height:50px; 
+    width: 800px;
+    vertical-align:middle; 
+    margin-top: 8px;
+    margin-bottom:8px;
+}

@@ -1,0 +1,16 @@
+.DisplayRecipe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#DRTitle {
+    display: inline-block;
+    text-align: center;
+    border: none;
+    color: black;
+    width: 100px;
+    text-decoration: none;
+    font-size: 16px;
+}

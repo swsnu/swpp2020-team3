@@ -1,0 +1,86 @@
+#mypageBack {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.MyPage {
+    padding-top : 2vh;
+    width: 115vh;
+    background: white;
+    text-align: center
+}
+.left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#mypagetab {
+    background-color: #fcc051; /* Green */
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 1px;
+}
+
+.my-profile {
+    display: flex;
+    justify-content: center;
+    width: 100vh;
+    flex-direction: column;
+}
+
+#infoblock {
+    display: block;
+    text-align: left;
+}
+
+#wr{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#mylabel{
+    display: inline-block;
+    width: 90vh;
+    text-align: left;
+    font-size: 24px;
+    margin-top: 20px;
+    border-top: solid 2px;
+}
+
+#my{
+    font-size: 24px;
+    margin-top: 14px;
+    margin-right: 10px;
+}
+
+#lr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#userdetail{
+    background-color: #b5b5b5;
+    border: none;
+    color: white;
+    padding: 8px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+}

@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import { withRouter } from 'react-router-dom'
-
+import PropTypes from 'prop-types';
+import './Login.css'
 //Local imports
 import * as actionCreators from '../../../store/actions/index';
 
@@ -11,47 +10,60 @@ import * as actionCreators from '../../../store/actions/index';
 //TODO:
 //should connect to store
 class Login extends Component{
-    state = {
-        id: "",
-        password: "",
+    componentDidMount() {
+        this.props.isLogin().then(res => {
+            if(res.login_id){
+                this.props.history.push('/main-page')
+            }
+        })
+        this.setState({id: 'id', password: 'password'})
     }
+
     onClickSubmit(){
         //this.props.onSignup
         var userCredentials = this.state;
         var tempuserCredentials = {"username": userCredentials.id, "password": userCredentials.password} // this shouldn't be here
         userCredentials = tempuserCredentials; // this shouldn't be here
-        console.log(userCredentials)
-        this.props.onLogin(userCredentials)
+        this.props.onLogin(userCredentials).then((res) => {
+            if(res){
+                window.history.back();
+                this.props.isLogin();
+            }
+            else {
+                alert("Wrong username or password!");
+            } 
+        })
     }
     render(){
         return(
-            <div className="Login">
-                <form className="Login" >
-                    <label>ID</label>
-                    <input type="text" name="id" onChange={(event) => this.setState({id: event.target.value})}></input>
-                    <label>Password</label>
-                    <input type="text" name="password" onChange={(event) => this.setState({password: event.target.value})}></input>
-                </form>
-                <button onClick={()=>this.onClickSubmit()}>Submit</button>
+            <div className = 'LoginBackground'>
+                <div className="Login">
+                    <div className="Login" >
+                        <label>RECIPICK</label>
+                        <input type="text" name="id"  placeholder = "아이디" onChange={(event) => this.setState({id: event.target.value})}></input>
+                        <input type="text" name="password" placeholder = "비밀번호" onChange={(event) => this.setState({password: event.target.value})}></input>
+                        <button className="LoginButton" onClick={()=>this.onClickSubmit()}>로그인</button>
+                    </div>
+                </div>
             </div>
         )
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
-       
-    };
+        is_authenticated: state.user.is_authenticated
+    }
 }
-  
 const mapDispatchToProps = dispatch => {
     return {
         onLogin: (userCredentials) => dispatch(actionCreators.signIn(userCredentials)),
-
+        isLogin: () => dispatch(actionCreators.isLogin())
         }
     }
 
-
-
+Login.propTypes = {
+    onLogin: PropTypes.func,
+}
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Login));

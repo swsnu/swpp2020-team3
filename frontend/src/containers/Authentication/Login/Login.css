@@ -1,0 +1,52 @@
+html, body, #root, #root >div {
+    height: 95%;
+}
+
+div .LoginBackground {
+    height: 100%;
+    background-color: #fafafa;
+}
+
+div .Login {
+    padding-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    line-break: normal;
+}
+
+div .Login label {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    width: 310px;
+    height: 50px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+div .Login input {
+    color: gray;
+    width: 300px;
+    height: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div .Login  button {
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    padding: 15px 131px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+}

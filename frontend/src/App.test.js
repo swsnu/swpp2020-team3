@@ -1,9 +1,11 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import {BrowserRouter, Router, Route, Redirect, Switch} from 'react-router-dom';
+import { mount } from 'enzyme';
 import { createBrowserHistory } from 'history' ;
+import { Provider } from 'react-redux';
 
 import App from './App';
+import {getMockStore} from './test-utils/mocks'
+import Navbar from './containers/Navbar/Navbar';
 
 
 jest.mock('./containers/Createpage/Createpage', () => {
@@ -36,17 +38,22 @@ jest.mock('./containers/RecipeList/RecipeList', () => {
   })
 })
 
+const stubState = {}
+
 const history = createBrowserHistory()
+const mockStore = getMockStore(stubState)
 
 
 describe('<App />', () => {
   let app;
   beforeEach(()=>{
     app = (
-        <Router history={history}>
+      <Provider store={mockStore}>
+        
             <App history={history}>
+            <Navbar></Navbar>
             </App>
-        </Router>
+      </Provider>
     )
   })
   it('should render without errors', () => {

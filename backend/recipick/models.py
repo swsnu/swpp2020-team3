@@ -1,45 +1,72 @@
+import django
 from django.db import models
-from django.db.models import Model
-from django.contrib.auth.models import User
+from django.contrib.auth.models import (AbstractUser)
 # Create your models here.
+
+class User(AbstractUser):
+    following = models.ManyToManyField(
+        'recipick.User',
+        related_name = 'follower',
+        blank=True
+    )
+    is_active = models.BooleanField(default=False)
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=64)
-    quantity = models.FloatField()
+    quantity = models.FloatField()                    # 구매 단위!! normalized price할 때 주로 사용되고, 유저에게 한 
+                                                      # ingredient를 살 때 얼마 지불해야하는지 알리는 가격 (NOT quantity of ingredient the recipe needs)
     price = models.IntegerField()
-    price_normalized = models.IntegerField() # 좀 더 엄밀한 나눗셈 필요
+    price_normalized = models.FloatField(null=True) # 좀 더 엄밀한 나눗셈 필요
     igd_type = models.CharField(max_length=5) # 단위: 개 / g
     brand = models.CharField(max_length=64)
-    picture = models.ImageField()
+    picture = models.ImageField(null=True)
 
 class ImageModel(models.Model):
     img = models.ImageField()
-    desc_index = models.IntegerField()
+    description_index =  models.IntegerField(default=0)
 
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
-    summary = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete = models.SET_NULL,
         null = True,
     )
+    price = models.IntegerField()  # 재료들의 총 가격
+    duration= models.IntegerField(default='0')
+    thumbnail = models.ImageField(upload_to='blog/%Y/%m/%d', null=True, default='media/already.png')
+    duration= models.IntegerField()
 
-    # This should be foreign key for the one to many field. However, when we use foreign key, we can't implement list. How to handle this?
+    liked_user = models.ManyToManyField(
+        User,
+        related_name='like',
+        blank=True
+    )
+    scrapped_user = models.ManyToManyField(
+        User,
+        related_name='scrap',
+        blank=True
+    )
     photo_list = models.ManyToManyField(
         ImageModel,
     )
-    
-    description_list = models.TextField(null=True)
-    tag_list = models.TextField(null=True)
-    price = models.IntegerField()
+    description_list = models.JSONField(null=True)
+    category = models.JSONField(null=True)
     ingredient_list = models.ManyToManyField(
         Ingredient,
+        through='ConnectRecipeIngredient'
     )
-    rating = models.FloatField()
-    likes = models.IntegerField()
-    created_date = models.DateField()
-    edited = models.BooleanField()
+    rating = models.FloatField(null=True)
+    likes = models.IntegerField(null=True)
+    created_date = models.DateField(null=True)
+    edited = models.BooleanField(null=True)
+    summary = models.TextField(null=True)
+
+class ConnectRecipeIngredient(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)     # 해당 레시피에 들어가는 해당 재료의 양
+
 
 class Comment(models.Model):
     recipe = models.ForeignKey(
@@ -70,5 +97,3 @@ class Reply(models.Model):
     )
     created_date = models.DateField()
     edited = models.BooleanField()
-
-

@@ -1,28 +1,38 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
+import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { connectRouter, ConnectedRouter } from 'connected-react-router';
-import {BrowserRouter, Router, Route, Redirect, Switch} from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
+import { getMockStore } from '../../test-utils/mocks';
 
 import Navbar from './Navbar'
 
 const history = createBrowserHistory()
+
+const stubInitialState = {
+  user : {login_id: 'hello'}
+};
+const mockStore = getMockStore(stubInitialState);
 
 describe('<Navbar />', () => {
     let navBar;
   
     beforeEach(() => {
       navBar = (
-        <Router history={history}>
-            <Navbar history={history}/>
-        </Router>
-      );;
+        <Provider store={mockStore}>
+          <Router history={history}>
+              <Navbar history={history}/>
+          </Router>
+        </Provider>
+      );
+      delete window.location;
+      window.location = { reload: jest.fn() };
     })
   
     it('should render Navbar', () => {
       const component = mount(navBar);
-      const wrapper = component.find('NavBar');
+      const wrapper = component.find('.BackNavBar');
+      expect(wrapper.length).toBe(1);
     });
 
     it('should render input', () => {
@@ -52,6 +62,13 @@ describe('<Navbar />', () => {
         wrapper.simulate('click')
         expect(wrapper.length).toBe(1);
       });
+
+    it('should test categories', () => {
+      const component = mount(navBar);
+      component.find('a').forEach((wrap) => {
+        wrap.simulate('click')
+      })
+    })
 
 
 })
