@@ -6,7 +6,7 @@ import './DishResult.css'
 class DishResult extends Component {
     render() {
         const showigd = this.props.ingredients
-        const tag = this.props.tag && this.props.tag.map((tag) => <span key={tag} id='tag'>{tag} </span>)
+        // const tag = this.props.tag && this.props.tag.map((tag) => <span key={tag} id='tag'>{tag} </span>)
         let categories;
         if(this.props.category){
             categories = this.props.category.map((td) => {

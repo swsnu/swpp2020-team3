@@ -16,10 +16,7 @@ class Login extends Component{
                 this.props.history.push('/main-page')
             }
         })
-        this.state = {
-            id: 'id',
-            password: 'password',
-        }
+        this.setState({id: 'id', password: 'password'})
     }
 
     onClickSubmit(){

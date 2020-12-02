@@ -7,24 +7,47 @@ import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
 import PropTypes from "prop-types";
 
+const checkOutput = (recipe) => {
+    let message = ''
+    if(recipe.title.length == 0)
+        message = message.concat('제목을 입력해주세요.\n')
+    if(recipe.thumbnail.length == 0)
+        message = message.concat('대표사진을 추가해주세요.\n')
+    if(recipe.duration.length == 0)
+        message = message.concat('조리시간을 정해주세요.\n')
+    if(recipe.ingredientList.length == 0)
+        message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
+    if(recipe.descriptionList.length == 0)
+        message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
+    
+    return message
+}
+
 // I don't think we need createstep anymore --> delete it after verfication (end-to-end) test
 class Createpage extends Component{
    state = {
-       title:'',
-       summary:'',
-       ingredient: '',
-       duration: '',
-       category: [],
+       title:'',                        // must
+       summary:'',                      // not must
+       ingredient: '',                  
+       duration: '',                    // not must
+       category: [],                    // not must
        ////////
-       descriptionList: [],
-       imageList: [],
-       imagePreviewList: [],
-       ingredientList: null,
-       selectedIngredientList: [],
+       descriptionList: [],             // must 
+       imageList: [],                   
+       imagePreviewList: [],            // not must
+       ingredientList: [],              
+       ingredientListSave: [],          
+       selectedIngredientList: [],      // must
        //quantity: '',
        priceList: '',
        thumbnail: '',
-       thumbnailURL: ''
+       thumbnailURL: '',                // must
+       // custom ingredient
+        customIngrName: '',
+        customIngrBrand: '',
+        customIngrQuantity: 0,
+        customIngrPrice: 0,
+        customIngrType: 0
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -42,7 +65,7 @@ class Createpage extends Component{
                 }
             }
         })
-        this.props.onGetIgrList()
+        this.props.onGetIgrList().then(res => this.setState({ingredientListSave: res.ingredients, ingredientList: res.ingredients}))
     }
 
     inputHandler(event, index){
@@ -100,6 +123,7 @@ class Createpage extends Component{
         let totalPrice = 0;
         let list = this.state.selectedIngredientList
         if(list.length > 0){
+            console.log("larger")
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
             for(let i = 0; i < priceList.length; i++){
                 totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
@@ -120,8 +144,11 @@ class Createpage extends Component{
             thumbnail: state.thumbnailURL,
             date: date
         }
-
-        this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
+        let pass = checkOutput(recipe);
+        
+        if(pass.length == 0)
+            this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
+        else console.log(pass)
     }
     
     onClickChangeColor(event, param){
@@ -136,40 +163,52 @@ class Createpage extends Component{
     }
 
     addSelectedIngredientHandler(event){
-        if(this.state.ingredientList == null){
-            this.setState({ingredientList: this.props.ingredientList})
-        }
+        console.log("addselected")
         let list1 = this.state.selectedIngredientList.concat(event)
         this.setState({selectedIngredientList: list1})
-        let list2 = this.props.ingredientList
+        let list2 = this.state.ingredientListSave
         let list = list2.filter((ing) => {
             return !list1.includes(ing)
         })
         this.setState({ingredientList: list})
-        //console.log(list1)
     }
     deleteSelectedIngredientHandler(index){
+        console.log("delete")
         let newList = this.state.selectedIngredientList;
         let deleted = newList.splice(index, 1)
         this.setState({selectedIngredientList: newList})
         newList = this.state.ingredientList;
-        newList.push(deleted[0])
+        newList = newList.concat(deleted[0])
         console.log(deleted[0])
+        console.log(newList)
         this.setState({ingredientList: newList})
     }
     addIngredientQuantity(event, id){
+        console.log("addingredient")
         let list = this.state.selectedIngredientList
         let amount = event.target.value
-        // was this: removed because of lint
-        // if(list[id]['amount']!=undefined){
-        //     list[id]['amount'] = parseInt(amount)
-        // }
-        // else{
-        //     list[id]['amount'] = parseInt(amount)
-        // }
         console.log(amount)
         list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
+    }
+    addCustomIngredient(){
+        console.log("addcustom")
+        let customIngr = {
+            brand: this.state.customIngrBrand,
+            name: this.state.customIngrName,
+            igd_type: this.state.customIngrType,
+            price: this.state.customIngrPrice,
+            quantity: this.state.customIngrQuantity,
+            amount: 0,
+        }
+        let listSelected = this.state.selectedIngredientList
+        let listTotal = this.state.ingredientListSave
+        listSelected = listSelected.concat(customIngr)
+        listTotal = listTotal.concat(customIngr)
+        console.log(listSelected)
+        console.log(listTotal)
+        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
+        customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0})
     }
 
 
@@ -178,8 +217,8 @@ class Createpage extends Component{
         if(this.state.descriptionList.length > 0){
         displayStepList = this.state.descriptionList.map((item, index) => (
             <div key={index} className="description-list">
-                <textarea type="text" onChange={(event) => this.inputHandler(event, index)} value={this.state.descriptionList[index]} />
-                <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
+                <textarea id='step-input' type="text" onChange={(event) => this.inputHandler(event, index)} value={this.state.descriptionList[index]} />
+                <input id='step-image' type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
                 <br/>
                 <img src={this.state.imagePreviewList[index]} width='250' height='200'/>
                 <button id="delete-step" onClick={(event) => this.deleteStepHandler(event)} index={index}>Delete step</button>
@@ -187,14 +226,16 @@ class Createpage extends Component{
         ))
                         }
         let selectedIngredientList;
+        // item.price/item.quantity 대신에 원래는 price_normalized 사용해야하는데, 그러고 위해서는 views를 고쳐야함
         selectedIngredientList = this.state.selectedIngredientList.map((item, index) => (
             <div id='ingredient' key={index}>
-                {item.brand}
-                {item.name}
-                {item.price}
+                {item.brand} {" | "}
+                {item.name} {" | "}
+                {item.price} {" | "}
                 <input id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
-                {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
+                {item.igd_type} {" | "}
+                {isNaN(parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 : parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)+'원'} 
                 <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
@@ -207,7 +248,6 @@ class Createpage extends Component{
                 totalPrice+= isNaN(priceList[i]['price']*priceList[i]['amount'])? 0 : (priceList[i]['price']*priceList[i]['amount'])
             }
         }
-        
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -220,7 +260,7 @@ class Createpage extends Component{
                             onChange={(event) => this.setState({title: event.target.value})}/>
                             <br/>
                             <p>레시피의 간단한 설명</p>
-                            <input id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
+                            <textarea id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
                             onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
 
@@ -231,15 +271,31 @@ class Createpage extends Component{
                             <br/>
                             
                             <p>재료 추가</p>
-                            {this.state.ingredientList == null
+                            {/* {this.state.ingredientList == null
                             ? <Select options={this.props.ingredientList} 
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>
-                            : <Select options={this.state.ingredientList} 
-                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
+                            : <Select options={this.state.ingredientList}  */}
+                            {<Select options={this.state.ingredientList}
+                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${(option.price/option.quantity).toFixed(2)}원/${option.igd_type})`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
+
+                            {/* horizontal로 쭉 됐으면 함 */}
+                            <div id="add-custom-ingredient">
+                                <label>재료 이름</label>
+                                <input type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
+                                <label>브랜드명</label>
+                                <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
+                                <label>양 (상품)</label>
+                                <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
+                                <label>계량(igd_type)</label>
+                                <input type="text" value={this.state.customIngrType} onChange={(event) => this.setState({customIngrType: event.target.value})}/>
+                                <label>가격 (상품)</label>
+                                <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
+                                <button onClick={() => this.addCustomIngredient()}>재료 추가하기</button>
+                            </div>
 
                             {selectedIngredientList}
 

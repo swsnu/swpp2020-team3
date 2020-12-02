@@ -4,12 +4,10 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 
 import * as actionCreators from '../../store/actions/index';
-
 import DishResult from '../../components/detail/DishResult';
 import DishStep from '../../components/detail/DishStep';
 import Comments from '../comments/Comments';
 import './Detailpage.css'
-//import './Detailpage.css';
 
 class Detailpage extends Component {
 
@@ -29,6 +27,7 @@ class Detailpage extends Component {
     }
 
     isLike = () => {
+        console.log(this.props.recipe)
         if(!this.props.recipe) return 0;
         for(let id of this.props.recipe.liked_user){
             if(id==this.state.login_id){
@@ -87,8 +86,8 @@ class Detailpage extends Component {
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
         const author = this.props.recipe && this.props.recipe.author
-        const liked_user = this.props.recipe && this.props.recipe.liked_user
-        const scrapped_user = this.props.recipe && this.props.recipe.scrapped_user
+        // const liked_user = this.props.recipe && this.props.recipe.liked_user
+        // const scrapped_user = this.props.recipe && this.props.recipe.scrapped_user
         
 
         console.log(this.state);
@@ -110,8 +109,6 @@ class Detailpage extends Component {
                 )
             })
         }
-        console.log(this.isLike())
-        console.log(this.state.login_id);
         console.log(this.props.recipe)
         let d = null;
         if(this.props.recipe){
@@ -123,6 +120,7 @@ class Detailpage extends Component {
             <div id = 'detailBackground'>
                 <div className="Detailpage">
                     <div id = "detailBlock">
+                        {this.state.login_id}
                         {(this.state.login_id==author)?<div><button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>Edit</button>
                         <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>Delete</button></div>:null}
                         <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} 

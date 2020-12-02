@@ -13,15 +13,14 @@ const mockFunction = jest.fn(
 );
 
 export const getMockStore = (initialState) => {
-  const mockUsersReducer = mockFunction(initialState);
+  const mockUserReducer = mockFunction(initialState);
   //const mockUsersReducer = mockFunction(initialState);
   const mockRecipeReducer = mockFunction(initialState);
   const mockCommentReducer = mockFunction(initialState);
   const mockReplyReducer = mockFunction(initialState);
   const rootReducer = combineReducers({
-    users: mockUsersReducer,
+    user: mockUserReducer,
     rcp: mockRecipeReducer,
-    recipe: mockRecipeReducer,
     comment: mockCommentReducer,
     reply: mockReplyReducer,
     router: connectRouter(history),

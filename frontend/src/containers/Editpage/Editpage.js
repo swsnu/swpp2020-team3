@@ -5,11 +5,8 @@ import PropTypes from 'prop-types';
 
 import * as actionCreators from '../../store/actions/recipe';
 
-import DishResult from '../../components/detail/DishResult';
-import DishStep from '../../components/detail/DishStep';
 import Comments from '../comments/Comments';
 import EditDishResult from './EditDishResult';
-import EditDishStep from './EditDishStep';
 
 // Don't need editdishstep
 class Editpage extends Component {
@@ -75,17 +72,17 @@ class Editpage extends Component {
     }
 
     onSubmit(){
-        this.props.editRecipe(this.state, this.props.match.params.id).then((res) => this.props.history.push('/detail-page/'+this.props.match.params.id))
+        this.props.editRecipe(this.state, this.props.match.params.id).then(() => this.props.history.push('/detail-page/'+this.props.match.params.id))
         console.log(this.state)
     }
 
     render() {
         const methodData = this.state.description_list && this.state.description_list.map((item, index) => ({img: this.state.photo_list[index], explanation:item}))
         const methods = methodData && methodData.map((item, index) => 
-        <div className='edit-dish_step'>
+        <div className='edit-dish_step' key = {index}>
             <br/>
             <img src={item.img} width='600'/>
-            <input type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
+            <input id="imageHandler" type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
             <div className='dish_explanation'>
                 <input id='detailtitle' value={this.state.description_list[index]} onChange={(event) => {this.changeExplanation(event, index)}}/>
                 <button id = "delete-button" onClick={() => this.deleteStep(index)}>Delete</button>
@@ -96,7 +93,6 @@ class Editpage extends Component {
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
-                    <p>Hello</p>
                     <div id = "detailBlock">
                         <EditDishResult id={this.props.match.params.id} updateState={(key,value) => this.setParentState(key, value)}/>
                         <div className='dish_method'>
@@ -107,7 +103,7 @@ class Editpage extends Component {
                             </div>
                         </div>
 
-                        <button onClick={() => this.onSubmit()}>Submit</button>
+                        <button id="submit" onClick={() => this.onSubmit()}>Submit</button>
                     </div>
                     <Comments recipeId={parseInt(this.props.match.params.id)}/>
                 </div>

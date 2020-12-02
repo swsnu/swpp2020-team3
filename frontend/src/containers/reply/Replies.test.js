@@ -7,6 +7,7 @@ import { getMockStore } from '../../test-utils/mocks';
 import { history } from '../../store/store';
 import * as actionCreators from '../../store/actions/reply';
 import Replies from './Replies';
+import * as UserCreators from '../../store/actions/userCreators';
 
 jest.mock('./Reply', () => {
     return jest.fn(props => {
@@ -44,7 +45,7 @@ const mockStore = getMockStore(stubInitialState);
 
 describe('<Replies />', () => {
 
-    let replies, spyGetReplies, spyEditReply, spyDeleteReply, spyAddReply;
+    let replies, spyGetReplies, spyEditReply, spyDeleteReply, spyAddReply, spyIsLogin;
     beforeEach(() => {  
         replies = (
             <Provider store={mockStore}>
@@ -63,6 +64,7 @@ describe('<Replies />', () => {
         .mockImplementation(() => { return () => {}; });
         spyAddReply = jest.spyOn(actionCreators, 'addReply')
         .mockImplementation(() => { return () => {}; });
+        
     });
 
     afterEach(() => {
@@ -86,15 +88,39 @@ describe('<Replies />', () => {
     });
 
     it(`should add reply`, () => {
+        spyIsLogin = jest.spyOn(UserCreators, 'isLogin')
+        .mockImplementation(() => { return () => {
+            return Promise.resolve({login_id: 1});
+            }; 
+        });
         const component = mount(replies);
-        const content = 'TEST_CONTENT'
+        const content = 'OOOOOPS'
         let wrapper = component.find('.reply-content-input');
         wrapper.simulate('change', { target: { value: content } });
         wrapper = component.find('.create-reply-button');
         wrapper.simulate('click');
-        expect(spyAddReply).toHaveBeenCalledTimes(1);
+        expect(spyAddReply).toHaveBeenCalledTimes(0);
     });
-
+    
+    it(`should add reply2`, () => {
+        const spyHistoryPush = jest.spyOn(history, 'push')
+        .mockImplementation(() => {});
+        spyIsLogin = jest.spyOn(UserCreators, 'isLogin')
+        .mockImplementation(() => { return () => {
+            return Promise.resolve({login_id: null});
+            }; 
+        });
+        const component = mount(replies);
+        const content = 'OOOOOPS'
+        let wrapper = component.find('.reply-content-input');
+        wrapper.simulate('change', { target: { value: content } });
+        wrapper = component.find('.create-reply-button');
+        wrapper.simulate('click');
+        expect(spyAddReply).toHaveBeenCalledTimes(0);
+        expect(spyIsLogin).toHaveBeenCalledTimes(1)
+        expect(spyHistoryPush).toHaveBeenCalledTimes(0);
+    });
+    
     it(`should edit reply`, () => {
         const component = mount(replies);
         let wrapper = component.find('.spyReplyEdit');

@@ -47,7 +47,8 @@ class RecipickTestCase(TestCase):
         # Create dummy user
         User = get_user_model()
         self.user1 = User.objects.create_user(username='swpp', password='iluvswpp')
-
+        self.user1.is_active = True
+        self.user1.save()
 
     def test_csrf(self):
         # By default, csrf checks are disabled in test client
@@ -65,8 +66,12 @@ class RecipickTestCase(TestCase):
         HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 405)
 
-        response = client.post('/api/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post(
+            '/api/signup/', 
+            json.dumps({'username': 'chris', 'password': 'chris', 'email': 'gongon.snu.ac.kr'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 201)  # Pass csrf protection
         response = client.delete('/api/signup/', content_type='application/json', 
         HTTP_X_CSRFTOKEN=csrftoken) 
@@ -74,43 +79,83 @@ class RecipickTestCase(TestCase):
     def test_signin_out(self):
         client = Client(enforce_csrf_checks=True)
         response = client.get('/api/token')
-        csrftoken = response.cookies['csrftoken'].value  
         # Get csrf token from cookie
-
-
-        response = client.post('/api/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        csrftoken = response.cookies['csrftoken'].value  
+        response = client.get('/api/curuser/', HTTP_X_CSRFTOKEN=csrftoken)
+        
+        # SIGNUP: valid signup
+        response = client.post(
+            '/api/signup/', 
+            json.dumps({'username': 'chris', 'password': 'chris', 'email': 'gongon.snu.ac.kr'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 201)
-        response = client.post('/api/signin/', json.dumps({'username': 'chis', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
-        self.assertEqual(response.status_code, 401)
-        response = client.get('/api/getuser/1', HTTP_X_CSRFTOKEN=csrftoken)
-        response = client.get('/api/token')
-        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
-        response = client.post('/api/signin/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
-        self.assertEqual(response.status_code, 204)
 
+        # SIGNIN: valid signin
         response = client.get('/api/token')
-        csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
-        response = client.delete('/api/signin/', content_type='application/json', 
-        HTTP_X_CSRFTOKEN=csrftoken)
+        csrftoken = response.cookies['csrftoken'].value
+        tempuser = User.objects.get(id=10)
+        tempuser.is_active= True
+        tempuser.save()
+        response = client.post(
+            '/api/signin/',
+            json.dumps({'username': 'chris', 'password': 'chris'}),
+            content_type='application/json',
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
+        self.assertEqual(response.status_code, 204)
+        response = client.get('/api/curuser/', HTTP_X_CSRFTOKEN=csrftoken)
+
+        # SIGNIN: wrong id or password when signin
+        response = client.get('/api/token')
+        csrftoken = response.cookies['csrftoken'].value
+        response = client.post(
+            '/api/signin/', 
+            json.dumps({'username': 'chis', 'password': 'chris'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
+        self.assertEqual(response.status_code, 401)
+        
+        # GETUSER: valid getuser
+        response = client.get('/api/getuser/10/', HTTP_X_CSRFTOKEN=csrftoken)
+
+        # SIGNIN: wrong request method
+        response = client.delete(
+            '/api/signin/', 
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 405)
 
-        response = client.get('/api/signout',content_type='application/json', 
-        HTTP_X_CSRFTOKEN=csrftoken)
+        # SIGNOUT: valid signout
+        response = client.get(
+            '/api/signout/',
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
         self.assertEqual(response.status_code, 204)
-        response = client.delete('/api/signout', content_type='application/json', 
-        HTTP_X_CSRFTOKEN=csrftoken)
+
+        # SIGNOUT: wrong request method
+        response = client.delete(
+            '/api/signout/', 
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
+
+        # CURUSER: valid curuser 
+        response = client.get('/api/token')
+        csrftoken = response.cookies['csrftoken'].value
+        response = client.put(
+            '/api/getuser/9/', 
+            json.dumps({'password': 'cris'}),
+            content_type='application/json', 
+            HTTP_X_CSRFTOKEN=csrftoken
+        )
 
     def test_ingredient_post(self):
         client = Client(enforce_csrf_checks=True)
-        response = client.get('/api/token')
-        csrftoken = response.cookies['csrftoken'].value
-        response = client.post('/api/signup/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
-        response = client.post('/api/signin/', json.dumps({'username': 'chris', 'password': 'chris'}),
-                               content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
 
         response = client.get('/api/token')
         csrftoken = response.cookies['csrftoken'].value
@@ -118,6 +163,15 @@ class RecipickTestCase(TestCase):
         response = client.post('/api/ingredient', data = { "json": igd_json, "file": ContentFile("new")}, 
                                 HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 200)
+
+        response = client.get('/api/token')
+        csrftoken = response.cookies['csrftoken'].value
+        igd_json = json.dumps({'name': 'first', 'quatity':1, 'price': 1000, 'igd_type': 'g', 'brand': 'CU'})
+        response = client.post('/api/ingredient', data = { "json": igd_json, "file": ContentFile("new")}, 
+                                HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 400)
+
+        response = client.get('/api/ingredient', HTTP_X_CSRFTOKEN=csrftoken)
 
         resposne = client.get('/api/ingredient/', HTTP_X_CSRFTOKEN=csrftoken)
         resposne = client.delete('/api/ingredient/', HTTP_X_CSRFTOKEN=csrftoken)
@@ -129,6 +183,83 @@ class RecipickTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         response = client.put('/api/ingredient', data = { "json": igd_json, "file": ContentFile("new")}, 
                                 HTTP_X_CSRFTOKEN=csrftoken)
+
+    def test_recipe_page(self):
+        client = self.client
+        csrftoken = self.csrftoken
+        print(client.login(username='swpp', password='iluvswpp'))
+        rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 
+                                'thumbnail': 'data:image/png;base64,nothingblablabla',
+                                'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU'}],
+                                'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 
+                                'summary': 'test_summary', 'date': '2020-01-01'}, )
+        Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
+        response = client.post('/api/recipe/', rcp_json, content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 201)
+
+        rp_json = {
+            'American': 'true',
+            'Korean': 'true',
+            'Chinese': 'true',
+            'Japanese': 'true',
+            'ConvenienceStore': 'true',
+            'Dessert': 'true',
+
+            'minPrice' : 0,
+            'maxPrice' : 100000,
+            'minDuration' : 0,
+            'maxDuration' : 100,
+            'searchWord' : "",
+
+            'pageStart' : 0,
+            'pageNumber': 1,
+            'searchMode' : "cost",
+            'searchOptionsClicked' : 'false',
+        }
+        response = client.get('/api/recipepage/', rp_json, HTTP_X_CSRFTOKEN=csrftoken)
+
+        rp_json = {
+            'American': 'true',
+            'Korean': 'true',
+            'Chinese': 'true',
+            'Japanese': 'true',
+            'ConvenienceStore': 'true',
+            'Dessert': 'true',
+
+            'minPrice' : 0,
+            'maxPrice' : 100000,
+            'minDuration' : 0,
+            'maxDuration' : 100,
+            'searchWord' : "gon",
+
+            'pageStart' : 0,
+            'pageNumber': 1,
+            'searchMode' : "cost",
+            'searchOptionsClicked' : 'false',
+        }
+        response = client.get('/api/recipepage/', rp_json, HTTP_X_CSRFTOKEN=csrftoken)
+
+        rp_json = {
+            'American': 'true',
+            'Korean': 'true',
+            'Chinese': 'true',
+            'Japanese': 'true',
+            'ConvenienceStore': 'true',
+            'Dessert': 'true',
+
+            'minPrice' : 0,
+            'maxPrice' : 100000,
+            'minDuration' : 0,
+            'maxDuration' : 100,
+            'searchWord' : "gon",
+
+            'pageStart' : 0,
+            'pageNumber': 1,
+            'searchMode' : "likes",
+            'searchOptionsClicked' : 'false',
+        }
+        response = client.get('/api/recipepage/', rp_json, HTTP_X_CSRFTOKEN=csrftoken)
 
     def test_recipe_post(self):
         client = self.client
@@ -158,7 +289,7 @@ class RecipickTestCase(TestCase):
         rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 
                                 'thumbnail': 'data:image/png;base64,nothingblablabla',
                                 'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
-                                'ingredientList': [{'name': 'first','price':1000, 'quantity':1, 'igd_type': 'g', 'brand': 'CU'}],
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU'}],
                                 'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 
                                 'summary': 'test_summary', 'date': '2020-01-01'}, )
         Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
@@ -189,7 +320,7 @@ class RecipickTestCase(TestCase):
                                 'searchMode' : "cost", 'searchOptionsClicked' : 'false'}, HTTP_X_CSRFTOKEN=csrftoken)
 
         Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
-                                description_list='[step1, step2]', tag_list='[tag1, tag2]', category='American',
+                                description_list='[step1, step2]', category='American',
                                 summary='test_summary')
         response = client.get('/api/recipepage/', { 'category1': 'true', 'category2': 'true', 'category3': 'true', 
                                 'category4': 'true', 'category5': 'true', 'category6': 'true',
@@ -204,7 +335,7 @@ class RecipickTestCase(TestCase):
 
         rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 'thumbnail': 'data:image/png;base64,nothingblablabla',
                                 'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
-                                'ingredientList': [{'name': 'first','price':1000, 'quantity':1, 'igd_type': 'g', 'brand': 'CU'}],
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU'}],
                                 'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 
                                 'summary': 'test_summary', 'date': '2020-01-01'}, )
         Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
@@ -212,19 +343,19 @@ class RecipickTestCase(TestCase):
         self.assertEqual(response.status_code, 201)
         response = client.get('/api/random/', HTTP_X_CSRFTOKEN=csrftoken)
         Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
-                                description_list='[step1, step2]', tag_list='[tag1, tag2]', category='American',
+                                description_list='[step1, step2]', category='American',
                                 summary='test_summary')
         Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
-                                description_list='[step1, step2]', tag_list='[tag1, tag2]', category='American',
+                                description_list='[step1, step2]', category='American',
                                 summary='test_summary')
         Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
-                                description_list='[step1, step2]', tag_list='[tag1, tag2]', category='American',
+                                description_list='[step1, step2]', category='American',
                                 summary='test_summary')
         Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
-                                description_list='[step1, step2]', tag_list='[tag1, tag2]', category='American',
+                                description_list='[step1, step2]', category='American',
                                 summary='test_summary')
         response = client.get('/api/random/', HTTP_X_CSRFTOKEN=csrftoken)
-        response = client.delete('/api/recipe/2/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/recipe/3/', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 200)
         response = client.delete('/api/recipe/12/', HTTP_X_CSRFTOKEN=csrftoken)
         response = client.post('/api/recipe/13/', {'data': 'qwtq'}, HTTP_X_CSRFTOKEN=csrftoken)
@@ -260,7 +391,7 @@ class RecipickTestCase(TestCase):
 
         rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 'thumbnail': 'data:image/png;base64,nothingblablabla',
                                 'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
-                                'ingredientList': [{'name': 'first','price':1000, 'quantity':1, 'igd_type': 'g', 'brand': 'CU'}],
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU'}],
                                 'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 'summary': 'test_summary', 'date': '2020-01-01'}, )
         Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
         response = client.post('/api/recipe/', rcp_json, content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
@@ -298,28 +429,30 @@ class RecipickTestCase(TestCase):
 
         rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 'thumbnail': 'data:image/png;base64,nothingblablabla',
                                 'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
-                                'ingredientList': [{'name': 'first','price':1000, 'quantity':1, 'igd_type': 'g', 'brand': 'CU'}],
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU'}],
                                 'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 'summary': 'test_summary', 'date': '2020-01-01'}, )
         Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
         response = client.post('/api/recipe/', rcp_json, content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 201)
 
-        response = client.post('/api/recipe/1/comment/',json.dumps({'content': 'chris12452', 'edited': True, 'date':'2020-10-08'}),
+        print(Recipe.objects.all().values())
+        response = client.post('/api/recipe/10/comment/',json.dumps({'content': 'chris12452', 'edited': True, 'date':'2020-10-08'}),
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 201)
 
         response = client.get('/api/token')
         csrftoken = response.cookies['csrftoken'].value
-        response = client.post('/api/comment/1/reply/',json.dumps({'content': 'chris12452', 'edited': True, 'date':'2020-10-08'}),
+        print(Comment.objects.all().values())
+        response = client.post('/api/comment/2/reply/',json.dumps({'content': 'chris12452', 'edited': True, 'date':'2020-10-08'}),
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         self.assertEqual(response.status_code, 201)
         
         response = client.get('/api/image/', HTTP_X_CSRFTOKEN=csrftoken)
         response = client.delete('/api/image/', HTTP_X_CSRFTOKEN=csrftoken)
 
-        response = client.put('/api/comment/1/reply/',json.dumps({'content': 'c12452', 'edited': True, 'date':'2020-10-08'}),
+        response = client.put('/api/comment/2/reply/',json.dumps({'content': 'c12452', 'edited': True, 'date':'2020-10-08'}),
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
-        response = client.get('/api/comment/1/reply/')
+        response = client.get('/api/comment/2/reply/')
         self.assertEqual(response.status_code, 200)
         response = client.get('/api/reply/1/')
         self.assertEqual(response.status_code, 200)
@@ -337,6 +470,50 @@ class RecipickTestCase(TestCase):
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
         response = client.post('/api/reply/1/',json.dumps({'content': 'c12452', 'edited': True, 'date':'2020-10-08'}),
                                content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/recipe/10/', HTTP_X_CSRFTOKEN=csrftoken)
 
 
+    def test_zrecipe(self):
+        client = self.client
+        csrftoken = self.csrftoken
+        print(client.login(username='swpp', password='iluvswpp'))
+        rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 'price': 100,
+                                'thumbnail': 'data:image/png;base64,nothingblablabla',
+                                'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU', 'picture':'data:image/png;base64,nothingblablaqwrqbla'}],
+                                'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 
+                                'summary': 'test_summary', 'date': '2020-01-01'}, )
+        Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
+        response = client.post('/api/recipe/', rcp_json, content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 201)
         
+        cp_json = json.dumps({'title': 'test_title', 'duration': 100, 'price': 100,
+                                'thumbnail': 'data:image/png;base64,nothingblablabla',
+                                'description_list': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
+                                'ingredient_list': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU', 'picture':'data:image/png;base64,nothingblablaqwrqbla'}],
+                                'photo_list': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 
+                                'summary': 'test_summary', 'date': '2020-01-01'}, )
+
+        response = client.put('/api/recipe/11/', cp_json, content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 200)
+        response = client.get('/api/recipe/11/', HTTP_X_CSRFTOKEN=csrftoken)
+
+    def test_zrecipedelete(self):
+        client = self.client
+        csrftoken = self.csrftoken
+        print(client.login(username='swpp', password='iluvswpp'))
+        rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 'price': 100,
+                                'thumbnail': 'data:image/png;base64,nothingblablabla',
+                                'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU', 'picture':'data:image/png;base64,nothingblablaqwrqbla'}],
+                                'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 
+                                'summary': 'test_summary', 'date': '2020-01-01'}, )
+        Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
+        response = client.post('/api/recipe/', rcp_json, content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        self.assertEqual(response.status_code, 201)
+        
+        response = client.post('/api/recipe/12/like/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/removelike/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/scrap/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/removescrap/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.get('/api/hot/', HTTP_X_CSRFTOKEN=csrftoken)

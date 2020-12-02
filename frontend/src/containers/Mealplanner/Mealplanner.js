@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
-import PropTypes from "prop-types";
-// import { DragDropContext } from 'react-dnd';
-// import HTML5Backend from 'react-dnd-html5-backend';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 
 import * as actionCreators from '../../store/actions/index'
 import './Mealplanner.css'
-import { DragSource } from 'react-dnd';
-
-
-
 
 /////
-const isFull = (list) => {
-    let temp = list.filter((element) => element.value != 0)
-    return temp.length
-}
+
 const updateIndex = (list) => {
     let newIndex = 1;
     let temp = list.flat()
@@ -34,7 +24,7 @@ const chunk = (arr, size) =>
     );
 
 // TODO: get articles and display thumbnail
-class Mealplanner extends Component {
+export class Mealplanner extends Component {
     constructor(props) {
         super(props)
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -58,15 +48,14 @@ class Mealplanner extends Component {
         
         // temporary function to get temp getrecipes
         this.props.getRecipes().then((res) => {
-            console.log(res);
             let new_list = res.randomRecipe.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
-            console.log(new_list)
             this.setState({scrappedRecipes: new_list})
         })
 
     }
 
     addDayAbove(index) {
+        console.log(this.state.recipeArray)
         if (this.state.recipeArray.length >= 7) {
             console.log('max number is 7')
         }
@@ -83,7 +72,6 @@ class Mealplanner extends Component {
             console.log("can't make empty list")
         }
         else{
-            console.log("shift")
             let list = this.state.recipeArray;
             list.splice(index, 1)
             this.setState({recipeArray: list})
@@ -98,6 +86,7 @@ class Mealplanner extends Component {
     }
 
     onDragEnd(result) {
+        console.log("dsldkja")
         const { source, destination } = result
         // no effect movements:
         if (!destination || destination.droppableId == 'scrappedArticles' 
@@ -156,39 +145,42 @@ class Mealplanner extends Component {
         }
     }
 
+    historyPush(recipe){
+        this.props.history.push(`/detail-page/${recipe.real_id}/`)
+    }
+
     /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.
         하지만 완벽하지 않음. 이 부분은 추후에 해결해야할것.
     */ 
     render() {
-        console.log(this.state)
         return (
             <div className = 'Mealplanner'>
                 <button onClick={this.clickSave}>Save</button>
                 <div className='Searchbar'>
                     <label>하한</label>
-                    <input type='number' value={this.state.min} onChange={(event) => this.setState({min: event.target.value})}/>
+                    <input id="min" type='number' value={this.state.min} onChange={(event) => this.setState({min: event.target.value})}/>
                     <label>상한</label>
-                    <input type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
+                    <input id="max" type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
 ++                    <label>Number of days</label>
-                    <input type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays} id='numOfDays'
+                    <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
                         onChange={(event) => this.setState({numOfDays: event.target.value})} />
-                    <button onClick={this.generateAllML}>ML Generate</button>
+                    <button id="ml-generate" onClick={() => this.generateAllML()}>ML Generate</button>
                 </div>
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <div className='column'>
                     {this.state.recipeArray && this.state.recipeArray.map((dayBlock, ind) => (
-                        <div id='droppable'>
+                        <div id='droppable' key={ind}>
                             <Droppable droppableId={`day${ind}`} key={ind} direction='horizontal'> 
                             {(provided) => (
                                 <div className='day' ref={provided.innerRef} {...provided.droppableProps} style={{display : "flex"}}>
-                                    <button onClick={() => this.addDayAbove(ind)}>Add a day</button>
-                                    <button onClick={() => this.deleteDay(ind)}>Delete day</button>
+                                    <button id="addDayAbove" onClick={() => this.addDayAbove(ind)}>Add a day</button>
+                                    <button id="deleteDay" onClick={() => this.deleteDay(ind)}>Delete day</button>
                                     <button onClick={() => this.generateSingleML(ind)}>Regenerate ML for single day</button>
                                     <div id ='drag'>
                                         {dayBlock && dayBlock.map((meal, index) => (
                                             <Draggable draggableId={`day_${ind}/meal_${index}`} index={index} key={index} >
                                                 {(provided) => (
-                                                    <div  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                                                    <div  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} id="blabl" >
                                                         <div className='singleBlock' >
                                                             {meal.thumbnail == 0 
                                                                 ? <div className='emptyImage'/>
@@ -215,7 +207,7 @@ class Mealplanner extends Component {
                                             {(provided) => (
                                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                     <div className='scrappedRecipe'>
-                                                        <img onClick={() =>this.props.history.push(`/detail-page/${recipe.real_id}/`)} src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
+                                                        <img onClick={() =>this.historyPush(recipe)} src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
                                                     </div>
                                                 </div>
                                             )}
@@ -242,9 +234,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getMLRecipes: () =>
-            dispatch(actionCreators.getMLRecipes()),
-        getScrappedRecipes: () => dispatch(actionCreators.getScrappedRecipes()),
+        // getMLRecipes: () =>
+        //     dispatch(actionCreators.getMLRecipes()),
+        // getScrappedRecipes: () => dispatch(actionCreators.getScrappedRecipes()),
         getRecipes: () => dispatch(actionCreators.getRandom()) // temp for getting sample recipes
         
     }

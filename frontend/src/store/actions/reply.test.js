@@ -8,9 +8,12 @@ const stubUserList= [{"id": 1, "email": "edsger@dijkstra.com", "password": "iluv
 "name": "Edsger Dijkstra", "logged_in": true}]
 
 describe('reply', () => {
-    afterEach(() => {
-        jest.clearAllMocks();
-    })
+    // const fflushPromises = () => {
+    //     return new Promise(resolve => setImmediate(resolve));
+    // }
+    // afterEach(() => {
+    //     jest.clearAllMocks();
+    // })
 
     it('should get list of reply', async () => {
         axios.get = jest.fn(() => {
@@ -53,20 +56,22 @@ describe('reply', () => {
         await store.dispatch(replyCreators.addReply({'commentId': 1}));
         expect(axios.post).toHaveBeenCalledTimes(1);
     })
-
+    
     it('should edit reply', () => {
         axios.put = jest.fn(() => {
             return new Promise((resolve) => {
                 const result = {
                     status: 200,
+                    data: {id: 1}
                 }
                 resolve(result);
             })
         })
-        store.dispatch(replyCreators.editReply({'id': 1}));
+        store.dispatch(replyCreators.editReply({id:1}));
         expect(axios.put).toHaveBeenCalledTimes(1);
     })
-
+    
+    
     it('should delete reply', () => {
         axios.delete = jest.fn(() => {
             return new Promise((resolve) => {
@@ -79,4 +84,5 @@ describe('reply', () => {
         store.dispatch(replyCreators.deleteReply(1));
         expect(axios.delete).toHaveBeenCalledTimes(1);
     })
+    
 })

@@ -69,4 +69,11 @@ describe('<Comment/>', () => {
         expect(spyDelete).toHaveBeenCalledTimes(1);
     })
 
+    it('should not show edit to not owner', () => {
+        comment = <Comment author={1} login_id={0} replies='test_replies' id='test_id' onEditComment={(comment) => spyEdit(comment)} onDeleteComment={() => spyDelete()} />
+        const component = mount(comment);
+        let wrapper = component.find('#edit-comment-button')
+        expect(wrapper.length).toBe(0)
+    })
+
 })
