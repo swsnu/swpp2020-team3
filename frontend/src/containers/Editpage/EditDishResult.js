@@ -17,7 +17,16 @@ class EditDishResult extends Component {
         selectedIngredientList: this.props.recipe && this.props.recipe.ingredient_list,
         thumbnail_preview: this.props.recipe && 'data:image/png;base64,'+ this.props.recipe.thumbnail,
 
-        ingredientList: this.props.ingredientList,
+        ingredientListSave: this.props.ingredientList,
+        ingredientList: [],
+
+        customIngrBrand:'',
+        customIngrName: '',
+        customIngrNormPrice: 0,
+        customIngrPrice: 0,
+        customIngrQuantity: 0,
+        customIngrType: '',
+
     }
 
     componentDidMount(){
@@ -34,7 +43,7 @@ class EditDishResult extends Component {
             thumbnail_preview: 'data:image/png;base64,'+ res.thumbnail,
         })});
         this.props.onGetIgrList().then((res) => {
-            this.setState({ingredientList: res.ingredients})
+            this.setState({ingredientListSave: res.ingredients})
         })
     }
 
@@ -95,7 +104,7 @@ class EditDishResult extends Component {
         newList = this.state.ingredientList;
         
         newList.push(deleted[0])
-        this.setState({ingredientList: newList})
+        this.setState({ingredientListSave: newList})
 
         let price = this.calculatePrice()
         this.updateState('price', price)
@@ -134,6 +143,26 @@ class EditDishResult extends Component {
             console.log(this.state.category)
         }
     }
+    addCustomIngredient(){
+        console.log("addcustom")
+        let customIngr = {
+            brand: this.state.customIngrBrand,
+            name: this.state.customIngrName,
+            igd_type: this.state.customIngrType,
+            price_normalized: this.state.customIngrNormPrice,
+            price: this.state.customIngrNormPrice != 0 ? 0 : this.state.customIngrPrice,
+            quantity: this.state.customIngrQuantity,
+            amount: 0,
+        }
+        console.log(customIngr)
+        let listSelected = this.state.selectedIngredientList
+        let listTotal = this.state.ingredientListSave
+        listSelected = listSelected.concat(customIngr)
+        listTotal = listTotal.concat(customIngr)
+        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
+        customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0, customIngrNormPrice: 0})
+    }
+
 
     render() {
         let thumbnail = this.state.thumbnail_preview ? <img src={this.state.thumbnail_preview} width='250' height='200' /> : null;
@@ -231,6 +260,24 @@ class EditDishResult extends Component {
                         getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
                         onChange={(event) => this.addSelectedIngredientHandler(event)}
                         isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
+
+                        <div id="add-custom-ingredient">
+                            <label>재료 이름</label>
+                            <input type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
+                            <label>브랜드명</label>
+                            <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
+                            <label>양 (상품)</label>
+                            <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
+                            <label>계량(igd_type)</label>
+                            <input type="text" value={this.state.customIngrType} onChange={(event) => this.setState({customIngrType: event.target.value})}/>
+                            <div>
+                                <label>가격 (상품)</label>
+                                <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
+                                <label>가격 (제품)</label>
+                                <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
+                            </div>
+                            <button onClick={() => this.addCustomIngredient()}>재료 추가하기</button>
+                        </div>
 
                         {selectedIngredientList}
                     
