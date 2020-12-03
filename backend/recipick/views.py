@@ -304,35 +304,47 @@ def recipe_post(request):
         format, imgstr = thumbnail.split(';base64,')
         ext = format.split('/')[-1]
         data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        if price is None:
+            price = 0
         recipe = Recipe(author=user, title=title, price=price, duration=duration, thumbnail=data,
         description_list=d_list, category=t_list, created_date=date, summary=summary, rating=0, likes=0)
         recipe.save()
         
         # ingredients
         ingList = Ingredient.objects.all()
-        
+        newIngr = None
         for ing in ingredient_list:
+            print(ing['name'])
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
             target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
             # If custom made ingredient, create ingredient. Difference is that picture is same as thumbnail or (if the user didn't input brand and stuff)
             if len(target) == 0:
                 temp = 0
-
-                tempPicture = "carrot.png" if 1 else 'carrot.png'
+                print(ing['quantity'])
+                tempPicture = "carrot.png"
                 # if there is a hardPrice, normalized price = 0 and hardPrice is price
-                price = ing['price_normalized'] if ing['price_normalized'] else ing['price']
-                normPrice = 0 if ing['price_normalized'] else ing['price']/ing['quantity']
-
-                target[0] = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
-                price=ing['price'], igd_type=ing['igd_type'], quantity=ing['quantity'], picture=tempPicture, price_normalized=normPrice) 
-                target[0].price=price
+                price = ing['price_normalized'] if ing['price_normalized'] != 0 else ing['price']
+                normPrice = 0 if (ing['price_normalized'] or ing['quantity']==0) else ing['price']/ing['quantity']
+                quantity = float(ing['quantity'])
+                newIngr = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
+                price=price, 
+                igd_type=ing['igd_type'], 
+                quantity=quantity,
+                price_normalized=normPrice,
+                picture=tempPicture
+                ) 
+                newIngr.save()
+                
                  # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
                 
-                print(target[0])
-                target[0].save()
-            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=target[0], amount=ing['amount'])
+                print(newIngr)
+                
+            if newIngr is None:
+                newIngr = target[0]
+            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=newIngr, amount=ing['amount'])
             connection.save()
+        print(recipe)
         recipe.save()
 
         # photo_list
