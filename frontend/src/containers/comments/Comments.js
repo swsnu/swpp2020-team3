@@ -44,8 +44,11 @@ class Comments extends Component {
         return (
             <div id='scrollcomment' className='comments'>
                 {commentlist}
-                <input id='new-comment' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
-                <button id='add-comment' disabled={this.state.content==''} onClick={() => this.onAddComment()}>confirm</button>
+                <div id='newComments'>
+                    <div id='newcommentlabel'>{'새 댓글'}</div>
+                    <input id='new-comment' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
+                    <button id='add-comment' disabled={this.state.content==''} onClick={() => this.onAddComment()}>작성</button>
+                </div>
             </div>
         )
     }

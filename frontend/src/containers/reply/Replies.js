@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import * as actionCreators from '../../store/actions/index';
 import Reply from './Reply';
-
+import './Replies.css'
 class Replies extends Component {
 
     state = {
@@ -36,8 +36,9 @@ class Replies extends Component {
         return (
             <div className='replies'>
                 {replylist}
+                <hr/>
                 <input className='reply-content-input' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
-                <button className='create-reply-button' disabled={this.state.content==''} onClick={() => this.onAddReply()}>confirm</button>
+                <button className='create-reply-button' disabled={this.state.content==''} onClick={() => this.onAddReply()}>작성</button>
             </div>
         )
     }
