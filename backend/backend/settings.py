@@ -141,7 +141,7 @@ EMAIL_USE_TLS = my_settings.EMAIL['EMAIL_USE_TLS']
 EMAIL_PORT = my_settings.EMAIL['EMAIL_PORT']
 EMAIL_HOST = my_settings.EMAIL['EMAIL_HOST']
 EMAIL_HOST_USER = my_settings.EMAIL['EMAIL_HOST_USER']
-# EMAIL_HOST_PASSWORD = my_settings.EMAIL['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_PASSWORD = my_settings.EMAIL['EMAIL_HOST_PASSWORD']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
