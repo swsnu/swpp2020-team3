@@ -131,6 +131,15 @@ class Createpage extends Component{
         }
         var today = new Date(),
         date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+        let newList = this.state.selectedIngredientList.map((ing) => {
+            let dict = ing
+            dict.amount = ing.amount ? ing.amount : 0
+            console.log(dict)
+            return dict
+        })
+        console.log(newList)
+
         let recipe = {
             title: state.title,
             duration: state.duration,
@@ -140,12 +149,12 @@ class Createpage extends Component{
             category: state.category,
             prevList: state.imagePreviewList,
             summary: state.summary,
-            ingredientList: state.selectedIngredientList,
+            ingredientList: newList,
             thumbnail: state.thumbnailURL,
             date: date
         }
         let pass = checkOutput(recipe);
-        
+        console.log(recipe)
         if(pass.length == 0)
             this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
         else console.log(pass)
@@ -248,11 +257,13 @@ class Createpage extends Component{
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount, 'quantity': entry.quantity, 'price_normalized': entry.price_normalized}))
             for(let i = 0; i < priceList.length; i++){
                 let item = priceList[i]
-                console.log(item)
                 let parsed = parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)
-                console.log(parsed)
-                totalPrice+= item.price == 0 ? item.price_normalized :
-                (isNaN(parsed) ? 0 : parsed)
+                let price = item.price == 0 ? item.price_normalized : (isNaN(parsed) ? 0 : parsed)
+                console.log(price)
+                console.log(totalPrice)
+                console.log(typeof totalPrice)
+                totalPrice = parseFloat(totalPrice) + parseFloat(price)
+                console.log(totalPrice.toFixed(2))
             }
         }
         return(
