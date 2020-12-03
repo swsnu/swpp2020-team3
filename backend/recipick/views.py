@@ -124,8 +124,11 @@ def signin(request):
         req_data = json.loads(request.body.decode())
         username = req_data['username']
         password = req_data['password']
+        # added this for debugging
+        temp = User.objects.all().values().filter(username=username, password=password)
         user = auth.authenticate(request, username = username, password = password)
-        if user is not None:
+        # added this for debugging
+        if user is not None or temp is not None:
             auth.login(request, user)
             return HttpResponse(status=204)
         else:
@@ -302,17 +305,27 @@ def recipe_post(request):
         
         # ingredients
         ingList = Ingredient.objects.all()
-
+        
         for ing in ingredient_list:
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
             target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
-            # If custom made ingredient, create ingredient
+            # If custom made ingredient, create ingredient. Difference is that picture is same as thumbnail or (if the user didn't input brand and stuff)
             if len(target) == 0:
                 temp = 0
-                target[0] = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], price=ing['price'], igd_type=ing['igd_type'], 
-                picture=data, quantity=ing['quantity'], price_normalized=ing['price']/ing['quantity']) # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
+
+                tempPicture = "carrot.png" if 1 else 'carrot.png'
+                # if there is a hardPrice, normalized price = 0 and hardPrice is price
+                price = ing['price_normalized'] if ing['price_normalized'] else ing['price']
+                normPrice = 0 if ing['price_normalized'] else ing['price']/ing['quantity']
+
+                target[0] = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
+                price=ing['price'], igd_type=ing['igd_type'], quantity=ing['quantity'], picture=tempPicture, price_normalized=normPrice) 
+                target[0].price=price
+                 # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
+                
                 print(target[0])
+                target[0].save()
             connection = ConnectRecipeIngredient(recipe=recipe, ingredient=target[0], amount=ing['amount'])
             connection.save()
         recipe.save()
