@@ -30,7 +30,7 @@ class Comments extends Component {
                     this.props.history.push('/login')
                 }
             }
-            else{
+            else{ 
                 this.props.addComment({date:'2020-11-05', edited:false, content: this.state.content, recipeId: this.props.recipeId});
                 this.setState({content: ''});
             }
@@ -39,7 +39,7 @@ class Comments extends Component {
 
     render() {
         const commentlist = this.props.comments.map( (item) => 
-            <Comment login_id={this.props.login_id} key={item.id} history={this.props.history} replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} id={item.id}
+            <Comment login_id={this.props.login_id} key={item.id} history={this.props.history} replies={this.props.replies.filter((reply) => reply.comment_id==item.id)} content={item.content} author={item.author_id} name={item.author__username} id={item.id}
             onEditComment={(content) => this.props.onEditComment({id: item.id, content, edited: true})} onDeleteComment={() => this.props.onDeleteComment(item.id)}/>)
         return (
             <div id='scrollcomment' className='comments'>
