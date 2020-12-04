@@ -17,6 +17,7 @@ const reducer = (state = initialState, action) => {
         comment_id: action.reply.comment_id,
         edited: false,
         author_id: action.reply.author_id,
+        author__username: action.reply.author__username,
         id: action.reply.id
       }
       return {...state, replies: [...state.replies, newReply]}

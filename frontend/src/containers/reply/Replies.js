@@ -9,6 +9,8 @@ class Replies extends Component {
     state = {
         content: '',
         replies: null,
+        pageStart: 0,
+        pageNumber: 1,
     }
 
     constructor(props) {
@@ -27,18 +29,67 @@ class Replies extends Component {
                 this.props.addReply({date:'2020-11-05', edited:false, content: this.state.content, commentId: this.props.commentId});
                 this.setState({content: ''});
             }
-        })
-        
+        })   
     }
+
+    clickPagePreviousHandler = () => {
+        let newState={...this.state, pageStart: this.state.pageStart-5, pageNumber: this.state.pageStart-4};
+        this.setState(newState)
+    }
+
+    clickPageNumberHandler = (id) => {
+        let newState={...this.state, pageNumber: this.state.pageStart+id};
+        this.setState(newState)
+    }
+
+    clickPageNextHandler = () => {
+        let newState={...this.state, pageStart: this.state.pageStart+5, pageNumber: this.state.pageStart+6};
+        this.setState(newState);
+    }
+
+    handleKeyPress = (e) => {
+        if(e.key == 'Enter' && this.state.content!=''){
+            this.onAddReply();
+        }
+    }
+
     render() {
-        const replylist = this.props.replies.map( (item) => <Reply login_id={this.props.login_id} key={item.id} content={item.content} author={item.author_id} 
+        const reversedReplies = this.props.replies.slice().reverse();
+        const slicedReplies = reversedReplies.slice(5*(this.state.pageNumber-1), 5*(this.state.pageNumber));
+        const replylist = slicedReplies.map( (item) => <Reply login_id={this.props.login_id} key={item.id} content={item.content} name={item.author__username} author={item.author_id} 
             onEditReply={(content) => this.props.onEditReply({id: item.id, content, edited: true})} onDeleteReply={() => this.props.onDeleteReply(item.id)}/>)
         return (
             <div className='replies'>
                 {replylist}
                 <hr/>
-                <input className='reply-content-input' value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
+                <input className='reply-content-input' onKeyPress={(e) => this.handleKeyPress(e)} value={this.state.content} onChange={(e) => this.setState({content: e.target.value})}/>
                 <button className='create-reply-button' disabled={this.state.content==''} onClick={() => this.onAddReply()}>작성</button>
+                <div className = "pages">
+                    <div className = "page">
+                        {reversedReplies.length >= 1 && <p>Page</p>}
+                    </div>
+                    <div className = "row">
+                        {this.state.pageStart != 0 && reversedReplies.length >= 1 && <button className="list-page-previous-button"
+                                onClick={() => this.clickPagePreviousHandler()}>left</button>}
+                        {reversedReplies.length - 5*this.state.pageStart >= 1 && <button className="list-page-number-button"
+                                style = {{backgroundColor: this.state.pageNumber%5==1 ? "grey" : null}}
+                                onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
+                        {reversedReplies.length - 5*this.state.pageStart >= 6 && <button className="list-page-number-button"
+                                style = {{backgroundColor: this.state.pageNumber%5==2 ? "grey" : null}}
+                                onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>}
+                        {reversedReplies.length - 5*this.state.pageStart >= 11 && <button className="list-page-number-button"
+                                style = {{backgroundColor: this.state.pageNumber%5==3 ? "grey" : null}}
+                                onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>}
+                        {reversedReplies.length - 5*this.state.pageStart>= 16 && <button className="list-page-number-button"
+                                style = {{backgroundColor: this.state.pageNumber%5==4 ? "grey" : null}}
+                                onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
+                        {reversedReplies.length - 5*this.state.pageStart>= 21 && <button className="list-page-number-button"
+                                style = {{backgroundColor: this.state.pageNumber%5==0 ? "grey" : null}}
+                                onClick={() => this.clickPageNumberHandler(5)}>{this.state.pageStart+5}</button>}
+                        {reversedReplies.length - 5*this.state.pageStart>= 26 && <button className="list-page-next-button"
+                                disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
+                    </div>
+                </div>
             </div>
         )
     }

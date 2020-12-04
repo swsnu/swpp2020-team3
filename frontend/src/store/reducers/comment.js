@@ -17,6 +17,7 @@ const reducer = (state = initialState, action) => {
         recipe_id: action.comment.recipeId,
         edited: false,
         author_id: action.comment.author_id,
+        author__username: action.comment.author__username,
         id: action.comment.id
       }
       return {...state, comments: [...state.comments, newComment]}

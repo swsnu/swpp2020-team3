@@ -7,7 +7,7 @@ import * as actionCreators from '../../store/actions/recipe';
 
 import Comments from '../comments/Comments';
 import EditDishResult from './EditDishResult';
-
+import './Editpage.css'
 // Don't need editdishstep
 class Editpage extends Component {
     state = {
@@ -84,7 +84,7 @@ class Editpage extends Component {
             <img src={item.img} width='600'/>
             <input id="imageHandler" type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
             <div className='dish_explanation'>
-                <input id='detailtitle' value={this.state.description_list[index]} onChange={(event) => {this.changeExplanation(event, index)}}/>
+                <input id='detailti' value={this.state.description_list[index]} onChange={(event) => {this.changeExplanation(event, index)}}/>
                 <button id = "delete-button" onClick={() => this.deleteStep(index)}>Delete</button>
             </div>
             <br/>
@@ -99,13 +99,12 @@ class Editpage extends Component {
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
                             <div id = 'detailmethod'>
                                 {methods}
-                                <button onClick={()=> this.addStepHandler()}>Add step</button>
+                                <button id='editaddstep' onClick={()=> this.addStepHandler()}>Add step</button>
                             </div>
                         </div>
 
                         <button id="submit" onClick={() => this.onSubmit()}>Submit</button>
                     </div>
-                    <Comments recipeId={parseInt(this.props.match.params.id)}/>
                 </div>
             </div>
         )

@@ -18,14 +18,14 @@ class Reply extends Component {
            <div>
                <hr/>
                 <div className = 'reply'>
-                    <div id='repauthor'>{this.props.author}</div>
+                    <div id='repauthor'>{this.props.name}</div>
                     <div id='repcontent'>{this.props.content}</div>
                     {
                         (this.props.login_id==this.props.author)?
                         <div>
                             <button id='edit-reply-button' onClick={this.onEdit}>수정</button>
                             <button id='delete-reply-button' onClick={() => this.props.onDeleteReply()}>삭제</button>
-                        </div>:
+                        </div>: 
                         null
                     }
                 </div>

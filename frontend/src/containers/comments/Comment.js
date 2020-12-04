@@ -22,7 +22,7 @@ class Comment extends Component {
         return(
             <div>
                 <div id='Comment'>
-                    <div id='comauthor'>{this.props.author}</div>
+                    <div id='comauthor'>{this.props.name}</div>
                     <div id='comcontent'>{this.props.content}</div>
                     <div id='commentButtons'>
                         {(this.props.login_id==this.props.author)?<div><button id='edit-comment-button' onClick={this.onEdit}>수정</button>
