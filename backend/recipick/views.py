@@ -318,31 +318,24 @@ def recipe_post(request):
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
             target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
+            tar = None
             # If custom made ingredient, create ingredient. Difference is that picture is same as thumbnail or (if the user didn't input brand and stuff)
             if len(target) == 0:
                 temp = 0
                 print(ing['quantity'])
                 tempPicture = "carrot.png"
                 # if there is a hardPrice, normalized price = 0 and hardPrice is price
-                price = ing['price_normalized'] if ing['price_normalized'] != 0 else ing['price']
-                normPrice = 0 if (ing['price_normalized'] or ing['quantity']==0) else ing['price']/ing['quantity']
-                quantity = float(ing['quantity'])
-                newIngr = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
-                price=price, 
-                igd_type=ing['igd_type'], 
-                quantity=quantity,
-                price_normalized=normPrice,
-                picture=tempPicture
-                ) 
-                newIngr.save()
-                
+                price = ing['price_normalized'] if ing['price_normalized'] else ing['price']
+                normPrice = 0 if ing['price_normalized'] or ing['quantity'] == 0 else ing['price']/ing['quantity']
+
+                tar = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
+                price=price, igd_type=ing['igd_type'], quantity=ing['quantity'], picture=tempPicture, price_normalized=normPrice) 
                  # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
                 
-                print(newIngr)
-                
-            if newIngr is None:
-                newIngr = target[0]
-            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=newIngr, amount=ing['amount'])
+                tar.save()
+            if tar is None:
+                tar = target[0]
+            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=tar, amount=ing['amount'])
             connection.save()
         print(recipe)
         recipe.save()

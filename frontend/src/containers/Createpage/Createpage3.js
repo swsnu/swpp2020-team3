@@ -104,8 +104,6 @@ class Createpage extends Component{
         let newList = this.state.descriptionList
         newList.push('')
         this.setState({descriptionList: newList})
-    }
-    deleteStepHandler(event, index){
         let newDList = this.state.descriptionList;
         let newIList = this.state.imageList;
         let newPList = this.state.imagePreviewList;
@@ -118,9 +116,7 @@ class Createpage extends Component{
     }
 
     submitHandler(){
-        let state = this.state;
-
-let totalPrice = 0;
+	let totalPrice = 0;
         let list = this.state.selectedIngredientList
         let priceList = []
         if(list.length > 0){
@@ -397,5 +393,4 @@ Createpage.propTypes = {
 };
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Createpage));
-
 
