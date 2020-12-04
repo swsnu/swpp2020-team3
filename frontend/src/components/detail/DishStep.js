@@ -9,7 +9,7 @@ class DishStep extends Component {
             <div className='dish_step'>
                 <br/>
                 <img src={this.props.img} width='600'/>
-                <div className='dish_explanation'>
+                <div className='dish_explanation1'>
                     {this.props.explanation}
                 </div>
                 <br/>
