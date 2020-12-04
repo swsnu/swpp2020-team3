@@ -137,8 +137,8 @@ class Detailpage extends Component {
                 </div>
                 <div id='detailcomment'>
                     <div id='commentlabel'>{'댓글'}</div>
-                    <hr/>
-                    <Comments id='comment' login_id={this.state.login_id} history={this.props.history} recipeId={this.props.match.params.id}/>
+                    <hr />
+                    <Comments id='comment' login_id={this.state.login_id    } history={this.props.history} recipeId={this.props.match.params.id}/>
                 </div>
             </div>
         )
