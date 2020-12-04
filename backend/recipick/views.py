@@ -329,8 +329,7 @@ def recipe_post(request):
                 price=price, igd_type=ing['igd_type'], quantity=ing['quantity'], picture=tempPicture, price_normalized=normPrice) 
                  # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
                 
-                print(target[0])
-                target.save()
+                tar.save()
             if tar is None:
                 tar = target[0]
             connection = ConnectRecipeIngredient(recipe=recipe, ingredient=tar, amount=ing['amount'])
