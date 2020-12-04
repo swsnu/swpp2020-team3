@@ -23,10 +23,8 @@ class RecipeList extends Component{
         maxDuration : 100,
         searchWord : "",
 
-        pageStart : 0,
         pageNumber: 1,
         searchMode : "likes",
-        searchOptionsClicked : false,
     }
 
     
@@ -41,7 +39,6 @@ class RecipeList extends Component{
             query.Japanese = query.Japanese == 'true';
             query.ConvenienceStore = query.ConvenienceStore == 'true';
             query.Dessert = query.Dessert == 'true';
-            query.pageStart = Number(query.pageStart);
             query.pageNumber = Number(query.pageNumber);
             this.setState(query);
         }
@@ -50,10 +47,9 @@ class RecipeList extends Component{
     
     clickSearchModeHandler = searchmode => {
         this.setState({searchMode: searchmode});
-        this.setState({searchOptionsClicked: false});
     }
 
-    clickCategoryHandler = (event,id) => {
+    clickCategoryHandler = (id) => {
         if(id == 1) this.setState({American : !this.state.American});
         else if(id == 2) this.setState({Korean : !this.state.Korean});
         else if(id == 3) this.setState({Chinese : !this.state.Chinese});
@@ -68,11 +64,8 @@ class RecipeList extends Component{
         if(this.state.minPrice == '') st.minPrice=0;
         if(this.state.maxDuration == '') st.maxDuration=100;
         if(this.state.minDuration == '') st.minDuration=0;
+        st.pageNumber = 1;
         return st;
-    }
-
-    clickOptionsHandler = () => {
-        this.setState({searchOptionsClicked: !(this.state.searchOptionsClicked)});
     }
 
     clickRecipeHandler = id => {
@@ -80,7 +73,7 @@ class RecipeList extends Component{
     }
 
     getURL(st){
-        return `/search?American=${st.American}&Korean=${st.Korean}&Chinese=${st.Chinese}&Japanese=${st.Japanese}&ConvenienceStore=${st.ConvenienceStore}&Dessert=${st.Dessert}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageStart=${st.pageStart}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}&searchOptionsClicked=${st.searchOptionsClicked}`;
+        return `/search?American=${st.American}&Korean=${st.Korean}&Chinese=${st.Chinese}&Japanese=${st.Japanese}&ConvenienceStore=${st.ConvenienceStore}&Dessert=${st.Dessert}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}`;
     }
 
     clickSearchHandler = () => {
@@ -90,21 +83,24 @@ class RecipeList extends Component{
     }
 
     clickPagePreviousHandler = () => {
-        let newState={...this.state, pageStart: this.state.pageStart-5, pageNumber: this.state.pageStart-4};
+        let newPageNumber = 5*Math.floor((this.state.pageNumber-1)/5)-4;
+        let newState={...this.state,  pageNumber: newPageNumber};
         this.setState(newState)
         this.props.history.push(this.getURL(newState));
         this.props.onGetRecipes(newState);
     }
 
     clickPageNumberHandler = (id) => {
-        let newState={...this.state, pageNumber: this.state.pageStart+id};
+        let newPageNumber = 5*Math.floor((this.state.pageNumber-1)/5)+id;
+        let newState={...this.state, pageNumber: newPageNumber};
         this.setState(newState)
         this.props.history.push(this.getURL(newState));
         this.props.onGetRecipes(newState);
     }
 
     clickPageNextHandler = () => {
-        let newState={...this.state, pageStart: this.state.pageStart+5, pageNumber: this.state.pageStart+6};
+        let newPageNumber = 5*Math.floor((this.state.pageNumber-1)/5)+6;
+        let newState={...this.state, pageNumber: newPageNumber};
         this.setState(newState);
         this.props.history.push(this.getURL(newState));
         this.props.onGetRecipes(newState);
@@ -112,11 +108,14 @@ class RecipeList extends Component{
 
 
     render(){
-        let slicedRecipes;
-        if(this.state.pageNumber%5 === 0)
-            slicedRecipes = this.props.storedRecipes.slice(10*(this.state.pageNumber%5-1), 10*5);
-        else
-            slicedRecipes = this.props.storedRecipes.slice(10*(this.state.pageNumber%5-1), 10*(this.state.pageNumber%5));
+        let slicedRecipes, pageStart;
+        let quotient = Math.floor((this.state.pageNumber-1)/5);
+        let remainder = (this.state.pageNumber-1)%5;
+        pageStart = 5*Math.floor(quotient/5);
+        slicedRecipes = this.props.storedRecipes.slice(remainder*10,(remainder+1)*10)
+        
+        let tempState = this.state;
+
         const recipes = slicedRecipes.map((recipe) => {
             return (
                 <Recipe key={recipe.id}
@@ -127,10 +126,10 @@ class RecipeList extends Component{
                     cost={recipe.price}
                     likes={recipe.likes}
                     clickedRecipe={() => this.clickRecipeHandler(recipe.id)}
-                    clickedLikes={null}
                 />
             );
         });
+
         return(
             <div className = "RecipeList">
                 <div className = "category-search">
@@ -139,19 +138,19 @@ class RecipeList extends Component{
                             <label id='option_label'>카테고리</label>
                             <div className = "row">
                                 <button className="category-select-button" style = {{backgroundColor: this.state.American ? "#fcc051" : null}}
-                                    onClick={(event) => this.clickCategoryHandler(event,1)}>양식</button>
+                                    onClick={() => this.clickCategoryHandler(1)}>양식</button>
                                 <button className="category-select-button" style = {{backgroundColor: this.state.Korean ? "#fcc051" : null}}
-                                    onClick={(event) => this.clickCategoryHandler(event,2)}>한식</button>
+                                    onClick={() => this.clickCategoryHandler(2)}>한식</button>
                                 <button className="category-select-button" style = {{backgroundColor: this.state.Chinese ? "#fcc051" : null}}
-                                    onClick={(event) => this.clickCategoryHandler(event,3)}>중식</button>
+                                    onClick={() => this.clickCategoryHandler(3)}>중식</button>
                             </div>
                             <div className = "row">
                                 <button className="category-select-button" style = {{backgroundColor: this.state.Japanese ? "#fcc051" : null}}
-                                    onClick={(event) => this.clickCategoryHandler(event,4)}>일식</button>
+                                    onClick={() => this.clickCategoryHandler(4)}>일식</button>
                                 <button className="category-select-button" style = {{backgroundColor: this.state.ConvenienceStore ? "#fcc051" : null}}
-                                onClick={(event) => this.clickCategoryHandler(event,5)}>편의점</button>
+                                onClick={() => this.clickCategoryHandler(5)}>편의점</button>
                                 <button className="category-select-button" style = {{backgroundColor: this.state.Dessert ? "#fcc051" : null}}
-                                onClick={(event) => this.clickCategoryHandler(event,6)}>디저트</button>
+                                onClick={() => this.clickCategoryHandler(6)}>디저트</button>
                             </div>
                         </div>
                         <div className = "constraints">
@@ -177,7 +176,7 @@ class RecipeList extends Component{
                         </div>
                         <div className = "search-options" id = "list-option">
                                 <div className = "options">
-                                    <button className ="search-options-button" onClick={() => this.clickOptionsHandler()}>분류</button>
+                                    <div className ="search-options-button">분류</div>
                                     {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
                                             onClick={() => this.clickSearchModeHandler("likes")}>좋아요순</button>}
                                     {this.state.searchOptionsClicked && <button className ="search-mode-select-button"
@@ -200,23 +199,23 @@ class RecipeList extends Component{
                         {this.props.storedRecipes.length >= 1 && <p>Page</p>}
                     </div>
                     <div className = "row">
-                        {this.state.pageStart != 0 && this.props.storedRecipes.length >= 1 && <button className="list-page-previous-button"
+                        {pageStart != 0 && this.props.storedRecipes.length >= 1 && <button className="list-page-previous-button"
                                 onClick={() => this.clickPagePreviousHandler()}>left</button>}
                         {this.props.storedRecipes.length >= 1 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==1 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
+                                onClick={() => this.clickPageNumberHandler(1)}>{pageStart+1}</button>}
                         {this.props.storedRecipes.length >= 11 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==2 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>}
+                                onClick={() => this.clickPageNumberHandler(2)}>{pageStart+2}</button>}
                         {this.props.storedRecipes.length >= 21 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==3 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>}
+                                onClick={() => this.clickPageNumberHandler(3)}>{pageStart+3}</button>}
                         {this.props.storedRecipes.length >= 31 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==4 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
+                                onClick={() => this.clickPageNumberHandler(4)}>{pageStart+4}</button>}
                         {this.props.storedRecipes.length >= 41 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.pageNumber%5==0 ? "grey" : null}}
-                                onClick={() => this.clickPageNumberHandler(5)}>{this.state.pageStart+5}</button>}
+                                onClick={() => this.clickPageNumberHandler(5)}>{pageStart+5}</button>}
                         {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
                                 disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
                     </div>
