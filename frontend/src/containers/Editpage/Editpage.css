@@ -1,0 +1,18 @@
+#detailti{
+    font-size:16px;
+    padding: 5px;
+    margin-top: 15px;
+    width: 580px;
+}
+
+#editaddstep, #submit{
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    margin: 15px;
+    font-size: 18px;
+}
