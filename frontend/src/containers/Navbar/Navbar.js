@@ -25,8 +25,8 @@ class Navbar extends Component{
             maxPrice: this.state.maxPrice == '' ? 100000 : this.state.maxPrice,
             minDuration: 0, maxDuration: 100,
             searchWord: this.state.keyword,
-            pageStart: 0, pageNumber: 1,
-            searchMode: 'likes', searchOptionsClicked: false,
+            pageNumber: 1,
+            searchMode: 'likes',
         }
         this.props.history.push(this.getURL(query));
         window.location.reload();
@@ -41,15 +41,15 @@ class Navbar extends Component{
             maxPrice: this.state.maxPrice == '' ? 100000 : this.state.maxPrice,
             minDuration: 0, maxDuration: 100,
             searchWord: this.state.keyword,
-            pageStart: 0, pageNumber: 1,
-            searchMode: 'likes', searchOptionsClicked: false,
+            pageNumber: 1,
+            searchMode: 'likes',
         }
         this.props.history.push(this.getURL(query));
         window.location.reload();
     }
 
     getURL(st){
-        return `/search?American=${st.American}&Korean=${st.Korean}&Chinese=${st.Chinese}&Japanese=${st.Japanese}&ConvenienceStore=${st.ConvenienceStore}&Dessert=${st.Dessert}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageStart=${st.pageStart}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}&searchOptionsClicked=${st.searchOptionsClicked}`;
+        return `/search?American=${st.American}&Korean=${st.Korean}&Chinese=${st.Chinese}&Japanese=${st.Japanese}&ConvenienceStore=${st.ConvenienceStore}&Dessert=${st.Dessert}&minPrice=${st.minPrice}&maxPrice=${st.maxPrice}&minDuration=${st.minDuration}&maxDuration=${st.maxDuration}&searchWord=${st.searchWord}&pageNumber=${st.pageNumber}&searchMode=${st.searchMode}`;
     }
 
     render(){

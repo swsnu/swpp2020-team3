@@ -97,7 +97,7 @@ def signup(request):
         username = req_data['username']
         password = req_data['password']
         email = req_data['email']
-        user = User.objects.create_user(username = username, password = password)
+        user = User.objects.create_user(username = username, password = password, email=email)
         user.is_active = False
         user.save()
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
@@ -195,7 +195,8 @@ def recipe_page(request):
         max_cost = int(request.GET.get('maxPrice'))
         min_time = int(request.GET.get('minDuration'))
         max_time = int(request.GET.get('maxDuration'))
-        page_start = int(request.GET.get('pageStart'))
+        page_number = int(request.GET.get('pageNumber'))
+        page_start = int((page_number-1)/5)*5
         search_mode = request.GET.get('searchMode')
         search_word = request.GET.get('searchWord')
         category_query = Q(category__contains = "dummy category")
