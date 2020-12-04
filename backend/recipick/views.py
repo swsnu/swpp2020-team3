@@ -322,18 +322,15 @@ def recipe_post(request):
             # If custom made ingredient, create ingredient. Difference is that picture is same as thumbnail or (if the user didn't input brand and stuff)
             if len(target) == 0:
                 temp = 0
-                print(ing['quantity'])
                 tempPicture = "carrot.png"
-                # if there is a hardPrice, normalized price = 0 and hardPrice is price
-                price = ing['price_normalized'] if ing['price_normalized'] else ing['price']
                 if ing['quantity'] == '':
                     quantity = 0
                 else:
-                    quantity = 0
-                normPrice = 0 if ing['price_normalized'] or quantity == 0 else ing['price']/float(ing['quantity'])
+                    quantity = ing['quantity']
+                # normPrice = 0 if ing['price_normalized'] == 0 else 1
 
                 tar = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
-                price=price, igd_type=ing['igd_type'], quantity=quantity, picture=tempPicture, price_normalized=normPrice) 
+                price=ing['price'], igd_type=ing['igd_type'], quantity=quantity, picture=tempPicture, price_normalized=ing['price_normalized']) 
                  # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
                 
                 tar.save()
