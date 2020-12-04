@@ -306,7 +306,7 @@ def recipe_post(request):
         data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
         recipe = Recipe(author=user, title=title, price=price, duration=duration, thumbnail=data,
         description_list=d_list, category=t_list, created_date=date, summary=summary, rating=0, likes=0)
-        recipe.save()
+        recipe.save()  
         
         # ingredients
         ingList = Ingredient.objects.all()
@@ -323,10 +323,14 @@ def recipe_post(request):
                 tempPicture = "carrot.png" if 1 else 'carrot.png'
                 # if there is a hardPrice, normalized price = 0 and hardPrice is price
                 price = ing['price_normalized'] if ing['price_normalized'] else ing['price']
-                normPrice = 0 if ing['price_normalized'] or ing['quantity'] == 0 else ing['price']/ing['quantity']
+                if ing['quantity'] == '':
+                    quantity = 0
+                else:
+                    quantity = 0
+                normPrice = 0 if ing['price_normalized'] or quantity == 0 else ing['price']/float(ing['quantity'])
 
                 tar = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
-                price=price, igd_type=ing['igd_type'], quantity=ing['quantity'], picture=tempPicture, price_normalized=normPrice) 
+                price=price, igd_type=ing['igd_type'], quantity=quantity, picture=tempPicture, price_normalized=normPrice) 
                  # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
                 
                 tar.save()
@@ -334,7 +338,7 @@ def recipe_post(request):
                 tar = target[0]
             connection = ConnectRecipeIngredient(recipe=recipe, ingredient=tar, amount=ing['amount'])
             connection.save()
-        recipe.save()
+        recipe.save(force_update=True)
 
         # photo_list
         cnt = 0;
