@@ -343,12 +343,11 @@ def recipe_post(request):
         # photo_list
         cnt = 0;
         for img_64 in p_list:
-            format, imgstr = img_64.split(';base64,')
-            _name, ext = format.split('/')[-1]
+            _format, imgstr = img_64.split(';base64,')
+            ext = _format.split('/')[-1]
+            print(user.id)
+            data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
             
-            name = _name.split(":")[-1]
-            print(name)
-            data = ContentFile(base64.b64decode(imgstr), name='{}.{}'.format(name, ext))
             new_img = ImageModel.objects.create(img=data, description_index=cnt)
             recipe.photo_list.add(new_img)
             cnt = cnt + 1
