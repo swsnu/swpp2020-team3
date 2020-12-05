@@ -58,12 +58,11 @@ const totalPriceCalculator = (list ) => {
             priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount, 'quantity': entry.quantity, 'price_normalized': entry.price_normalized}))
             for(let i = 0; i < priceList.length; i++){
                 let item = priceList[i]
+
+                let price = item.price ? item.price : 0
+                let flag = item.price_normalized
+                console.log(item)
                 let parsed = parseFloat(item.amount * (item.quantity == 0 ? 0 : item.price/item.quantity).toFixed(2)).toFixed(2)
-                console.log(item.price)
-                console.log(parsed)
-                console.log(item.price_normalized)
-                let price = item.price == 0 ? item.price_normalized : (isNaN(parsed) ? 0 : parsed)
-                console.log(price)
                 console.log(totalPrice)
                 console.log(typeof totalPrice)
                 totalPrice = parseFloat(totalPrice) + parseFloat(price)
@@ -99,7 +98,8 @@ class Createpage extends Component{
         customIngrQuantity: 0,
         customIngrPrice: 0,
         customIngrNormPrice: 0, // 3번 타입의 재료를 위한 제품의 총 가격 변수 - 호환을 위해 hardPrice 말고 NormPrice라고 함.
-        customIngrType: 0
+        customIngrType1: 'g',
+        customIngrType0: 'g'
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -174,7 +174,7 @@ class Createpage extends Component{
     
         var today = new Date(),
         date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-
+        
         let recipe = {
             title: state.title,
             duration: state.duration,
@@ -235,21 +235,23 @@ class Createpage extends Component{
         this.setState({selectedIngredientList: list})
     }
     addCustomIngredient(show){
+        console.log(this.state.customIngrType)
+        let ingrPrice = this.state.customIngrPrice!=undefined ? this.state.customIngrPrice : 0
         let customIngr = {
             brand: this.state.customIngrBrand,
             name: this.state.customIngrName1 ? this.state.customIngrName1 : this.state.customIngrName0,
-            igd_type: this.state.customIngrType,
+            igd_type: this.state.customIngrType1? this.state.customIngrType1 : this.state.customIngrType0,
             price_normalized: show,
-            price: show == 1 ? this.state.customIngrPrice : this.state.price_normalized,
-            quantity: this.state.customIngrQuantity,
+            price: show == 1 ? parseInt(ingrPrice) : parseInt(this.state.customIngrNormPrice),
+            quantity: parseFloat(this.state.customIngrQuantity),
             amount: 0,
         }
         let listSelected = this.state.selectedIngredientList
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
         listTotal = listTotal.concat(customIngr)
-        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
-        customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0, customIngrNormPrice: 0})
+        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName1: '', customIngrName0: '', customIngrBrand: '',
+        customIngrQuantity: 0, customIngrPrice: 0,  customIngrNormPrice: 0, customIngrType1: 'g', customIngrType0: 'g'})
     }
 
 
@@ -273,17 +275,18 @@ class Createpage extends Component{
                 {item.brand} {" | "}
                 {item.name} {" | "}
                 {console.log(item)}
-                {item.price == 0 ? '?': item.price} {`/  ${item.price == 0 ? '?': item.igd_type} | `}
-                {console.log("hello")}
-                {console.log(this.state.selectedIngredientList[index].amount)}
+                {item.price==undefined?0:item.price} {`per  ${item.igd_type} | `}
                 <input id={index} type='number' min="0" placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {item.igd_type} {" | "}
-                {item.price == 0 ? item.price_normalized :
-                isNaN(parseFloat(item.amount * (item.quantity == 0 ? 0 
-                : item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 
-                : parseFloat(item.amount * (item.quantity == 0 ? 0 
-                : item.price/item.quantity).toFixed(2)).toFixed(2)+'원'} 
+                {
+                item.price_normalized == 0 ? item.price :
+                parseFloat(item.amount * (item.quantity == 0 ? 0 : parseFloat((item.price/item.quantity).toFixed(2)).toFixed(2))).toFixed(2)}
+
+                {/* // isNaN(parseFloat(item.amount * (item.quantity == 0 ? 0 
+                // : item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 
+                // : parseFloat(item.amount * (item.quantity == 0 ? 0 
+                // : item.price/item.quantity).toFixed(2)).toFixed(2)+'원'}  */}
                 <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
@@ -332,7 +335,7 @@ class Createpage extends Component{
                                 <label>양 (상품)</label>
                                 <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                 <label>계량(igd_type)</label>
-                                <input type="text" value={this.state.customIngrType} onChange={(event) => this.setState({customIngrType: event.target.value})}/>
+                                <input type="text" value={this.state.customIngrType1} onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
                                 <label>가격 (상품)</label>
                                 <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
                                 <button onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>
@@ -341,10 +344,11 @@ class Createpage extends Component{
                                 <label>재료 이름</label>
                                 <input type="text" value={this.state.customIngrName0} onChange={(event) => this.setState({customIngrName0: event.target.value})}/>
                                 <label>계량(igd_type)</label>
-                                <input type="text" value={this.state.customIngrType} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType: event.target.value})}/>
+                                <input type="text" value={this.state.customIngrType0} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType0: event.target.value})}/>
                                 <label>가격 (제품)</label>
                                 <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
                                 <button onClick={() => this.addCustomIngredient(0)}>재료 추가하기</button>
+                                
                             </div>
 
                             {selectedIngredientList}
