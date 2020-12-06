@@ -275,7 +275,6 @@ def image(request):
         return HttpResponseNotAllowed(['GET'])
 
 
-
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
         user = request.user
@@ -304,7 +303,7 @@ def recipe_post(request):
             price = 0
         recipe = Recipe(author=user, title=title, price=price, duration=duration, thumbnail=data,
         description_list=d_list, category=t_list, created_date=date, summary=summary, rating=0, likes=0)
-        recipe.save()
+        recipe.save()  
         
         # ingredients
         ingList = Ingredient.objects.all()
@@ -314,34 +313,27 @@ def recipe_post(request):
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
             target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
+            tar = None
             # If custom made ingredient, create ingredient. Difference is that picture is same as thumbnail or (if the user didn't input brand and stuff)
             if len(target) == 0:
                 temp = 0
-                print(ing['quantity'])
                 tempPicture = "carrot.png"
-                # if there is a hardPrice, normalized price = 0 and hardPrice is price
-                price = ing['price_normalized'] if ing['price_normalized'] != 0 else ing['price']
-                normPrice = 0 if (ing['price_normalized'] or ing['quantity']==0) else ing['price']/ing['quantity']
-                quantity = float(ing['quantity'])
-                newIngr = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
-                price=price, 
-                igd_type=ing['igd_type'], 
-                quantity=quantity,
-                price_normalized=normPrice,
-                picture=tempPicture
-                ) 
-                newIngr.save()
-                
+                if ing['quantity'] == '':
+                    quantity = 0
+                else:
+                    quantity = ing['quantity']
+                # normPrice = 0 if ing['price_normalized'] == 0 else 1
+
+                tar = Ingredient.objects.create(name=ing['name'], brand=ing['brand'], 
+                price=ing['price'], igd_type=ing['igd_type'], quantity=quantity, picture=tempPicture, price_normalized=ing['price_normalized']) 
                  # made an ingredient with picture of thumbnail, should change this to an agreed upon image file
                 
-                print(newIngr)
-                
-            if newIngr is None:
-                newIngr = target[0]
-            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=newIngr, amount=ing['amount'])
+                tar.save()
+            if tar is None:
+                tar = target[0]
+            connection = ConnectRecipeIngredient(recipe=recipe, ingredient=tar, amount=ing['amount'])
             connection.save()
-        print(recipe)
-        recipe.save()
+        recipe.save(force_update=True)
 
         # photo_list
         cnt = 0;
@@ -349,7 +341,8 @@ def recipe_post(request):
             _format, imgstr = img_64.split(';base64,')
             ext = _format.split('/')[-1]
             print(user.id)
-            data = ContentFile(base64.b64decode(imgstr), name='{}{}{}.{}'.format(recipe.id,user.id,cnt, ext))
+            data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
+            
             new_img = ImageModel.objects.create(img=data, description_index=cnt)
             recipe.photo_list.add(new_img)
             cnt = cnt + 1
@@ -358,6 +351,8 @@ def recipe_post(request):
         return JsonResponse(return_id, status = 201)
     else:
         return HttpResponseNotAllowed(['POST'])
+
+
 
 def hotrecipe(request):
     if request.method == 'GET':
