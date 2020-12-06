@@ -98,7 +98,7 @@ def signup(request):
         username = req_data['username']
         password = req_data['password']
         email = req_data['email']
-        user = User.objects.create_user(username = username, password = password)
+        user = User.objects.create_user(username = username, password = password, email=email)
         user.is_active = False
         user.save()
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
@@ -200,7 +200,8 @@ def recipe_page(request):
         max_cost = int(request.GET.get('maxPrice'))
         min_time = int(request.GET.get('minDuration'))
         max_time = int(request.GET.get('maxDuration'))
-        page_start = int(request.GET.get('pageStart'))
+        page_number = int(request.GET.get('pageNumber'))
+        page_start = int((page_number-1)/5)*5
         search_mode = request.GET.get('searchMode')
         search_word = request.GET.get('searchWord')
         category_query = Q(category__contains = "dummy category")
@@ -279,7 +280,6 @@ def image(request):
         return HttpResponseNotAllowed(['GET'])
 
 
-
 def recipe_post(request):
     if request.method == 'POST': # only allowed method, else --> 405
         user = request.user
@@ -356,6 +356,8 @@ def recipe_post(request):
         return JsonResponse(return_id, status = 201)
     else:
         return HttpResponseNotAllowed(['POST'])
+
+
 
 def hotrecipe(request):
     if request.method == 'GET':
@@ -608,7 +610,7 @@ def recipe(request, id):
 def recipe_comment(request, id):
     if request.method == 'GET':
         recipe = Recipe.objects.get(id= id)
-        comment = [comment for comment in Comment.objects.filter(recipe = recipe).values()]
+        comment = [comment for comment in Comment.objects.filter(recipe = recipe).values('id', 'recipe_id', 'content', 'author_id', 'author__username', 'created_date', 'edited')]
         return JsonResponse(comment, safe=False, status=200)
     elif request.method == 'POST':
         req_data = json.loads(request.body.decode())
@@ -620,14 +622,14 @@ def recipe_comment(request, id):
         recipe = Recipe.objects.get(id= id)
         comment = Comment(recipe = recipe, content = content, author = author, edited = edited, created_date = date)
         comment.save()
-        response_dict = {'id': comment.id, 'content': comment.content, 'author_id': comment.author_id, 'recipe_id': comment.recipe_id, 'edited': comment.edited, 'created_date': comment.created_date}
+        response_dict = {'id': comment.id, 'content': comment.content, 'author_id': author.id, 'author__username': author.username, 'recipe_id': comment.recipe_id, 'edited': comment.edited, 'created_date': comment.created_date}
         return JsonResponse(response_dict, status=201, safe = False)
     else: 
         return HttpResponseNotAllowed(['GET', 'POST'])
 
 def comment(request, id):
     if request.method == 'GET':
-        comment = [comment for comment in Comment.objects.filter(id= id).values()]
+        comment = [comment for comment in Comment.objects.filter(id= id).values('id', 'recipe_id', 'content', 'author_id', 'author__username', 'created_date', 'edited')]
         return JsonResponse(comment, safe=False, status=200)
     elif request.method == 'PUT':
         body = request.body.decode()
@@ -659,7 +661,7 @@ def comment(request, id):
 def comment_reply(request, id):
     if request.method == 'GET':
         comment = Comment.objects.get(id= id)
-        reply = [reply for reply in Reply.objects.filter(comment = comment).values()]
+        reply = [reply for reply in Reply.objects.filter(comment = comment).values('id', 'comment_id', 'content', 'author_id', 'author__username', 'created_date', 'edited')]
         return JsonResponse(reply, safe=False, status=200)
     elif request.method == 'POST':
         req_data = json.loads(request.body.decode())
@@ -671,14 +673,14 @@ def comment_reply(request, id):
         comment = Comment.objects.get(id= id)
         reply = Reply(comment = comment, content = content, author = author, edited = edited, created_date = date)
         reply.save()
-        response_dict = {'id': reply.id, 'content': reply.content, 'author_id': reply.author_id, 'comment_id': reply.comment_id, 'edited': reply.edited, 'created_date': reply.created_date}
+        response_dict = {'id': reply.id, 'content': reply.content, 'author_id': author.id, 'author__username': reply.author.username, 'comment_id': reply.comment_id, 'edited': reply.edited, 'created_date': reply.created_date}
         return JsonResponse(response_dict, status=201, safe = False)
     else: 
         return HttpResponseNotAllowed(['GET', 'POST'])
 
 def reply(request, id):
     if request.method == 'GET':
-        reply = [reply for reply in Reply.objects.filter(id= id).values()]
+        reply = [reply for reply in Reply.objects.filter(id= id).values('id', 'comment_id', 'content', 'author_id', 'author__username', 'created_date', 'edited')]
         return JsonResponse(reply, safe=False, status=200)
     elif request.method == 'PUT':
         body = request.body.decode()

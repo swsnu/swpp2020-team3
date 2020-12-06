@@ -4,7 +4,7 @@ import * as actionCreators from '../../store/actions/index';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import Select from 'react-select'
-
+import './EditDishResult.css'
 // TODO: ingredientList must contain all the ingredients except those that are already used.
 class EditDishResult extends Component {
     state = {
@@ -165,19 +165,19 @@ class EditDishResult extends Component {
 
 
     render() {
-        let thumbnail = this.state.thumbnail_preview ? <img src={this.state.thumbnail_preview} width='250' height='200' /> : null;
+        let thumbnail = this.state.thumbnail_preview ? <img src={this.state.thumbnail_preview} width='350' height='280' /> : null;
         let selectedIngredientList;
         if(this.state.selectedIngredientList){
             selectedIngredientList = this.state.selectedIngredientList.map((item, index) => (
                 <div id='ingredient' key={index}>
-                    <label>{item.brand} | </label>
-                    <label>{item.name} | </label>
-                    <label>{item.price} | </label>
-                    <label>{item.amount}</label>
-                    <input className="add-ingredient-quantity" id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
+                    <label id='inginfo'>{item.brand}</label>
+                    <label id='inginfo'>{item.name} </label>
+                    <label id='inginfo'>{item.price}</label>
+                    <label id='inginfo'>{item.amount}</label>
+                    <input id='inginfo' className="add-ingredient-quantity" id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
                         onChange={(event) => this.addIngredientQuantity(event, index)}/>
-                    {isNaN(item.amount * item.price) ? 0 : item.amount * item.price}
-                    <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
+                    <label id = 'inginfo'>{isNaN(item.amount * item.price) ? 0 : item.amount * item.price}</label>
+                    <button id='inginfo' className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
                 </div>
             ))
         }
@@ -209,7 +209,7 @@ class EditDishResult extends Component {
             <div className='dish_result'>
                 <div id = 'detailbox1'>
                     <div id = 'detailbox1area1'>
-                        <div className = "area1text">
+                        <div className = "area1text1">
                             <input id='detailtitle' value={this.state.title} onChange={(event) => {this.changeTitle(event)}}/>
                             <br/>
                             <div id = 'detailinfo'>
@@ -228,11 +228,12 @@ class EditDishResult extends Component {
                                                     onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
                                 <button id='type' style = {{background: (this.state.category&&this.state.category.includes('American'))&&'grey'}} 
                                                     onClick={(event)=>this.onClickChangeColor(event, 'American')}>American</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Japanese'))&&'grey'}} 
+                                <button id='type' className = 'type_second' style = {{background: (this.state.category&&this.state.category.includes('Japanese'))&&'grey'}} 
                                                     onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
                                 <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Chinese'))&&'grey'}} 
                                                     onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Mexican'))&&'grey'}} 
+                                <br/>
+                                <button id='type' className = "type_second" style = {{background: (this.state.category&&this.state.category.includes('Mexican'))&&'grey'}} 
                                                     onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
                                 <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Dessert'))&&'grey'}} 
                                                     onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>Dessert</button>
@@ -250,16 +251,19 @@ class EditDishResult extends Component {
                     </div>
                 </div>
                 <div id = 'detailbox2'>
-                    <div id = 'detailtitle3'>{'레시피 재료'}
-                        {this.state.ingredientList == null
-                        ? <Select options={this.props.ingredientList} 
-                        getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
-                        onChange={(event) => this.addSelectedIngredientHandler(event)}
-                        isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>
-                        : <Select options={this.state.ingredientList} 
-                        getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
-                        onChange={(event) => this.addSelectedIngredientHandler(event)}
-                        isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
+                    <div id = 'detailtitle3'>
+                        {'레시피 재료'}
+                        <br/>
+                        <div id='detailingre'>
+                            {this.state.ingredientList == null
+                            ? <Select options={this.props.ingredientList} id='select'
+                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
+                            onChange={(event) => this.addSelectedIngredientHandler(event)}
+                            isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>
+                            : <Select options={this.state.ingredientList} id='select'
+                            getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - normalized price)`}
+                            onChange={(event) => this.addSelectedIngredientHandler(event)}
+                            isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
 
                         <div id="add-custom-ingredient">
                             <label>재료 이름</label>
@@ -278,8 +282,8 @@ class EditDishResult extends Component {
                             </div>
                             <button onClick={() => this.addCustomIngredient()}>재료 추가하기</button>
                         </div>
-
-                        {selectedIngredientList}
+                            <div id='selected'>{selectedIngredientList}</div>
+                        </div>
                     
                     </div>
                 </div>

@@ -104,19 +104,19 @@
     font-size: 13px;
 }
 
-    .category-select-button {
-        display: inline-block;
-        text-align: center;
-        background-color: gray;
-        border: none;
-        border-radius: 3px;
-        color: black;
-        font-weight: bold;
-        padding:8px;
-        text-decoration: none;
-        font-size: 13px;
-        margin: 5px;
-    }
+.category-select-button {
+    display: inline-block;
+    text-align: center;
+    background-color: gray;
+    border: none;
+    border-radius: 3px;
+    color: black;
+    font-weight: bold;
+    padding:8px;
+    text-decoration: none;
+    font-size: 13px;
+    margin: 5px;
+}
 .search-options {
     margin-top: -30px;
 }

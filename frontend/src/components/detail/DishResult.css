@@ -3,31 +3,33 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 100vh;
+    width: 1000px;
     padding-top: 30px;
     padding-bottom: 30px;
     text-align: center;
     background: white;
     border-radius: 20px;
     margin-bottom:20px;
+    min-width: 1000px;
 }
 
 #detailbox2{
     
-    width: 100vh;
+    width: 1000px;
     padding-top: 30px;
     padding-bottom: 30px;
     text-align: left;
     background: white;
     border-radius: 20px;
     margin-bottom:20px;
+    min-width: 1000px;
 }
 
 #categsplit {
     display: block;
-    width: 15vh;
+    width: 150px;
     margin-left: 108px;
-    height: 3vh;
+    height: 30px;
 }
 
 #detailbox1area1 {
@@ -37,7 +39,7 @@
 .area1text {
     text-align: center;
     display: block;
-    width: 38vh;
+    width: 380px;
     padding: 10px;
     border: solid #fcc051;
     border-width: 4px;
@@ -88,8 +90,8 @@
 #detailinfo{
     display: block;
     text-align: left;
-    width: 30vh;
-    margin-left: 2vh;
+    width: 300px;
+    margin-left: 20px;
 }
 
 #detailsummary {
@@ -98,7 +100,7 @@
     border:2px solid #e1e1e1; 
     border-radius: 10px;
     font-size:16px; 
-    width: 78vh;
+    width: 780px;
     text-align: left;
     padding: 10px;
 }
@@ -106,13 +108,14 @@
 #detailigd {
     margin-left: 50px;
     display:flex;
-    width : 33vh;
+    width : 330px;
     padding: 10px;
     border: solid #fcc051;
     border-width: 4px;
     border-radius: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+    min-width: 330px;
 }
 
 #detailigdinfo {
@@ -139,6 +142,6 @@
 }
 
 #userbuttons {
-    margin-top:-20px;
+    margin-top: 0px;
     margin-bottom: 10px;
 }

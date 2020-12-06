@@ -35,8 +35,8 @@ class DishResult extends Component {
                                 <div id='categsplit'>{categories && categories.slice(2,4)}</div>
                                 <div id='categsplit'>{categories && categories.slice(4,6)}</div>
                                 <div id='userbuttons'>
-                                    {(this.props.loginid!=-1)?<div><button id='ub' style={(this.props.islike?{'background-color':'#c2563a'}:null)} onClick={this.props.onlikeClicked}>Like</button>
-                                    <button id='ub' style={(this.props.isscrap?{'background-color':'#c2563a'}:null)} onClick={this.props.onscrapClicked}>Scrap</button></div>:null}
+                                    {(this.props.loginid!=-1)?<div><button id='ub' style={(this.props.islike?{'background-color':'#c2563a'}:null)} onClick={this.props.onlikeClicked}>좋아요</button>
+                                    <button id='ub' style={(this.props.isscrap?{'background-color':'#c2563a'}:null)} onClick={this.props.onscrapClicked}>스크랩</button></div>:null}
                                 </div>
                             </div>
                         </div>

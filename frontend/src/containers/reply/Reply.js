@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-
+import './Reply.css';
 class Reply extends Component {
     state = {
         author_name:''
@@ -15,15 +15,21 @@ class Reply extends Component {
     
     render() {
         return(
-            <div className = 'reply'>
-                <p>{this.props.content} - {this.props.author}</p>
-                {(this.props.login_id==this.props.author)?
-                <div>
-                    <button id='edit-reply-button' onClick={this.onEdit}>edit</button>
-                    <button id='delete-reply-button' onClick={() => this.props.onDeleteReply()}>delete</button>
-                </div>:
-                null}
-            </div>
+           <div>
+               <hr/>
+                <div className = 'reply'>
+                    <div id='repauthor'>{this.props.name}</div>
+                    <div id='repcontent'>{this.props.content}</div>
+                    {
+                        (this.props.login_id==this.props.author)?
+                        <div>
+                            <button id='edit-reply-button' onClick={this.onEdit}>수정</button>
+                            <button id='delete-reply-button' onClick={() => this.props.onDeleteReply()}>삭제</button>
+                        </div>: 
+                        null
+                    }
+                </div>
+           </div>
         ) 
     }
 }
