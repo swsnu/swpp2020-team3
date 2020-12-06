@@ -275,7 +275,9 @@ class Createpage extends Component{
                 {item.brand} {" | "}
                 {item.name} {" | "}
                 {console.log(item)}
-                {item.price==undefined?0:item.price} {`per  ${item.igd_type} | `}
+                {item.price_normalized == 0 ? (item.price == undefined ? 0 : item.price) 
+                    : (parseFloat((item.quantity == 0 ? 0 : parseFloat((item.price/item.quantity).toFixed(2)).toFixed(2))).toFixed(2))} 
+                {`per  ${item.igd_type} | `}
                 <input id={index} type='number' min="0" placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {item.igd_type} {" | "}
