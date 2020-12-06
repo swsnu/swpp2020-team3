@@ -7,6 +7,31 @@ import './Createpage.css'
 import * as actionCreators from '../../store/actions/index'
 import PropTypes from "prop-types";
 
+const checkIngredients = (list) => {
+    for(let i =0; i<list.length; i++){
+        let item = list[i]
+        if(item.price_normalized){ // ideal
+            if(item.price!=0 && item.name.length != 0 && item.brand.length != 0 && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
+                continue;
+            else{
+                console.log('dd')
+                return false;
+            } 
+        }
+        else{
+            if(item.price != 0 && item.name.length != 0 && item.igd_type != ''){
+                console.log('dsd')
+                continue;
+            }
+            else {
+                console.log("dsadj")
+                return false;
+            }
+        }
+    } 
+    return true;
+}
+
 const checkOutput = (recipe) => {
     let message = ''
     if(recipe.title.length == 0)
@@ -19,8 +44,32 @@ const checkOutput = (recipe) => {
         message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
     if(recipe.descriptionList.length == 0)
         message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
+    if(recipe.ingredientList.length != 0 && !checkIngredients(recipe.ingredientList))
+        message = message.concat('요리재료를 올바르게 채워주세요.')
     
     return message
+}
+
+const totalPriceCalculator = (list ) => {
+    let totalPrice = 0;
+        // let list = this.state.selectedIngredientList
+        let priceList = []
+        if(list.length > 0){
+            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount, 'quantity': entry.quantity, 'price_normalized': entry.price_normalized}))
+            for(let i = 0; i < priceList.length; i++){
+                let item = priceList[i]
+
+                let price = item.price ? item.price : 0
+                let flag = item.price_normalized
+                console.log(item)
+                let parsed = parseFloat(item.amount * (item.quantity == 0 ? 0 : item.price/item.quantity).toFixed(2)).toFixed(2)
+                console.log(totalPrice)
+                console.log(typeof totalPrice)
+                totalPrice = parseFloat(totalPrice) + parseFloat(price)
+                console.log(totalPrice.toFixed(2))
+            }
+        }
+    return totalPrice
 }
 
 // I don't think we need createstep anymore --> delete it after verfication (end-to-end) test
@@ -43,19 +92,20 @@ class Createpage extends Component{
        thumbnail: '',
        thumbnailURL: '',                // must
        // custom ingredient
-        customIngrName: '',
+        customIngrName1: '',
+        customIngrName0: '',
         customIngrBrand: '',
         customIngrQuantity: 0,
         customIngrPrice: 0,
         customIngrNormPrice: 0, // 3번 타입의 재료를 위한 제품의 총 가격 변수 - 호환을 위해 hardPrice 말고 NormPrice라고 함.
-        customIngrType: 0
+        customIngrType1: 'g',
+        customIngrType0: 'g'
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
 
     componentDidMount(){
         this.props.isLogin().then(res => {
-            console.log(res.is_authenticated)
             if(!res.login_id){
                 let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
                 if(input){
@@ -119,18 +169,12 @@ class Createpage extends Component{
 
     submitHandler(){
         let state = this.state;
-        let priceList = []
-        let totalPrice = 0;
-        let list = this.state.selectedIngredientList
-        if(list.length > 0){
-            console.log("larger")
-            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount}))
-            for(let i = 0; i < priceList.length; i++){
-                totalPrice+=(priceList[i]['price']*priceList[i]['amount'])
-            }
-        }
+
+        let totalPrice = totalPriceCalculator(this.state.selectedIngredientList);
+    
         var today = new Date(),
         date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        
         let recipe = {
             title: state.title,
             duration: state.duration,
@@ -145,7 +189,8 @@ class Createpage extends Component{
             date: date
         }
         let pass = checkOutput(recipe);
-        
+        console.log(recipe)
+
         if(pass.length == 0)
             this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
         else console.log(pass)
@@ -163,7 +208,7 @@ class Createpage extends Component{
     }
 
     addSelectedIngredientHandler(event){
-        console.log("addselected")
+        event.amount = 0
         let list1 = this.state.selectedIngredientList.concat(event)
         this.setState({selectedIngredientList: list1})
         let list2 = this.state.ingredientListSave
@@ -173,7 +218,6 @@ class Createpage extends Component{
         this.setState({ingredientList: list})
     }
     deleteSelectedIngredientHandler(index){
-        console.log("delete")
         let newList = this.state.selectedIngredientList;
         let deleted = newList.splice(index, 1)
         this.setState({selectedIngredientList: newList})
@@ -184,31 +228,30 @@ class Createpage extends Component{
         this.setState({ingredientList: newList})
     }
     addIngredientQuantity(event, id){
-        console.log("addingredient")
         let list = this.state.selectedIngredientList
         let amount = event.target.value
-        console.log(amount)
+        console.log(event.target.value)
         list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
     }
-    addCustomIngredient(){
-        console.log("addcustom")
+    addCustomIngredient(show){
+        console.log(this.state.customIngrType)
+        let ingrPrice = this.state.customIngrPrice!=undefined ? this.state.customIngrPrice : 0
         let customIngr = {
             brand: this.state.customIngrBrand,
-            name: this.state.customIngrName,
-            igd_type: this.state.customIngrType,
-            price_normalized: this.state.customIngrNormPrice,
-            price: this.state.customIngrNormPrice != 0 ? 0 : this.state.customIngrPrice,
-            quantity: this.state.customIngrQuantity,
+            name: this.state.customIngrName1 ? this.state.customIngrName1 : this.state.customIngrName0,
+            igd_type: this.state.customIngrType1? this.state.customIngrType1 : this.state.customIngrType0,
+            price_normalized: show,
+            price: show == 1 ? parseInt(ingrPrice) : parseInt(this.state.customIngrNormPrice),
+            quantity: parseFloat(this.state.customIngrQuantity),
             amount: 0,
         }
-        console.log(customIngr)
         let listSelected = this.state.selectedIngredientList
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
         listTotal = listTotal.concat(customIngr)
-        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
-        customIngrQuantity: 0, customIngrPrice: 0, customIngrType: 0, customIngrNormPrice: 0})
+        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName1: '', customIngrName0: '', customIngrBrand: '',
+        customIngrQuantity: 0, customIngrPrice: 0,  customIngrNormPrice: 0, customIngrType1: 'g', customIngrType0: 'g'})
     }
 
 
@@ -232,29 +275,22 @@ class Createpage extends Component{
                 {item.brand} {" | "}
                 {item.name} {" | "}
                 {console.log(item)}
-                {item.price == 0 ? '?': item.price} {`/  ${item.price == 0 ? '?': item.igd_type} | `}
-                <input id={index} type='number' placeholder='양' value={this.state.selectedIngredientList[index].amount}
+                {item.price==undefined?0:item.price} {`per  ${item.igd_type} | `}
+                <input id={index} type='number' min="0" placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {item.igd_type} {" | "}
-                {item.price == 0 ? item.price_normalized :
-                isNaN(parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 : parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)+'원'} 
+                {
+                item.price_normalized == 0 ? item.price :
+                parseFloat(item.amount * (item.quantity == 0 ? 0 : parseFloat((item.price/item.quantity).toFixed(2)).toFixed(2))).toFixed(2)}
+
+                {/* // isNaN(parseFloat(item.amount * (item.quantity == 0 ? 0 
+                // : item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 
+                // : parseFloat(item.amount * (item.quantity == 0 ? 0 
+                // : item.price/item.quantity).toFixed(2)).toFixed(2)+'원'}  */}
                 <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))
-        let totalPrice = 0;
-        let list = this.state.selectedIngredientList
-        let priceList = []
-        if(list.length > 0){
-            priceList = list.map((entry) => ({'price': entry.price, 'amount':entry.amount, 'quantity': entry.quantity, 'price_normalized': entry.price_normalized}))
-            for(let i = 0; i < priceList.length; i++){
-                let item = priceList[i]
-                console.log(item)
-                let parsed = parseFloat(item.amount * (item.price/item.quantity).toFixed(2)).toFixed(2)
-                console.log(parsed)
-                totalPrice+= item.price == 0 ? item.price_normalized :
-                (isNaN(parsed) ? 0 : parsed)
-            }
-        }
+        let totalPrice = totalPriceCalculator(this.state.selectedIngredientList)
         return(
             <div className="CreateBackground">
                 <div className="CreatepageBlock">
@@ -286,27 +322,33 @@ class Createpage extends Component{
                             <p>둘 다 입력하게 되면 '제품' 칸이 채워진거기 때문에 제품의 가격이 먹힙니다.</p>
                             {<Select options={this.state.ingredientList}
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${option.price == 0 ? '?' 
-                                        : (option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
+                                        : (option.quantity == 0 ? 0 : option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
-
                             {/* horizontal로 쭉 됐으면 함 */}
                             <div id="add-custom-ingredient">
+                                <label>엄밀</label>
                                 <label>재료 이름</label>
-                                <input type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
+                                <input type="text" value={this.state.customIngrName1} onChange={(event) => this.setState({customIngrName1: event.target.value})}/>
                                 <label>브랜드명</label>
                                 <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
                                 <label>양 (상품)</label>
                                 <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                 <label>계량(igd_type)</label>
-                                <input type="text" value={this.state.customIngrType} onChange={(event) => this.setState({customIngrType: event.target.value})}/>
-                                <div>
-                                    <label>가격 (상품)</label>
-                                    <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
-                                    <label>가격 (제품)</label>
-                                    <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
-                                </div>
-                                <button onClick={() => this.addCustomIngredient()}>재료 추가하기</button>
+                                <input type="text" value={this.state.customIngrType1} onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
+                                <label>가격 (상품)</label>
+                                <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
+                                <button onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>
+
+                                <label>간단</label>
+                                <label>재료 이름</label>
+                                <input type="text" value={this.state.customIngrName0} onChange={(event) => this.setState({customIngrName0: event.target.value})}/>
+                                <label>계량(igd_type)</label>
+                                <input type="text" value={this.state.customIngrType0} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType0: event.target.value})}/>
+                                <label>가격 (제품)</label>
+                                <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
+                                <button onClick={() => this.addCustomIngredient(0)}>재료 추가하기</button>
+                                
                             </div>
 
                             {selectedIngredientList}
@@ -329,17 +371,18 @@ class Createpage extends Component{
                         <div className = 'create_third'>
                             <div className='buttons'>
                                 <p>카테고리 선택</p>
-                                <button id='type' className = "type_first" onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'American')}>American</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>Dessert</button>
+                                <button id='type' className = "type_first" onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>중식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>한식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Western')}>양식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>일식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>디저트</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'ConvenienceStore')}>편의점</button>
                             </div>
                         </div>
                         <div className = 'create_fourth'>
                             <p>총 예상 가격 :   </p>
                             <h3>계산된 가격</h3>
+                            <p>{}</p>
                             <p>{isNaN(totalPrice) ? 0 : parseFloat(totalPrice)} 원</p>
                         </div>
                         <div className = 'create_fifth'>
@@ -378,4 +421,5 @@ Createpage.propTypes = {
 };
 
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Createpage));
+
 
