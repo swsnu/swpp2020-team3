@@ -12,7 +12,7 @@ const checkIngredients = (list) => {
         let item = list[i]
         console.log(item)
         if(item.price_normalized){ // ideal
-            if(item.price!=0 && item.name.length != 0 && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
+            if(item.price!=0 && item.name.length != 0 && item.brand.length != 0 && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
                 continue;
             else{
                 console.log('dd')
@@ -64,9 +64,8 @@ const totalPriceCalculator = (list ) => {
                 let flag = item.price_normalized
                 console.log(item)
                 let parsed = parseFloat(item.amount * (item.quantity == 0 ? 0 : item.price/item.quantity).toFixed(2)).toFixed(2)
-                console.log(totalPrice)
-                console.log(typeof totalPrice)
-                totalPrice = parseFloat(totalPrice) + parseFloat(price)
+                let add = flag == 0 ? price : parsed
+                totalPrice = parseFloat(totalPrice) + parseFloat(add)
                 console.log(totalPrice.toFixed(2))
             }
         }
