@@ -371,12 +371,12 @@ class Createpage extends Component{
                         <div className = 'create_third'>
                             <div className='buttons'>
                                 <p>카테고리 선택</p>
-                                <button id='type' className = "type_first" onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'American')}>American</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>Dessert</button>
+                                <button id='type' className = "type_first" onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>중식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>한식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Western')}>양식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>일식</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>디저트</button>
+                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'ConvenienceStore')}>편의점</button>
                             </div>
                         </div>
                         <div className = 'create_fourth'>
