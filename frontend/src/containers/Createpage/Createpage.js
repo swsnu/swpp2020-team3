@@ -33,6 +33,11 @@ const checkIngredients = (list) => {
     return true;
 }
 
+const checkDescriptions = (list) => {
+    // check
+    return true
+}
+
 const checkOutput = (recipe) => {
     let message = ''
     if(recipe.title.length == 0)
@@ -43,7 +48,7 @@ const checkOutput = (recipe) => {
         message = message.concat('조리시간을 정해주세요.\n')
     if(recipe.ingredientList.length == 0)
         message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
-    if(recipe.descriptionList.length == 0)
+    if(recipe.descriptionList.length == 0 || !checkDescriptions(recipe.descriptionList))
         message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
     if(recipe.ingredientList.length != 0 && !checkIngredients(recipe.ingredientList))
         message = message.concat('요리재료를 올바르게 채워주세요.')
@@ -287,10 +292,6 @@ class Createpage extends Component{
                 item.price_normalized == 0 ? item.price :
                 parseFloat(item.amount * (item.quantity == 0 ? 0 : parseFloat((item.price/item.quantity).toFixed(2)).toFixed(2))).toFixed(2)}
 
-                {/* // isNaN(parseFloat(item.amount * (item.quantity == 0 ? 0 
-                // : item.price/item.quantity).toFixed(2)).toFixed(2)) ? 0 
-                // : parseFloat(item.amount * (item.quantity == 0 ? 0 
-                // : item.price/item.quantity).toFixed(2)).toFixed(2)+'원'}  */}
                 <button className="deleteIngredient" onClick={() => this.deleteSelectedIngredientHandler(index)} index={index} > X </button>
             </div>
         ))

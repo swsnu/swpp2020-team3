@@ -30,6 +30,9 @@ class DishResult extends Component {
                                 <p id='detaillabel'>{'평점'}</p>
                                 {this.props.rating}
                                 <br/>
+                                <p id='detaillabel'>{'예상 조리 시간'}</p>
+                                {this.props.duration}
+                                <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
                                 {categories && categories.slice(0,2)}
                                 <div id='categsplit'>{categories && categories.slice(2,4)}</div>

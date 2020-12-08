@@ -62,3 +62,17 @@
     padding:6px;
     font-size: 18px;
 }
+
+#add-custom-ingredient label{
+    display: inline-block;
+    text-align: left;
+    border: none;
+    color: black;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 117.5vh;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
