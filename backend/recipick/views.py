@@ -91,6 +91,7 @@ def curuser(request):
             login_id=0
         return JsonResponse(login_id, safe=False, status=200)
 
+@csrf_exempt
 def signup(request):
     if request.method == 'POST':
         req_data = json.loads(request.body.decode())
@@ -102,7 +103,8 @@ def signup(request):
         user.save()
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = token_generator.make_token(user)
-        domain = get_current_site(request).domain
+        #domain = get_current_site(request).domain
+        domain = 'recipick.shop'
         link = reverse('activate', kwargs={'uidb64': uidb64, 'token': token})
         activate_url = 'http://'+domain+link
         mail_subject = 'Activate your account'
@@ -119,17 +121,20 @@ def signup(request):
     else:
         return HttpResponseNotAllowed(['POST'])
 
+@csrf_exempt
 def signin(request):
     if request.method == 'POST':
         req_data = json.loads(request.body.decode())
         username = req_data['username']
         password = req_data['password']
         # added this for debugging
-        temp = User.objects.all().values().filter(username=username, password=password)
+        #temp = User.objects.all().values().filter(username=username, password=password)
         user = auth.authenticate(request, username = username, password = password)
         # added this for debugging
-        if user is not None or temp is not None:
+        if user is not None:
             auth.login(request, user)
+            #login(request,temp,backend='django.contrib.auth.backends.ModelBackend')
+            
             return HttpResponse(status=204)
         else:
             return HttpResponse(status=401)
