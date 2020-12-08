@@ -9,6 +9,52 @@ import Comments from '../comments/Comments';
 import EditDishResult from './EditDishResult';
 import './Editpage.css'
 // Don't need editdishstep
+
+const checkIngredients = (list) => {
+    for(let i =0; i<list.length; i++){
+        let item = list[i]
+        if(item.price_normalized){ // ideal
+            if(item.price!=0 && item.name.length != 0  && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
+                continue;
+            else{
+                return false;
+            } 
+        }
+        else{
+            if(item.price != 0 && item.name.length != 0 && item.igd_type != '' && item.amount != 0){
+                continue;
+            }
+            else {
+                return false;
+            }
+        }
+    } 
+    return true;
+}
+
+const checkDescriptions = (list) => {
+    // check
+    return true
+}
+
+const checkOutput = (recipe) => {
+    console.log(recipe)
+    let message = ''
+    if(recipe.title.length == 0)
+        message = message.concat('제목을 입력해주세요.\n')
+    if(recipe.thumbnail.length == 0)
+        message = message.concat('대표사진을 추가해주세요.\n')
+    if(recipe.duration.length == 0)
+        message = message.concat('조리시간을 정해주세요.\n')
+    if(recipe.ingredient_list.length == 0)
+        message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
+    if(recipe.description_list.length == 0 || !checkDescriptions(recipe.description_list))
+        message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
+    if(recipe.ingredient_list.length != 0 && !checkIngredients(recipe.ingredient_list))
+        message = message.concat('요리재료를 올바르게 채워주세요.')
+    
+    return message
+}
 class Editpage extends Component {
     state = {
     }
@@ -18,6 +64,7 @@ class Editpage extends Component {
                 this.setState({
                     title: res['selectedRecipe'].title,
                     price: res['selectedRecipe'].price,
+                    duration: res['selectedRecipe'].duration,
                     rating: res['selectedRecipe'].rating,
                     likes: res['selectedRecipe'].likes,
                     category: res['selectedRecipe'].category,
@@ -37,6 +84,7 @@ class Editpage extends Component {
     }
 
     setParentState(key, value){
+        console.log(key)
         this.setState({[key]: value})
     }
     
@@ -72,8 +120,14 @@ class Editpage extends Component {
     }
 
     onSubmit(){
-        this.props.editRecipe(this.state, this.props.match.params.id).then(() => this.props.history.push('/detail-page/'+this.props.match.params.id))
-        console.log(this.state)
+        let pass = checkOutput(this.state);
+
+        if(pass.length == 0)
+            this.props.editRecipe(this.state, this.props.match.params.id).then(() => this.props.history.push('/detail-page/'+this.props.match.params.id))
+        else {
+            console.log('dsd')
+            alert(pass)
+        }
     }
 
     render() {
@@ -89,7 +143,7 @@ class Editpage extends Component {
             </div>
             <br/>
         </div>)
-
+console.log(this.state)
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">

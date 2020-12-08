@@ -86,6 +86,7 @@ class Detailpage extends Component {
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
         const author = this.props.recipe && this.props.recipe.author
+        const duration = this.props.recipe && this.props.recipe.duration
         // const liked_user = this.props.recipe && this.props.recipe.liked_user
         // const scrapped_user = this.props.recipe && this.props.recipe.scrapped_user
         
@@ -122,7 +123,7 @@ class Detailpage extends Component {
                     <div id = "detailBlock">
                         {(this.state.login_id==author)?<div><button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>수정</button>
                         <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>삭제</button></div>:null}
-                        <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} 
+                        <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} duration = {duration}
                             likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}
                             loginid={this.state.login_id} onlikeClicked = {() =>  this.handleLike()} onscrapClicked = {() => this.handleScrap()}
                             islike = {this.isLike()} isscrap = {this.isScrap()}
