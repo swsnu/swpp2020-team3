@@ -25,6 +25,7 @@ from random import *
 from django.forms.models import model_to_dict
 from django.db.models import Q
 import random
+import secrets
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 def getuser(request, id):
@@ -303,12 +304,17 @@ def recipe_post(request):
         # thumbnail
         format, imgstr = thumbnail.split(';base64,')
         ext = format.split('/')[-1]
-        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        temp_key = secrets.token_urlsafe(16)
+        data = ContentFile(base64.b64decode(imgstr), name='{}.{}'.format(temp_key, ext))
         if price is None:
             price = 0
         recipe = Recipe(author=user, title=title, price=price, duration=duration, thumbnail=data,
         description_list=d_list, category=t_list, created_date=date, summary=summary, rating=0, likes=0)
-        recipe.save()  
+        recipe.save() 
+
+        # change thumbnail
+        # recipe.thumbnail.name = 'r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id, ext)
+        
         
         # ingredients
         ingList = Ingredient.objects.all()
@@ -520,14 +526,13 @@ def recipe(request, id):
             body = json.loads(request.body.decode())
             title = body['title']
             price = body['price']   # normally should convert to int
-            # duration = body['duration']  # normally should convert to float
             thumbnail = body['thumbnail']
             d_list = body['description_list']
             t_list = body['category']
-            #i_list = body['imageList']  
             ingredient_list = body['ingredient_list']  
             p_list = body['photo_list']   # right now works with prev. Maybe there is a better method?
             summary = body['summary']
+            duration = body['duration']
             # date = body['date'] ==> implement edited time   
         except Exception as e:
             print(e)
@@ -535,16 +540,16 @@ def recipe(request, id):
             return HttpResponse(status = 400)
         recipe.title = title
         recipe.price = price
+        recipe.duration = duration
         format, imgstr = thumbnail.split(';base64,')
         ext = format.split('/')[-1]
-        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        temp_key = secrets.token_urlsafe(16)
+        data = ContentFile(base64.b64decode(imgstr), name='{}.{}'.format(temp_key, ext))
         recipe.thumbnail.delete()
         recipe.thumbnail = data
         recipe.description_list = d_list
         recipe.category = t_list
         recipe.summary = summary
-        # created_date = ? 
-        # duration = ? 
         recipe.save()
         # ingredients: 
         ingList = Ingredient.objects.all()
@@ -570,7 +575,7 @@ def recipe(request, id):
         for img_64 in p_list:
             format, imgstr = img_64.split(';base64,')
             ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
             new_img = ImageModel.objects.create(img=data, description_index=cnt)
             new_photo_list.append(new_img)
             cnt = cnt + 1
