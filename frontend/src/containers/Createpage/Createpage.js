@@ -10,8 +10,9 @@ import PropTypes from "prop-types";
 const checkIngredients = (list) => {
     for(let i =0; i<list.length; i++){
         let item = list[i]
+        console.log(item)
         if(item.price_normalized){ // ideal
-            if(item.price!=0 && item.name.length != 0 && item.brand.length != 0 && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
+            if(item.price!=0 && item.name.length != 0  && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
                 continue;
             else{
                 console.log('dd')
@@ -19,7 +20,7 @@ const checkIngredients = (list) => {
             } 
         }
         else{
-            if(item.price != 0 && item.name.length != 0 && item.igd_type != ''){
+            if(item.price != 0 && item.name.length != 0 && item.igd_type != '' && item.amount != 0){
                 console.log('dsd')
                 continue;
             }
@@ -63,9 +64,8 @@ const totalPriceCalculator = (list ) => {
                 let flag = item.price_normalized
                 console.log(item)
                 let parsed = parseFloat(item.amount * (item.quantity == 0 ? 0 : item.price/item.quantity).toFixed(2)).toFixed(2)
-                console.log(totalPrice)
-                console.log(typeof totalPrice)
-                totalPrice = parseFloat(totalPrice) + parseFloat(price)
+                let add = flag == 0 ? price : parsed
+                totalPrice = parseFloat(totalPrice) + parseFloat(add)
                 console.log(totalPrice.toFixed(2))
             }
         }
@@ -235,17 +235,19 @@ class Createpage extends Component{
         this.setState({selectedIngredientList: list})
     }
     addCustomIngredient(show){
-        console.log(this.state.customIngrType)
+        console.log(this.state.customIngrType1==this.state.customIngrType0)
         let ingrPrice = this.state.customIngrPrice!=undefined ? this.state.customIngrPrice : 0
         let customIngr = {
             brand: this.state.customIngrBrand,
             name: this.state.customIngrName1 ? this.state.customIngrName1 : this.state.customIngrName0,
-            igd_type: this.state.customIngrType1? this.state.customIngrType1 : this.state.customIngrType0,
+            igd_type: this.state.customIngrType1==this.state.customIngrType0 ? 'g' 
+                        : (this.state.customIngrType1!='g'? this.state.customIngrType1 : this.state.customIngrType0),
             price_normalized: show,
             price: show == 1 ? parseInt(ingrPrice) : parseInt(this.state.customIngrNormPrice),
             quantity: parseFloat(this.state.customIngrQuantity),
             amount: 0,
         }
+        console.log(customIngr)
         let listSelected = this.state.selectedIngredientList
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
@@ -275,7 +277,9 @@ class Createpage extends Component{
                 {item.brand} {" | "}
                 {item.name} {" | "}
                 {console.log(item)}
-                {item.price==undefined?0:item.price} {`per  ${item.igd_type} | `}
+                {item.price_normalized == 0 ? (item.price == undefined ? 0 : item.price) 
+                    : (parseFloat((item.quantity == 0 ? 0 : parseFloat((item.price/item.quantity).toFixed(2)).toFixed(2))).toFixed(2))} 
+                {`per  ${item.igd_type} | `}
                 <input id={index} type='number' min="0" placeholder='양' value={this.state.selectedIngredientList[index].amount}
                     onChange={(event) => this.addIngredientQuantity(event, index)}/>
                 {item.igd_type} {" | "}
