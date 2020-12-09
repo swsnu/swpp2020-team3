@@ -188,3 +188,18 @@ export const removescrapRecipe = (id) => {
       })
   }
 }
+
+const addRating_ = (data) => {
+  console.log(data)
+  return {type: actionTypes.ADD_RECIPE_RATING, data}
+}
+export const addRating = (id, rating) => {
+  console.log(id)
+  console.log(typeof rating)
+  return dispatch => {
+    return axios.post(`/api/recipe/${id}/rating/`, {rating: rating})
+      .then(res => {
+        dispatch(addRating_(res.data))
+      })
+  }
+}

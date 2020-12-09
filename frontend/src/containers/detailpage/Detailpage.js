@@ -15,6 +15,7 @@ class Detailpage extends Component {
         login_id: -1,
         like: 0,
         scrap: 0,
+        rating: 0
     };
     constructor(props) {
         super(props);
@@ -75,6 +76,16 @@ class Detailpage extends Component {
             this.props.removescrapRecipe(this.props.recipe.id);
         }
     }
+
+    handleRating = (rating) => {
+        console.log(rating)
+        this.setState({rating: rating})
+
+    }
+    submitRating = () => {
+        console.log('submit')
+        this.props.addRating(this.props.recipe.id, this.state.rating)
+    }
     
 
     render() {
@@ -126,7 +137,8 @@ class Detailpage extends Component {
                         <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} duration = {duration}
                             likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}
                             loginid={this.state.login_id} onlikeClicked = {() =>  this.handleLike()} onscrapClicked = {() => this.handleScrap()}
-                            islike = {this.isLike()} isscrap = {this.isScrap()}
+                            islike = {this.isLike()} isscrap = {this.isScrap()} 
+                            updateState={(event)=>this.handleRating(event)} confirmRating={() => this.submitRating()}
                         />
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
@@ -160,7 +172,8 @@ const mapDispatchToProps = dispatch => {
         likeRecipe: (id) => dispatch(actionCreators.likeRecipe(id)),
         removelikeRecipe: (id) => dispatch(actionCreators.removelikeRecipe(id)),
         scrapRecipe: (id) => dispatch(actionCreators.scrapRecipe(id)),
-        removescrapRecipe: (id) => dispatch(actionCreators.removescrapRecipe(id))
+        removescrapRecipe: (id) => dispatch(actionCreators.removescrapRecipe(id)),
+        addRating: (id, rating) => dispatch(actionCreators.addRating(id, rating))
     };
 }
 

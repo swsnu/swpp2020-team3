@@ -71,6 +71,12 @@ class Recipe(models.Model):
         related_name='scrap',
         blank=True
     )
+    rating_user = models.ManyToManyField(
+        User,
+        related_name='rating',
+        through='ConnectRecipeRating',
+        blank=True
+    )
     photo_list = models.ManyToManyField(
         ImageModel,
     )
@@ -85,6 +91,11 @@ class Recipe(models.Model):
     created_date = models.DateField(null=True)
     edited = models.BooleanField(null=True)
     summary = models.TextField(null=True)
+
+class ConnectRecipeRating(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.FloatField(default=0)
 
 class ConnectRecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm
-from .models import Ingredient, Recipe, Comment, Reply, ImageModel, User, ConnectRecipeIngredient
+from .models import Ingredient, Recipe, Comment, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating
 # Register your models here.
 
 class UserCreateForm(UserCreationForm):
@@ -29,3 +29,4 @@ admin.site.register(Reply)
 admin.site.register(Comment)
 admin.site.register(ImageModel)
 admin.site.register(ConnectRecipeIngredient)
+admin.site.register(ConnectRecipeRating)
