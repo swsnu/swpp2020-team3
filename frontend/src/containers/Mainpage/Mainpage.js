@@ -139,6 +139,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(actionCreators.getUser(td)),
         onGetHot: () =>
             dispatch(actionCreators.getHot()),
+        getMls: (id) => dispatch(actionCreators.getMl(id))
     }
 }
 

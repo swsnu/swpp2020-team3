@@ -41,7 +41,8 @@ export class Mealplanner extends Component {
         ],
         scrappedRecipes: [{ id: 1, thumbnail: 'hana' }, { id: 2, thumbnail: 'duna' },
         { id: 3, thumbnail: 'sena' }, { id: 4, thumbnail: 'nena' }],
-        recipes: []
+        recipes: [],
+        login_id: 1,
     }
     componentDidMount() {        
         // to connect with others' implementation
@@ -53,12 +54,13 @@ export class Mealplanner extends Component {
             let new_list = res.randomRecipe.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
             this.setState({scrappedRecipes: new_list})
         })
-        this.props.getMls(1).then((res)=> {
-            console.log(res)
-            let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
-            this.setState({recipes: new_list})
+        this.props.isLogin().then(res => {
+            this.props.getMls(res.login_id).then((res)=> {
+                console.log(this.state.login_id)
+                let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
+                this.setState({recipes: new_list})
+            })
         })
-
     }
 
     addDayAbove(index) {
@@ -275,7 +277,8 @@ const mapDispatchToProps = dispatch => {
         //     dispatch(actionCreators.getMLRecipes()),
         // getScrappedRecipes: () => dispatch(actionCreators.getScrappedRecipes()),
         getRecipes: () => dispatch(actionCreators.getRandom()), // temp for getting sample recipes
-        getMls: (id) => dispatch(actionCreators.getMl(id))
+        getMls: (id) => dispatch(actionCreators.getMl(id)),
+        isLogin: () => dispatch(actionCreators.isLogin()),
     }
 }
 
