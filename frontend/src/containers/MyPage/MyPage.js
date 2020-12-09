@@ -62,7 +62,7 @@ class MyPage extends Component{
                 return (
                     <Recipe key={recipe.id}
                         author={recipe.author}
-                        thumbnail={'data:image/png;base64,'+recipe.thumbnail}
+                        thumbnail={recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
                         cost={recipe.price}
@@ -76,7 +76,7 @@ class MyPage extends Component{
                 return (
                     <Recipe key={recipe.id}
                         author={recipe.author}
-                        thumbnail={'data:image/png;base64,'+recipe.thumbnail}
+                        thumbnail={recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
                         cost={recipe.price}
@@ -90,7 +90,7 @@ class MyPage extends Component{
                 return (
                     <Recipe key={recipe.id}
                         author={recipe.author}
-                        thumbnail={'data:image/png;base64,'+recipe.thumbnail}
+                        thumbnail={recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
                         cost={recipe.price}
