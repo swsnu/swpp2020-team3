@@ -5,8 +5,6 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-const 
-
 const getRandom_ = (recipe) => {
   return {type: actionTypes.GET_RANDOM, randomRecipe: recipe}
 };
