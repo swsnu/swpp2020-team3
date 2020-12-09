@@ -201,12 +201,11 @@ class RecipeList extends Component{
         let remainder = (this.state.searchSettings.pageNumber-1)%5;
         pageStart = 5*Math.floor(quotient/5);
         slicedRecipes = this.props.storedRecipes.slice(remainder*10,(remainder+1)*10)
-
+	console.log(slicedRecipes);
         const recipes = slicedRecipes.map((recipe) => {
             return (
                 <Recipe key={recipe.id}
                     author={recipe.author}
-                    //thumbnail={'data:image/png;base64,'+recipe.thumbnail}
                     thumbnail={recipe.thumbnail}
                     title={recipe.title}
                     rating={recipe.rating}
