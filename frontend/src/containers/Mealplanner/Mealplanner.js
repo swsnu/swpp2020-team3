@@ -184,7 +184,7 @@ export class Mealplanner extends Component {
                                                         <div className='singleBlock' >
                                                             {meal.thumbnail == 0 
                                                                 ? <div className='emptyImage'/>
-                                                                :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={`data:image/png;base64,${meal.thumbnail}`} width='100' height='100'/>}
+                                                                :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={meal.thumbnail} width='100' height='100'/>}
                                                         </div>
                                                     </div>
                                                 )} 
@@ -207,7 +207,7 @@ export class Mealplanner extends Component {
                                             {(provided) => (
                                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                     <div className='scrappedRecipe'>
-                                                        <img onClick={() =>this.historyPush(recipe)} src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
+                                                        <img onClick={() =>this.historyPush(recipe)} src={recipe.thumbnail} width='100' height='100'/>
                                                     </div>
                                                 </div>
                                             )}

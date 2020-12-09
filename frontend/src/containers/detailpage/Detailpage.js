@@ -96,7 +96,7 @@ class Detailpage extends Component {
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
-                let img = 'data:image/png;base64,'+igd.picture
+                let img = igd.picture
                 return (
                     <div key={igd.id} id='detailigd'>
                         <div id = 'detailigdinfo'>
@@ -113,9 +113,9 @@ class Detailpage extends Component {
         console.log(this.props.recipe)
         let d = null;
         if(this.props.recipe){
-            d = 'data:image/png;base64,'+ this.props.recipe.thumbnail;
+            d = this.props.recipe.thumbnail;
         }
-        const methodData = descriptions && descriptions.map((item, index) => ({img:'data:image/png;base64,'+ this.props.recipe.photo_list[index], explanation:item}))
+        const methodData = descriptions && descriptions.map((item, index) => ({img: this.props.recipe.photo_list[index], explanation:item}))
         const methods = methodData && methodData.map((item) => <DishStep key={item.id} img={item.img} explanation={item.explanation}/>)
         return (
             <div id = 'detailBackground'>
