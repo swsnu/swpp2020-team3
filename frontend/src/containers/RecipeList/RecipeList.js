@@ -122,10 +122,23 @@ class RecipeList extends Component{
 
     checkInputHandler = (state) =>{
         let st=state;
-        if(this.state.maxPrice == '') st.maxPrice=100000;
-        if(this.state.minPrice == '') st.minPrice=0;
-        if(this.state.maxDuration == '') st.maxDuration=100;
-        if(this.state.minDuration == '') st.minDuration=0;
+        let tempMaxPrice, tempMinPrice;
+        let tempMaxDuration, tempMinDuration;
+        let message = '';
+        tempMaxPrice = parseInt(st.maxPrice);
+        tempMinPrice = parseInt(st.minPrice);
+        tempMaxDuration = parseInt(st.maxDuration);
+        tempMinDuration = parseInt(st.minDuration);
+        if(isNaN(tempMaxPrice)) message += "가격의 상한을 올바르게 입력하세요.\n";
+        if(isNaN(tempMinPrice)) message += "가격의 하한을 올바르게 입력하세요.\n";
+        if(isNaN(tempMaxDuration)) message += "조리 시간의 상한을 올바르게 입력하세요.\n";
+        if(isNaN(tempMinDuration)) message += "조리 시간의 하한을 올바르게 입력하세요.\n";
+
+        if(message){
+            window.alert(message);
+            return null;
+        }
+        
         return st;
     }
 
@@ -140,13 +153,15 @@ class RecipeList extends Component{
 
     clickSearchHandler = () => {
         let newSearchSettings=this.checkInputHandler({...this.state.tempSearchSettings, pageNumber: 1});
-        this.setState(prevState => ({
-            ...prevState,
-            SearchSettings: newSearchSettings,
-        }));
-        this.props.history.push(this.getURL(newSearchSettings));
-        this.props.onGetRecipes(newSearchSettings);
-        window.location.reload();
+        if(newSearchSettings){
+            this.setState(prevState => ({
+                ...prevState,
+                SearchSettings: newSearchSettings,
+            }));
+            this.props.history.push(this.getURL(newSearchSettings));
+            this.props.onGetRecipes(newSearchSettings);
+            window.location.reload();
+        }   
     }
 
     clickPagePreviousHandler = () => {
