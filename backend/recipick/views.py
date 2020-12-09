@@ -253,8 +253,8 @@ def recipe_page(request):
                 recipepage = recipelist.order_by('price','-likes','-rating')[10*page_start:(10*page_start+51)]
         newrecipepage = []
         for recipe in recipepage:
-            tn = recipe.thumbnail
-            decoded_string = base64.b64encode(tn.read()).decode('utf-8')
+            #tn = recipe.thumbnail
+            #decoded_string = base64.b64encode(tn.read()).decode('utf-8')
             author = "none"
             if recipe.author:
                 author = recipe.author.username
@@ -262,7 +262,7 @@ def recipe_page(request):
                 'id': recipe.id, 'title': recipe.title,
                 'author': author, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                'thumbnail': decoded_string
+                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
             }
             newrecipepage.append(newrecipe)
         return JsonResponse(newrecipepage, safe=False, status=200)
