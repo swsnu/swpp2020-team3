@@ -27,6 +27,9 @@ from django.db.models import Q
 import random
 import secrets
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+import boto3
+import time
+
 
 def getuser(request, id):
     if(request.method) == 'GET':
@@ -583,7 +586,10 @@ def recipe(request, id):
         format, imgstr = thumbnail.split(';base64,')
         ext = format.split('/')[-1]
         temp_key = secrets.token_urlsafe(16)
-        data = ContentFile(base64.b64decode(imgstr), name='{}.{}'.format(temp_key, ext))
+        try: 
+                data = ContentFile(base64.b64decode(imgstr+"=" * ((4 - len(imgstr) % 4) % 4)), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
+        except:
+                data=''
         recipe.thumbnail.delete()
         recipe.thumbnail = data
         recipe.description_list = d_list
@@ -614,7 +620,12 @@ def recipe(request, id):
         for img_64 in p_list:
             format, imgstr = img_64.split(';base64,')
             ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
+            print("0-"+imgstr)
+            data = ''
+            try: 
+                data = ContentFile(base64.b64decode(imgstr+"=" * ((4 - len(imgstr) % 4) % 4)), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
+            except:
+                data=''
             new_img = ImageModel.objects.create(img=data, description_index=cnt)
             new_photo_list.append(new_img)
             cnt = cnt + 1
@@ -764,6 +775,18 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
+def getml(request, id):
+    if request.method == 'GET':
+        personalizeRt = boto3.client('personalize-runtime', region_name = 'us-east-1')
+        response = personalizeRt.get_recommendations(
+            campaignArn = "arn:aws:personalize:us-east-1:089178928033:campaign/ml2",
+            filterArn = "arn:aws:personalize:us-east-1:089178928033:filter/filter6",
+            userId = id)
+        ml_list = []
+        for item in response['itemList']:
+            ml_list.append(item['itemId'])
+        print(ml_list)
+        return JsonResponse(ml_list, status=200, safe=False)        
 
 @ensure_csrf_cookie
 def token(request):

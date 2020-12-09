@@ -6,6 +6,7 @@ const initialState = {
   ingredientList: [],
   randomRecipe: null,
   hotRecipe: null,
+  mlRecipe: [],
 };
 
 const reducer = (state = initialState, action) => {
