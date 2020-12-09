@@ -35,7 +35,7 @@ def getuser(request, id):
         liked_recipes = []
         recipe_basket = []
         written_recipes = []
-
+        print(user_1.like.all().values())
         for recipe in user_1.like.all():
             newrecipe = {
                 'id': recipe.id, 'title': recipe.title,
@@ -450,6 +450,7 @@ def randomrecipe(request):
 
 def recipe_like(request, id):
     if request.method == 'POST':
+        print('recipe_like+{}'.format(id))
         user = request.user
         if not user.is_authenticated:
             return HttpResponse(status=401)
