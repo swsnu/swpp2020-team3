@@ -10,6 +10,7 @@ export const LIKE_RECIPE = 'LIKE_RECIPE';
 export const REMOVE_LIKE_RECIPE = 'REMOVE_LIKE_RECIPE';
 export const SCRAP_RECIPE = 'SCRAP_RECIPE';
 export const REMOVE_SCRAP_RECIPE = 'REMOVE_SCRAP_RECIPE';
+export const ADD_RECIPE_RATING = 'ADD_RECIPE_RATING';
 
 export const GET_INGREDIENTS = 'GET_INGREDIENTS'
 
@@ -17,6 +18,8 @@ export const SIGN_UP = 'SIGN_UP';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT'; 
 export const GET_USER = 'GET_USER';
+export const FOLLOW_USER = 'FOLLOW_USER';
+export const UNFOLLOW_USER = 'UNFOLLOW_USER';
 export const IS_AUTHENTICATED = 'IS_AUTHENTICATED';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 

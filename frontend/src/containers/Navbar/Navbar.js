@@ -16,6 +16,35 @@ class Navbar extends Component{
     componentDidMount() {
         this.props.isLogin()
     }
+
+    parse = (string) => {
+        let value = 0;
+        for(let i = 0; i < string.length; i++){
+            if(string[i] < '0' || string[i] > '9'){
+                return NaN;
+            }
+            value = 10 * value + parseInt(string[i]);
+        }
+        return value;
+    }
+
+    checkInputHandler = (state) =>{
+        let st = state;
+        let tempMaxPrice, tempMinPrice;
+        let message = '';
+        tempMaxPrice = this.parse(st.maxPrice);
+        tempMinPrice = this.parse(st.minPrice);
+        if(isNaN(tempMaxPrice)) message += "가격의 상한을 올바르게 입력하세요.\n";
+        if(isNaN(tempMinPrice)) message += "가격의 하한을 올바르게 입력하세요.\n";
+
+        if(message){
+            window.alert(message);
+            return null;
+        }
+        
+        return st;
+    }
+
     searchConfirmHandler = () => {
         let query = {
             American: true, Korean: true,
@@ -23,13 +52,16 @@ class Navbar extends Component{
             ConvenienceStore: true, Dessert: true,
             minPrice: this.state.minPrice == '' ? 0 : this.state.minPrice,
             maxPrice: this.state.maxPrice == '' ? 100000 : this.state.maxPrice,
-            minDuration: 0, maxDuration: 100,
+            minDuration: 0, maxDuration: 1000,
             searchWord: this.state.keyword,
             pageNumber: 1,
             searchMode: 'likes',
         }
-        this.props.history.push(this.getURL(query));
-        window.location.reload();
+        let searchSettings = this.checkInputHandler(query);
+        if(searchSettings){
+            this.props.history.push(this.getURL(searchSettings));
+            window.location.reload();
+        }
     }
 
     clickCategoryHandler = (id) => {
@@ -39,13 +71,16 @@ class Navbar extends Component{
             ConvenienceStore: id == 5, Dessert: id == 6,
             minPrice: this.state.minPrice == '' ? 0 : this.state.minPrice,
             maxPrice: this.state.maxPrice == '' ? 100000 : this.state.maxPrice,
-            minDuration: 0, maxDuration: 100,
+            minDuration: 0, maxDuration: 1000,
             searchWord: this.state.keyword,
             pageNumber: 1,
             searchMode: 'likes',
         }
-        this.props.history.push(this.getURL(query));
-        window.location.reload();
+        let searchSettings = this.checkInputHandler(query);
+        if(searchSettings){
+            this.props.history.push(this.getURL(searchSettings));
+            window.location.reload();
+        }
     }
 
     getURL(st){
@@ -72,17 +107,17 @@ class Navbar extends Component{
                 </div>
                 <div id='nav'>
                 <ul id = 'Navlist'>
-                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(1)}}> 중식 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(1)}}> 양식 </a>
                     </li>
                     <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(2)}}> 한식 </a>
                     </li>
-                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(3)}}> 양식 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(3)}}> 중식 </a>
                     </li>
                     <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(4)}}> 일식 </a>
                     </li>
-                    <li> <a id='navitem'onClick={() => {this.clickCategoryHandler(5)}}> 디저트 </a>
+                    <li> <a id='navitem'onClick={() => {this.clickCategoryHandler(5)}}> 편의점 </a>
                     </li>
-                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(6)}}> 편의점 </a>
+                    <li> <a id='navitem' onClick={() => {this.clickCategoryHandler(6)}}> 디저트 </a>
                     </li>
                     <li><NavLink id='navitem' to='/meal-planner' exact>식단표</NavLink></li>
                 </ul>

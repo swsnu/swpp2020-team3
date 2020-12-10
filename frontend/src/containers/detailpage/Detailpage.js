@@ -15,6 +15,7 @@ class Detailpage extends Component {
         login_id: -1,
         like: 0,
         scrap: 0,
+        rating: 0
     };
     constructor(props) {
         super(props);
@@ -75,6 +76,16 @@ class Detailpage extends Component {
             this.props.removescrapRecipe(this.props.recipe.id);
         }
     }
+
+    handleRating = (rating) => {
+        console.log(rating)
+        this.setState({rating: rating})
+
+    }
+    submitRating = () => {
+        console.log('submit')
+        this.props.addRating(this.props.recipe.id, this.state.rating)
+    }
     
 
     render() {
@@ -96,7 +107,6 @@ class Detailpage extends Component {
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
-                let img = igd.picture
                 return (
                     <div key={igd.id} id='detailigd'>
                         <div id = 'detailigdinfo'>
@@ -105,7 +115,7 @@ class Detailpage extends Component {
                             <div id='igdlabel'>{"수량: "+igd.quantity+igd.igd_type+' * '+igd.amount}</div>
                             <div id='igdlabel'>{"가격: "+igd.price+'원'}</div>
                         </div>
-                        {<img id = 'detailimg' src={img} width='200'/>}
+                        {<img id = 'detailimg' src={igd.picture} width='200'/>}
                     </div>
                 )
             })
@@ -126,7 +136,8 @@ class Detailpage extends Component {
                         <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} duration = {duration}
                             likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}
                             loginid={this.state.login_id} onlikeClicked = {() =>  this.handleLike()} onscrapClicked = {() => this.handleScrap()}
-                            islike = {this.isLike()} isscrap = {this.isScrap()}
+                            islike = {this.isLike()} isscrap = {this.isScrap()} 
+                            updateState={(event)=>this.handleRating(event)} confirmRating={() => this.submitRating()}
                         />
                         <div className='dish_method'>
                             <div id = 'detailtitle3'>{'조리 순서'}</div>
@@ -139,7 +150,7 @@ class Detailpage extends Component {
                 <div id='detailcomment'>
                     <div id='commentlabel'>{'댓글'}</div>
                     <hr />
-                    <Comments id='comment' login_id={this.state.login_id    } history={this.props.history} recipeId={this.props.match.params.id}/>
+                    <Comments id='comment' login_id={this.state.login_id} history={this.props.history} recipeId={this.props.match.params.id}/>
                 </div>
             </div>
         )
@@ -160,7 +171,8 @@ const mapDispatchToProps = dispatch => {
         likeRecipe: (id) => dispatch(actionCreators.likeRecipe(id)),
         removelikeRecipe: (id) => dispatch(actionCreators.removelikeRecipe(id)),
         scrapRecipe: (id) => dispatch(actionCreators.scrapRecipe(id)),
-        removescrapRecipe: (id) => dispatch(actionCreators.removescrapRecipe(id))
+        removescrapRecipe: (id) => dispatch(actionCreators.removescrapRecipe(id)),
+        addRating: (id, rating) => dispatch(actionCreators.addRating(id, rating))
     };
 }
 

@@ -4,6 +4,15 @@ import './DishResult.css'
 import './DishResult.css'
 
 class DishResult extends Component {
+    state = {
+        value: ''
+    }
+    handleRating(event){
+        console.log(event.target.value)
+        this.setState({value: event.target.value})
+        this.props.updateState(event.target.value)
+    }
+
     render() {
         const showigd = this.props.ingredients
         // const tag = this.props.tag && this.props.tag.map((tag) => <span key={tag} id='tag'>{tag} </span>)
@@ -39,7 +48,10 @@ class DishResult extends Component {
                                 <div id='categsplit'>{categories && categories.slice(4,6)}</div>
                                 <div id='userbuttons'>
                                     {(this.props.loginid!=-1)?<div><button id='ub' style={(this.props.islike?{'background-color':'#c2563a'}:null)} onClick={this.props.onlikeClicked}>좋아요</button>
-                                    <button id='ub' style={(this.props.isscrap?{'background-color':'#c2563a'}:null)} onClick={this.props.onscrapClicked}>스크랩</button></div>:null}
+                                    <button id='ub' style={(this.props.isscrap?{'background-color':'#c2563a'}:null)} onClick={this.props.onscrapClicked}>스크랩</button>
+                                    <input type='number' value={this.state.value} onChange={(event)=>{this.handleRating(event)}}/>
+                                    <button onClick={this.props.confirmRating}>별점 남기기</button>
+                                    </div>:null}
                                 </div>
                             </div>
                         </div>

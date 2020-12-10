@@ -113,6 +113,8 @@ class Migration(migrations.Migration):
                 ('liked_user', models.ManyToManyField(blank=True, related_name='like', to=settings.AUTH_USER_MODEL)),
                 ('photo_list', models.ManyToManyField(to='recipick.ImageModel')),
                 ('scrapped_user', models.ManyToManyField(blank=True, related_name='scrap', to=settings.AUTH_USER_MODEL)),
+                ('rating_user', models.ManyToManyField(blank=True, related_name='rating', through='recipick.ConnectRecipeRating', to=settings.AUTH_USER_MODEL)),
+
             ],
         ),
         migrations.AddField(
@@ -129,5 +131,14 @@ class Migration(migrations.Migration):
             model_name='comment',
             name='recipe',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='recipick.recipe'),
+        ),
+        migrations.CreateModel(
+            name='ConnectRecipeRating',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('rating', models.FloatField(default=0)),
+                ('recipe', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='recipick.recipe')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+            ],
         ),
     ]
