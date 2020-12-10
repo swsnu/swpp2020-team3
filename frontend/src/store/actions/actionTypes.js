@@ -17,6 +17,8 @@ export const SIGN_UP = 'SIGN_UP';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT'; 
 export const GET_USER = 'GET_USER';
+export const FOLLOW_USER = 'FOLLOW_USER';
+export const UNFOLLOW_USER = 'UNFOLLOW_USER';
 export const IS_AUTHENTICATED = 'IS_AUTHENTICATED';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 

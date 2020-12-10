@@ -22,6 +22,8 @@ export {
     signOut,
     getUser,
     isLogin,
+    followUser,
+    unfollowUser,
     changePassword,
 } from './userCreators';
 

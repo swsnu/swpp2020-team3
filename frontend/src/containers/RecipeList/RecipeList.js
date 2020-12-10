@@ -329,7 +329,7 @@ class RecipeList extends Component{
                                 style = {{backgroundColor: this.state.searchSettings.pageNumber%5==0 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(5)}>{5*Math.floor((this.state.searchSettings.pageNumber-1)/5)+5}</button>}
                         {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
-                                disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
+                                onClick={() => this.clickPageNextHandler()}>right</button>}
                     </div>
                 </div>
             </div>
