@@ -45,8 +45,6 @@ class Signup extends Component{
                         <p> RECIPICK </p>
                         <label>이름</label>
                         <input type="text" name="name" onChange={(event) => this.setState({name: event.target.value})}></input>
-                        <label>비밀번호</label>
-                        <input type="text" name="id" onChange={(event) => this.setState({id: event.target.value})}></input>
                         <label>이메일</label>
                         <input type="text" name="email" onChange={(event) => this.setState({email: event.target.value})}></input>
                         <label>비밀번호</label>

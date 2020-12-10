@@ -13,20 +13,8 @@ import './Editpage.css'
 const checkIngredients = (list) => {
     for(let i =0; i<list.length; i++){
         let item = list[i]
-        if(item.price_normalized){ // ideal
-            if(item.price!=0 && item.name.length != 0  && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
-                continue;
-            else{
-                return false;
-            } 
-        }
-        else{
-            if(item.price != 0 && item.name.length != 0 && item.igd_type != '' && item.amount != 0){
-                continue;
-            }
-            else {
-                return false;
-            }
+        if(item.price==0 || item.name.length==0 || item.igd_type=='' || item.amount==0 || (item.price_normalized && item.quantity==0)){
+            return false;
         }
     } 
     return true;
@@ -40,17 +28,17 @@ const checkDescriptions = (list) => {
 const checkOutput = (recipe) => {
     console.log(recipe)
     let message = ''
-    if(recipe.title.length == 0)
+    if(!recipe.title)
         message = message.concat('제목을 입력해주세요.\n')
-    if(recipe.thumbnail.length == 0)
+    if(!recipe.thumbnail)
         message = message.concat('대표사진을 추가해주세요.\n')
-    if(recipe.duration.length == 0)
+    if(!recipe.duration)
         message = message.concat('조리시간을 정해주세요.\n')
-    if(recipe.ingredient_list.length == 0)
+    if(!recipe.ingredient_list)
         message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
-    if(recipe.description_list.length == 0 || !checkDescriptions(recipe.description_list))
+    if(!recipe.description_list || !checkDescriptions(recipe.description_list))
         message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
-    if(recipe.ingredient_list.length != 0 && !checkIngredients(recipe.ingredient_list))
+    if(recipe.ingredient_list && !checkIngredients(recipe.ingredient_list))
         message = message.concat('요리재료를 올바르게 채워주세요.')
     
     return message
@@ -61,6 +49,7 @@ class Editpage extends Component {
     componentDidMount(){
         this.props.getRecipe(this.props.match.params.id)
             .then((res) => {
+                console.log(this.state)
                 this.setState({
                     title: res['selectedRecipe'].title,
                     price: res['selectedRecipe'].price,
@@ -74,12 +63,10 @@ class Editpage extends Component {
                     description_list: res['selectedRecipe'].description_list,
                     photo_list: res['selectedRecipe'].photo_list,
                 })
-                if(this.state.photo_list){
-                    let list = this.state.photo_list.map((item) => (
-                        'data:image/png;base64,'+item
-                    ))
-                    this.setState({photo_list: list})
-                }
+                let list = this.state.photo_list.map((item) => (
+                    'data:image/png;base64,'+item
+                ))
+                this.setState({photo_list: list})
             })
     }
 
@@ -89,7 +76,7 @@ class Editpage extends Component {
     }
     
     addStepHandler(){
-        let newList = this.state.description_list
+        let newList = this.state.description_list;
         newList.push('')
         this.setState({description_list: newList})
     }
@@ -125,7 +112,6 @@ class Editpage extends Component {
         if(pass.length == 0)
             this.props.editRecipe(this.state, this.props.match.params.id).then(() => this.props.history.push('/detail-page/'+this.props.match.params.id))
         else {
-            console.log('dsd')
             alert(pass)
         }
     }
@@ -138,7 +124,7 @@ class Editpage extends Component {
             <img src={item.img} width='600'/>
             <input id="imageHandler" type="file" accept='.jpg, .png, .jpeg' onChange={(event) => this.imageHandler(event, index)}/>
             <div className='dish_explanation'>
-                <input id='detailti' value={this.state.description_list[index]} onChange={(event) => {this.changeExplanation(event, index)}}/>
+                <input id='edittitle' value={this.state.description_list[index]} onChange={(event) => {this.changeExplanation(event, index)}}/>
                 <button id = "delete-button" onClick={() => this.deleteStep(index)}>Delete</button>
             </div>
             <br/>
@@ -174,7 +160,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
-        onGetIgrList: () => dispatch(actionCreators.getIngredients()),
         editRecipe: (data, id) => dispatch(actionCreators.editRecipe(data, id))
     };
 }
