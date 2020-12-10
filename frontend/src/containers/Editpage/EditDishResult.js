@@ -54,7 +54,7 @@ class EditDishResult extends Component {
 
     componentDidMount(){
         this.props.getRecipe(parseInt(this.props.match.params.id)).then((res1) => {
-            res = res1.selectedRecipe
+            let res = res1.selectedRecipe
             this.setState({
             title: res.title,
             price: res.price,

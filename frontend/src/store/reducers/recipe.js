@@ -7,6 +7,7 @@ const initialState = {
   randomRecipe: null,
   hotRecipe: null,
   mlRecipes: [],
+  rating:0,
 };
 
 const reducer = (state = initialState, action) => {
@@ -44,6 +45,9 @@ const reducer = (state = initialState, action) => {
       return {...state, selectedRecipe: {...state.selectedRecipe, scrapped_user: remove_scrapped_user}}
     case actionTypes.GET_ML_RECIPES:
       return {...state, mlRecipes: action.mlRecipes}
+    case actionTypes.GET_RECIPE_RATING:
+      console.log(action)
+      return {...state, rating: action.rating}
     default:
       break;
   }

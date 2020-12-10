@@ -14,6 +14,7 @@ export {
     scrapRecipe,
     removescrapRecipe,
     addRating,
+    getRating,
     getMl,
 } from './recipe';
 

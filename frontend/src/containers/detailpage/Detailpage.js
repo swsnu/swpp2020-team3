@@ -19,12 +19,16 @@ class Detailpage extends Component {
     };
     constructor(props) {
         super(props);
-        this.props.getRecipe(this.props.match.params.id);
+        this.props.getRating(this.props.match.params.id).then(res => {
+            console.log(res)
+        })
         this.props.isLogin().then(res => {
+            console.log(res)
             this.setState({
                 login_id: res.login_id
             })
         })
+        this.props.getRecipe(this.props.match.params.id)
     }
 
     isLike = () => {
@@ -159,7 +163,8 @@ class Detailpage extends Component {
 
 const mapStateToProps = state => {
     return {
-        recipe: state.rcp.selectedRecipe
+        recipe: state.rcp.selectedRecipe,
+        initrating: state.rcp.rating
     };
 }
 
@@ -172,7 +177,8 @@ const mapDispatchToProps = dispatch => {
         removelikeRecipe: (id) => dispatch(actionCreators.removelikeRecipe(id)),
         scrapRecipe: (id) => dispatch(actionCreators.scrapRecipe(id)),
         removescrapRecipe: (id) => dispatch(actionCreators.removescrapRecipe(id)),
-        addRating: (id, rating) => dispatch(actionCreators.addRating(id, rating))
+        addRating: (id, rating) => dispatch(actionCreators.addRating(id, rating)),
+        getRating: (id) => dispatch(actionCreators.getRating(id))
     };
 }
 
