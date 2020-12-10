@@ -27,6 +27,9 @@ from django.db.models import Q
 import random
 import secrets
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+import boto3
+import time
+
 
 def getuser(request, id):
     if(request.method) == 'GET':
@@ -35,7 +38,7 @@ def getuser(request, id):
         liked_recipes = []
         recipe_basket = []
         written_recipes = []
-
+        print(user_1.like.all().values())
         for recipe in user_1.like.all():
             newrecipe = {
                 'id': recipe.id, 'title': recipe.title,
@@ -448,6 +451,7 @@ def randomrecipe(request):
 
 def recipe_like(request, id):
     if request.method == 'POST':
+        print('recipe_like+{}'.format(id))
         user = request.user
         if not user.is_authenticated:
             return HttpResponse(status=401)
@@ -585,9 +589,13 @@ def recipe(request, id):
             format, imgstr = thumbnail.split(';base64,')
             ext = format.split('/')[-1]
             temp_key = secrets.token_urlsafe(16)
-            data = ContentFile(base64.b64decode(imgstr), name='{}.{}'.format(temp_key, ext))
+            try: 
+                data = ContentFile(base64.b64decode(imgstr+"=" * ((4 - len(imgstr) % 4) % 4)), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
+            except:
+                data=''
             recipe.thumbnail.delete()
             recipe.thumbnail = data
+            
         recipe.description_list = d_list
         recipe.category = t_list
         recipe.summary = summary
@@ -622,6 +630,10 @@ def recipe(request, id):
             else:
                 format, imgstr = img_64.split(';base64,')
                 ext = format.split('/')[-1]
+                try: 
+                    data = ContentFile(base64.b64decode(imgstr+"=" * ((4 - len(imgstr) % 4) % 4)), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
+                except:
+                    data=''
                 data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
                 new_img = ImageModel.objects.create(img=data, description_index=cnt)
                 new_photo_list.append(new_img)
@@ -773,6 +785,24 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
+def getml(request, id):
+    if request.method == 'GET':
+        print(1)
+        personalizeRt = boto3.client('personalize-runtime', region_name = 'us-east-1')
+        response = personalizeRt.get_recommendations(
+            campaignArn = "arn:aws:personalize:us-east-1:089178928033:campaign/ml2",
+            filterArn = "arn:aws:personalize:us-east-1:089178928033:filter/filter6",
+            userId = str(id))
+        ml_list = []
+        for item in response['itemList']:
+            ml_list.append(item['itemId'])
+        res = []
+        for i in ml_list:
+            print(i)
+            recipe = [recipe for recipe in Recipe.objects.filter(id = i).values()]
+            if(recipe):
+                res.append(recipe)
+        return JsonResponse(res, status=200, safe=False)        
 
 @ensure_csrf_cookie
 def token(request):

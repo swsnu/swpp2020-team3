@@ -49,5 +49,7 @@ urlpatterns = [
     path('token', views.token, name='token'),
 
     path('activate/<str:uidb64>/<str:token>', views.activate, name='activate'),
+
+    path('getml/<int:id>/', views.getml, name='getml'),
     
 ]
