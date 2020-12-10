@@ -13,6 +13,7 @@ export {
     removelikeRecipe,
     scrapRecipe,
     removescrapRecipe,
+    addRating,
     getMl,
 } from './recipe';
 

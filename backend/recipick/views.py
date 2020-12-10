@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient
+from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
@@ -604,6 +604,35 @@ def recipe_removescrap(request, id):
         return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
+
+@csrf_exempt
+def recipe_rating(request, id):
+    if request.method == 'POST':
+        user = request.user
+        if not user.is_authenticated:
+            return HttpResponse(status=401)
+        try:
+            body = json.loads(request.body.decode())
+            rating = body['rating']
+        except:
+            return HttpResponse(status=403)
+        recipe = Recipe.objects.get(id=id)
+        recipe.rating_user.add(user)
+        recipe.save()
+        connection = ConnectRecipeRating(recipe=recipe, user=user, rating=rating)
+        connection.save()
+        return JsonResponse({'user.id': user.id, 'rating': connection.rating, 'recipe.id': recipe.id}, safe=False, status=200)
+    elif request.method == 'PUT':
+        print("to edit my rating")
+    # 디버깅용, 나중에는 기덕이처럼 유저로부터 가지고 오면 될듯
+    elif request.method == 'GET':
+        user = request.user
+        recipe = Recipe.objects.get(id=id)
+        connection = ConnectRecipeRating.objects.get(recipe=recipe)
+        return JsonResponse(connection.rating, safe=False, status=200)
+    else:
+        return HttpResponseNotAllowed(['GET', 'POST', 'PUT'])
+
 
 def recipe(request, id):
     if request.method == 'GET':

@@ -26,6 +26,8 @@ urlpatterns = [
     # scrap recipe
     path('recipe/<int:id>/scrap/', views.recipe_scrap, name='recipe_scrap'),
     path('recipe/<int:id>/removescrap/', views.recipe_removescrap, name='recipe_remomvescrap'),
+    # add rating to recipe
+    path('recipe/<int:id>/rating/', views.recipe_rating, name='recipe_rating'),
     
     # for posting an ingredient
     path('ingredient', views.ingredient_post, name='ingredient_post'),              
