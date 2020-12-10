@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow} from 'enzyme';
 import Reply from './Reply';
 
 describe('<Reply />', () => {
@@ -38,5 +38,11 @@ describe('<Reply />', () => {
     expect(spyPrompt2).toHaveBeenCalledTimes(2); 
     expect(mockClickEdit).toHaveBeenCalledTimes(0);
   });
+
+  it('should not render button without login', () => {
+    const component = shallow(<Reply login_id={1} author={2}/>);
+    const wrapper = component.find('#delete-reply-button');
+    expect(wrapper.length).toBe(0);
+  })
   
 });
