@@ -193,12 +193,14 @@ class Createpage extends Component{
             thumbnail: state.thumbnailURL,
             date: date
         }
+        console.log(recipe.thumbnail);
         let pass = checkOutput(recipe);
-        console.log(recipe)
+        if(pass){
+            window.alert(pass);
+            return;
+        }
+        this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
 
-        if(pass.length == 0)
-            this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
-        else console.log(pass)
     }
     
     onClickChangeColor(event, param){
@@ -245,12 +247,31 @@ class Createpage extends Component{
         let customIngr = {
             brand: this.state.customIngrBrand,
             name: this.state.customIngrName1 ? this.state.customIngrName1 : this.state.customIngrName0,
-            igd_type: this.state.customIngrType1==this.state.customIngrType0 ? 'g' 
-                        : (this.state.customIngrType1!='g'? this.state.customIngrType1 : this.state.customIngrType0),
+            igd_type: show == 1 ? this.state.customIngrType1 : this.state.customIngrType0,
             price_normalized: show,
             price: show == 1 ? parseInt(ingrPrice) : parseInt(this.state.customIngrNormPrice),
             quantity: parseFloat(this.state.customIngrQuantity),
             amount: 0,
+        }
+        let message = '';
+        if(show == 1 && !customIngr.brand){
+            message += '재료의 브랜드를 입력해주세요.\n'
+        }
+        if(!customIngr.name){
+            message += '재료의 이름를 입력해주세요.\n'
+        }
+        if(show == 1 && !customIngr.quantity){
+            message += '재료의 양을 정확하게 입력해주세요.\n'
+        }
+        if(!customIngr.igd_type){
+            message += '재료의 단위를 입력해주세요.\n'
+        }
+        if(!(customIngr.price == 0 || customIngr.price)){
+            message += '재료의 가격을 입력해주세요.\n'
+        }
+        if(message){
+            window.alert(message);
+            return;
         }
         console.log(customIngr)
         let listSelected = this.state.selectedIngredientList
@@ -340,7 +361,7 @@ class Createpage extends Component{
                                 <label>양 (상품)</label>
                                 <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                 <label>계량(igd_type)</label>
-                                <input type="text" value={this.state.customIngrType1} onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
+                                <input type="text" value={this.state.customIngrType1} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
                                 <label>가격 (상품)</label>
                                 <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
                                 <button onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>

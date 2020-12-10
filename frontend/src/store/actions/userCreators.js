@@ -77,3 +77,27 @@ export const changePassword = (userCredentials) => {
     .then(res => dispatch(changePassword_(res.data)))
   }
 }
+
+const followUser_ = (userCredentials) => {
+  return { type: actionTypes.FOLLOW_USER, getuser: userCredentials};
+}
+export const followUser = (id) => {
+  return dispatch => {
+    return axios.post('/api/recipe/'+id+'/follow/')
+      .then(res => {
+        dispatch(followUser_(res.data))
+      })
+  }
+}
+
+const unfollowUser_ = (userCredentials) => {
+  return { type: actionTypes.UNFOLLOW_USER, getuser: userCredentials};
+}
+export const unfollowUser = (id) => {
+  return dispatch => {
+    return axios.post('/api/recipe/'+id+'/unfollow/')
+      .then(res => {
+        dispatch(unfollowUser_(res.data))
+      })
+  }
+}
