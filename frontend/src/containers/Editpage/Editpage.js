@@ -70,13 +70,13 @@ class Editpage extends Component {
                     category: res['selectedRecipe'].category,
                     summary: res['selectedRecipe'].summary,
                     ingredient_list: res['selectedRecipe'].ingredient_list,
-                    thumbnail: 'data:image/png;base64,'+ res['selectedRecipe'].thumbnail,
+                    thumbnail: res['selectedRecipe'].thumbnail,
                     description_list: res['selectedRecipe'].description_list,
                     photo_list: res['selectedRecipe'].photo_list,
                 })
                 if(this.state.photo_list){
                     let list = this.state.photo_list.map((item) => (
-                        'data:image/png;base64,'+item
+                        item
                     ))
                     this.setState({photo_list: list})
                 }

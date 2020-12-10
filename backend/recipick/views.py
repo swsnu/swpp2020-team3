@@ -353,7 +353,6 @@ def recipe_post(request):
         ingList = Ingredient.objects.all()
         newIngr = None
         for ing in ingredient_list:
-            print(ing['name'])
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
             target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
@@ -379,14 +378,13 @@ def recipe_post(request):
             connection.save()
         recipe.save(force_update=True)
 
+    
         # photo_list
         cnt = 0;
         for img_64 in p_list:
             _format, imgstr = img_64.split(';base64,')
             ext = _format.split('/')[-1]
-            print(user.id)
             data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
-            
             new_img = ImageModel.objects.create(img=data, description_index=cnt)
             recipe.photo_list.add(new_img)
             cnt = cnt + 1
@@ -580,12 +578,16 @@ def recipe(request, id):
         recipe.title = title
         recipe.price = price
         recipe.duration = duration
-        format, imgstr = thumbnail.split(';base64,')
-        ext = format.split('/')[-1]
-        temp_key = secrets.token_urlsafe(16)
-        data = ContentFile(base64.b64decode(imgstr), name='{}.{}'.format(temp_key, ext))
-        recipe.thumbnail.delete()
-        recipe.thumbnail = data
+        if "http" in thumbnail:
+            format, imgstr = thumbnail.split('http://3.217.98.184:8000/media/')
+            recipe.thumbnail = imgstr
+        else:
+            format, imgstr = thumbnail.split(';base64,')
+            ext = format.split('/')[-1]
+            temp_key = secrets.token_urlsafe(16)
+            data = ContentFile(base64.b64decode(imgstr), name='{}.{}'.format(temp_key, ext))
+            recipe.thumbnail.delete()
+            recipe.thumbnail = data
         recipe.description_list = d_list
         recipe.category = t_list
         recipe.summary = summary
@@ -612,12 +614,19 @@ def recipe(request, id):
         cnt = 0
         new_photo_list = []
         for img_64 in p_list:
-            format, imgstr = img_64.split(';base64,')
-            ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
-            new_img = ImageModel.objects.create(img=data, description_index=cnt)
-            new_photo_list.append(new_img)
-            cnt = cnt + 1
+            if "http" in img_64:
+                format, imgstr = img_64.split('http://3.217.98.184:8000/media/')
+                new_img = ImageModel.objects.create(img=imgstr, description_index = cnt)
+                new_photo_list.append(new_img)
+                cnt = cnt + 1
+            else:
+                format, imgstr = img_64.split(';base64,')
+                ext = format.split('/')[-1]
+                data = ContentFile(base64.b64decode(imgstr), name='r_{}u_{}cnt_{}.{}'.format(recipe.id,user.id,cnt, ext))
+                new_img = ImageModel.objects.create(img=data, description_index=cnt)
+                new_photo_list.append(new_img)
+                cnt = cnt + 1
+        
         recipe.photo_list.all().delete()
         recipe.photo_list.set(new_photo_list)
         liked_user = recipe.liked_user

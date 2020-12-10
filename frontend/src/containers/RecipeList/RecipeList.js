@@ -119,16 +119,27 @@ class RecipeList extends Component{
             }
         }));
     }
+    parse = (string) => {
+        let value = 0;
+        for(let i = 0; i < string.length; i++){
+            if(string[i] < '0' || string[i] > '9'){
+                return NaN;
+            }
+            value = 10 * value + parseInt(string[i]);
+        }
+        return value;
+    }
+
 
     checkInputHandler = (state) =>{
         let st=state;
         let tempMaxPrice, tempMinPrice;
         let tempMaxDuration, tempMinDuration;
         let message = '';
-        tempMaxPrice = parseInt(st.maxPrice);
-        tempMinPrice = parseInt(st.minPrice);
-        tempMaxDuration = parseInt(st.maxDuration);
-        tempMinDuration = parseInt(st.minDuration);
+        tempMaxPrice = this.parse(st.maxPrice);
+        tempMinPrice = this.parse(st.minPrice);
+        tempMaxDuration = this.parse(st.maxDuration);
+        tempMinDuration = this.parse(st.minDuration);
         if(isNaN(tempMaxPrice)) message += "가격의 상한을 올바르게 입력하세요.\n";
         if(isNaN(tempMinPrice)) message += "가격의 하한을 올바르게 입력하세요.\n";
         if(isNaN(tempMaxDuration)) message += "조리 시간의 상한을 올바르게 입력하세요.\n";
