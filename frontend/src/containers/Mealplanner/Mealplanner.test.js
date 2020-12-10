@@ -4,8 +4,11 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 import {getMockStore} from '../../test-utils/mocks.js'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import * as actionCreators from '../../store/actions/recipe';
+
+import * as recipeCreators from '../../store/actions/recipe';
+import * as userCreators from '../../store/actions/userCreators';
 import Mealplanner from './Mealplanner'
 
 const stubState = {
@@ -56,7 +59,7 @@ jest.mock('react-beautiful-dnd', (onDragEnd) => ({
 
 
 describe('<Mealplanner />', () => {
-  let spyOnGetRecipe = jest.spyOn(actionCreators, 'getRecipes')
+  let spyOnGetRecipe = jest.spyOn(recipeCreators, 'getRecipes')
       .mockImplementation(() => {
           return () => new Promise((resolve) => {
               const result = stubRecipeArray
@@ -75,7 +78,10 @@ describe('<Mealplanner />', () => {
           </Router>
         </Provider>
       );
-      
+    })
+
+    afterEach(() => {
+      jest.clearAllMocks();
     })
   
     it('should render Mealplanner', async() => {
@@ -141,6 +147,80 @@ describe('<Mealplanner />', () => {
       wrapper.at(0).simulate('click')
       expect(spyHistory).toHaveBeenCalledTimes(1)
       
+    })
+
+    it('should click singleblock', () => {
+      let spyHistory = jest.spyOn(history, 'push')
+      const component = mount(mealplanner);
+      const instance = component.find(Mealplanner.WrappedComponent).instance();
+      instance.setState({recipeArray: [[{id: 1, thumbnail: 1, real_id: 1}]]})
+      component.update();
+      let wrapper = component.find('.singleBlock img')
+      wrapper.simulate('click')
+      expect(spyHistory).toHaveBeenCalledTimes(1);
+    })
+
+    it('test onDragEnd', () => {
+      const component = mount(mealplanner);
+      const instance = component.find(Mealplanner.WrappedComponent).instance();
+      let source, destination;
+      instance.onDragEnd({source, destination});
+
+      destination = {droppableId: 'a', index: 1};
+      source = {droppableId: 'a', index: 0}
+      instance.onDragEnd({source, destination});
+
+      destination = {droppableId: 'aday', index: 1};
+      source = {droppableId: 'aday', index: 0}
+      instance.onDragEnd({source, destination});
+
+      destination = {droppableId: 'aday', index: 2};
+      source = {droppableId: 'aday', index: 0}
+      instance.onDragEnd({source, destination});
+
+      destination = {droppableId: 'bday', index: 1};
+      source = {droppableId: 'aday', index: 0}
+      instance.onDragEnd({source, destination});
+    })
+
+    it('test generatAllML', () => {
+      const component = mount(mealplanner);
+      const instance = component.find(Mealplanner.WrappedComponent).instance();
+      instance.setState({recipes: [1, 2, 3, 4, 5, 6, 7, 8, 9]})
+      instance.generateAllML();
+    })
+
+    it('test deleteDay', () => {
+      const component = mount(mealplanner);
+      const instance = component.find(Mealplanner.WrappedComponent).instance();
+      instance.setState({recipeArray: [['a']]});
+      instance.deleteDay();
+    })
+
+    it('test login', () => {
+      const spyGetRecipes = jest.spyOn(recipeCreators, 'getRandom')
+        .mockImplementation(() => {
+          return () => new Promise(resolve => {
+            const result = {randomRecipe: []}
+            setImmediate(resolve(result));
+          })
+        })
+      const spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+          return () => new Promise(resolve => {
+            const result = {login_id: 1};
+            setImmediate(resolve(result))
+          })
+        })
+      const spyGetMls = jest.spyOn(recipeCreators, 'getMl')
+        .mockImplementation((id) => {
+          return () => new Promise(resolve => {
+            const result = {mlRecipes: []};
+            setImmediate(resolve(result))
+          })
+        })
+      const component = mount(mealplanner);
+      const instance = component.find(Mealplanner.WrappedComponent).instance();
     })
 
 });

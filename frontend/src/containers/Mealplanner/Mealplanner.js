@@ -111,20 +111,19 @@ export class Mealplanner extends Component {
         if(currlist[5]){
             arraylist[1][2] = currlist[0];
         }
-        if(currlist[5]){
+        if(currlist[6]){
             arraylist[2][0] = currlist[0];
         }
-        if(currlist[6]){
+        if(currlist[7]){
             arraylist[2][1] = currlist[0];
         }
-        if(currlist[7]){
+        if(currlist[8]){
             arraylist[2][2] = currlist[0];
         }
         this.setState({ recipeArray: arraylist })
     }
 
     onDragEnd(result) {
-        console.log("dsldkja")
         const { source, destination } = result
         // no effect movements:
         if (!destination || destination.droppableId == 'scrappedArticles' 
