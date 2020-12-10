@@ -5,6 +5,16 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+const getMl_ = (recipe) => {
+  return {type: actionTypes.GET_ML_RECIPES, mlRecipes: recipe}
+};
+export const getMl = (id) => {
+  return dispatch => {
+    return axios.get('api/getml/'+id+'/').then(res=> dispatch(getMl_(res.data)))
+  }
+}
+
+
 const getRandom_ = (recipe) => {
   return {type: actionTypes.GET_RANDOM, randomRecipe: recipe}
 };

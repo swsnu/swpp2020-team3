@@ -6,6 +6,7 @@ const initialState = {
   ingredientList: [],
   randomRecipe: null,
   hotRecipe: null,
+  mlRecipes: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -41,6 +42,8 @@ const reducer = (state = initialState, action) => {
     case actionTypes.REMOVE_SCRAP_RECIPE:
       remove_scrapped_user = state.selectedRecipe.scrapped_user.filter((id) => id!=action.id);
       return {...state, selectedRecipe: {...state.selectedRecipe, scrapped_user: remove_scrapped_user}}
+    case actionTypes.GET_ML_RECIPES:
+      return {...state, mlRecipes: action.mlRecipes}
     default:
       break;
   }

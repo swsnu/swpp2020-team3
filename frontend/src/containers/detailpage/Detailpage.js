@@ -107,7 +107,6 @@ class Detailpage extends Component {
         let igd;
         if(this.props.recipe && this.props.recipe.ingredient_list){
             igd = this.props.recipe.ingredient_list.map( (igd) => {
-                let img = igd.picture
                 return (
                     <div key={igd.id} id='detailigd'>
                         <div id = 'detailigdinfo'>
@@ -116,7 +115,7 @@ class Detailpage extends Component {
                             <div id='igdlabel'>{"수량: "+igd.quantity+igd.igd_type+' * '+igd.amount}</div>
                             <div id='igdlabel'>{"가격: "+igd.price+'원'}</div>
                         </div>
-                        {<img id = 'detailimg' src={img} width='200'/>}
+                        {<img id = 'detailimg' src={igd.picture} width='200'/>}
                     </div>
                 )
             })
@@ -151,7 +150,7 @@ class Detailpage extends Component {
                 <div id='detailcomment'>
                     <div id='commentlabel'>{'댓글'}</div>
                     <hr />
-                    <Comments id='comment' login_id={this.state.login_id    } history={this.props.history} recipeId={this.props.match.params.id}/>
+                    <Comments id='comment' login_id={this.state.login_id} history={this.props.history} recipeId={this.props.match.params.id}/>
                 </div>
             </div>
         )
