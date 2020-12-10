@@ -171,7 +171,6 @@ describe('<Replies />', () => {
         instance.state.content = 'text';
         instance.handleKeyPress({key: 'Enter'})
         expect(spyOnAdd).toHaveBeenCalledTimes(1);
-
     })
 
     it('should work confirm', async () => {
