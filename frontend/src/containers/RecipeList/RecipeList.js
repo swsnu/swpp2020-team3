@@ -119,13 +119,37 @@ class RecipeList extends Component{
             }
         }));
     }
+    parse = (string) => {
+        let value = 0;
+        for(let i = 0; i < string.length; i++){
+            if(string[i] < '0' || string[i] > '9'){
+                return NaN;
+            }
+            value = 10 * value + parseInt(string[i]);
+        }
+        return value;
+    }
+
 
     checkInputHandler = (state) =>{
         let st=state;
-        if(this.state.maxPrice == '') st.maxPrice=100000;
-        if(this.state.minPrice == '') st.minPrice=0;
-        if(this.state.maxDuration == '') st.maxDuration=100;
-        if(this.state.minDuration == '') st.minDuration=0;
+        let tempMaxPrice, tempMinPrice;
+        let tempMaxDuration, tempMinDuration;
+        let message = '';
+        tempMaxPrice = this.parse(st.maxPrice);
+        tempMinPrice = this.parse(st.minPrice);
+        tempMaxDuration = this.parse(st.maxDuration);
+        tempMinDuration = this.parse(st.minDuration);
+        if(isNaN(tempMaxPrice)) message += "가격의 상한을 올바르게 입력하세요.\n";
+        if(isNaN(tempMinPrice)) message += "가격의 하한을 올바르게 입력하세요.\n";
+        if(isNaN(tempMaxDuration)) message += "조리 시간의 상한을 올바르게 입력하세요.\n";
+        if(isNaN(tempMinDuration)) message += "조리 시간의 하한을 올바르게 입력하세요.\n";
+
+        if(message){
+            window.alert(message);
+            return null;
+        }
+        
         return st;
     }
 
@@ -140,13 +164,15 @@ class RecipeList extends Component{
 
     clickSearchHandler = () => {
         let newSearchSettings=this.checkInputHandler({...this.state.tempSearchSettings, pageNumber: 1});
-        this.setState(prevState => ({
-            ...prevState,
-            SearchSettings: newSearchSettings,
-        }));
-        this.props.history.push(this.getURL(newSearchSettings));
-        this.props.onGetRecipes(newSearchSettings);
-        window.location.reload();
+        if(newSearchSettings){
+            this.setState(prevState => ({
+                ...prevState,
+                SearchSettings: newSearchSettings,
+            }));
+            this.props.history.push(this.getURL(newSearchSettings));
+            this.props.onGetRecipes(newSearchSettings);
+            window.location.reload();
+        }   
     }
 
     clickPagePreviousHandler = () => {
@@ -303,7 +329,7 @@ class RecipeList extends Component{
                                 style = {{backgroundColor: this.state.searchSettings.pageNumber%5==0 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(5)}>{5*Math.floor((this.state.searchSettings.pageNumber-1)/5)+5}</button>}
                         {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
-                                disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
+                                onClick={() => this.clickPageNextHandler()}>right</button>}
                     </div>
                 </div>
             </div>

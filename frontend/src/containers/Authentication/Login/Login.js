@@ -41,7 +41,7 @@ class Login extends Component{
                     <div className="Login" >
                         <label>RECIPICK</label>
                         <input type="text" name="id"  placeholder = "아이디" onChange={(event) => this.setState({id: event.target.value})}></input>
-                        <input type="text" name="password" placeholder = "비밀번호" onChange={(event) => this.setState({password: event.target.value})}></input>
+                        <input type="text" name="password" placeholder = "비밀번호" onChange={(event) => this.setState({password: event.target.value})} type="password"></input>
                         <button className="LoginButton" onClick={()=>this.onClickSubmit()}>로그인</button>
                     </div>
                 </div>

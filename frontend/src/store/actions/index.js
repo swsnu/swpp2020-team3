@@ -13,6 +13,8 @@ export {
     removelikeRecipe,
     scrapRecipe,
     removescrapRecipe,
+    addRating,
+    getMl,
 } from './recipe';
 
 export {
@@ -21,6 +23,8 @@ export {
     signOut,
     getUser,
     isLogin,
+    followUser,
+    unfollowUser,
     changePassword,
 } from './userCreators';
 
