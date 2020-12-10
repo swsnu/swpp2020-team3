@@ -50,6 +50,6 @@ urlpatterns = [
 
     path('activate/<str:uidb64>/<str:token>', views.activate, name='activate'),
 
-    path('ml/<int:id>/', views.getml, name='getml'),
+    path('getml/<int:id>/', views.getml, name='getml'),
     
 ]

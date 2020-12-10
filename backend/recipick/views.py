@@ -778,16 +778,22 @@ def activate(request, uidb64, token):
 
 def getml(request, id):
     if request.method == 'GET':
+        print(1)
         personalizeRt = boto3.client('personalize-runtime', region_name = 'us-east-1')
         response = personalizeRt.get_recommendations(
             campaignArn = "arn:aws:personalize:us-east-1:089178928033:campaign/ml2",
             filterArn = "arn:aws:personalize:us-east-1:089178928033:filter/filter6",
-            userId = id)
+            userId = str(id))
         ml_list = []
         for item in response['itemList']:
             ml_list.append(item['itemId'])
-        print(ml_list)
-        return JsonResponse(ml_list, status=200, safe=False)        
+        res = []
+        for i in ml_list:
+            print(i)
+            recipe = [recipe for recipe in Recipe.objects.filter(id = i).values()]
+            if(recipe):
+                res.append(recipe)
+        return JsonResponse(res, status=200, safe=False)        
 
 @ensure_csrf_cookie
 def token(request):
