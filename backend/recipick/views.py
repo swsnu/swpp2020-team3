@@ -619,8 +619,19 @@ def recipe_rating(request, id):
         recipe = Recipe.objects.get(id=id)
         recipe.rating_user.add(user)
         recipe.save()
+        print(user)
         connection = ConnectRecipeRating(recipe=recipe, user=user, rating=rating)
         connection.save()
+        connec = [c for c in ConnectRecipeRating.objects.filter(recipe = recipe).values()]
+        rating = 0
+        num = 0
+        for obj in connec:
+            rating = rating + obj['rating']
+            num = num + 1
+        rating = rating / num
+        print(rating)
+        recipe.rating = rating
+        recipe.save()
         return JsonResponse({'user.id': user.id, 'rating': connection.rating, 'recipe.id': recipe.id}, safe=False, status=200)
     elif request.method == 'PUT':
         print("to edit my rating")
