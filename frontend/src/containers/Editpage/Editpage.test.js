@@ -5,6 +5,7 @@ import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history' ;
 
 import * as recipeCreators from '../../store/actions/recipe';
+import * as userCreators from '../../store/actions/userCreators';
 import {getMockStore} from '../../test-utils/mocks.js'
 import Editpage from './Editpage'
 import EditDishResult from './EditDishResult';
@@ -127,6 +128,13 @@ describe('<Editpage />', () => {
         .mockImplementation((data, id) => {
           return () => new Promise((resolve) => {
             const result = {};
+            setImmediate(resolve(result))
+          })
+        })
+      let mockIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+          return () => new Promise((resolve) => {
+            const result = {login_id: 1}
             setImmediate(resolve(result))
           })
         })

@@ -5,6 +5,16 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+const getMl_ = (recipe) => {
+  return {type: actionTypes.GET_ML_RECIPES, mlRecipes: recipe}
+};
+export const getMl = (id) => {
+  return dispatch => {
+    return axios.get('api/getml/'+id+'/').then(res=> dispatch(getMl_(res.data)))
+  }
+}
+
+
 const getRandom_ = (recipe) => {
   return {type: actionTypes.GET_RANDOM, randomRecipe: recipe}
 };
@@ -185,6 +195,21 @@ export const removescrapRecipe = (id) => {
     return axios.post('/api/recipe/'+id+'/removescrap/')
       .then(res => {
         dispatch(removescrapRecipe_(res.data))
+      })
+  }
+}
+
+const addRating_ = (data) => {
+  console.log(data)
+  return {type: actionTypes.ADD_RECIPE_RATING, data}
+}
+export const addRating = (id, rating) => {
+  console.log(id)
+  console.log(typeof rating)
+  return dispatch => {
+    return axios.post(`/api/recipe/${id}/rating/`, {rating: rating})
+      .then(res => {
+        dispatch(addRating_(res.data))
       })
   }
 }

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import Recipe from '../../components/Recipe/Recipe';
 import SimpleUserInfo from '../../components/UserInfo/SimpleUserInfo';
 import MyInfo from '../MyInfo/MyInfo';
+import Recipes from '../../components/Recipe/Recipes';
 import './MyPage.css';
 import * as actionCreators from '../../store/actions/index';
 
@@ -12,19 +13,41 @@ class MyPage extends Component{
 
     state={
         tab: 'my-profile',
+        login_id: -1,
+        editable: false,
     }
 
     onClickTabHandler(tab){
+        if(tab == 'my-info' && !this.state.editable) return;
         this.setState({tab: tab});
     }
 
     componentDidMount(){
-        let id=this.props.match.params.id;
-        this.props.onGetUser(id);
+        this.props.isLogin().then(response => {
+            this.setState({
+                login_id: response.login_id,
+            })
+            console.log(this.props.match.params.id);
+            console.log(response.login_id);
+            let id=this.props.match.params.id;
+            this.setState({
+                editable: id == response.login_id,
+            })
+            this.props.onGetUser(id).then(res => {
+                
+            });
+            
+        })
+        
     }
 
     clickRecipeHandler = id => {
         this.props.history.push('/detail-page/'+id);
+    }
+
+
+    onClickFollowHandler = () => {
+
     }
 
     render(){
@@ -62,7 +85,7 @@ class MyPage extends Component{
                 return (
                     <Recipe key={recipe.id}
                         author={recipe.author}
-                        thumbnail={'data:image/png;base64,'+recipe.thumbnail}
+                        thumbnail={recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
                         cost={recipe.price}
@@ -76,7 +99,7 @@ class MyPage extends Component{
                 return (
                     <Recipe key={recipe.id}
                         author={recipe.author}
-                        thumbnail={'data:image/png;base64,'+recipe.thumbnail}
+                        thumbnail={recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
                         cost={recipe.price}
@@ -90,7 +113,7 @@ class MyPage extends Component{
                 return (
                     <Recipe key={recipe.id}
                         author={recipe.author}
-                        thumbnail={'data:image/png;base64,'+recipe.thumbnail}
+                        thumbnail={recipe.thumbnail}
                         title={recipe.title}
                         rating={recipe.rating}
                         cost={recipe.price}
@@ -128,12 +151,16 @@ class MyPage extends Component{
                 <div className='left'>
                     <div id = "mypagetab" className = 'my-profile-button' onClick = {() => this.onClickTabHandler('my-profile')}
                         style = {{backgroundColor: this.state.tab=='my-profile' ? "grey" : null}}>
-                    My Profile
+                    Profile
                     </div>
-                    <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
+                    {this.state.editable && <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
                         style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
                     My Info
-                    </div>
+                    </div>}
+                    {!this.state.editable && <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickFollowHandler('my-info')}
+                        style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
+                    Follow
+                    </div>}
                     <div id = "mypagetab" className = 'liked-recipes-button' onClick = {() => this.onClickTabHandler('liked-recipes')}
                         style = {{backgroundColor: this.state.tab=='liked-recipes' ? "grey" : null}}> 
                     Liked recipes
@@ -191,15 +218,15 @@ class MyPage extends Component{
                     </div>}
                     {this.state.tab=='liked-recipes' && <div className = 'liked-recipes'>
                     <p>liked recipes</p>
-                    <div id='lr'>{likedRecipes}</div>
+                    <div id='lr'>{<Recipes recipes={likedRecipes}/>}</div>
                     </div>}
                     {this.state.tab=='recipe-basket' && <div className = 'recipe-basket'>
                     <p>recipe basket</p>
-                    <div id='lr'>{recipeBasket}</div>
+                    <div id='lr'>{<Recipes recipes={recipeBasket}/>}</div>
                     </div>}
                     {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
                     <p>written recipes</p>
-                    <div id='wr'>{writtenRecipes}</div>
+                    <div id='wr'>{<Recipes recipes={writtenRecipes}/>}</div>
                     </div>}
                     {this.state.tab=='follower' && <div className = 'follower'>
                     <p>follower</p>
@@ -226,6 +253,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onGetUser: (id) =>
             dispatch(actionCreators.getUser(id)),
+        isLogin: () => dispatch(actionCreators.isLogin()),
     }
 }
 

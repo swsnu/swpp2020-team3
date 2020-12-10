@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 
-import * as actionCreators from '../../store/actions/recipe';
+import * as actionCreators from '../../store/actions/index';
 
 import Comments from '../comments/Comments';
 import EditDishResult from './EditDishResult';
 import './Editpage.css'
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 // Don't need editdishstep
 
 const checkIngredients = (list) => {
@@ -45,11 +46,18 @@ const checkOutput = (recipe) => {
 }
 class Editpage extends Component {
     state = {
+        login_id : -1,
     }
     componentDidMount(){
-        this.props.getRecipe(this.props.match.params.id)
+        this.props.isLogin().then(response => {
+            this.setState({
+                login_id: response.login_id
+            });
+            this.props.getRecipe(this.props.match.params.id)
             .then((res) => {
-                console.log(this.state)
+                if(response.login_id != res['selectedRecipe'].author){
+                    this.props.history.push('/detail-page/'+this.props.match.params.id);
+                }
                 this.setState({
                     title: res['selectedRecipe'].title,
                     price: res['selectedRecipe'].price,
@@ -59,7 +67,7 @@ class Editpage extends Component {
                     category: res['selectedRecipe'].category,
                     summary: res['selectedRecipe'].summary,
                     ingredient_list: res['selectedRecipe'].ingredient_list,
-                    thumbnail: 'data:image/png;base64,'+ res['selectedRecipe'].thumbnail,
+                    thumbnail: res['selectedRecipe'].thumbnail,
                     description_list: res['selectedRecipe'].description_list,
                     photo_list: res['selectedRecipe'].photo_list,
                 })
@@ -68,6 +76,7 @@ class Editpage extends Component {
                 ))
                 this.setState({photo_list: list})
             })
+        })
     }
 
     setParentState(key, value){
@@ -117,6 +126,7 @@ class Editpage extends Component {
     }
 
     render() {
+        const author = this.props.recipe && this.props.recipe.author;
         const methodData = this.state.description_list && this.state.description_list.map((item, index) => ({img: this.state.photo_list[index], explanation:item}))
         const methods = methodData && methodData.map((item, index) => 
         <div className='edit-dish_step' key = {index}>
@@ -129,7 +139,6 @@ class Editpage extends Component {
             </div>
             <br/>
         </div>)
-console.log(this.state)
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">
@@ -160,7 +169,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getRecipe: (id) => dispatch(actionCreators.getRecipe(id)),
-        editRecipe: (data, id) => dispatch(actionCreators.editRecipe(data, id))
+        onGetIgrList: () => dispatch(actionCreators.getIngredients()),
+        editRecipe: (data, id) => dispatch(actionCreators.editRecipe(data, id)),
+        isLogin: () => dispatch(actionCreators.isLogin()),
     };
 }
 

@@ -36,7 +36,7 @@ class EditDishResult extends Component {
         category: this.props.recipe && this.props.recipe.category,
         abstraction: this.props.recipe && this.props.recipe.summary,
         selectedIngredientList: this.props.recipe && this.props.recipe.ingredient_list,
-        thumbnail_preview: this.props.recipe && 'data:image/png;base64,'+ this.props.recipe.thumbnail,
+        thumbnail_preview: this.props.recipe && this.props.recipe.thumbnail,
 
         ingredientListSave: this.props.ingredientList,
         ingredientList: [],
@@ -64,7 +64,7 @@ class EditDishResult extends Component {
             category: res.category,
             summary: res.summary,
             selectedIngredientList: res.ingredient_list,
-            thumbnail_preview: 'data:image/png;base64,'+ res.thumbnail,
+            thumbnail_preview: res.thumbnail,
         })});
         this.props.onGetIgrList().then((res) => {
             this.setState({ingredientListSave: res.ingredients, ingredientList: res.ingredients})
@@ -169,13 +169,33 @@ class EditDishResult extends Component {
         let customIngr = {
             brand: this.state.customIngrBrand,
             name: this.state.customIngrName1 ? this.state.customIngrName1 : this.state.customIngrName0,
-            igd_type: this.state.customIngrType1==this.state.customIngrType0 ? 'g' 
-                        : (this.state.customIngrType1!='g'? this.state.customIngrType1 : this.state.customIngrType0),
+            igd_type: show == 1 ? this.state.customIngrType1 : this.state.customIngrType0,
             price_normalized: show,
             price: show == 1 ? parseInt(ingrPrice) : parseInt(this.state.customIngrNormPrice),
             quantity: parseFloat(this.state.customIngrQuantity),
             amount: 0,
         }
+        let message = '';
+        if(show == 1 && !customIngr.brand){
+            message += '재료의 브랜드를 입력해주세요.\n'
+        }
+        if(!customIngr.name){
+            message += '재료의 이름를 입력해주세요.\n'
+        }
+        if(show == 1 && !customIngr.quantity){
+            message += '재료의 양을 정확하게 입력해주세요.\n'
+        }
+        if(!customIngr.igd_type){
+            message += '재료의 단위를 입력해주세요.\n'
+        }
+        if(!(customIngr.price == 0 || customIngr.price)){
+            message += '재료의 가격을 입력해주세요.\n'
+        }
+        if(message){
+            window.alert(message);
+            return;
+        }
+
         let listSelected = this.state.selectedIngredientList
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
@@ -208,8 +228,8 @@ class EditDishResult extends Component {
             totalPrice = totalPriceCalculator(this.state.selectedIngredientList)
         }        
 
-        const categoryOptions = [{value: 'American', label: 'American'}, {value: 'Mexican', label: 'Mexican'}, {value: 'Korean', label: 'Korean'},
-        {value: 'Chinese', label: 'Chinese'}, {value: 'Japanese', label: 'Japanese'},{value: 'Dessert', label: 'Dessert'}]
+        const categoryOptions = [{value: '양식', label: '양식'}, {value: '편의점', label: '편의점'}, {value: '한식', label: '한식'},
+        {value: '중식', label: '중식'}, {value: '일식', label: '일식'},{value: '디저트', label: '디저트'}]
         let defaultOptions = [];
         if(this.state.category){
             for(let i = 0; i<this.state.category.length; i++){
@@ -244,19 +264,19 @@ class EditDishResult extends Component {
                                 {"  분"}
                                 <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
-                                <button id='type' className = "type_first" style = {{background: (this.state.category&&this.state.category.includes('Korean'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>Korean</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('American'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, 'American')}>American</button>
-                                <button id='type' className = 'type_second' style = {{background: (this.state.category&&this.state.category.includes('Japanese'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>Japanese</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Chinese'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>Chinese</button>
+                                <button id='type' className = "type_first" style = {{background: (this.state.category&&this.state.category.includes('한식'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, '한식')}>한식</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('양식'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, '양식')}>양식</button>
+                                <button id='type' className = 'type_second' style = {{background: (this.state.category&&this.state.category.includes('일식'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, '일식')}>일식</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('중식'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, '중식')}>중식</button>
                                 <br/>
-                                <button id='type' className = "type_second" style = {{background: (this.state.category&&this.state.category.includes('Mexican'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, 'Mexican')}>Mexican</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('Dessert'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>Dessert</button>
+                                <button id='type' className = "type_second" style = {{background: (this.state.category&&this.state.category.includes('편의점'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, '편의점')}>편의점</button>
+                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('디저트'))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, '디저트')}>디저트</button>
                                 <br/>
                             </div>
                         </div>
@@ -291,7 +311,7 @@ class EditDishResult extends Component {
                                     <label>양 (상품)</label>
                                     <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                     <label>계량(igd_type)</label>
-                                    <input type="text" value={this.state.customIngrType1} onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
+                                    <input type="text" value={this.state.customIngrType1} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
                                     <label>가격 (상품)</label>
                                     <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
                                     <button onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>

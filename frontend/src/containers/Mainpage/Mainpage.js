@@ -63,7 +63,7 @@ class Mainpage extends Component{
         let dailyrandomList;
         if(this.props.storedRecipes){
             dailyrandomList = this.props.storedRecipes.map((td) => {
-                let d = 'data:image/png;base64,'+ td.thumbnail
+                let d = td.thumbnail
                 return (
                     <li key={td.id} className = 'random_content' id = 'r1'>
                         <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
@@ -74,7 +74,7 @@ class Mainpage extends Component{
         let hotlist;
         if(this.props.hotRecipes){
             hotlist= this.props.hotRecipes.map( (td) => {
-                let d = 'data:image/png;base64,'+ td.thumbnail
+                let d = td.thumbnail
                 return (
                     <li key={td.id} className = 'random_content' id = 'r2'>
                         <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
@@ -139,6 +139,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(actionCreators.getUser(td)),
         onGetHot: () =>
             dispatch(actionCreators.getHot()),
+        getMls: (id) => dispatch(actionCreators.getMl(id))
     }
 }
 

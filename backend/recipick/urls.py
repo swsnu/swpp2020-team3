@@ -10,7 +10,9 @@ urlpatterns = [
     path('getuser/<int:id>/', views.getuser, name='getuser'),
     path('curuser/', views.curuser, name='curuser'),
 
-
+    # for follow user
+    path('user/<int:id>/follow/', views.user_follow, name='user_follow'),
+    path('user/<int:id>/unfollow/', views.user_unfollow, name='user_unfollow'),
     # for /create
     path('recipe/', views.recipe_post, name='recipe_post'),                         
     # for /search (get all recipes)
@@ -24,6 +26,8 @@ urlpatterns = [
     # scrap recipe
     path('recipe/<int:id>/scrap/', views.recipe_scrap, name='recipe_scrap'),
     path('recipe/<int:id>/removescrap/', views.recipe_removescrap, name='recipe_remomvescrap'),
+    # add rating to recipe
+    path('recipe/<int:id>/rating/', views.recipe_rating, name='recipe_rating'),
     
     # for posting an ingredient
     path('ingredient', views.ingredient_post, name='ingredient_post'),              
@@ -49,5 +53,7 @@ urlpatterns = [
     path('token', views.token, name='token'),
 
     path('activate/<str:uidb64>/<str:token>', views.activate, name='activate'),
+
+    path('getml/<int:id>/', views.getml, name='getml'),
     
 ]

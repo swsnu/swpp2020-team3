@@ -34,12 +34,15 @@ export class Mealplanner extends Component {
         max: '',
         numOfDays: '',
         // link to recipe of real_id = 0 will give us a 404 error or display that it's an empty recipe or should not be clickable
-        recipeArray: [[{ id: 1, thumbnail: 0, real_id: 0 }, { id: 2, thumbnail: 0, real_id: 0}, { id: 3, thumbnail: 0, real_id: 0}],
-        [{ id: 4, thumbnail: 0, real_id: 0 }, { id: 5, thumbnail: 0, real_id: 0 }, { id: 6, thumbnail: 0, real_id: 0 }],
-        [{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }]],
+        recipeArray: [
+            [{ id: 1, thumbnail: 0, real_id: 0 }, { id: 2, thumbnail: 0, real_id: 0}, { id: 3, thumbnail: 0, real_id: 0}],
+            [{ id: 4, thumbnail: 0, real_id: 0 }, { id: 5, thumbnail: 0, real_id: 0 }, { id: 6, thumbnail: 0, real_id: 0 }],
+            [{ id: 7, thumbnail: 0, real_id: 0 }, { id: 8, thumbnail: 0, real_id: 0 }, { id: 9, thumbnail: 0, real_id: 0 }]
+        ],
         scrappedRecipes: [{ id: 1, thumbnail: 'hana' }, { id: 2, thumbnail: 'duna' },
         { id: 3, thumbnail: 'sena' }, { id: 4, thumbnail: 'nena' }],
-        recipes: []
+        recipes: [],
+        login_id: 1,
     }
     componentDidMount() {        
         // to connect with others' implementation
@@ -51,7 +54,13 @@ export class Mealplanner extends Component {
             let new_list = res.randomRecipe.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
             this.setState({scrappedRecipes: new_list})
         })
-
+        this.props.isLogin().then(res => {
+            this.props.getMls(res.login_id).then((res)=> {
+                console.log(this.state.login_id)
+                let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
+                this.setState({recipes: new_list})
+            })
+        })
     }
 
     addDayAbove(index) {
@@ -82,7 +91,36 @@ export class Mealplanner extends Component {
 
     }
     generateAllML(){
-        console.log('generate all day ML (random for all)')
+        let currlist = this.state.recipes
+        let arraylist = this.state.recipeArray
+        if(currlist[0]){
+            arraylist[0][0] = currlist[0];
+        }
+        if(currlist[1]){
+            arraylist[0][1] = currlist[0];
+        }
+        if(currlist[2]){
+            arraylist[0][2] = currlist[0];
+        }
+        if(currlist[3]){
+            arraylist[1][0] = currlist[0];
+        }
+        if(currlist[4]){
+            arraylist[1][1] = currlist[0];
+        }
+        if(currlist[5]){
+            arraylist[1][2] = currlist[0];
+        }
+        if(currlist[5]){
+            arraylist[2][0] = currlist[0];
+        }
+        if(currlist[6]){
+            arraylist[2][1] = currlist[0];
+        }
+        if(currlist[7]){
+            arraylist[2][2] = currlist[0];
+        }
+        this.setState({ recipeArray: arraylist })
     }
 
     onDragEnd(result) {
@@ -184,7 +222,7 @@ export class Mealplanner extends Component {
                                                         <div className='singleBlock' >
                                                             {meal.thumbnail == 0 
                                                                 ? <div className='emptyImage'/>
-                                                                :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={`data:image/png;base64,${meal.thumbnail}`} width='100' height='100'/>}
+                                                                :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={meal.thumbnail} width='100' height='100'/>}
                                                         </div>
                                                     </div>
                                                 )} 
@@ -207,7 +245,7 @@ export class Mealplanner extends Component {
                                             {(provided) => (
                                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                     <div className='scrappedRecipe'>
-                                                        <img onClick={() =>this.historyPush(recipe)} src={`data:image/png;base64,${recipe.thumbnail}`} width='100' height='100'/>
+                                                        <img onClick={() =>this.historyPush(recipe)} src={recipe.thumbnail} width='100' height='100'/>
                                                     </div>
                                                 </div>
                                             )}
@@ -229,6 +267,7 @@ export class Mealplanner extends Component {
 const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.randomRecipes,
+        mlRecipes: state.rcp.mlRecipes,
     }
 }
 
@@ -237,8 +276,9 @@ const mapDispatchToProps = dispatch => {
         // getMLRecipes: () =>
         //     dispatch(actionCreators.getMLRecipes()),
         // getScrappedRecipes: () => dispatch(actionCreators.getScrappedRecipes()),
-        getRecipes: () => dispatch(actionCreators.getRandom()) // temp for getting sample recipes
-        
+        getRecipes: () => dispatch(actionCreators.getRandom()), // temp for getting sample recipes
+        getMls: (id) => dispatch(actionCreators.getMl(id)),
+        isLogin: () => dispatch(actionCreators.isLogin()),
     }
 }
 
