@@ -19,7 +19,8 @@ const history = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
 describe('Login', () => {
-    let login, spyOnLogin;
+    let login, spyOnLogin, spyIsLogin;
+    const spyAlert = jest.spyOn(window, 'alert');
     beforeEach(() => {
         login = (
             <Provider store={mockStore}>
@@ -32,6 +33,13 @@ describe('Login', () => {
         .mockImplementation(() => {
             return () => new Promise((resolve) => {
                 const result = {user: [{'id': 1}]}
+                setImmediate(resolve(result))
+            })
+        })
+        spyIsLogin = jest.spyOn(actionCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: 1}
                 setImmediate(resolve(result))
             })
         })
@@ -61,6 +69,27 @@ describe('Login', () => {
         wrapper = component.find('input').at(1) // id
         wrapper.simulate('change', {target: {value: 'test_pw'}})
         expect(instance.state.password).toBe('test_pw')
+    })
+
+    it('test wrong login', () => {
+        spyOnLogin = jest.spyOn(actionCreators, 'signIn')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = null;
+                setImmediate(resolve(result))
+            })
+        })
+        spyIsLogin = jest.spyOn(actionCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {user: [{'id': 0}]}
+                setImmediate(resolve(result))
+            })
+        })
+
+        const component = mount(login);
+        const instance = component.find(Login.WrappedComponent).instance();
+        instance.onClickSubmit();
     })
     
     
