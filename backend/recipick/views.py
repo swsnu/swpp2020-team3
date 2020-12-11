@@ -982,8 +982,10 @@ def getml(request, id):
         res = []
         for i in ml_list:
             print(i)
-            recipe = Recipe.objects.get(id = i)
+            recipe = Recipe.objects.filter(id = i)
+            print(recipe)
             if(recipe):
+                recipe = Recipe.objects.get(id = i)
                 newrecipe = {
                     'id': recipe.id, 'title': recipe.title,
                     'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
