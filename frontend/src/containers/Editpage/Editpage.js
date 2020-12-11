@@ -124,6 +124,14 @@ class Editpage extends Component {
             alert(pass)
         }
     }
+    
+    onCancel(){
+        let ret = window.confirm("확인을 누르시면 작성하신 것들이 다 없어집니다. 그래도 뒤돌아가시겠습니까?")
+        if(ret){
+            this.props.history.goBack();
+            return;
+        }
+    }
 
     render() {
         const author = this.props.recipe && this.props.recipe.author;
@@ -153,6 +161,7 @@ class Editpage extends Component {
                         </div>
 
                         <button id="submit" onClick={() => this.onSubmit()}>Submit</button>
+                        <button id="cancel" onClick={() => this.onCancel()}>Cancel</button>
                     </div>
                 </div>
             </div>
