@@ -97,14 +97,17 @@ class Createpage extends Component{
        thumbnail: '',
        thumbnailURL: '',                // must
        // custom ingredient
-        customIngrName1: '',
-        customIngrName0: '',
+        customIngrName: '',
+        // customIngrName0: '',
         customIngrBrand: '',
         customIngrQuantity: 0,
         customIngrPrice: 0,
         customIngrNormPrice: 0, // 3번 타입의 재료를 위한 제품의 총 가격 변수 - 호환을 위해 hardPrice 말고 NormPrice라고 함.
-        customIngrType1: 'g',
-        customIngrType0: 'g'
+        // customIngrType1: 'g',
+        customIngrType: 'g',
+
+
+        detailed: false,
    }
    inputHandler = this.inputHandler.bind(this);
    imageHandler = this.imageHandler.bind(this);
@@ -241,34 +244,36 @@ class Createpage extends Component{
         list[id]['amount'] = parseInt(amount)
         this.setState({selectedIngredientList: list})
     }
-    addCustomIngredient(show){
-        console.log(this.state.customIngrType1==this.state.customIngrType0)
+    addCustomIngredient(){
+        let show = this.state.detailed ? 1 : 0     // 0: 간단 재료, 1: 상세 재료
         let ingrPrice = this.state.customIngrPrice!=undefined ? this.state.customIngrPrice : 0
         let customIngr = {
             brand: this.state.customIngrBrand,
-            name: this.state.customIngrName1 ? this.state.customIngrName1 : this.state.customIngrName0,
-            igd_type: show == 1 ? this.state.customIngrType1 : this.state.customIngrType0,
-            price_normalized: show,
+            name: this.state.customIngrName,
+            igd_type: this.state.customIngrType,
+            price_normalized: show,  
             price: show == 1 ? parseInt(ingrPrice) : parseInt(this.state.customIngrNormPrice),
-            quantity: parseFloat(this.state.customIngrQuantity),
+            quantity: parseFloat(this.state.customIngrQuantity),   // 0: 간단, != 0: 상세
             amount: 0,
         }
+        console.log(customIngr.price)
         let message = '';
         if(show == 1 && !customIngr.brand){
-            message += '재료의 브랜드를 입력해주세요.\n'
+            message += '상세 선택 시 재료의 브랜드를 입력해주세요.\n'
         }
         if(!customIngr.name){
             message += '재료의 이름를 입력해주세요.\n'
         }
-        if(show == 1 && !customIngr.quantity){
-            message += '재료의 양을 정확하게 입력해주세요.\n'
+        if(show == 1 && customIngr.quantity==0){
+            message += '상세 선택 시 상품의 양을 정확하게 입력해주세요.\n'
         }
         if(!customIngr.igd_type){
             message += '재료의 단위를 입력해주세요.\n'
         }
-        if(!(customIngr.price == 0 || customIngr.price)){
-            message += '재료의 가격을 입력해주세요.\n'
-        }
+        // can be zero (예: 소금, 후추, 물... 이런건 추가할때 가격 메기기 힘들듯)
+        // if(!customIngr.price){ 
+        //     message += '재료의 가격을 입력해주세요.\n'
+        // }
         if(message){
             window.alert(message);
             return;
@@ -278,10 +283,9 @@ class Createpage extends Component{
         let listTotal = this.state.ingredientListSave
         listSelected = listSelected.concat(customIngr)
         listTotal = listTotal.concat(customIngr)
-        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName1: '', customIngrName0: '', customIngrBrand: '',
-        customIngrQuantity: 0, customIngrPrice: 0,  customIngrNormPrice: 0, customIngrType1: 'g', customIngrType0: 'g'})
+        this.setState({selectedIngredientList: listSelected, ingredientListSave: listTotal, customIngrName: '', customIngrBrand: '',
+        customIngrQuantity: 0, customIngrPrice: 0,  customIngrNormPrice: 0, customIngrType: 'g'})
     }
-
 
     render(){
         let displayStepList;
@@ -354,35 +358,35 @@ class Createpage extends Component{
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
                             {/* horizontal로 쭉 됐으면 함 */}
                             <div id="add-custom-ingredient">
-                                <p>엄밀</p>
-                                <br/>
                                 <p>재료 이름</p>
-                                <input type="text" value={this.state.customIngrName1} onChange={(event) => this.setState({customIngrName1: event.target.value})}/>
-                                <br/>
-                                <p>브랜드명</p>
-                                <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
-                                <br/>
-                                <p>양 (상품)</p>
-                                <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
+                                <input type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
                                 <br/>
                                 <p>계량(igd_type)</p>
-                                <input type="text" value={this.state.customIngrType1} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
+                                <input type="text" value={this.state.customIngrType} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType: event.target.value})}/>
                                 <br/>
-                                <p>가격 (상품)</p>
-                                <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
-                                <button onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>
-                                <br/>
-                                <p>간단</p>
-                                <br/>
-                                <p>재료 이름</p>
-                                <input type="text" value={this.state.customIngrName0} onChange={(event) => this.setState({customIngrName0: event.target.value})}/>
-                                <br/>
-                                <p>계량(igd_type)</p>
-                                <input type="text" value={this.state.customIngrType0} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType0: event.target.value})}/>
-                                <br/>
-                                <p>가격 (제품)</p>
+                                <p>가격 (실제 사용된 만큼의 재료의 가격)</p>
                                 <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
-                                <button onClick={() => this.addCustomIngredient(0)}>재료 추가하기</button>
+                                <br/>
+                                <br/>
+                                
+                                <button onClick={() => this.setState({detailed: !this.state.detailed})}>상품 상세 </button>
+                                <br/>
+                                {
+                                    (this.state.detailed == true 
+                                        ? <div>
+                                            <p>브랜드명</p>
+                                            <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
+                                            <br/>
+                                            <p>상품의 제조량</p>
+                                            <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
+                                            <br/>
+                                            <p>상품의 가격</p>
+                                            <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
+                                          </div> 
+                                        : <div></div>)
+                                }
+                                <br/>
+                                <button onClick={() => this.addCustomIngredient(this.state.detailed)}>재료 추가하기</button>
                                 
                             </div>
 
