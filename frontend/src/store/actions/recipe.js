@@ -200,6 +200,7 @@ export const removescrapRecipe = (id) => {
 }
 
 const getRating_ = (data) => {
+  console.log(data)
   return {type: actionTypes.GET_RECIPE_RATING, rating: data}
 }
 export const getRating = (id) => {
