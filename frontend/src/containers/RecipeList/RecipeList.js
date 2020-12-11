@@ -289,6 +289,7 @@ class RecipeList extends Component{
                         <div className = "search-options" id = "list-option">
                                 <div className = "options">
                                     <div className ="search-options-button">분류</div>
+                                    <br/>
                                     <button className ="search-mode-select-button" style = {{backgroundColor: this.state.tempSearchSettings.searchMode == 'likes' ? "#fcc051" : null}}
                                             onClick={() => this.clickSearchModeHandler("likes")}>좋아요순</button>
                                     <button className ="search-mode-select-button" style = {{backgroundColor: this.state.tempSearchSettings.searchMode == 'rating' ? "#fcc051" : null}}
@@ -332,6 +333,8 @@ class RecipeList extends Component{
                                 onClick={() => this.clickPageNextHandler()}>right</button>}
                     </div>
                 </div>
+                <br/>
+                <br/><br/>
             </div>
 
         )        

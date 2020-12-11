@@ -1,5 +1,6 @@
 div .CreateBackground {
     background: #fafafa;
+    min-width: 1500px;
 }
 
 div .CreatepageBlock {
@@ -11,11 +12,13 @@ div .CreatepageBlock {
     align-items: center;
     flex-direction: column;
     line-break: normal;
+    min-width: 1000px;
 }
 
 div .Createpage {
     display: block;
-    width: 120vh;
+    width: 1000px;
+    min-width: 1000px;
     background: #fafafa;
 }
 
@@ -28,7 +31,8 @@ div .Createpage label{
     padding-left: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
-    width: 117.5vh;
+    width: 1015px;
+    min-width: 1015px;
     text-decoration: none;
     font-size: 16px;
     font-weight: bold;
@@ -38,7 +42,7 @@ div .create_first {
     padding: 15px;
     margin-top: 10px;
     display: block;
-    width: 116vh;
+    min-width: 1000px;
     background: white;
 }
 
@@ -46,7 +50,7 @@ div .create_second {
     padding: 15px;
     margin-top: 10px;
     display: block;
-    width: 116vh;
+    min-width: 1000px;
     background: white;
 }
 
@@ -54,7 +58,7 @@ div .create_third {
     padding: 15px;
     margin-top: 10px;
     display: block;
-    width: 116vh;
+    min-width: 1000px;
     background: white;
 }
 
@@ -62,7 +66,7 @@ div .create_fourth {
     padding: 15px;
     margin-top: 10px;
     display: block;
-    width: 116vh;
+    min-width: 1000px;
     background: white;
 }
 
@@ -70,7 +74,7 @@ div .create_fifth {
     padding: 15px;
     margin-top: 10px;
     display: flex;
-    width: 116vh;
+    min-width: 1000px;
     background: white;
     justify-content: center;
     align-items: center;

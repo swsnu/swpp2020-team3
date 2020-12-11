@@ -189,16 +189,17 @@ export class Mealplanner extends Component {
     /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.
         하지만 완벽하지 않음. 이 부분은 추후에 해결해야할것.
     */ 
+   /*<label>하한</label>
+                    <input id="min" type='number' value={this.state.min} onChange={(event) => this.setState({min: event.target.value})}/>
+                    <label>상한</label>
+                    <input id="max" type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
+++                    */
     render() {
         return (
             <div className = 'Mealplanner'>
                 <button onClick={this.clickSave}>Save</button>
                 <div className='Searchbar'>
-                    <label>하한</label>
-                    <input id="min" type='number' value={this.state.min} onChange={(event) => this.setState({min: event.target.value})}/>
-                    <label>상한</label>
-                    <input id="max" type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
-++                    <label>Number of days</label>
+                    <label>Number of days</label>
                     <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
                         onChange={(event) => this.setState({numOfDays: event.target.value})} />
                     <button id="ml-generate" onClick={() => this.generateAllML()}>ML Generate</button>

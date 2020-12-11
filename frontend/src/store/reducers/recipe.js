@@ -6,7 +6,7 @@ const initialState = {
   ingredientList: [],
   randomRecipe: null,
   hotRecipe: null,
-  mlRecipes: [],
+  mlRecipes: null,
   rating:0,
 };
 

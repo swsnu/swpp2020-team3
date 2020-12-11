@@ -43,12 +43,26 @@ class Mainpage extends Component{
             {image: require('../../Image/F4201_4.jpg'), title: 'item2'}, 
             {image: require('../../Image/item.png'), title: 'item3'},
         ],
-        check: null
+        check: null,
+        login_id: -1,
     }
 
     componentDidMount() {
         this.props.onGetRandom()
         this.props.onGetHot()
+        this.props.isLogin().then(res => {
+            console.log(res)
+            this.setState({
+                login_id: res.login_id
+            })
+            if(res.login_id != -1){
+                this.props.getMls(res.login_id).then( res => {
+                    console.log(res)
+                    let new_list = res.mlRecipes.map((recipe, index) => ({'image':recipe.thumbnail, 'id':recipe.id, 'title': recipe.title}))
+                    this.setState({thirdList: new_list})
+                })
+            }
+        })
     }
 
     toCreateHandler() {
@@ -82,14 +96,18 @@ class Mainpage extends Component{
                 )   
             })
         }
-        const thirdlist = this.state.thirdList.map( (td) => {
+        let thirdlist = this.state.thirdList.map( (td) => {
+            let d = td.thumbnail
             return (
                 <li key={td.id} className = 'random_content' id = 'r3'>
-                    <DisplayRecipe img = {<img src = {td.image} width='150'/>} title = {td.title} />
+                    <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
                 </li>
             )   
         })
-
+        console.log(this.props.mlRecipes)
+        if(this.state.login_id < 1 || !this.props.mlRecipes) {
+            thirdlist = hotlist
+        }
         return(
             <div className = 'MainpageBackground'>
                 <div className = 'Mainpage'>
@@ -128,6 +146,7 @@ const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.randomRecipe,
         hotRecipes: state.rcp.hotRecipe,
+        mlRecipes: state.rcp.mlRecipes,
     }
 }
   
@@ -139,7 +158,9 @@ const mapDispatchToProps = dispatch => {
             dispatch(actionCreators.getUser(td)),
         onGetHot: () =>
             dispatch(actionCreators.getHot()),
-        getMls: (id) => dispatch(actionCreators.getMl(id))
+        getMls: (id) => dispatch(actionCreators.getMl(id)),
+        isLogin: () => dispatch(actionCreators.isLogin()),
+
     }
 }
 

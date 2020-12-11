@@ -122,25 +122,47 @@ class MyPage extends Component{
             <div className='MyPage'>
                 <div className='left'>
                     <div id = "mypagetab" className = 'my-profile-button' onClick = {() => this.onClickTabHandler('my-profile')}
-                        style = {{backgroundColor: this.state.tab=='my-profile' ? "grey" : null}}>
-                    Profile
+                        style = {{backgroundColor: this.state.tab=='my-profile' ? "#d1bb5a" : null}}>
+                    프로필
                     </div>
+<<<<<<< HEAD
                     <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
                         style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
                     My Info
                     </div>
+=======
+                    {this.state.editable && <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
+                        style = {{backgroundColor: this.state.tab=='my-info' ? "#d1bb5a" : null}}>
+                    내 정보
+                    </div>}
+                    {!this.state.editable && <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickFollowHandler('my-info')}
+                        style = {{backgroundColor: this.state.tab=='my-info' ? "#d1bb5a" : null}}>
+                    팔로우
+                    </div>}
+>>>>>>> adb7d91aa318063e3868cbb53ebf564889d1b3e7
                     <div id = "mypagetab" className = 'liked-recipes-button' onClick = {() => this.onClickTabHandler('liked-recipes')}
-                        style = {{backgroundColor: this.state.tab=='liked-recipes' ? "grey" : null}}> 
-                    Liked recipes
+                        style = {{backgroundColor: this.state.tab=='liked-recipes' ? "#d1bb5a" : null}}> 
+                    좋아요한 레시피
                     </div>
                     <div id = "mypagetab" className = 'recipe-basket-button' onClick = {() => this.onClickTabHandler('recipe-basket')}
-                        style = {{backgroundColor: this.state.tab=='recipe-basket' ? "grey" : null}}> 
-                    Recipe basket
+                        style = {{backgroundColor: this.state.tab=='recipe-basket' ? "#d1bb5a" : null}}> 
+                    장바구니
                     </div>
                     <div id = "mypagetab" className = 'written-recipes-button' onClick = {() => this.onClickTabHandler('written-recipes')}
-                        style = {{backgroundColor: this.state.tab=='written-recipes' ? "grey" : null}}>
-                    Written recipes   
+                        style = {{backgroundColor: this.state.tab=='written-recipes' ? "#d1bb5a" : null}}>
+                    작성한 레시피   
                     </div>
+<<<<<<< HEAD
+=======
+                    <div id = "mypagetab" className = 'follower-button' onClick = {() => this.onClickTabHandler('follower')}
+                        style = {{backgroundColor: this.state.tab=='follower' ? "#d1bb5a" : null}}>
+                    팔로워
+                    </div>
+                    <div id = "mypagetab" className = 'following-button' onClick = {() => this.onClickTabHandler('following')}
+                        style = {{backgroundColor: this.state.tab=='following' ? "#d1bb5a" : null}}>
+                    팔로우
+                    </div>
+>>>>>>> adb7d91aa318063e3868cbb53ebf564889d1b3e7
                 </div>
                 <div className='right'>
                     {
