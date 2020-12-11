@@ -1,4 +1,4 @@
-요약
+약
 오늘한거
 삽질
 pull request, merge 완료
