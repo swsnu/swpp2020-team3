@@ -355,25 +355,25 @@ class Createpage extends Component{
                             <div id="add-custom-ingredient">
                                 <label>엄밀</label>
                                 <label>재료 이름</label>
-                                <input type="text" value={this.state.customIngrName1} onChange={(event) => this.setState({customIngrName1: event.target.value})}/>
+                                <input type="text" className = 'ingr_name_1' value={this.state.customIngrName1} onChange={(event) => this.setState({customIngrName1: event.target.value})}/>
                                 <label>브랜드명</label>
-                                <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
+                                <input type="text" className = 'ingr_brand_1' value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
                                 <label>양 (상품)</label>
-                                <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
+                                <input type="number" className = 'ingr_quantity_1' value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                 <label>계량(igd_type)</label>
-                                <input type="text" value={this.state.customIngrType1} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
+                                <input type="text" className = 'ingr_type_1' value={this.state.customIngrType1} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
                                 <label>가격 (상품)</label>
-                                <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
-                                <button onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>
+                                <input type="number" className = 'ingr_price_1' value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
+                                <button className = 'ingr_submit_1' onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>
 
                                 <label>간단</label>
                                 <label>재료 이름</label>
-                                <input type="text" value={this.state.customIngrName0} onChange={(event) => this.setState({customIngrName0: event.target.value})}/>
+                                <input type="text" className = 'ingr_name_0' value={this.state.customIngrName0} onChange={(event) => this.setState({customIngrName0: event.target.value})}/>
                                 <label>계량(igd_type)</label>
-                                <input type="text" value={this.state.customIngrType0} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType0: event.target.value})}/>
+                                <input type="text" className = 'ingr_type_0' value={this.state.customIngrType0} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType0: event.target.value})}/>
                                 <label>가격 (제품)</label>
-                                <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
-                                <button onClick={() => this.addCustomIngredient(0)}>재료 추가하기</button>
+                                <input type="number" className = 'ingr_price_0' value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
+                                <button className = 'ingr_submit_0' onClick={() => this.addCustomIngredient(0)}>재료 추가하기</button>
                                 
                             </div>
 
