@@ -346,6 +346,7 @@ class Createpage extends Component{
                             <p>할 수 있다면 사용하시는 브랜드의 명과 상품의 가격 및 총량을 입력해주세요. 입력하기 귀찮으시다면 위처럼 재료명과 가격('제품'칸)에 입력해주세요.</p>
                             <p>제품칸에 입력을 안 하시고 상품칸에 재료의 가격을 입력하게 된다면 실제 가격보다 훨씬 더 많이 측정이 됩니다 ㅠㅠ</p>
                             <p>둘 다 입력하게 되면 '제품' 칸이 채워진거기 때문에 제품의 가격이 먹힙니다.</p>
+                            <br/>
                             {<Select options={this.state.ingredientList}
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${option.price == 0 ? '?' 
                                         : (option.quantity == 0 ? 0 : option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
@@ -353,25 +354,33 @@ class Createpage extends Component{
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
                             {/* horizontal로 쭉 됐으면 함 */}
                             <div id="add-custom-ingredient">
-                                <label>엄밀</label>
-                                <label>재료 이름</label>
+                                <p>엄밀</p>
+                                <br/>
+                                <p>재료 이름</p>
                                 <input type="text" value={this.state.customIngrName1} onChange={(event) => this.setState({customIngrName1: event.target.value})}/>
-                                <label>브랜드명</label>
+                                <br/>
+                                <p>브랜드명</p>
                                 <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
-                                <label>양 (상품)</label>
+                                <br/>
+                                <p>양 (상품)</p>
                                 <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
-                                <label>계량(igd_type)</label>
+                                <br/>
+                                <p>계량(igd_type)</p>
                                 <input type="text" value={this.state.customIngrType1} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType1: event.target.value})}/>
-                                <label>가격 (상품)</label>
+                                <br/>
+                                <p>가격 (상품)</p>
                                 <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
                                 <button onClick={() => this.addCustomIngredient(1)}>재료 추가하기</button>
-
-                                <label>간단</label>
-                                <label>재료 이름</label>
+                                <br/>
+                                <p>간단</p>
+                                <br/>
+                                <p>재료 이름</p>
                                 <input type="text" value={this.state.customIngrName0} onChange={(event) => this.setState({customIngrName0: event.target.value})}/>
-                                <label>계량(igd_type)</label>
+                                <br/>
+                                <p>계량(igd_type)</p>
                                 <input type="text" value={this.state.customIngrType0} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType0: event.target.value})}/>
-                                <label>가격 (제품)</label>
+                                <br/>
+                                <p>가격 (제품)</p>
                                 <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
                                 <button onClick={() => this.addCustomIngredient(0)}>재료 추가하기</button>
                                 

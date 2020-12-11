@@ -618,7 +618,6 @@ def recipe_rating(request, id):
             return HttpResponse(status=403)
         recipe = Recipe.objects.get(id=id)
         recipe.rating_user.add(user)
-        recipe.save()
         previous = ConnectRecipeRating.objects.filter(user=user, recipe=recipe)
         if len(previous) != 0:
             # update
@@ -640,8 +639,13 @@ def recipe_rating(request, id):
         for obj in connec:
             rating = rating + obj['rating']
             num = num + 1
-        rating = rating / num
+        if num<=1:
+            num=2
+        rating = rating / (num-1)
+        rating = round(rating,2)
+        print(rating)
         recipe.rating = rating
+        print(recipe.rating)
         recipe.save()
         response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}
         print(response)
@@ -978,9 +982,13 @@ def getml(request, id):
         res = []
         for i in ml_list:
             print(i)
-            recipe = [recipe for recipe in Recipe.objects.filter(id = i).values()]
+            recipe = Recipe.objects.get(id = i)
             if(recipe):
-                res.append(recipe)
+                newrecipe = {
+                    'id': recipe.id, 'title': recipe.title,
+                    'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                }
+                res.append(newrecipe)
         return JsonResponse(res, status=200, safe=False)        
 
 @ensure_csrf_cookie
