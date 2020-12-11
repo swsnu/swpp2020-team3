@@ -19,10 +19,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 40px;
 }
 
 #mypagetab {
-    background-color: #fcc051; /* Green */
+    background-color: #ffea8f; /* Green */
     border: none;
     color: black;
     padding: 15px 32px;
@@ -31,6 +32,8 @@
     display: inline-block;
     font-size: 16px;
     margin: 1px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .my-profile {
@@ -43,6 +46,7 @@
 #infoblock {
     display: block;
     text-align: left;
+    margin-bottom:10px;
 }
 
 #wr{

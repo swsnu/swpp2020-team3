@@ -640,7 +640,8 @@ def recipe_rating(request, id):
         for obj in connec:
             rating = rating + obj['rating']
             num = num + 1
-        rating = rating / num
+        rating = rating / (num-1)
+        rating = round(rating,2)
         recipe.rating = rating
         recipe.save()
         response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}

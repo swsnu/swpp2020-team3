@@ -13,3 +13,29 @@
     font-size: 20px;
     color: gray;
 }
+
+.changePassword {
+    margin-top: 30px;
+    margin-left: 330px;
+    background:  #fcc051;
+    padding:8px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size:16px;
+}
+
+.changePassword:disabled {
+    margin-top: 30px;
+    margin-left: 330px;
+    background: #ffd587;
+    padding:8px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size:16px;
+}
+
+.new_password, .password_confirm {
+    padding: 5px;
+    font-size:14px;
+    width:240px;
+}

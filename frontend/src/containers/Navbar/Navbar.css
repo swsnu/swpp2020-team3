@@ -53,6 +53,7 @@
     display: block;
     padding: 2px;
     text-decoration: none;
+    cursor: pointer;
   }
 
   div .searchbar img:hover {

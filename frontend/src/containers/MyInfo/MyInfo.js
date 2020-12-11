@@ -45,7 +45,8 @@ class MyInfo extends Component{
                         <p id='infolabel' >new password(confirm)</p>
                         {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'}
                         <input type="text" className="password_confirm" type="password" placeholder = "비밀번호 확인" onChange={(event) => this.setState({password_confirm: event.target.value})}></input>
-                        <button className="changePassword" disabled = {!this.state.new_password || !this.state.password_confirm} onClick={()=>this.onClickSubmit()}>비밀번호 변경</button>
+                        <br/>
+                        <button className="changePassword" disabled = {!this.state.new_password || !this.state.password_confirm} onClick={()=>this.onClickSubmit()}>저장</button>
                     </form>
                 </div>
             </div>
