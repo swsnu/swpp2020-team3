@@ -42,7 +42,7 @@ class DishResult extends Component {
                                 {this.props.likes }
                                 <br/>
                                 <p id='detaillabel'>{'평점'}</p>
-                                {this.props.rating}
+                                {this.props.recipe_rating}
                                 <br/>
                                 <p id='detaillabel'>{'예상 조리 시간'}</p>
                                 {this.props.duration}
@@ -54,7 +54,7 @@ class DishResult extends Component {
                                 <div id='userbuttons'>
                                     {(this.props.loginid!=-1)?<div><button id='ub' style={(this.props.islike?{'background-color':'#c2563a'}:null)} onClick={this.props.onlikeClicked}>좋아요</button>
                                     <button id='ub' style={(this.props.isscrap?{'background-color':'#c2563a'}:null)} onClick={this.props.onscrapClicked}>스크랩</button>
-                                    <input type='number' value={this.state.value} onChange={(event)=>{this.handleRating(event)}}/>
+                                    <input type='number' value={this.props.rating} onChange={(event)=>{this.handleRating(event)}}/>
                                     <button onClick={this.props.confirmRating}>별점 남기기</button>
                                     </div>:null}
                                 </div>

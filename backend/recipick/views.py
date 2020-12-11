@@ -619,8 +619,21 @@ def recipe_rating(request, id):
         recipe = Recipe.objects.get(id=id)
         recipe.rating_user.add(user)
         recipe.save()
-        connection = ConnectRecipeRating(recipe=recipe, user=user, rating=rating)
-        connection.save()
+        previous = ConnectRecipeRating.objects.filter(user=user, recipe=recipe)
+        if len(previous) != 0:
+            # update
+            print('update')
+            print(previous)
+            previous = previous[0]
+            previous.rating = rating
+            previous.save(force_update=True)
+            
+        else:
+            # create
+            print('empty')
+            previous = ConnectRecipeRating(recipe=recipe, user=user, rating=rating)
+            previous.save()
+        # calculate overall rating of recipe
         connec = [c for c in ConnectRecipeRating.objects.filter(recipe = recipe).values()]
         rating = 0
         num = 0
@@ -630,25 +643,31 @@ def recipe_rating(request, id):
         rating = rating / num
         recipe.rating = rating
         recipe.save()
-        return JsonResponse({'user.id': user.id, 'rating': connection.rating, 'recipe.id': recipe.id}, safe=False, status=200)
-    elif request.method == 'PUT':
-        user = request.user
-        if not user.is_authenticated:
-            return HttpResponse(status=401)
-        try:
-            body = json.loads(request.body.decode())
-            rating = body['rating']
-        except:
-            return HttpResponse(status=403)
-        recipe = Recipe.objects.get(id=id)
-        connection = ConnectRecipeRating.objects.get(recipe=recipe, user=user)
-        connection.rating = rating
-        connection.save()
-        return JsonResponse(connection.rating, safe=False, status=200)
+        response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}
+        print(response)
+        return JsonResponse(response, safe=False, status=200)
+    # elif request.method == 'PUT':
+    #     user = request.user
+    #     if not user.is_authenticated:
+    #         return HttpResponse(status=401)
+    #     try:
+    #         body = json.loads(request.body.decode())
+    #         rating = body['rating']
+    #     except:
+    #         return HttpResponse(status=403)
+    #     recipe = Recipe.objects.get(id=id)
+    #     connection = ConnectRecipeRating.objects.get(recipe=recipe, user=user)
+    #     connection.rating = rating
+    #     connection.save()
+    #     return JsonResponse(connection.rating, safe=False, status=200)
     elif request.method == 'GET':
         user = request.user
         recipe = Recipe.objects.get(id=id)
         rating = 0
+
+        temp = ConnectRecipeRating.objects.filter(user=user, recipe=recipe)
+        print(temp)
+        
         try:
             connection = ConnectRecipeRating.objects.get(recipe=recipe, user=user)
             rating = connection.rating
