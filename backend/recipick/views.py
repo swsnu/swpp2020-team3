@@ -70,8 +70,10 @@ def getuser(request, id):
             written_recipes.append(newrecipe)
 
 
-        follower = [user for user in user_1.follower.all().values()]
-        following = [user for user in user_1.following.all().values()]
+        #follower = [user for user in user_1.follower.all().values()]
+        #following = [user for user in user_1.following.all().values()]
+        follower = []
+        following=[]
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
             'written_recipes': written_recipes, 'follower': follower, 'following': following}
         return JsonResponse(user, safe=False, status=200)

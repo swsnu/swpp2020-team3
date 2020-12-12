@@ -29,12 +29,36 @@
     height: 100px;
     display: inline-flex;
 } */
+.column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#plannerContents {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#recipeBasket {
+    align-self: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 200px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin-left: 50px;
+    background-color: white;
+}
 
 .Searchbar {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
 }
 
 #drag {
