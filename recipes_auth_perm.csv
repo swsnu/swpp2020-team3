@@ -1,0 +1,53 @@
+id,name,content_type_id,codename
+1,Can add user,1,add_user
+2,Can change user,1,change_user
+3,Can delete user,1,delete_user
+4,Can view user,1,view_user
+5,Can add comment,2,add_comment
+6,Can change comment,2,change_comment
+7,Can delete comment,2,delete_comment
+8,Can view comment,2,view_comment
+9,Can add connect recipe ingredient,3,add_connectrecipeingredient
+10,Can change connect recipe ingredient,3,change_connectrecipeingredient
+11,Can delete connect recipe ingredient,3,delete_connectrecipeingredient
+12,Can view connect recipe ingredient,3,view_connectrecipeingredient
+13,Can add image model,4,add_imagemodel
+14,Can change image model,4,change_imagemodel
+15,Can delete image model,4,delete_imagemodel
+16,Can view image model,4,view_imagemodel
+17,Can add ingredient,5,add_ingredient
+18,Can change ingredient,5,change_ingredient
+19,Can delete ingredient,5,delete_ingredient
+20,Can view ingredient,5,view_ingredient
+21,Can add reply,6,add_reply
+22,Can change reply,6,change_reply
+23,Can delete reply,6,delete_reply
+24,Can view reply,6,view_reply
+25,Can add recipe,7,add_recipe
+26,Can change recipe,7,change_recipe
+27,Can delete recipe,7,delete_recipe
+28,Can view recipe,7,view_recipe
+29,Can add log entry,8,add_logentry
+30,Can change log entry,8,change_logentry
+31,Can delete log entry,8,delete_logentry
+32,Can view log entry,8,view_logentry
+33,Can add permission,9,add_permission
+34,Can change permission,9,change_permission
+35,Can delete permission,9,delete_permission
+36,Can view permission,9,view_permission
+37,Can add group,10,add_group
+38,Can change group,10,change_group
+39,Can delete group,10,delete_group
+40,Can view group,10,view_group
+41,Can add content type,11,add_contenttype
+42,Can change content type,11,change_contenttype
+43,Can delete content type,11,delete_contenttype
+44,Can view content type,11,view_contenttype
+45,Can add session,12,add_session
+46,Can change session,12,change_session
+47,Can delete session,12,delete_session
+48,Can view session,12,view_session
+49,Can add connect recipe rating,13,add_connectreciperating
+50,Can change connect recipe rating,13,change_connectreciperating
+51,Can delete connect recipe rating,13,delete_connectreciperating
+52,Can view connect recipe rating,13,view_connectreciperating

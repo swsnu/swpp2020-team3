@@ -1,0 +1,14 @@
+id,app_label,model
+1,recipick,user
+2,recipick,comment
+3,recipick,connectrecipeingredient
+4,recipick,imagemodel
+5,recipick,ingredient
+6,recipick,reply
+7,recipick,recipe
+8,admin,logentry
+9,auth,permission
+10,auth,group
+11,contenttypes,contenttype
+12,sessions,session
+13,recipick,connectreciperating

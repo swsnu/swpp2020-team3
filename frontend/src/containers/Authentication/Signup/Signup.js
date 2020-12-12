@@ -61,7 +61,7 @@ class Signup extends Component{
                 <div className="Signup">
                     <form className="Signup" >
                         <p> RECIPICK </p>
-                        <label>이름</label>
+                        <label>닉네임</label>
                         <input type="text" name="name" onChange={(event) => this.setState({name: event.target.value})}></input>
                         <label>이메일</label>
                         <input type="text" name="email" onChange={(event) => this.setState({email: event.target.value})}></input>
