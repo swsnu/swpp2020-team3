@@ -42,7 +42,7 @@ export class Mealplanner extends Component {
         scrappedRecipes: [{ id: 1, thumbnail: 'hana' }, { id: 2, thumbnail: 'duna' },
         { id: 3, thumbnail: 'sena' }, { id: 4, thumbnail: 'nena' }],
         recipes: [],
-        login_id: 1,
+        login_id: -1,
     }
     componentDidMount() {        
         // to connect with others' implementation
@@ -55,10 +55,15 @@ export class Mealplanner extends Component {
             this.setState({scrappedRecipes: new_list})
         })
         this.props.isLogin().then(res => {
+            this.setState({login_id: res.login_id})
             this.props.getMls(res.login_id).then((res)=> {
                 console.log(this.state.login_id)
                 let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
                 this.setState({recipes: new_list})
+            })
+            this.props.loadPlanner(res.login_id).then(res => {
+                console.log(res)
+                this.setState({recipeArray: res.planner.data})
             })
         })
     }
@@ -178,6 +183,10 @@ export class Mealplanner extends Component {
         this.props.history.push(`/detail-page/${recipe.real_id}/`)
     }
 
+    onClickSave(){
+        this.props.savePlanner(this.state.login_id, this.state.recipeArray)
+    }
+
     /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.
         하지만 완벽하지 않음. 이 부분은 추후에 해결해야할것.
     */ 
@@ -189,7 +198,7 @@ export class Mealplanner extends Component {
     render() {
         return (
             <div className = 'Mealplanner'>
-                <button onClick={this.clickSave}>Save</button>
+                <button onClick={() => this.onClickSave()}>Save</button>
                 <div className='Searchbar'>
                     <label>Number of days</label>
                     <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
@@ -271,6 +280,8 @@ const mapDispatchToProps = dispatch => {
         getRecipes: () => dispatch(actionCreators.getRandom()), // temp for getting sample recipes
         getMls: (id) => dispatch(actionCreators.getMl(id)),
         isLogin: () => dispatch(actionCreators.isLogin()),
+        loadPlanner: (id) => dispatch(actionCreators.loadPlanner(id)),
+        savePlanner: (id, planner) => dispatch(actionCreators.savePlanner(id, planner)),
     }
 }
 
