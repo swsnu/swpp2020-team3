@@ -226,3 +226,4 @@ export const addRating = (id, rating) => {
       })
   }
 }
+

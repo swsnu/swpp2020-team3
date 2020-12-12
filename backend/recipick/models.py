@@ -26,6 +26,13 @@ class CustomUserManager(BaseUserManager):
         user.save(using = self._db)
         return user
 
+def default_planner():
+    return [
+        [{ "id": 1, "thumbnail": 0, "real_id": 0 }, { "id": 2, "thumbnail": 0, "real_id": 0}, { "id": 3, "thumbnail": 0, "real_id": 0}],
+        [{ "id": 4, "thumbnail": 0, "real_id": 0 }, { "id": 5, "thumbnail": 0, "real_id": 0 }, { "id": 6, "thumbnail": 0, "real_id": 0 }],
+        [{ "id": 7, "thumbnail": 0, "real_id": 0 }, { "id": 8, "thumbnail": 0, "real_id": 0 }, { "id": 9, "thumbnail": 0, "real_id": 0 }]
+    ]
+
 class User(AbstractUser):
     objects = CustomUserManager()
     following = models.ManyToManyField(
@@ -34,6 +41,15 @@ class User(AbstractUser):
         blank=True
     )
     is_active = models.BooleanField(default=False)
+
+class Planner(models.Model):
+    owner = models.ForeignKey(
+        User,
+        related_name = 'planner',
+        on_delete = models.CASCADE,
+        blank=True
+    )
+    data = models.JSONField(default=default_planner, null=True)
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=64)
@@ -51,7 +67,7 @@ class ImageModel(models.Model):
 
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
-    author = models.ForeignKey(
+    author = models.ForeignKey( 
         User,
         on_delete = models.SET_NULL,
         null = True,

@@ -101,3 +101,30 @@ export const unfollowUser = (id) => {
       })
   }
 }
+
+const loadPlanner_ = (planner) => {
+  return {type: actionTypes.LOAD_PLANNER, planner}
+}
+
+export const loadPlanner = (id) => {
+  return dispatch => {
+    return axios.get(`/api/planner/${id}/`)
+      .then(res => {
+        console.log(res)
+        return dispatch(loadPlanner_(res))
+      })
+  }
+}
+
+const savePlanner_ = (planner) => {
+  return {type: actionTypes.SAVE_PLANNER, planner}
+}
+
+export const savePlanner = (id, planner) => {
+  return dispatch => {
+    return axios.put(`/api/planner/${id}/`, planner)
+      .then(res => {
+        return dispatch(savePlanner_(planner))
+      })
+  }
+}

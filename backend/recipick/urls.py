@@ -41,7 +41,10 @@ urlpatterns = [
     # for getting and posting a comment
     path('comment/<int:id>/reply/', views.comment_reply, name='comment_reply'),     
     # for getting, modifying and deleting a reply
-    path('reply/<int:id>/', views.reply, name='reply'),                             
+    path('reply/<int:id>/', views.reply, name='reply'),  
+
+    # for meal planner
+    path('planner/<int:id>/', views.planner, name='planner'),                           
     
     # for getting a radomrecipe (mainpage)
     path('random/', views.randomrecipe, name='randomrecipe'),   

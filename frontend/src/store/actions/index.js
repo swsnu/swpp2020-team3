@@ -27,6 +27,8 @@ export {
     followUser,
     unfollowUser,
     changePassword,
+    loadPlanner,
+    savePlanner,
 } from './userCreators';
 
 export {

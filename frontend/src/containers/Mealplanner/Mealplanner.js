@@ -55,11 +55,14 @@ export class Mealplanner extends Component {
             this.setState({scrappedRecipes: new_list})
         })
         this.props.isLogin().then(res => {
-            this.props.getMls(res.login_id).then((res)=> {
+            this.props.loadPlanner(res.login_id).then(res => {
+                this.setState({recipeArray: res.planner});
+            })
+            /*this.props.getMls(res.login_id).then((res)=> {
                 console.log(this.state.login_id)
                 let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
                 this.setState({recipes: new_list})
-            })
+            })*/
         })
     }
 
@@ -182,6 +185,9 @@ export class Mealplanner extends Component {
         }
     }
 
+    clickSave = () => {
+        this.props.savePlanner(this.state.recipeArray);
+    }
     historyPush(recipe){
         this.props.history.push(`/detail-page/${recipe.real_id}/`)
     }
@@ -197,7 +203,7 @@ export class Mealplanner extends Component {
     render() {
         return (
             <div className = 'Mealplanner'>
-                <button onClick={this.clickSave}>Save</button>
+                <button onClick={() => this.clickSave()}>Save</button>
                 <div className='Searchbar'>
                     <label>Number of days</label>
                     <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
@@ -268,6 +274,7 @@ const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.randomRecipes,
         mlRecipes: state.rcp.mlRecipes,
+        user: state.user.currentUser,
     }
 }
 
@@ -277,8 +284,11 @@ const mapDispatchToProps = dispatch => {
         //     dispatch(actionCreators.getMLRecipes()),
         // getScrappedRecipes: () => dispatch(actionCreators.getScrappedRecipes()),
         getRecipes: () => dispatch(actionCreators.getRandom()), // temp for getting sample recipes
+        loadPlanner: (id) => dispatch(actionCreators.loadPlanner(id)),
+        savePlanner: (planner) => dispatch(actionCreators.savePlanner(planner)),
         getMls: (id) => dispatch(actionCreators.getMl(id)),
         isLogin: () => dispatch(actionCreators.isLogin()),
+        getUser: (id) => dispatch(actionCreators.getUser(id)),
     }
 }
 

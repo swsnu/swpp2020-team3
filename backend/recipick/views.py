@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating
+from recipick.models import Planner, Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
@@ -185,6 +185,22 @@ def signout(request):
         return HttpResponse(status=204)
     else:
         return HttpResponseNotAllowed(['GET'])
+
+def planner(request, id):
+    if request.method == 'GET':
+        print(1233)
+        saved_planner = Planner.objects.get(id=id)
+        if saved_planner:
+            print('t')
+        else:
+            print(123)
+        return JsonResponse(saved_planner, safe=False, status=200)
+    elif request.method == 'PUT':
+        body = json.loads(request.body.decode())
+        print(body)
+        return
+    else:
+        return
 
 def ingredient_post(request):
     if request.method == 'POST':

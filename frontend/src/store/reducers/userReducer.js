@@ -1,9 +1,11 @@
+import { getUser } from '../actions';
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   currentUser: {},
   getuser: null,
   login_id: null,
+  planner: {},
 }
 
 const reducer = (state = initialState, action) => {
@@ -25,6 +27,10 @@ const reducer = (state = initialState, action) => {
       return {...state, login_id: action.login_id}
     case actionTypes.CHANGE_PASSWORD:
       return {...state, getuser: action.getuser};
+    case actionTypes.LOAD_PLANNER:
+      return {...state, planner: action.planner};
+    case actionTypes.SAVE_PLANNER:
+      return {...state, getUser: {...state.getUser, planner: action.planner}};
   }
   return state;
 };
