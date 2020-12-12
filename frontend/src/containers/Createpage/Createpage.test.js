@@ -6,14 +6,16 @@ import { createBrowserHistory } from 'history' ;
 
 import Createpage from './Createpage'
 import {getMockStore} from '../../test-utils/mocks.js'
+import * as actionCreators from '../../store/actions/index';
 
 const stubState = {
     ingredientList: [
         {'name': 'ingredient', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
         'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
     ],
+    login_id : 1,
     user: {
-        login_id: 'root'
+        login_id: 1
     }
 }
 
@@ -35,7 +37,7 @@ jest.mock("react-select", () => ( {options, value, onChange, getOptionLabel} ) =
         {options.map(({ label, value }) => (
           <option key={value} value={value}>
             {label}
-          </option>
+          </option> 
         ))}
       </select>
     );
@@ -51,7 +53,12 @@ describe('<Createpage />', () => {
             </Router>
           </Provider>
         );
+
     })
+
+    afterEach(() => {
+        jest.clearAllMocks();
+      })
   
     it('should render Createpage', () => {
       const component = mount(createpage);
@@ -184,38 +191,5 @@ describe('<Createpage />', () => {
 
     // })
 
-
-    it('should add custom ingredients', () => {
-        const mock_alert = jest.spyOn(window, 'alert')
-        .mockImplementation((arg) => {})
-        const component = mount(createpage)
-        let wrapper = component.find('select')
-        const instance = component.find(Createpage.WrappedComponent).instance()
-
-        wrapper = component.find('.ingr_name_1')
-        wrapper.simulate('change', 'test-ingr')
-        wrapper = component.find('.ingr_type_1')
-        wrapper.simulate('change', 'g')
-        wrapper = component.find('.ingr_price_1')
-        wrapper.simulate('change', 1000)
-        wrapper = component.find('.ingr_brand_1')
-        wrapper.simulate('change', 'oops')
-        wrapper = component.find('.ingr_quantity_1')
-        wrapper.simulate('change', 1000)
-        wrapper = component.find('.ingr_submit_1')
-        wrapper.simulate('click')
-        expect(instance.state.selectedIngredientList.length).toBe(0)
-
-
-        wrapper = component.find('.ingr_name_0')
-        wrapper.simulate('change', 'test-ingr')
-        wrapper = component.find('.ingr_type_0')
-        wrapper.simulate('change', 'g')
-        wrapper = component.find('.ingr_price_0')
-        wrapper.simulate('change', 1000)
-        wrapper = component.find('.ingr_submit_0')
-        wrapper.simulate('click')
-        expect(instance.state.selectedIngredientList.length).toBe(0)
-    })
 })
        

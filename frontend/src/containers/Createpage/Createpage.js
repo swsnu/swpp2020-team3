@@ -359,34 +359,34 @@ class Createpage extends Component{
                             {/* horizontal로 쭉 됐으면 함 */}
                             <div id="add-custom-ingredient">
                                 <p>재료 이름</p>
-                                <input type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
+                                <input className='ingr_name' type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
                                 <br/>
                                 <p>계량(igd_type)</p>
-                                <input type="text" value={this.state.customIngrType} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType: event.target.value})}/>
+                                <input className='ingr_type' type="text" value={this.state.customIngrType} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType: event.target.value})}/>
                                 <br/>
                                 <p>가격 (실제 사용된 만큼의 재료의 가격)</p>
-                                <input type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
+                                <input className='ingr_price_1' type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
                                 <br/>
                                 <br/>
                                 
-                                <button onClick={() => this.setState({detailed: !this.state.detailed})}>상품 상세 </button>
+                                <button className='ingr_detailed' onClick={() => this.setState({detailed: !this.state.detailed})}>상품 상세 </button>
                                 <br/>
                                 {
                                     (this.state.detailed == true 
                                         ? <div>
                                             <p>브랜드명</p>
-                                            <input type="text" value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
+                                            <input type="text" className='ingr_brand' value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
                                             <br/>
                                             <p>상품의 제조량</p>
-                                            <input type="number" value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
+                                            <input type="number" className='ingr_quantity' value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                             <br/>
                                             <p>상품의 가격</p>
-                                            <input type="number" value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
+                                            <input type="number" className='ingr_price_0' value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
                                           </div> 
                                         : <div></div>)
                                 }
                                 <br/>
-                                <button onClick={() => this.addCustomIngredient(this.state.detailed)}>재료 추가하기</button>
+                                <button className='ingr_submit_0' onClick={() => this.addCustomIngredient(this.state.detailed)}>재료 추가하기</button>
                                 
                             </div>
 
