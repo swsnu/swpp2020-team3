@@ -109,10 +109,11 @@ describe('<Mealplanner />', () => {
 
     it('should test searchbar and draggable', () => {
       const component = mount(mealplanner)
-      let wrapper = component.find('.Searchbar #min')
-      wrapper.simulate('change', {target: {value: 'test'}})
-      wrapper = component.find('.Searchbar #max')
-      wrapper.simulate('change', {target: {value: 'test'}})
+      let wrapper;
+      // wrapper = component.find('.Searchbar #min')
+      // wrapper.simulate('change', {target: {value: 'test'}})
+      // wrapper = component.find('.Searchbar #max')
+      // wrapper.simulate('change', {target: {value: 'test'}})
       wrapper = component.find('.Searchbar #numOfDays')
       wrapper.simulate('change', {target: {value: 'test'}})
       wrapper = component.find('.Searchbar button')

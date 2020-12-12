@@ -24,7 +24,7 @@ class Recipes extends Component {
     }
 
     render(){
-        let slicedRecipes = this.props.recipes.slice(50*this.state.pageStart,50*(this.state.pageStart+1))
+        let slicedRecipes = this.props.recipes.slice(50*this.state.pageStart,50*(this.state.pageStart+1)+1)
         let renderRecipes = this.props.recipes.slice(10*(this.state.pageNumber-1),10*this.state.pageNumber)
         return (
             <div className = 'Recipes'>

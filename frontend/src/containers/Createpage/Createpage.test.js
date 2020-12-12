@@ -6,14 +6,16 @@ import { createBrowserHistory } from 'history' ;
 
 import Createpage from './Createpage'
 import {getMockStore} from '../../test-utils/mocks.js'
+import * as actionCreators from '../../store/actions/index';
 
 const stubState = {
     ingredientList: [
         {'name': 'ingredient', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
         'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
     ],
+    login_id : 1,
     user: {
-        login_id: 'root'
+        login_id: 1
     }
 }
 
@@ -35,7 +37,7 @@ jest.mock("react-select", () => ( {options, value, onChange, getOptionLabel} ) =
         {options.map(({ label, value }) => (
           <option key={value} value={value}>
             {label}
-          </option>
+          </option> 
         ))}
       </select>
     );
@@ -43,7 +45,6 @@ jest.mock("react-select", () => ( {options, value, onChange, getOptionLabel} ) =
 
 describe('<Createpage />', () => {
     let createpage;
-
     beforeEach(() => {
       createpage = (
           <Provider store={mockStore}>
@@ -52,7 +53,12 @@ describe('<Createpage />', () => {
             </Router>
           </Provider>
         );
+
     })
+
+    afterEach(() => {
+        jest.clearAllMocks();
+      })
   
     it('should render Createpage', () => {
       const component = mount(createpage);
@@ -81,9 +87,8 @@ describe('<Createpage />', () => {
         wrapper.simulate('click')
         // expect(spyHistory).toHaveBeenCalledTimes(2) // this is right
         expect(spyHistory).toHaveBeenCalledTimes(0)
-
-
     })
+
 /////////////
     it('should test title, summary, cooking time and type', () => {
         const component = mount(createpage)

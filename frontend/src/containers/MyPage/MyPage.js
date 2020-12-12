@@ -33,10 +33,7 @@ class MyPage extends Component{
             this.setState({
                 editable: id == response.login_id,
             })
-            this.props.onGetUser(id).then(res => {
-                
-            });
-            
+            this.props.onGetUser(id)
         })
         
     }
@@ -46,9 +43,6 @@ class MyPage extends Component{
     }
 
 
-    onClickFollowHandler = () => {
-
-    }
 
     render(){
         let myInfo=[];
@@ -56,8 +50,6 @@ class MyPage extends Component{
         let likedRecipes=[];
         let recipeBasket=[];
         let writtenRecipes=[];
-        let follower = [];
-        let following = [];
         if(this.props.storedUser){
             myInfo = this.props.storedUser.user_info.map((user) => {
                 return (
@@ -123,26 +115,6 @@ class MyPage extends Component{
                     />
                 );
             });
-            follower = this.props.storedUser.follower.map((user) => {
-                return (
-                    <SimpleUserInfo key={user.id}
-                        username = {user.username}
-                        first_name = {user.first_name}
-                        last_name = {user.last_name}
-                        email = {user.email}
-                    />
-                );
-            });
-            following = this.props.storedUser.following.map((user) => {
-                return (
-                    <SimpleUserInfo key={user.id}
-                        username = {user.username}
-                        first_name = {user.first_name}
-                        last_name = {user.last_name}
-                        email = {user.email}
-                    />
-                );
-            });
         }
         
         return (
@@ -153,14 +125,10 @@ class MyPage extends Component{
                         style = {{backgroundColor: this.state.tab=='my-profile' ? "#d1bb5a" : null}}>
                     프로필
                     </div>
-                    {this.state.editable && <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
-                        style = {{backgroundColor: this.state.tab=='my-info' ? "#d1bb5a" : null}}>
-                    내 정보
-                    </div>}
-                    {!this.state.editable && <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickFollowHandler('my-info')}
-                        style = {{backgroundColor: this.state.tab=='my-info' ? "#d1bb5a" : null}}>
-                    팔로우
-                    </div>}
+                    <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
+                        style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
+                    My Info
+                    </div>
                     <div id = "mypagetab" className = 'liked-recipes-button' onClick = {() => this.onClickTabHandler('liked-recipes')}
                         style = {{backgroundColor: this.state.tab=='liked-recipes' ? "#d1bb5a" : null}}> 
                     좋아요한 레시피
@@ -172,14 +140,6 @@ class MyPage extends Component{
                     <div id = "mypagetab" className = 'written-recipes-button' onClick = {() => this.onClickTabHandler('written-recipes')}
                         style = {{backgroundColor: this.state.tab=='written-recipes' ? "#d1bb5a" : null}}>
                     작성한 레시피   
-                    </div>
-                    <div id = "mypagetab" className = 'follower-button' onClick = {() => this.onClickTabHandler('follower')}
-                        style = {{backgroundColor: this.state.tab=='follower' ? "#d1bb5a" : null}}>
-                    팔로워
-                    </div>
-                    <div id = "mypagetab" className = 'following-button' onClick = {() => this.onClickTabHandler('following')}
-                        style = {{backgroundColor: this.state.tab=='following' ? "#d1bb5a" : null}}>
-                    팔로우
                     </div>
                 </div>
                 <div className='right'>
@@ -227,14 +187,6 @@ class MyPage extends Component{
                     {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
                     <p>written recipes</p>
                     <div id='wr'>{<Recipes recipes={writtenRecipes}/>}</div>
-                    </div>}
-                    {this.state.tab=='follower' && <div className = 'follower'>
-                    <p>follower</p>
-                    {follower}
-                    </div>}
-                    {this.state.tab=='following' && <div className = 'following'>
-                    <p>following</p>
-                    {following}
                     </div>}
                 </div>
             </div>
