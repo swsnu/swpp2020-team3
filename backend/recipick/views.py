@@ -981,9 +981,7 @@ def getml(request, id):
             ml_list.append(item['itemId'])
         res = []
         for i in ml_list:
-            print(i)
             recipe = Recipe.objects.filter(id = i)
-            print(recipe)
             if(recipe):
                 recipe = Recipe.objects.get(id = i)
                 newrecipe = {

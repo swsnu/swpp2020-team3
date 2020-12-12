@@ -32,7 +32,7 @@ export class Mealplanner extends Component {
     state = {
         min: '',
         max: '',
-        numOfDays: '',
+        numOfDays: 0,
         // link to recipe of real_id = 0 will give us a 404 error or display that it's an empty recipe or should not be clickable
         recipeArray: [
             [{ id: 1, thumbnail: 0, real_id: 0 }, { id: 2, thumbnail: 0, real_id: 0}, { id: 3, thumbnail: 0, real_id: 0}],
@@ -93,32 +93,24 @@ export class Mealplanner extends Component {
     generateAllML(){
         let currlist = this.state.recipes
         let arraylist = this.state.recipeArray
-        if(currlist[0]){
-            arraylist[0][0] = currlist[0];
-        }
-        if(currlist[1]){
-            arraylist[0][1] = currlist[0];
-        }
-        if(currlist[2]){
-            arraylist[0][2] = currlist[0];
-        }
-        if(currlist[3]){
-            arraylist[1][0] = currlist[0];
-        }
-        if(currlist[4]){
-            arraylist[1][1] = currlist[0];
-        }
-        if(currlist[5]){
-            arraylist[1][2] = currlist[0];
-        }
-        if(currlist[6]){
-            arraylist[2][0] = currlist[0];
-        }
-        if(currlist[7]){
-            arraylist[2][1] = currlist[0];
-        }
-        if(currlist[8]){
-            arraylist[2][2] = currlist[0];
+        let num = parseInt(this.state.numOfDays)
+        let j = 0;
+        for(let i=0; i<num; i++){
+            if(currlist[j]){
+                arraylist[i][0] = currlist[j];
+                j=j+1
+            }
+            else break;
+            if(currlist[j]){
+                arraylist[i][1] = currlist[j];
+                j=j+1
+            }
+            else break;
+            if(currlist[j]){
+                arraylist[i][2] = currlist[j];
+                j=j+1
+            }
+            else break;                                  
         }
         this.setState({ recipeArray: arraylist })
     }
