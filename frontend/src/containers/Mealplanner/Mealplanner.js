@@ -199,12 +199,16 @@ export class Mealplanner extends Component {
     render() {
         return (
             <div className = 'Mealplanner'>
+                <h2>식단표</h2>
+                <div id='mlpDescription'>{'원하는만큼의 날짜를 선택하고 "추천 받기" 버튼을 누리시면'} </div>
+                <div id='mlpDescription2'>{'선택한 날짜 수만큼 추천 레시피로 채워집니다!'}</div>
                 <div className='Searchbar'>
-                    <label>Number of days</label>
+                    <label>날짜수</label>
                     <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
                         onChange={(event) => this.setState({numOfDays: event.target.value})} />
                     <button id="ml-generate" onClick={() => this.generateAllML()}>ML Generate</button>
                 </div>
+                <button id='mlpSave' onClick={() => this.onClickSave()}>Save</button>
                 <div id='plannerContents'>
                     <DragDropContext onDragEnd={this.onDragEnd}>
                         <div className='column'>
@@ -213,9 +217,9 @@ export class Mealplanner extends Component {
                                     <Droppable droppableId={`day${ind}`} key={ind} direction='horizontal'> 
                                         {(provided) => (
                                             <div className='day' ref={provided.innerRef} {...provided.droppableProps} style={{display : "flex"}}>
-                                                <button id="addDayAbove" onClick={() => this.addDayAbove(ind)}>Add a day</button>
-                                                <button id="deleteDay" onClick={() => this.deleteDay(ind)}>Delete day</button>
-                                                <button onClick={() => this.generateSingleML(ind)}>Regenerate ML for single day</button>
+                                                <button id="addDayAbove" onClick={() => this.addDayAbove(ind)}>날짜 추가</button>
+                                                <button id="deleteDay" onClick={() => this.deleteDay(ind)}>날짜 삭제</button>
+                                                <button onClick={() => this.generateSingleML(ind)}>하루치 추천 받기</button>
                                                 <div id ='drag'>
                                                     {dayBlock && dayBlock.map((meal, index) => (
                                                         <Draggable draggableId={`day_${ind}/meal_${index}`} index={index} key={index} >
@@ -264,7 +268,6 @@ export class Mealplanner extends Component {
                         </div>
                     </DragDropContext>
                 </div>
-                <button onClick={() => this.onClickSave()}>Save</button>
             </div>
         )
 
