@@ -121,16 +121,16 @@ class MyPage extends Component{
                 let items = res.map( (row) => {
                     console.log(row)
                     return (
-                        <div>
-                            <img src={row.thunmbnail}></img>
+                        <div id='plannerItem'>
+                            <img src={row.thunmbnail} width={100} height={100} onClick = {() => row.real_id!=undefined && this.props.history.push((`/detail-page/${row.real_id}`))}></img>
                         </div>
                     )
                 })
 
                 return (
-                    <div>
+                    <div id = 'plannerRows'>
                         <div>{`${index} 일차`}</div>
-                        {items}
+                        <div id='plannerCols'>{items}</div>
                     </div>
                 )
                    
@@ -146,7 +146,7 @@ class MyPage extends Component{
                     프로필
                     </div>
                     <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
-                        style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
+                        style = {{backgroundColor: this.state.tab=='my-info' ? "#d1bb5a" : null}}>
                     내 정보
                     </div>
                     <div id = "mypagetab" className = 'liked-recipes-button' onClick = {() => this.onClickTabHandler('liked-recipes')}

@@ -10,13 +10,13 @@
     width:4.4em;
     margin-left: 15px;
     margin-right: 15px;
-    font-size:14px;
-    padding:2px;
+    font-size:16px;
+    padding:5px;
 }
 .emptyImage{
     width:100px;
     height:100px;
-    border: solid black;
+    border: 1px solid black;
 }
 /*
 .day{
@@ -67,6 +67,8 @@
     padding-top: 20px;
     margin-left: 50px;
     background-color: white;
+    border-radius: 20px;
+    border: 6px solid #18f0e8; 
 }
 
 #mlpDescription {
@@ -93,4 +95,76 @@
 
 #mlpSave {
     margin-bottom: 20px;
+}
+
+.scrappedRecipe {
+    border: 1px solid black
+}
+
+.planbutton {
+    background-color: #FF8868;
+    margin: 3px;
+    border: none;
+    padding: 10px;
+    color: white;
+    font-size:18px;
+    font-weight: 700;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.day {
+    margin:10px;
+    padding: 15px;
+    border: 6px solid palevioletred;
+    border-radius: 20px;
+}
+
+#rightbutton {
+    margin-right: 20px;
+}
+
+#targetdays{
+    font-size:16px;
+    font-weight: 500;
+}
+
+#ml-generate{
+    background-color: #06d146;
+    padding:10px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size:15px;
+    font-weight: 800;
+}
+
+#mlpSave {
+    background-color: #06d146;
+    padding-left:20px;
+    padding-right:20px;
+    padding-top:7px;
+    padding-bottom:7px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size:15px;
+    font-weight: 800;
+}
+
+#mpdsc {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 15px;
+    border: 6px solid #6bed94;
+    border-radius: 20px;
+    width:900px;
+}
+
+#mlpDescription, #mlpDescription2 {
+    font-size: 18px;
 }

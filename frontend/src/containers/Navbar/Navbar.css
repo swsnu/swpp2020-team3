@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #fcc051;
+    background-color: #ffd270;
     margin-top: -10px;
     min-width: 1500px;
   }
@@ -16,7 +16,7 @@
     align-items: center;
     list-style-type: none;
     overflow: hidden;
-    background-color: #fcc051;
+    background-color: #ffd270;
     min-width: 1400px;
   }
 

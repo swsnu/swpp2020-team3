@@ -90,3 +90,9 @@
     font-weight: bold;
     border-radius: 10px;
 }
+
+#plannerCols {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
