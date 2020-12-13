@@ -2,12 +2,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width:1000px;
+    min-width:1500px;
 }
 .MyPage {
     padding-top : 2vh;
-    width: 1000px;
-    min-width:1000px;
+    width: 1200px;
+    min-width:1200px;
     background: white;
     text-align: center
 }
@@ -28,20 +28,20 @@
     background-color: #ffea8f; /* Green */
     border: none;
     color: black;
-    padding: 15px 32px;
+    padding: 18px 40px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 18px;
     margin: 1px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
 }
 
 .my-profile {
     display: flex;
     justify-content: center;
-    width: 800px;
+    width: 1000px;
     flex-direction: column;
 }
 
@@ -59,7 +59,7 @@
 
 #mylabel{
     display: inline-block;
-    width: 800px;
+    width: 1000px;
     text-align: left;
     font-size: 24px;
     margin-top: 20px;
