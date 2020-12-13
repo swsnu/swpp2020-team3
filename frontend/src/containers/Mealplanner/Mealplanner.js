@@ -42,7 +42,7 @@ export class Mealplanner extends Component {
         scrappedRecipes: [{ id: 1, thumbnail: 'hana' }, { id: 2, thumbnail: 'duna' },
         { id: 3, thumbnail: 'sena' }, { id: 4, thumbnail: 'nena' }],
         recipes: [],
-        login_id: 1,
+        login_id: -1,
     }
     componentDidMount() {        
         // to connect with others' implementation
@@ -55,10 +55,16 @@ export class Mealplanner extends Component {
             this.setState({scrappedRecipes: new_list})
         })
         this.props.isLogin().then(res => {
+            this.setState({login_id: res.login_id})
             this.props.getMls(res.login_id).then((res)=> {
-                console.log(this.state.login_id)
                 let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
                 this.setState({recipes: new_list})
+            })
+            this.props.loadPlanner(res.login_id).then(res => {
+                this.setState({recipeArray: res.planner.data})
+            })
+            this.props.onGetUser(res.login_id).then(res => {
+                this.setState({scrappedRecipes: res.getuser.recipe_basket})
             })
         })
     }
@@ -178,6 +184,10 @@ export class Mealplanner extends Component {
         this.props.history.push(`/detail-page/${recipe.real_id}/`)
     }
 
+    onClickSave(){
+        this.props.savePlanner(this.state.login_id, this.state.recipeArray)
+    }
+
     /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.
         하지만 완벽하지 않음. 이 부분은 추후에 해결해야할것.
     */ 
@@ -189,67 +199,75 @@ export class Mealplanner extends Component {
     render() {
         return (
             <div className = 'Mealplanner'>
-                <button onClick={this.clickSave}>Save</button>
+                <h2>식단표</h2>
+                <div id='mlpDescription'>{'원하는만큼의 날짜를 선택하고 "추천 받기" 버튼을 누리시면'} </div>
+                <div id='mlpDescription2'>{'선택한 날짜 수만큼 추천 레시피로 채워집니다!'}</div>
                 <div className='Searchbar'>
-                    <label>Number of days</label>
+                    <label>날짜수</label>
                     <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
                         onChange={(event) => this.setState({numOfDays: event.target.value})} />
                     <button id="ml-generate" onClick={() => this.generateAllML()}>ML Generate</button>
                 </div>
-                <DragDropContext onDragEnd={this.onDragEnd}>
-                    <div className='column'>
-                    {this.state.recipeArray && this.state.recipeArray.map((dayBlock, ind) => (
-                        <div id='droppable' key={ind}>
-                            <Droppable droppableId={`day${ind}`} key={ind} direction='horizontal'> 
-                            {(provided) => (
-                                <div className='day' ref={provided.innerRef} {...provided.droppableProps} style={{display : "flex"}}>
-                                    <button id="addDayAbove" onClick={() => this.addDayAbove(ind)}>Add a day</button>
-                                    <button id="deleteDay" onClick={() => this.deleteDay(ind)}>Delete day</button>
-                                    <button onClick={() => this.generateSingleML(ind)}>Regenerate ML for single day</button>
-                                    <div id ='drag'>
-                                        {dayBlock && dayBlock.map((meal, index) => (
-                                            <Draggable draggableId={`day_${ind}/meal_${index}`} index={index} key={index} >
-                                                {(provided) => (
-                                                    <div  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} id="blabl" >
-                                                        <div className='singleBlock' >
-                                                            {meal.thumbnail == 0 
-                                                                ? <div className='emptyImage'/>
-                                                                :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={meal.thumbnail} width='100' height='100'/>}
-                                                        </div>
-                                                    </div>
-                                                )} 
-                                            </Draggable>
-                                        ))}
-                                        {provided.placeholder}
-                                    </div>
-                                </div>
-                            )}
-
-                        </Droppable>
-                        </div>
-                    ))}
-                    <div id='drop'>
-                        <Droppable droppableId="scrappedArticles">
-                            {(provided) => (
-                                <div id='basket' {...provided.droppableProps} ref={provided.innerRef}  direction='horizontal' style={{display : "flex"}}>
-                                    {this.state.scrappedRecipes && this.state.scrappedRecipes.map((recipe, index) => (
-                                        <Draggable key={recipe.id} draggableId={`recipe_${recipe.id}`} index={index}>
-                                            {(provided) => (
-                                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                                    <div className='scrappedRecipe'>
-                                                        <img onClick={() =>this.historyPush(recipe)} src={recipe.thumbnail} width='100' height='100'/>
-                                                    </div>
+                <button id='mlpSave' onClick={() => this.onClickSave()}>Save</button>
+                <div id='plannerContents'>
+                    <DragDropContext onDragEnd={this.onDragEnd}>
+                        <div className='column'>
+                            {this.state.recipeArray && this.state.recipeArray.map((dayBlock, ind) => (
+                                <div id='droppable' key={ind}>
+                                    <Droppable droppableId={`day${ind}`} key={ind} direction='horizontal'> 
+                                        {(provided) => (
+                                            <div className='day' ref={provided.innerRef} {...provided.droppableProps} style={{display : "flex"}}>
+                                                <button id="addDayAbove" onClick={() => this.addDayAbove(ind)}>날짜 추가</button>
+                                                <button id="deleteDay" onClick={() => this.deleteDay(ind)}>날짜 삭제</button>
+                                                <button onClick={() => this.generateSingleML(ind)}>하루치 추천 받기</button>
+                                                <div id ='drag'>
+                                                    {dayBlock && dayBlock.map((meal, index) => (
+                                                        <Draggable draggableId={`day_${ind}/meal_${index}`} index={index} key={index} >
+                                                            {(provided) => (
+                                                                <div  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} id="blabl" >
+                                                                    <div className='singleBlock' >
+                                                                        {meal.thumbnail == 0 
+                                                                            ? <div className='emptyImage'/>
+                                                                            :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={meal.thumbnail} width='100' height='100'/>}
+                                                                    </div>
+                                                                </div>
+                                                            )} 
+                                                        </Draggable>
+                                                    ))}
+                                                    {provided.placeholder}
                                                 </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
+                                            </div>
+                                        )}
+
+                                    </Droppable>
                                 </div>
-                            )}
-                    </Droppable>
-                    </div>
-                    </div>
-                </DragDropContext>
+                            ))}
+                        </div>
+                        <div id='recipeBasket'>
+                            <div>{'장바구니'}</div>
+                            <div id='drop'>
+                                <Droppable droppableId="scrappedArticles">
+                                    {(provided) => (
+                                        <div id='basket' {...provided.droppableProps} ref={provided.innerRef}  direction='horizontal' style={{display : "flex"}}>
+                                            {this.state.scrappedRecipes && this.state.scrappedRecipes.map((recipe, index) => (
+                                                <Draggable key={recipe.id} draggableId={`recipe_${recipe.id}`} index={index}>
+                                                    {(provided) => (
+                                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                            <div className='scrappedRecipe'>
+                                                                <img onClick={() =>this.historyPush(recipe)} src={recipe.thumbnail} width='100' height='100'/>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </div>                                                                  
+                        </div>
+                    </DragDropContext>
+                </div>
             </div>
         )
 
@@ -260,6 +278,7 @@ const mapStateToProps = state => {
     return {
         storedRecipes: state.rcp.randomRecipes,
         mlRecipes: state.rcp.mlRecipes,
+        storedUser: state.user.getuser,
     }
 }
 
@@ -271,6 +290,10 @@ const mapDispatchToProps = dispatch => {
         getRecipes: () => dispatch(actionCreators.getRandom()), // temp for getting sample recipes
         getMls: (id) => dispatch(actionCreators.getMl(id)),
         isLogin: () => dispatch(actionCreators.isLogin()),
+        loadPlanner: (id) => dispatch(actionCreators.loadPlanner(id)),
+        savePlanner: (id, planner) => dispatch(actionCreators.savePlanner(id, planner)),
+        onGetUser: (id) =>
+            dispatch(actionCreators.getUser(id)),
     }
 }
 

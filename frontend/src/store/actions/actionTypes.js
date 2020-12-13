@@ -33,3 +33,6 @@ export const GET_REPLIES = 'GET_REPLIES';
 export const ADD_REPLY = 'ADD_REPLY';
 export const EDIT_REPLY = 'EDIT_REPLY';
 export const DELETE_REPLY = 'DELETE_REPLY';
+
+export const LOAD_PLANNER = 'LOAD_PLANNER';
+export const SAVE_PLANNER = 'SAVE_PLANNER';

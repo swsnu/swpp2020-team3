@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating
+from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating, Planner
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
@@ -70,8 +70,10 @@ def getuser(request, id):
             written_recipes.append(newrecipe)
 
 
-        follower = [user for user in user_1.follower.all().values()]
-        following = [user for user in user_1.following.all().values()]
+        #follower = [user for user in user_1.follower.all().values()]
+        #following = [user for user in user_1.following.all().values()]
+        follower = []
+        following=[]
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
             'written_recipes': written_recipes, 'follower': follower, 'following': following}
         return JsonResponse(user, safe=False, status=200)
@@ -989,7 +991,41 @@ def getml(request, id):
                     'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
                 }
                 res.append(newrecipe)
-        return JsonResponse(res, status=200, safe=False)        
+        return JsonResponse(res, status=200, safe=False)    
+
+def planner(request, id):
+    if request.method == 'GET':
+        user = request.user
+        planner = user.following.all()
+        if not planner :
+            res = [
+                [{ "id": 1, "thumbnail": 0, "real_id": 0 }, { "id": 2, "thumbnail": 0, "real_id": 0}, { "id": 3, "thumbnail": 0, "real_id": 0}],
+                [{ "id": 4, "thumbnail": 0, "real_id": 0 }, { "id": 5, "thumbnail": 0, "real_id": 0 }, { "id": 6, "thumbnail": 0, "real_id": 0 }],
+                [{ "id": 7, "thumbnail": 0, "real_id": 0 }, { "id": 8, "thumbnail": 0, "real_id": 0 }, { "id": 9, "thumbnail": 0, "real_id": 0 }]
+            ]
+            return JsonResponse(res, status=200, safe=False)
+        else :
+            return JsonResponse(planner[0].data, status=200, safe=False)
+    elif request.method == 'PUT':
+        user = request.user
+        body = json.loads(request.body.decode())
+        planner = user.following.all()
+        if not planner :
+            newplanner = Planner(data = body)
+            newplanner.save()
+            user.following.add(newplanner)
+            user.save()
+            print(user.following)
+            return JsonResponse(newplanner.data, status=200, safe=False)
+        else:
+            newplanner = Planner(data = body)
+            newplanner.save()
+            user.following.all().delete()
+            user.following.add(newplanner)
+            user.save()
+            print(user.following)
+            return JsonResponse(newplanner.data, status=200, safe=False)
+             
 
 @ensure_csrf_cookie
 def token(request):
