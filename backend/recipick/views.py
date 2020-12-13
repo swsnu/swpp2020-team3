@@ -74,8 +74,9 @@ def getuser(request, id):
         #following = [user for user in user_1.following.all().values()]
         follower = []
         following=[]
+        planner = user_1.following.all()
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
-            'written_recipes': written_recipes, 'follower': follower, 'following': following}
+            'written_recipes': written_recipes, 'follower': follower, 'following': following, 'planner': planner[0].data}
         return JsonResponse(user, safe=False, status=200)
     elif(request.method) == 'PUT':
         body = json.loads(request.body.decode())
@@ -1015,7 +1016,6 @@ def planner(request, id):
             newplanner.save()
             user.following.add(newplanner)
             user.save()
-            print(user.following)
             return JsonResponse(newplanner.data, status=200, safe=False)
         else:
             newplanner = Planner(data = body)
@@ -1023,7 +1023,6 @@ def planner(request, id):
             user.following.all().delete()
             user.following.add(newplanner)
             user.save()
-            print(user.following)
             return JsonResponse(newplanner.data, status=200, safe=False)
              
 

@@ -50,6 +50,7 @@ class MyPage extends Component{
         let likedRecipes=[];
         let recipeBasket=[];
         let writtenRecipes=[];
+        let planner
         if(this.props.storedUser){
             myInfo = this.props.storedUser.user_info.map((user) => {
                 return (
@@ -115,6 +116,25 @@ class MyPage extends Component{
                     />
                 );
             });
+            planner = this.props.storedUser.planner.map( (res, index) => {
+
+                let items = res.map( (row) => {
+                    console.log(row)
+                    return (
+                        <div id='plannerItem'>
+                            <img src={row.thunmbnail} width={100} height={100} onClick = {() => row.real_id!=undefined && this.props.history.push((`/detail-page/${row.real_id}`))}></img>
+                        </div>
+                    )
+                })
+
+                return (
+                    <div id = 'plannerRows'>
+                        <div>{`${index} 일차`}</div>
+                        <div id='plannerCols'>{items}</div>
+                    </div>
+                )
+                   
+            })
         }
         
         return (
@@ -126,8 +146,8 @@ class MyPage extends Component{
                     프로필
                     </div>
                     <div id = "mypagetab" className = 'my-info-button' onClick = {() => this.onClickTabHandler('my-info')}
-                        style = {{backgroundColor: this.state.tab=='my-info' ? "grey" : null}}>
-                    My Info
+                        style = {{backgroundColor: this.state.tab=='my-info' ? "#d1bb5a" : null}}>
+                    내 정보
                     </div>
                     <div id = "mypagetab" className = 'liked-recipes-button' onClick = {() => this.onClickTabHandler('liked-recipes')}
                         style = {{backgroundColor: this.state.tab=='liked-recipes' ? "#d1bb5a" : null}}> 
@@ -140,6 +160,10 @@ class MyPage extends Component{
                     <div id = "mypagetab" className = 'written-recipes-button' onClick = {() => this.onClickTabHandler('written-recipes')}
                         style = {{backgroundColor: this.state.tab=='written-recipes' ? "#d1bb5a" : null}}>
                     작성한 레시피   
+                    </div>
+                    <div id = "mypagetab" className = 'meal-planner-button' onClick = {() => this.onClickTabHandler('meal-planner')}
+                        style = {{backgroundColor: this.state.tab=='meal-planner' ? "#d1bb5a" : null}}>
+                    내 식단표  
                     </div>
                 </div>
                 <div className='right'>
@@ -187,6 +211,10 @@ class MyPage extends Component{
                     {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
                     <p>written recipes</p>
                     <div id='wr'>{<Recipes recipes={writtenRecipes}/>}</div>
+                    </div>}
+                    {this.state.tab=='meal-planner' && <div className = 'meal-planner'>
+                    <p>planner</p>
+                    <div id='mp'>{planner}</div>
                     </div>}
                 </div>
             </div>

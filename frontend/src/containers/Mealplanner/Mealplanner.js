@@ -50,10 +50,6 @@ export class Mealplanner extends Component {
         // this.props.getScrappedRecipes().then((res) => console.log('"retrieved list of scrapped article"'));//this.setState({recipeArrays: list})
         
         // temporary function to get temp getrecipes
-        this.props.getRecipes().then((res) => {
-            let new_list = res.randomRecipe.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
-            this.setState({scrappedRecipes: new_list})
-        })
         this.props.isLogin().then(res => {
             this.setState({login_id: res.login_id})
             this.props.getMls(res.login_id).then((res)=> {
@@ -64,13 +60,13 @@ export class Mealplanner extends Component {
                 this.setState({recipeArray: res.planner.data})
             })
             this.props.onGetUser(res.login_id).then(res => {
-                this.setState({scrappedRecipes: res.getuser.recipe_basket})
+                let new_list = res.getuser.recipe_basket.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
+                this.setState({scrappedRecipes: new_list})
             })
         })
     }
 
     addDayAbove(index) {
-        console.log(this.state.recipeArray)
         if (this.state.recipeArray.length >= 7) {
             console.log('max number is 7')
         }
@@ -93,8 +89,21 @@ export class Mealplanner extends Component {
         }
     }
     generateSingleML(day){
-        console.log(`generate single day ML (random for the three meals of ${day})`)
-
+        console.log(day)
+        let currlist = this.state.recipes
+        let arraylist = this.state.recipeArray
+        if(currlist[0]){
+            arraylist[day][0] = currlist[0];
+        }
+        else return;
+        if(currlist[1]){
+            arraylist[day][1] = currlist[1];
+        }
+        else return;
+        if(currlist[2]){
+            arraylist[day][2] = currlist[2];
+        }
+        else return;                            
     }
     generateAllML(){
         let currlist = this.state.recipes
@@ -149,7 +158,12 @@ export class Mealplanner extends Component {
                     let dest = recipeArray[d_index].thumbnail
                     recipeArray[d_index]['thumbnail'] = source
                     recipeArray[s_index]['thumbnail'] = dest
+                    let sid = recipeArray[s_index].real_id
+                    let did = recipeArray[d_index].real_id
+                    recipeArray[d_index]['real_id'] = sid
+                    recipeArray[s_index]['real_id'] = did
                     let newList = (chunk(recipeArray, 3))
+                    console.log(newList)
                     this.setState({recipeArray: newList})
                 }
                 else{
@@ -172,10 +186,12 @@ export class Mealplanner extends Component {
             let modify = recipeArray.splice(d_id, 1)
             let toswap = modify[0].splice(m_id, 1)
             toswap[0].thumbnail = selected.thumbnail
+            toswap[0].real_id = selected.real_id
             // 여기에 추가로 다른 인자 넣을 수 있음
             selected = toswap[0]
             modify[0].splice(m_id, 0, selected)
             recipeArray.splice(d_id, 0, modify[0])
+            console.log(recipeArray)
             this.setState({ recipeArray: recipeArray })
         }
     }
@@ -199,16 +215,18 @@ export class Mealplanner extends Component {
     render() {
         return (
             <div className = 'Mealplanner'>
-                <h2>식단표</h2>
-                <div id='mlpDescription'>{'원하는만큼의 날짜를 선택하고 "추천 받기" 버튼을 누리시면'} </div>
-                <div id='mlpDescription2'>{'선택한 날짜 수만큼 추천 레시피로 채워집니다!'}</div>
-                <div className='Searchbar'>
-                    <label>날짜수</label>
-                    <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
-                        onChange={(event) => this.setState({numOfDays: event.target.value})} />
-                    <button id="ml-generate" onClick={() => this.generateAllML()}>ML Generate</button>
+                <div id='mpdsc'>
+                    <h2>식단표</h2>
+                    <div id='mlpDescription'>{'원하는만큼의 날짜를 선택하고 "추천 받기" 버튼을 누리시면'} </div>
+                    <div id='mlpDescription2'>{'선택한 날짜 수만큼 추천 레시피로 채워집니다!'}</div>
+                    <div className='Searchbar'>
+                        <label id = 'targetdays'>날짜수</label>
+                        <input id="numOfDays" type='number' min='0' max='7' placeholder='최대 7일' value={this.state.numOfDays}
+                            onChange={(event) => this.setState({numOfDays: event.target.value})} />
+                        <button id="ml-generate" onClick={() => this.generateAllML()}>추천 받기</button>
+                    </div>
+                    <button id='mlpSave' onClick={() => this.onClickSave()}>저장</button>
                 </div>
-                <button id='mlpSave' onClick={() => this.onClickSave()}>Save</button>
                 <div id='plannerContents'>
                     <DragDropContext onDragEnd={this.onDragEnd}>
                         <div className='column'>
@@ -217,9 +235,9 @@ export class Mealplanner extends Component {
                                     <Droppable droppableId={`day${ind}`} key={ind} direction='horizontal'> 
                                         {(provided) => (
                                             <div className='day' ref={provided.innerRef} {...provided.droppableProps} style={{display : "flex"}}>
-                                                <button id="addDayAbove" onClick={() => this.addDayAbove(ind)}>날짜 추가</button>
-                                                <button id="deleteDay" onClick={() => this.deleteDay(ind)}>날짜 삭제</button>
-                                                <button onClick={() => this.generateSingleML(ind)}>하루치 추천 받기</button>
+                                                <button className = 'planbutton' id="addDayAbove" onClick={() => this.addDayAbove(ind)}>날짜 추가</button>
+                                                <button className = 'planbutton' id="deleteDay" onClick={() => this.deleteDay(ind)}>날짜 삭제</button>
+                                                <button className = 'planbutton' id = 'rightbutton' onClick={() => this.generateSingleML(ind)}>하루치 추천</button>
                                                 <div id ='drag'>
                                                     {dayBlock && dayBlock.map((meal, index) => (
                                                         <Draggable draggableId={`day_${ind}/meal_${index}`} index={index} key={index} >
@@ -228,7 +246,7 @@ export class Mealplanner extends Component {
                                                                     <div className='singleBlock' >
                                                                         {meal.thumbnail == 0 
                                                                             ? <div className='emptyImage'/>
-                                                                            :<img onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={meal.thumbnail} width='100' height='100'/>}
+                                                                            :<img id='basketimage' onClick={() =>this.props.history.push(`/detail-page/${meal.real_id}`)} src={meal.thumbnail} width={100} height={100}/>}
                                                                     </div>
                                                                 </div>
                                                             )} 
@@ -244,7 +262,7 @@ export class Mealplanner extends Component {
                             ))}
                         </div>
                         <div id='recipeBasket'>
-                            <div>{'장바구니'}</div>
+                            <h3>장바구니</h3>
                             <div id='drop'>
                                 <Droppable droppableId="scrappedArticles">
                                     {(provided) => (
@@ -254,7 +272,7 @@ export class Mealplanner extends Component {
                                                     {(provided) => (
                                                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                             <div className='scrappedRecipe'>
-                                                                <img onClick={() =>this.historyPush(recipe)} src={recipe.thumbnail} width='100' height='100'/>
+                                                                <img onClick={() =>this.props.history.push(`/detail-page/${recipe.real_id}`)} src={recipe.thumbnail} width='100' height='100'/>
                                                             </div>
                                                         </div>
                                                     )}

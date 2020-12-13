@@ -1,6 +1,6 @@
 .ListBackground {
     background: #f2eded;
-    min-width: 1000px;
+    min-width: 1500px;
 }
 
 .RecipeList{
@@ -11,7 +11,7 @@
     align-items: center;
     flex-direction: column;
     line-break: normal;
-    min-width: 1000px;
+    min-width: 1500px;
 }
 .search-confirm-button{
     display: inline-block;
