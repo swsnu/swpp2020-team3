@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history' ;
 
 import {getMockStore} from '../../test-utils/mocks.js'
 import EditDishResult from './EditDishResult'
+import * as recipeCreator from '../../store/actions/recipe';
 
 const stubState = {
   selectedRecipe: {
@@ -42,8 +43,12 @@ jest.mock("react-select", () => ( {options, value, onChange, getOptionLabel} ) =
 });
 
 describe('<Editpage />', () => {
-    let editdishresult;
+    let editdishresult; 
     const updateState = jest.fn()
+    const fflushPromises = () => {
+      return new Promise(resolve => setImmediate(resolve));
+    }
+
     beforeEach(() => {
       editdishresult = (
           <Provider store={mockStore}>
@@ -53,12 +58,15 @@ describe('<Editpage />', () => {
           </Provider>
         );
     })
+    afterEach(() => {
+      jest.clearAllMocks();
+    })
   
     it('should render EditDishResult and test basic buttons', () => {
       const component = mount(editdishresult);
       let wrapper = component.find('EditDishResult');
       let instance = component.find(EditDishResult.WrappedComponent).instance()
-      instance.setState({category: ['grey']})
+      instance.setState({category: []})
 
       expect(wrapper.length).toBe(1)
 
@@ -79,11 +87,11 @@ describe('<Editpage />', () => {
           return mockReader
       })
       wrapper = component.find('#imageHandler')
-        wrapper.simulate('change', {target: {files: ['image1', 'image2']}})
+      wrapper.simulate('change', {target: {files: ['image1', 'image2']}})
 
 
-      wrapper = component.find('.add-ingredient-quantity')
-      wrapper.simulate('change', {target: {value: 'text'}})
+      //wrapper = component.find('.add-ingredient-quantity')
+      //wrapper.simulate('change', {target: {value: 'text'}})
 
       wrapper = component.find('#type')
       wrapper.forEach(button => {
@@ -95,9 +103,59 @@ describe('<Editpage />', () => {
 
       wrapper = component.find('select')
       wrapper.at(0).simulate('change', {target: {value: 'text'}})
-      
+
+      wrapper = component.find('#add-custom-simple input')
+      expect(wrapper.length).toBe(3);
+      wrapper.forEach(button => {
+        if(button.type == 'text'){
+          button.simulate('change', {target: {value: 'text'}})
+        }
+        else{
+          button.simulate('change', {target: {value: 1}})
+        }
+      })
+      wrapper = component.find('#add-custom-simple button')
+      wrapper.simulate('click')
+
+      wrapper = component.find('#add-custom-detailed input');
+      expect(wrapper.length).toBe(5);
+      wrapper.forEach(button => {
+        if(button.type == 'text'){
+          button.simulate('change', {target: {value: 'text'}});
+        }
+        else{
+          button.simulate('change', {target: {value: 1}})
+        }
+      })
+      wrapper = component.find('#add-custom-detailed button');
+      wrapper.simulate('click');
+
+      wrapper = component.find('#recipe-cooking-time-input');
+      wrapper.simulate('change', {target:{value: 'text'}})
+
+      wrapper = component.find('#ingredient').at(0).find('input').at(0);
+      wrapper.simulate('change', {target: {value: 1}})
+
+      wrapper = component.find('#detailinfo button');
+      wrapper.forEach(button => {
+        button.simulate('click');
+      })
     });
 
+    /*it('should handle ingrestate is null', () => {
+      const component = mount(editdishresult);
+      let instance = component.find(EditDishResult.WrappedComponent).instance()
+      instance.setState({ingredientList: null})
+
+      const wrapper = component.find('select');
+      wrapper.simulate('change', {})
+    })*/
+
+    it('should call getIngredients', async () => {
+      const component = mount(editdishresult)
+      fflushPromises();
+      //expect(mockGetRecipe).toHaveBeenCalledTimes(1);
+    })
    
  
 })

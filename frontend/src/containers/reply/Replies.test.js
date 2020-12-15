@@ -46,13 +46,17 @@ const mockStore = getMockStore(stubInitialState);
 describe('<Replies />', () => {
 
     let replies, spyGetReplies, spyEditReply, spyDeleteReply, spyAddReply, spyIsLogin;
+    let spyConfirm = jest.spyOn(window, 'confirm')
+        .mockImplementation(() => true)
+    const fflushPromises = () => {
+        return new Promise(resolve => setImmediate(resolve));
+    }
+
     beforeEach(() => {  
         replies = (
             <Provider store={mockStore}>
                 <ConnectedRouter history={history}>
-                <Switch>
-                    <Route path='/' render = {() => <Replies replies={replyList} />} />
-                    </Switch>
+                     <Replies history={history} replies={replyList} />
                 </ConnectedRouter>
             </Provider>
         );
@@ -87,13 +91,16 @@ describe('<Replies />', () => {
         expect(newRepliesInstance.state.content).toEqual(content);
     });
 
-    it(`should add reply`, () => {
+    it(`should add reply`, async () => {
         spyIsLogin = jest.spyOn(UserCreators, 'isLogin')
-        .mockImplementation(() => { return () => {
-            return Promise.resolve({login_id: 1});
-            }; 
-        });
+        .mockImplementation(() => {
+            return () => new Promise(resolve => {
+                const result = {login_id: 1};
+                setImmediate(resolve(result))
+            })
+        })
         const component = mount(replies);
+        await fflushPromises();
         const content = 'OOOOOPS'
         let wrapper = component.find('.reply-content-input');
         wrapper.simulate('change', { target: { value: content } });
@@ -134,5 +141,69 @@ describe('<Replies />', () => {
         wrapper.at(0).simulate('click');
         expect(spyDeleteReply).toHaveBeenCalledTimes(1);
     });
+
+    it('should test reply page', () => {
+        const manyreplies = (
+            <Provider store={mockStore}>
+                <ConnectedRouter history={history}>
+                <Switch>
+                    <Route path='/' render = {() => <Replies replies={new Array(30)} />} />
+                    </Switch>
+                </ConnectedRouter>
+            </Provider>
+        );
+        const component = mount(manyreplies);
+        let wrapper = component.find('.row button');
+        wrapper.forEach(button => {
+            button.simulate('click');
+        })
+        wrapper = component.find('.row button').at(0);
+        wrapper.simulate('click');
+    })
+
+    it('should work handleKeyPress', () => {
+        const component = mount(replies);
+        const instance = component.find(Replies.WrappedComponent).instance();
+        const spyOnAdd = jest.fn();
+        instance.onAddReply = spyOnAdd;
+        instance.handleKeyPress({key: 'Enter'})
+        expect(spyOnAdd).toHaveBeenCalledTimes(0);
+        instance.state.content = 'text';
+        instance.handleKeyPress({key: 'Enter'})
+        expect(spyOnAdd).toHaveBeenCalledTimes(1);
+    })
+
+    it('should work confirm', async () => {
+        let spyIsLogin = jest.spyOn(UserCreators, 'isLogin')
+        .mockImplementation(() => { 
+            return () => new Promise(resolve => {
+                const result = {login_id: null};
+                setImmediate(resolve(result))
+            })
+        });
+        let spyConfirm = jest.spyOn(window, 'confirm')
+        .mockImplementation(() => true)
+
+        const component = mount(replies);
+        await fflushPromises();
+        const instance = component.find(Replies.WrappedComponent).instance();
+        instance.onAddReply();
+    })
+
+    it('should work neg confirm', async() => {
+        let spyIsLogin = jest.spyOn(UserCreators, 'isLogin')
+        .mockImplementation(() => { 
+            return () => new Promise(resolve => {
+                const result = {login_id: null};
+                setImmediate(resolve(result))
+            })
+        });
+        let spyConfirm = jest.spyOn(window, 'confirm')
+            .mockImplementation(() => false)
+        const component = mount(replies);
+        fflushPromises();
+        const instance = component.find(Replies.WrappedComponent).instance();
+        instance.onAddReply();
+    })
   
 });

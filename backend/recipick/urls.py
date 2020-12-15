@@ -55,5 +55,7 @@ urlpatterns = [
     path('activate/<str:uidb64>/<str:token>', views.activate, name='activate'),
 
     path('getml/<int:id>/', views.getml, name='getml'),
+
+    path('planner/<int:id>/', views.planner, name='planner'),  
     
 ]

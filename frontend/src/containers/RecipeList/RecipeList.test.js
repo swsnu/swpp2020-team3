@@ -73,11 +73,11 @@ describe('<RecipeList />', () => {
         wrapper = component.find('.search-word-input');
         wrapper.simulate('change', { target: { value: keywords } });
         let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
-        expect(newRecipeInstance.state.minPrice).toEqual(numberMin);
-        expect(newRecipeInstance.state.maxPrice).toEqual(numberMax);
-        expect(newRecipeInstance.state.minDuration).toEqual(numberMin);
-        expect(newRecipeInstance.state.maxDuration).toEqual(numberMax);
-        expect(newRecipeInstance.state.searchWord).toEqual('asdf');
+        expect(newRecipeInstance.state.tempSearchSettings.minPrice).toEqual(numberMin);
+        expect(newRecipeInstance.state.tempSearchSettings.maxPrice).toEqual(numberMax);
+        expect(newRecipeInstance.state.tempSearchSettings.minDuration).toEqual(numberMin);
+        expect(newRecipeInstance.state.tempSearchSettings.maxDuration).toEqual(numberMax);
+        expect(newRecipeInstance.state.tempSearchSettings.searchWord).toEqual('asdf');
     });
     
     it(`should call 'cancelArticleHandler'`, () => {
@@ -95,32 +95,28 @@ describe('<RecipeList />', () => {
       let wrapper = component.find('.list-page-number-button');
       expect(wrapper.length).toBe(5);
       wrapper.at(0).simulate('click');
-      expect(newRecipeInstance.state.pageNumber).toEqual(1);
+      expect(newRecipeInstance.state.searchSettings.pageNumber).toEqual(1);
       //expect(wrapper.at(0).props('style')).toHaveProperty('',{"backgroundColor": "grey"});
       wrapper.at(1).simulate('click');
-      expect(newRecipeInstance.state.pageNumber).toEqual(2);
+      expect(newRecipeInstance.state.searchSettings.pageNumber).toEqual(2);
       //expect(wrapper.at(1).props('style')).toHaveProperty('backgroundColor','grey');
       wrapper.at(2).simulate('click');
-      expect(newRecipeInstance.state.pageNumber).toEqual(3);
+      expect(newRecipeInstance.state.searchSettings.pageNumber).toEqual(3);
       //expect(wrapper.at(2).props('style')).toHaveProperty('backgroundColor','grey');
       wrapper.at(3).simulate('click');
-      expect(newRecipeInstance.state.pageNumber).toEqual(4);
+      expect(newRecipeInstance.state.searchSettings.pageNumber).toEqual(4);
       //expect(wrapper.at(3).props('style')).toHaveProperty('backgroundColor','grey');
       wrapper.at(4).simulate('click');
-      expect(newRecipeInstance.state.pageNumber).toEqual(5);
+      expect(newRecipeInstance.state.searchSettings.pageNumber).toEqual(5);
       //expect(wrapper.at(4).props('style')).toHaveProperty('backgroundColor','grey');
 
       wrapper = component.find('.list-page-next-button');
-      expect(wrapper.length).toBe(1);
-      expect(newRecipeInstance.state.pageStart).toEqual(0);
       wrapper.simulate('click');
-      expect(newRecipeInstance.state.pageStart).toEqual(5);
+      expect(newRecipeInstance.state.searchSettings.pageNumber).toEqual(6);
 
       wrapper = component.find('.list-page-previous-button');
-      expect(wrapper.length).toBe(1);
-      expect(newRecipeInstance.state.pageStart).toEqual(5);
       wrapper.simulate('click');
-      expect(newRecipeInstance.state.pageStart).toEqual(0);
+      expect(newRecipeInstance.state.searchSettings.pageNumber).toEqual(1);
   });
     
     it(`should render categories`, () => {
@@ -129,17 +125,17 @@ describe('<RecipeList />', () => {
         let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
         expect(wrapper.length).toBe(6);
         wrapper.at(0).simulate('click');
-        expect(newRecipeInstance.state.American).toEqual(false);
+        expect(newRecipeInstance.state.tempSearchSettings.American).toEqual(false);
         wrapper.at(1).simulate('click');
-        expect(newRecipeInstance.state.Korean).toEqual(false);
+        expect(newRecipeInstance.state.tempSearchSettings.Korean).toEqual(false);
         wrapper.at(2).simulate('click');
-        expect(newRecipeInstance.state.Chinese).toEqual(false);
+        expect(newRecipeInstance.state.tempSearchSettings.Chinese).toEqual(false);
         wrapper.at(3).simulate('click');
-        expect(newRecipeInstance.state.Japanese).toEqual(false);
+        expect(newRecipeInstance.state.tempSearchSettings.Japanese).toEqual(false);
         wrapper.at(4).simulate('click');
-        expect(newRecipeInstance.state.ConvenienceStore).toEqual(false);
+        expect(newRecipeInstance.state.tempSearchSettings.ConvenienceStore).toEqual(false);
         wrapper.at(5).simulate('click');
-        expect(newRecipeInstance.state.Dessert).toEqual(false); 
+        expect(newRecipeInstance.state.tempSearchSettings.Dessert).toEqual(false); 
     });
 
     it(`should render search mode`, () => {
@@ -148,15 +144,14 @@ describe('<RecipeList />', () => {
         let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
 
         let wrapper = component.find('.search-options-button');
-        wrapper.simulate('click');
-        expect(newRecipeInstance.state.searchOptionsClicked).toBe(true);
+        expect(wrapper.length).toBe(1);
         
         let wrapper2 = component.find('.search-mode-select-button');
         expect(wrapper2.length).toBe(3);
         for(let i=0;i<3;i++){
           wrapper2 = component.find('.search-mode-select-button')
           wrapper2.at(i).simulate('click');
-          expect(newRecipeInstance.state.searchMode).toEqual(searchModeList[i]);
+          expect(newRecipeInstance.state.tempSearchSettings.searchMode).toEqual(searchModeList[i]);
           wrapper.simulate('click');
         }
         

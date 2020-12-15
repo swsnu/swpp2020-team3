@@ -15,16 +15,22 @@ class Detailpage extends Component {
         login_id: -1,
         like: 0,
         scrap: 0,
-        rating: 0
+        personal_rating: 0
     };
     constructor(props) {
         super(props);
-        this.props.getRecipe(this.props.match.params.id);
+        this.props.getRating(this.props.match.params.id).then(res => {
+            console.log("why?")
+            this.setState({personal_rating: this.props.initrating})
+            console.log(this.props.initrating)
+        })
         this.props.isLogin().then(res => {
+            console.log(res)
             this.setState({
                 login_id: res.login_id
             })
         })
+        this.props.getRecipe(this.props.match.params.id)
     }
 
     isLike = () => {
@@ -79,12 +85,17 @@ class Detailpage extends Component {
 
     handleRating = (rating) => {
         console.log(rating)
-        this.setState({rating: rating})
+        this.setState({personal_rating: rating})
 
     }
     submitRating = () => {
         console.log('submit')
-        this.props.addRating(this.props.recipe.id, this.state.rating)
+        if(this.state.personal_rating > 10 || this.state.personal_rating < 0){
+            alert("별점은 10점 만점입니다.")
+            return;
+        }
+        this.props.addRating(this.props.recipe.id, this.state.personal_rating)
+        alert("별점을 남기셨습니다!");
     }
     
 
@@ -134,9 +145,9 @@ class Detailpage extends Component {
                         {(this.state.login_id==author)?<div><button id = 'edit-button' onClick={() => this.props.history.push(`/edit/${this.props.match.params.id}/`)}>수정</button>
                         <button id = "delete-button" onClick={() => this.props.deleteRecipe(this.props.match.params.id)}>삭제</button></div>:null}
                         <DishResult img={<img src = {d} width='396' height='330'/>} price = {price} category = {category} duration = {duration}
-                            likes = {likes} rating={rating} title={title} abstraction={abstraction} ingredients={igd}
+                            likes = {likes} recipe_rating={rating} title={title} abstraction={abstraction} ingredients={igd} 
                             loginid={this.state.login_id} onlikeClicked = {() =>  this.handleLike()} onscrapClicked = {() => this.handleScrap()}
-                            islike = {this.isLike()} isscrap = {this.isScrap()} 
+                            islike = {this.isLike()} isscrap = {this.isScrap()}  rating={this.state.personal_rating}
                             updateState={(event)=>this.handleRating(event)} confirmRating={() => this.submitRating()}
                         />
                         <div className='dish_method'>
@@ -159,7 +170,8 @@ class Detailpage extends Component {
 
 const mapStateToProps = state => {
     return {
-        recipe: state.rcp.selectedRecipe
+        recipe: state.rcp.selectedRecipe,
+        initrating: state.rcp.rating,
     };
 }
 
@@ -172,7 +184,8 @@ const mapDispatchToProps = dispatch => {
         removelikeRecipe: (id) => dispatch(actionCreators.removelikeRecipe(id)),
         scrapRecipe: (id) => dispatch(actionCreators.scrapRecipe(id)),
         removescrapRecipe: (id) => dispatch(actionCreators.removescrapRecipe(id)),
-        addRating: (id, rating) => dispatch(actionCreators.addRating(id, rating))
+        addRating: (id, rating) => dispatch(actionCreators.addRating(id, rating)),
+        getRating: (id) => dispatch(actionCreators.getRating(id))
     };
 }
 

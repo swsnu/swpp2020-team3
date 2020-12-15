@@ -14,6 +14,7 @@ export {
     scrapRecipe,
     removescrapRecipe,
     addRating,
+    getRating,
     getMl,
 } from './recipe';
 
@@ -26,6 +27,8 @@ export {
     followUser,
     unfollowUser,
     changePassword,
+    loadPlanner,
+    savePlanner,
 } from './userCreators';
 
 export {
