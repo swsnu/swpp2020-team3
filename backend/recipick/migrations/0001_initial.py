@@ -116,11 +116,9 @@ class Migration(migrations.Migration):
                 ('edited', models.BooleanField(null=True)),
                 ('summary', models.TextField(null=True)),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
-                ('ingredient_list', models.ManyToManyField(through='recipick.ConnectRecipeIngredient', to='recipick.Ingredient')),
                 ('liked_user', models.ManyToManyField(blank=True, related_name='like', to=settings.AUTH_USER_MODEL)),
                 ('photo_list', models.ManyToManyField(to='recipick.ImageModel')),
                 ('scrapped_user', models.ManyToManyField(blank=True, related_name='scrap', to=settings.AUTH_USER_MODEL)),
-                ('rating_user', models.ManyToManyField(blank=True, related_name='rating', through='recipick.ConnectRecipeRating', to=settings.AUTH_USER_MODEL)),
 
             ],
         ),
