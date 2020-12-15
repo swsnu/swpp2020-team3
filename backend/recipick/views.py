@@ -575,6 +575,23 @@ def recipe_like(request, id):
         recipe.liked_user.add(user)
         recipe.likes = recipe.likes+1
         recipe.save()
+
+        timestamp = int(time.time())
+
+        personalize_events = boto3.client('personalize-events', 'us-east-1')
+
+        data = personalize_events.put_events(
+            trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
+            userId = user.id,
+            sessionId = 'session_id',
+            eventList = [{
+                'sentAt': timestamp,
+                'eventType': 'Likes',
+                'properties': json.dumps({
+                'itemId': id
+                })
+            }]
+        )
         return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -654,12 +671,28 @@ def recipe_rating(request, id):
             num=2
         rating = rating / (num-1)
         rating = round(rating,2)
-        print(rating)
         recipe.rating = rating
-        print(recipe.rating)
         recipe.save()
         response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}
-        print(response)
+
+        timestamp = int(time.time())
+
+        personalize_events = boto3.client('personalize-events', 'us-east-1')
+
+        data = personalize_events.put_events(
+            trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
+            userId = user.id,
+            sessionId = 'session_id',
+            eventList = [{
+                'sentAt': timestamp,
+                'eventType': 'Likes',
+                'properties': json.dumps({
+                'itemId': recipe.id
+                })
+            }]
+        )
+
+
         return JsonResponse(response, safe=False, status=200)
     # elif request.method == 'PUT':
     #     user = request.user
