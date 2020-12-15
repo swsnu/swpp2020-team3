@@ -18,7 +18,6 @@ import Signup from './containers/Authentication/Signup/Signup';
 import Login from './containers/Authentication/Login/Login';
 import Editpage from './containers/Editpage/Editpage';
 import Mealplanner from './containers/Mealplanner/Mealplanner';
-import Footer from './containers/Footer/Footer';
 
 function App(props) {
   useEffect(() => {
@@ -45,7 +44,6 @@ function App(props) {
           
           <Route render = {() => <h1>Not Found</h1>} />
         </Switch>
-        <Footer/>
       </div>
       </Router>
     </ConnectedRouter>
