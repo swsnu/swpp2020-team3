@@ -29,6 +29,10 @@
     margin:10px;
 }
 
+#add-comment:hover{
+    cursor: pointer;
+}
+
 #new-comment {
     width:270px;
     overflow: auto;

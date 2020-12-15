@@ -153,7 +153,7 @@ div .Createpage h1, p{
 
 #addStep:hover {
     background-color: gray;
-  }
+}
 
 div .Createpage h3{
     color: black;
@@ -226,4 +226,28 @@ textarea {
 
 #step-input{
     white-space: pre-wrap;
+}
+
+.ingr_detailed:hover{
+    cursor: pointer;
+}
+
+.ingr_submit_0:hover{
+    cursor: pointer;
+}
+
+#addStep:hover{
+    cursor: pointer;
+}
+
+#type:hover{
+    cursor: pointer;
+}
+
+#submit:hover{
+    cursor: pointer;
+}
+
+#delete-step:hover{
+    cursor: pointer;
 }

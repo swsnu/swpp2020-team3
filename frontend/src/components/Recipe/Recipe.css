@@ -4,6 +4,10 @@
     margin-bottom: 30px;
 }
 
+.recipe_thumbnail:hover{
+    cursor: pointer;
+}
+
 .recipe_title {
     width: 100px;
 }

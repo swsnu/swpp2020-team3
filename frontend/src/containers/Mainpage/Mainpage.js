@@ -118,7 +118,7 @@ class Mainpage extends Component{
                                 {dailyrandomList}
                                 <li className = 'toCreate'>
                                     <div><img src = {require('../../Image/toCreate.png')} onClick = {() => this.toCreateHandler()}/></div>
-                                    <div>{'click to create'}</div>
+                                    <div>{'레시피 만들기'}</div>
                                 </li>
                             </ul>
                         </div>

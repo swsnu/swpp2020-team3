@@ -16,3 +16,15 @@
     margin: 15px;
     font-size: 18px;
 }
+
+#delete-button:hover{
+    cursor: pointer;
+}
+
+#editaddstep:hover{
+    cursor: pointer;
+}
+
+#cancel:hover{
+    cursor: pointer;
+}
