@@ -202,6 +202,7 @@ export class Mealplanner extends Component {
 
     onClickSave(){
         this.props.savePlanner(this.state.login_id, this.state.recipeArray)
+        window.alert("식단표가 저장이 되었습니다!")
     }
 
     /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.
