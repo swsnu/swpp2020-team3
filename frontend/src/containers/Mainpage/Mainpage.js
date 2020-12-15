@@ -96,13 +96,15 @@ class Mainpage extends Component{
                 )   
             })
         }
-        let thirdlist = this.state.thirdList.map( (td) => {
-            let d = td.thumbnail
-            return (
-                <li key={td.id} className = 'random_content' id = 'r3'>
-                    <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
-                </li>
-            )   
+        let thirdlist = this.state.thirdList.map( (td, index) => {
+            if(index<=4){
+                let d = td.thumbnail
+                return (
+                    <li key={td.id} className = 'random_content' id = 'r3'>
+                        <DisplayRecipe history={this.props.history} id = {td.id} img = {<img src = {d} width='120' height='100'/>} title = {td.title} />
+                    </li>
+                )   
+            }
         })
         console.log(this.props.mlRecipes)
         if(this.state.login_id < 1 || !this.props.mlRecipes) {
