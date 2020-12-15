@@ -1,5 +1,6 @@
 .ListBackground {
     background: #f2eded;
+    min-width: 1500px;
 }
 
 .RecipeList{
@@ -10,6 +11,7 @@
     align-items: center;
     flex-direction: column;
     line-break: normal;
+    min-width: 1500px;
 }
 .search-confirm-button{
     display: inline-block;
@@ -22,7 +24,7 @@
     padding:5px;
     text-decoration: none;
     font-size: 13px;
-    width: 10vh;
+    width: 100px;
     margin-top: 2px;
     margin-bottom: 50px;
 }
@@ -30,8 +32,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 8vh;
-    padding-bottom: 5vh;
+    padding-top: 80px;
+    padding-bottom: 50px;
 }
 .category-search {
     display: flex;
@@ -40,6 +42,7 @@
 }
 
 .options {
+    margin-top: 20px;
     
 }
 
@@ -54,7 +57,7 @@
     padding:5px;
     text-decoration: none;
     font-size: 13px;
-    width: 10vh;
+    width: 100px;
     margin-top: 2px;
     margin-bottom: 2px;
 }
@@ -87,8 +90,8 @@
 .search-options {
     background: #f2eded;
     display: block;
-    height: 18vh;
-    width: 14vh;
+    height: 180px;
+    width: 140px;
 }
 
 .search-options-button {
@@ -132,4 +135,7 @@
 #basket {
     display: block;
     width:100px;
+}
+
+.pages {
 }

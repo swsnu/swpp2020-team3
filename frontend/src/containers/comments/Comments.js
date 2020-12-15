@@ -40,6 +40,7 @@ class Comments extends Component {
     }
 
     onAddComment = () => {
+        console.log(1);
         this.props.isLogin().then(res => {
             if(!res.login_id){
                 let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");

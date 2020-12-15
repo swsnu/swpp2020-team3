@@ -20,6 +20,17 @@ const mockStore = getMockStore(stubState)
 
 describe('Signup', () => {
     let signup, spyOnSignup;
+    const fflushPromises = () => {
+        return new Promise(resolve => setImmediate(resolve));
+    }
+    let isLogin = jest.spyOn(actionCreators,'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise(resolve => {
+                const result = {login_id: 1}
+                setImmediate(resolve(result))
+            })
+        })
+    const spyAlert = jest.spyOn(window, 'alert')
     beforeEach(() => {
         signup = (
             <Provider store={mockStore}>
@@ -55,11 +66,63 @@ describe('Signup', () => {
         })
     })
 
-    it('should test submit', () => {
+    it('should test submit', async () => {
         const component = mount(signup);
+        const instance = component.find(Signup.WrappedComponent).instance();
+        const spyClick = jest.fn();
+        instance.onClickSubmit = spyClick;
         let wrapper = component.find('.SignupButton')
         wrapper.simulate('click')
-        expect(spyOnSignup).toHaveBeenCalledTimes(1)
+        fflushPromises();
+        expect(spyClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('test onClickSubmit', () => {
+        const component = mount(signup);
+        const instance = component.find(Signup.WrappedComponent).instance();
+        instance.setState({password:"password"})
+        instance.onClickSubmit();
+        expect(spyAlert).toHaveBeenCalledTimes(1);
+        jest.clearAllMocks();
+        instance.setState({password_confirm:"password"})
+        instance.onClickSubmit();
+        expect(spyAlert).toHaveBeenCalledTimes(1);
+        jest.clearAllMocks();
+        instance.setState({email: 'superkgd@gmail.com'})
+        instance.onClickSubmit();
+    })
+
+    it('testing signup error', async () => {
+        spyOnSignup = jest.spyOn(actionCreators, 'signUp')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = false;
+                setImmediate(resolve(result))
+            })
+        })
+        const component = mount(signup);
+        const instance = component.find(Signup.WrappedComponent).instance();
+        instance.setState({password:"password", password_confirm:"password", email: 'superkgd@gmail.com'})
+        instance.onClickSubmit();
+    })
+
+    it('testing islogin', async () => {
+        let spyPush = jest.spyOn(history, 'push');
+        const component = mount(signup);
+        await fflushPromises();
+        expect(spyPush).toHaveBeenCalledTimes(1);
+    })
+
+    it('testing neg islogin', async () => {
+        isLogin = jest.spyOn(actionCreators,'isLogin')
+            .mockImplementation(() => {
+                return () => new Promise(resolve => {
+                    const result = {login_id: null}
+                    setImmediate(resolve(result))
+                })
+            })
+        const component = mount(signup);
+        fflushPromises();
     })
     
     

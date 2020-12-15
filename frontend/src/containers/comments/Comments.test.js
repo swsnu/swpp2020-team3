@@ -37,6 +37,7 @@ describe('<Comments/>', () => {
     const fflushPromises = () => {
         return new Promise(resolve => setImmediate(resolve));
     }
+    let spyConfirm, spyPush;
     let spyIsLogin = jest.spyOn(userCreators, 'isLogin')
         .mockImplementation(() => {
             return () => new Promise((resolve) => {
@@ -57,13 +58,13 @@ describe('<Comments/>', () => {
         jest.clearAllMocks();
     })
 
-    /*it('should render comments', () => {
+    it('should render comments', () => {
         const component = mount(comments);
         let wrapper = component.find('Comments');
         expect(wrapper.length).toBe(1);
         wrapper = component.find('.spyComment');
         expect(wrapper.length).toBe(1);
-    })   */
+    })   
 
     it('should mount well', async () => {
         const spyGetReplySet = jest.spyOn(replyCreators, 'getReplySet')
@@ -95,6 +96,7 @@ describe('<Comments/>', () => {
     it('should add comment', async () => {
         const spyAddComment = jest.spyOn(commentCreators, 'addComment');
         const component = mount(comments);
+        const instance = component.find(Comments.WrappedComponent).instance();
         let wrapper = component.find('#new-comment');
         wrapper.simulate('change', {target: {value: 'test_comment'}})
         wrapper = component.find('#add-comment');
@@ -104,7 +106,7 @@ describe('<Comments/>', () => {
         expect(spyAddComment).toHaveBeenCalledTimes(1);
         expect(spyIsLogin).toHaveBeenCalledTimes(1);
     })
-
+    
     it('should not add without login', async () => {
         spyIsLogin = jest.spyOn(userCreators, 'isLogin')
             .mockImplementation(() => {
@@ -112,7 +114,7 @@ describe('<Comments/>', () => {
                     const result = {login_id: 0}
                     setImmediate(resolve(result))
                 })
-            })
+        })
         // const spyConfirm = jest.spyOn(window, 'confirm')
         //     .mockImplementation(() => true)
         // const spyPush = jest.spyOn(history, 'push')
@@ -124,7 +126,7 @@ describe('<Comments/>', () => {
         wrapper = component.find('#add-comment');
         expect(wrapper.length).toBe(1);
         wrapper.simulate('click');
-        await fflushPromises();
+        fflushPromises();
     })
 
     it('should pass edit well', () => {
@@ -141,5 +143,134 @@ describe('<Comments/>', () => {
         const wrapper = component.find('#delete-comment-button')
         wrapper.simulate('click');
         expect(spyDelete).toHaveBeenCalledTimes(1);
+    })
+
+    it('should test reply page', () => {
+        const manycomments = (
+            <Provider store={getMockStore({comments: new Array(30)})}>
+                <ConnectedRouter history={history}>
+                   <Comments history={history} recipeId={1}  />
+                </ConnectedRouter>
+            </Provider>
+        );
+        const component = mount(manycomments);
+        let wrapper = component.find('.row button');
+        wrapper.forEach(button => {
+            button.simulate('click');
+        })
+        wrapper = component.find('.row button').at(0);
+        wrapper.simulate('click');
+    })
+
+    it('should work handleKeyPress', () => {
+        const component = mount(comments);
+        const instance = component.find(Comments.WrappedComponent).instance();
+        const spyOnAdd = jest.fn();
+        instance.onAddComment = spyOnAdd;
+        instance.handleKeyPress({key: 'Enter'})
+        expect(spyOnAdd).toHaveBeenCalledTimes(0);
+        instance.state.content = 'text';
+        instance.handleKeyPress({key: 'Enter'})
+        expect(spyOnAdd).toHaveBeenCalledTimes(1);
+    })
+
+    /*it('should not push', async () => {
+        spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: null}
+                setImmediate(resolve(result))
+            })
+        })
+        spyConfirm = jest.spyOn(window, 'confirm')
+            .mockImplementation(() => false)
+        
+        const component = mount(comments);
+        await fflushPromises();
+        const instance = component.find(Comments.WrappedComponent).instance();
+        instance.state.content = 'text';
+        instance.handleKeyPress({key: 'Enter'})
+    })
+    
+    it('should work push', async () => {
+        spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: null}
+                setImmediate(resolve(result))
+            })
+        })
+        spyConfirm = jest.spyOn(window, 'confirm')
+            .mockImplementation(() => true)
+        
+        const component = mount(comments);
+        await fflushPromises();
+        const instance = component.find(Comments.WrappedComponent).instance();
+        instance.props.history.push = jest.fn();
+        instance.state.content = 'text';
+        instance.handleKeyPress({key: 'Enter'})
+    })*/
+})
+
+describe('<Comments/>', () => {
+    let comments;
+    const fflushPromises = () => {
+        return new Promise(resolve => setImmediate(resolve));
+    }
+    let spyConfirm, spyPush;
+    let spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: 1}
+                setImmediate(resolve(result))
+            })
+        })
+    
+    beforeEach(() => {
+        comments = <Provider store={mockStore}>
+            <ConnectedRouter history={history}>
+                <Comments history={history} recipeId={1}/>
+            </ConnectedRouter>
+        </Provider>
+    })
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    })
+
+    it('should not push', async () => {
+        spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: null}
+                setImmediate(resolve(result))
+            })
+        })
+        spyConfirm = jest.spyOn(window, 'confirm')
+            .mockImplementation(() => false)
+        
+        const component = mount(comments);
+        fflushPromises();
+        const instance = component.find(Comments.WrappedComponent).instance();
+        instance.state.content = 'text';
+        instance.handleKeyPress({key: 'Enter'})
+    })
+   it('should work push', async () => {
+        spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const result = {login_id: null}
+                setImmediate(resolve(result))
+            })
+        })
+        spyConfirm = jest.spyOn(window, 'confirm')
+            .mockImplementation(() => true)
+        
+        const component = mount(comments);
+        fflushPromises();
+        const instance = component.find(Comments.WrappedComponent).instance();
+        instance.props.history.push = jest.fn();
+        instance.state.content = 'text';
+        instance.handleKeyPress({key: 'Enter'})
     })
 })

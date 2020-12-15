@@ -58,6 +58,7 @@ jest.mock('../comments/Comments', () => {
   })
 })
 describe('<Detailpage />', () => {
+    let spyGetRating;
     let detailpage, spyDeleteRecipe;
     let spyIsLogin = jest.spyOn(userCreators, 'isLogin')
       .mockImplementation(() => {
@@ -83,6 +84,15 @@ describe('<Detailpage />', () => {
       );
       spyDeleteRecipe = jest.spyOn(recipeCreators, 'deleteRecipe')
       .mockImplementation(() => {return () => {}})
+      spyGetRating = jest.spyOn(recipeCreators, 'getRating')
+      .mockImplementation(() => {
+        return () => new Promise((resolve) => {
+          const data = {login_id: 3}
+          resolve(data)
+          setImmediate(resolve(data))
+      })
+
+      })
     })
 
     afterEach(() => {
@@ -122,29 +132,10 @@ describe('<Detailpage />', () => {
       wrapper.simulate('click');
       expect(spyRemoveLikeRecipe).toHaveBeenCalledTimes(1);
     })
-    it('should work like', async () => {
-      const spyLikeRecipe = jest.spyOn(recipeCreators, 'likeRecipe')
-        .mockImplementation(() => {
-          return () => {}
-        })
-      spyIsLogin = jest.spyOn(userCreators, 'isLogin')
-        .mockImplementation(() => {
-            return () => new Promise((resolve) => {
-                const result = {login_id: 3}
-                setImmediate(resolve(result))
-            })
-        })
-      let component = mount(detailpage);
-      await fflushPromises();
-      component.update();
-      const wrapper = component.find('#spylike');
-      wrapper.simulate('click');
-      expect(spyLikeRecipe).toHaveBeenCalledTimes(1);
-    })
-
+    
     it('should work removescrap', async () => {
       const spyRemoveScrapRecipe = jest.spyOn(recipeCreators, 'removescrapRecipe')
-        .mockImplementation(() => {
+        .mockImplementation((id) => {
           return () => {}
         })
       let component = mount(detailpage);
@@ -155,9 +146,34 @@ describe('<Detailpage />', () => {
       expect(spyRemoveScrapRecipe).toHaveBeenCalledTimes(1);
     })
 
+    it('should work like', async () => {
+      const spyLikeRecipe = jest.spyOn(recipeCreators, 'likeRecipe')
+        .mockImplementation((id) => {
+          return () => new Promise((resolve) => {
+            const data = {login_id: 3}
+            resolve(data)
+            setImmediate(resolve(data))
+        })
+      })
+      spyIsLogin = jest.spyOn(userCreators, 'isLogin')
+        .mockImplementation(() => {
+            return () => new Promise((resolve) => {
+                const data = {login_id: 3}
+                resolve(data)
+                setImmediate(resolve(data))
+            })
+        })
+      let component = mount(detailpage);
+      await fflushPromises();
+      component.update();
+      const wrapper = component.find('#spylike');
+      wrapper.simulate('click');
+      expect(spyLikeRecipe).toHaveBeenCalledTimes(1);
+    })
+
     it('should work scrap', async () => {
       const spyScrapRecipe = jest.spyOn(recipeCreators, 'scrapRecipe')
-        .mockImplementation(() => {
+        .mockImplementation((id) => {
           return () => {}
         })
       spyIsLogin = jest.spyOn(userCreators, 'isLogin')

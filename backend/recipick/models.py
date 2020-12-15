@@ -25,12 +25,25 @@ class CustomUserManager(BaseUserManager):
         user.is_active = True
         user.save(using = self._db)
         return user
+        
+def default_planner():
+    return [
+        [{ "id": 1, "thumbnail": 0, "real_id": 0 }, { "id": 2, "thumbnail": 0, "real_id": 0}, { "id": 3, "thumbnail": 0, "real_id": 0}],
+        [{ "id": 4, "thumbnail": 0, "real_id": 0 }, { "id": 5, "thumbnail": 0, "real_id": 0 }, { "id": 6, "thumbnail": 0, "real_id": 0 }],
+        [{ "id": 7, "thumbnail": 0, "real_id": 0 }, { "id": 8, "thumbnail": 0, "real_id": 0 }, { "id": 9, "thumbnail": 0, "real_id": 0 }]
+    ]
+
+
+class Planner(models.Model):
+    data = models.JSONField(default=default_planner, null=True)
+
 
 class User(AbstractUser):
     objects = CustomUserManager()
+    # 이름은 following이지만 사실은 planner
     following = models.ManyToManyField(
-        'recipick.User',
-        related_name = 'follower',
+        Planner,
+        related_name = 'planner',
         blank=True
     )
     is_active = models.BooleanField(default=False)
@@ -132,3 +145,4 @@ class Reply(models.Model):
     )
     created_date = models.DateField()
     edited = models.BooleanField()
+

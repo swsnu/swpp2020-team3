@@ -56,9 +56,10 @@
 }
 
 #edit-button {
-    background-color: #fcc051; /* Green */
+    background-color: #0fd1cd; /* Green */
     border: none;
-    color: black;
+    font-weight: 600;
+    color: white;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
@@ -71,9 +72,10 @@
 }
 
 #delete-button {
-    background-color: #fcc051; /* Green */
+    background-color: #FF8868; /* Green */
     border: none;
-    color: black;
+    font-weight: 600;
+    color: white;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;

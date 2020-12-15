@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
-from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating
+from recipick.models import Ingredient, Comment, Recipe, Reply, ImageModel, User, ConnectRecipeIngredient, ConnectRecipeRating, Planner
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
@@ -70,10 +70,13 @@ def getuser(request, id):
             written_recipes.append(newrecipe)
 
 
-        follower = [user for user in user_1.follower.all().values()]
-        following = [user for user in user_1.following.all().values()]
+        #follower = [user for user in user_1.follower.all().values()]
+        #following = [user for user in user_1.following.all().values()]
+        follower = []
+        following=[]
+        planner = user_1.following.all()
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
-            'written_recipes': written_recipes, 'follower': follower, 'following': following}
+            'written_recipes': written_recipes, 'follower': follower, 'following': following, 'planner': planner[0].data}
         return JsonResponse(user, safe=False, status=200)
     elif(request.method) == 'PUT':
         body = json.loads(request.body.decode())
@@ -618,29 +621,67 @@ def recipe_rating(request, id):
             return HttpResponse(status=403)
         recipe = Recipe.objects.get(id=id)
         recipe.rating_user.add(user)
-        recipe.save()
-        print(user)
-        connection = ConnectRecipeRating(recipe=recipe, user=user, rating=rating)
-        connection.save()
+        previous = ConnectRecipeRating.objects.filter(user=user, recipe=recipe)
+        if len(previous) != 0:
+            # update
+            print('update')
+            print(previous)
+            previous = previous[0]
+            previous.rating = rating
+            previous.save(force_update=True)
+            
+        else:
+            # create
+            print('empty')
+            previous = ConnectRecipeRating(recipe=recipe, user=user, rating=rating)
+            previous.save()
+        # calculate overall rating of recipe
         connec = [c for c in ConnectRecipeRating.objects.filter(recipe = recipe).values()]
         rating = 0
         num = 0
         for obj in connec:
             rating = rating + obj['rating']
             num = num + 1
-        rating = rating / num
+        if num<=1:
+            num=2
+        rating = rating / (num-1)
+        rating = round(rating,2)
         print(rating)
         recipe.rating = rating
+        print(recipe.rating)
         recipe.save()
-        return JsonResponse({'user.id': user.id, 'rating': connection.rating, 'recipe.id': recipe.id}, safe=False, status=200)
-    elif request.method == 'PUT':
-        print("to edit my rating")
-    # 디버깅용, 나중에는 기덕이처럼 유저로부터 가지고 오면 될듯
+        response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}
+        print(response)
+        return JsonResponse(response, safe=False, status=200)
+    # elif request.method == 'PUT':
+    #     user = request.user
+    #     if not user.is_authenticated:
+    #         return HttpResponse(status=401)
+    #     try:
+    #         body = json.loads(request.body.decode())
+    #         rating = body['rating']
+    #     except:
+    #         return HttpResponse(status=403)
+    #     recipe = Recipe.objects.get(id=id)
+    #     connection = ConnectRecipeRating.objects.get(recipe=recipe, user=user)
+    #     connection.rating = rating
+    #     connection.save()
+    #     return JsonResponse(connection.rating, safe=False, status=200)
     elif request.method == 'GET':
         user = request.user
         recipe = Recipe.objects.get(id=id)
-        connection = ConnectRecipeRating.objects.get(recipe=recipe)
-        return JsonResponse(connection.rating, safe=False, status=200)
+        rating = 0
+
+        temp = ConnectRecipeRating.objects.filter(user=user, recipe=recipe)
+        print(temp)
+        
+        try:
+            connection = ConnectRecipeRating.objects.get(recipe=recipe, user=user)
+            rating = connection.rating
+        except:
+            rating = 0
+        print(rating)
+        return JsonResponse(rating, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'POST', 'PUT'])
 
@@ -943,11 +984,47 @@ def getml(request, id):
             ml_list.append(item['itemId'])
         res = []
         for i in ml_list:
-            print(i)
-            recipe = [recipe for recipe in Recipe.objects.filter(id = i).values()]
+            recipe = Recipe.objects.filter(id = i)
             if(recipe):
-                res.append(recipe)
-        return JsonResponse(res, status=200, safe=False)        
+                recipe = Recipe.objects.get(id = i)
+                newrecipe = {
+                    'id': recipe.id, 'title': recipe.title,
+                    'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                }
+                res.append(newrecipe)
+        return JsonResponse(res, status=200, safe=False)    
+
+def planner(request, id):
+    if request.method == 'GET':
+        user = request.user
+        planner = user.following.all()
+        if not planner :
+            res = [
+                [{ "id": 1, "thumbnail": 0, "real_id": 0 }, { "id": 2, "thumbnail": 0, "real_id": 0}, { "id": 3, "thumbnail": 0, "real_id": 0}],
+                [{ "id": 4, "thumbnail": 0, "real_id": 0 }, { "id": 5, "thumbnail": 0, "real_id": 0 }, { "id": 6, "thumbnail": 0, "real_id": 0 }],
+                [{ "id": 7, "thumbnail": 0, "real_id": 0 }, { "id": 8, "thumbnail": 0, "real_id": 0 }, { "id": 9, "thumbnail": 0, "real_id": 0 }]
+            ]
+            return JsonResponse(res, status=200, safe=False)
+        else :
+            return JsonResponse(planner[0].data, status=200, safe=False)
+    elif request.method == 'PUT':
+        user = request.user
+        body = json.loads(request.body.decode())
+        planner = user.following.all()
+        if not planner :
+            newplanner = Planner(data = body)
+            newplanner.save()
+            user.following.add(newplanner)
+            user.save()
+            return JsonResponse(newplanner.data, status=200, safe=False)
+        else:
+            newplanner = Planner(data = body)
+            newplanner.save()
+            user.following.all().delete()
+            user.following.add(newplanner)
+            user.save()
+            return JsonResponse(newplanner.data, status=200, safe=False)
+             
 
 @ensure_csrf_cookie
 def token(request):

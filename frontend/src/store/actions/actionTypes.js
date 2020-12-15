@@ -11,6 +11,7 @@ export const REMOVE_LIKE_RECIPE = 'REMOVE_LIKE_RECIPE';
 export const SCRAP_RECIPE = 'SCRAP_RECIPE';
 export const REMOVE_SCRAP_RECIPE = 'REMOVE_SCRAP_RECIPE';
 export const ADD_RECIPE_RATING = 'ADD_RECIPE_RATING';
+export const GET_RECIPE_RATING = 'GET_RECIPE_RATING';
 
 export const GET_INGREDIENTS = 'GET_INGREDIENTS'
 
@@ -32,3 +33,6 @@ export const GET_REPLIES = 'GET_REPLIES';
 export const ADD_REPLY = 'ADD_REPLY';
 export const EDIT_REPLY = 'EDIT_REPLY';
 export const DELETE_REPLY = 'DELETE_REPLY';
+
+export const LOAD_PLANNER = 'LOAD_PLANNER';
+export const SAVE_PLANNER = 'SAVE_PLANNER';

@@ -93,12 +93,13 @@ let user1 = {
 
 const stubInitialState = {
   getuser : user1,
+  login_id : 1,
 };
 const mockStore = getMockStore(stubInitialState);
 
 describe('<MyPage />', () => {
     let myPage;
-    let spyGetUser;
+    let spyGetUser,spyIsLogin;
     beforeEach(() => {  
         myPage = (
             <Provider store={mockStore}>
@@ -111,7 +112,19 @@ describe('<MyPage />', () => {
         );
         spyGetUser = jest.spyOn(actionCreators, 'getUser')
         .mockImplementation(() => { return () => {}; });
-    });
+        spyIsLogin = jest.spyOn(actionCreators, 'isLogin')
+        .mockImplementation((id) => {
+          return () => new Promise(resolve => {
+            const result = {
+              status: 200,
+              data: 1
+            };
+            resolve(result);
+            setImmediate(resolve(result));
+          });
+        })
+
+    })
 
     afterEach(() => {
       jest.clearAllMocks();
@@ -119,7 +132,7 @@ describe('<MyPage />', () => {
 
     it(`should set render properly on my profile tab`, () => {
         const component = mount(myPage);
-        expect(spyGetUser).toHaveBeenCalledTimes(1)
+        expect(spyGetUser).toHaveBeenCalledTimes(0)
         let wrapper = component.find('.my-profile-button');
         wrapper.simulate('click');
         let newRecipeInstance = component.find(MyPage.WrappedComponent).instance();
@@ -145,9 +158,9 @@ describe('<MyPage />', () => {
         let wrapper = component.find('.my-info-button');
         wrapper.simulate('click');
         let newRecipeInstance = component.find(MyPage.WrappedComponent).instance();
-        expect(newRecipeInstance.state.tab).toEqual('my-info');
+        expect(newRecipeInstance.state.tab).toEqual('my-profile');
         wrapper = component.find('.spyMyInfo');
-        expect(wrapper.length).toBe(1);
+        expect(wrapper.length).toBe(0);
     });
     it(`should set render properly on liked recipes tab`, () => {
         const component = mount(myPage);
@@ -176,24 +189,6 @@ describe('<MyPage />', () => {
         wrapper = component.find('.spyRecipe');
         expect(wrapper.length).toBe(1);
     });
-    it(`should set render properly on follower tab`, () => {
-        const component = mount(myPage);
-        let wrapper = component.find('.follower-button');
-        wrapper.simulate('click');
-        let newRecipeInstance = component.find(MyPage.WrappedComponent).instance();
-        expect(newRecipeInstance.state.tab).toEqual('follower');
-        wrapper = component.find('.spySimpleUserInfo');
-        expect(wrapper.length).toBe(1);
-    });
-    it(`should set render properly on following tab`, () => {
-        const component = mount(myPage);
-        let wrapper = component.find('.following-button');
-        wrapper.simulate('click');
-        let newRecipeInstance = component.find(MyPage.WrappedComponent).instance();
-        expect(newRecipeInstance.state.tab).toEqual('following');
-        wrapper = component.find('.spySimpleUserInfo');
-        expect(wrapper.length).toBe(1);
-    });
 
     it(`clickRecipeHandler should work`, () => {
         const spyHistoryPush = jest.spyOn(history, 'push')
@@ -214,7 +209,5 @@ describe('<MyPage />', () => {
         wrapper.at(5).simulate('click');
         expect(spyHistoryPush).toHaveBeenCalledTimes(6);
     });
-    
-    
     
 });

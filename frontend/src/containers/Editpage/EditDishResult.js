@@ -21,7 +21,6 @@ const totalPriceCalculator = (list ) => {
                 let parsed = parseFloat(item.amount * (item.quantity == 0 ? 0 : item.price/item.quantity).toFixed(2)).toFixed(2)
                 let add = flag == 0 ? price : parsed
                 totalPrice = parseFloat(totalPrice) + parseFloat(add)
-                console.log(totalPrice.toFixed(2))
             }
         }
     return totalPrice
@@ -54,8 +53,8 @@ class EditDishResult extends Component {
     }
 
     componentDidMount(){
-        this.props.getRecipe(parseInt(this.props.match.params.id)).then((res) => {
-            res = res.selectedRecipe
+        this.props.getRecipe(parseInt(this.props.match.params.id)).then((res1) => {
+            let res = res1.selectedRecipe
             this.setState({
             title: res.title,
             price: res.price,
@@ -135,9 +134,9 @@ class EditDishResult extends Component {
         this.updateState('price', price)
     }
     addSelectedIngredientHandler(event){
-        if(this.state.ingredientList == null){
+        /*if(this.state.ingredientList == null){
             this.setState({ingredientList: this.props.ingredientList})
-        }
+        }*/
         event.amount = 0
         let list1 = this.state.selectedIngredientList.concat(event)
         this.setState({selectedIngredientList: list1})
