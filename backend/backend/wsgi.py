@@ -15,4 +15,5 @@ from django.core.management import call_command
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 
 application = get_wsgi_application()
+call_command("makemigrations");
 call_command("migrate")
