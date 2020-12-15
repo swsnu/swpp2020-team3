@@ -51,6 +51,17 @@ export class Mealplanner extends Component {
         
         // temporary function to get temp getrecipes
         this.props.isLogin().then(res => {
+            if(!res.login_id){
+                let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
+                if(input){
+                    this.props.history.push('/login')
+                }
+                else{
+                    this.props.history.push('/main-page')
+                }
+                return;
+            }
+
             this.setState({login_id: res.login_id})
             this.props.getMls(res.login_id).then((res)=> {
                 let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
