@@ -984,8 +984,8 @@ def getml(request, id):
         print(1)
         personalizeRt = boto3.client('personalize-runtime', region_name = 'us-east-1')
         response = personalizeRt.get_recommendations(
-            campaignArn = "arn:aws:personalize:us-east-1:089178928033:campaign/ml2",
-            filterArn = "arn:aws:personalize:us-east-1:089178928033:filter/filter6",
+            campaignArn = "arn:aws:personalize:us-east-1:912135822055:campaign/test",
+            filterArn = "arn:aws:personalize:us-east-1:912135822055:filter/filter2",
             userId = str(id))
         ml_list = []
         for item in response['itemList']:
