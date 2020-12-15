@@ -105,6 +105,9 @@ class Mainpage extends Component{
                     </li>
                 )   
             }
+            else {
+                return ;
+            }
         })
         console.log(this.props.mlRecipes)
         if(this.state.login_id < 1 || !this.props.mlRecipes) {
