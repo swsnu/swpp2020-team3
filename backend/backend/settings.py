@@ -26,7 +26,7 @@ SECRET_KEY = '@$(7l20qx*j1rqu9=s@=a3ey3pmn1wa5+n_85+b&075eis0%@$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','3.230.15.70', 'ec2-3-230-15-70.compute-1.amazonaws.com']
+ALLOWED_HOSTS = [ '3.230.15.70', 'localhost', '127.0.0.1' ]
 
 # Base url to serve media files
 MEDIA_URL = '/media/'

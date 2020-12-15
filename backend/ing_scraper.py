@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
@@ -12,7 +10,6 @@ import urllib.request
 from django.core.files import File
   #add imprt of content file wrapper
 from django.core.files.base import ContentFile
-from pyvirtualdisplay import Display
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 import django
@@ -22,18 +19,11 @@ from recipick.models import Ingredient
 
 
 def noBrandScraper():
-#    driver = webdriver.Chrome('./chromedriver')
-    print("no brand start")
-    display = Display(visible=0, size=(800, 800))
-    display.start()
-    driver = webdriver.Chrome()
-    print("crhome");
+    driver = webdriver.Chrome('./chromedriver')
     driver.implicitly_wait(3)
     driver.get("http://emart.ssg.com/specialStore/nobrand/sub.ssg?ctgId=6000032943")
-    print("get")
     nobrand_page_source = ''
     for i in range(1, 5):
-        print('hi')
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(6)
         nobrand_page_source = nobrand_page_source + driver.page_source
@@ -49,7 +39,7 @@ def noBrandScraper():
         prodName = product.find('div', class_='title').find('a').find('em', class_='tx_ko').get_text()
         prodPrice = product.find('em', class_='ssg_price').get_text()
         # there are two options to get the quantity of an ingredient
-        # 1. click and get price () (something like below)
+        # 1. click and get price (총용량) (something like below)
         # the problem is that it's slow and emart website blocked too much page refreshes (which this code does)
             # detail_page_link = product.find('div', class_='thmb').find('a')['href']
             # driver.get(detail_page_link)
@@ -62,7 +52,7 @@ def noBrandScraper():
         prodQuantity = 0    
         numbers = re.findall(r'\d+', prodName)
         # print(len(numbers))
-        if(len(numbers) > 1): # handle cornercases # x * , ml, g, kg, , , \ \(space),  15입(65ml*15), 70% 100g
+        if(len(numbers) > 1): # handle cornercases # x * , ml, g, kg, 개입, 입, \ \(space),  15입(65ml*15), 70% 100g
             print(prodName)
         else:
             if(len(numbers) == 0):
@@ -79,8 +69,6 @@ def noBrandScraper():
             result_dict = {'name': prodName, 'quantity': prodQuantity, 'price': prodPrice, 'igd_type': prodIngType, 'brand': 'NoBrand', 'picture': prodPhoto}
             result_list.append(result_dict)
     print(totalSum)
-    driver.quit()
-    display.stop()
     return result_list
 
 
@@ -100,7 +88,7 @@ if __name__=='__main__':
             continue
         print(int(int(ing['price'])/float(ing['quantity'])))
         temp = Ingredient.objects.create(name=ing['name'], quantity=float(ing['quantity']), price=int(ing['price']),
-                igd_type=ing['igd_type'], brand=ing['brand'], picture=ing['picture'])
+                igd_type=ing['igd_type'], brand=ing['brand'], picture=ing['picture'], price_normalized=round((int(ing['price'])/float(ing['quantity']),2)))
         temp.save()
 
 

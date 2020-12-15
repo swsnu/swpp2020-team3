@@ -38,14 +38,13 @@ def getuser(request, id):
         liked_recipes = []
         recipe_basket = []
         written_recipes = []
-        print(user_1.like.all().values())
+
         for recipe in user_1.like.all():
             newrecipe = {
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             liked_recipes.append(newrecipe)
 
@@ -54,8 +53,7 @@ def getuser(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             recipe_basket.append(newrecipe)
         
@@ -64,19 +62,14 @@ def getuser(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             written_recipes.append(newrecipe)
 
 
-        #follower = [user for user in user_1.follower.all().values()]
-        #following = [user for user in user_1.following.all().values()]
-        follower = []
-        following=[]
         planner = user_1.following.all()
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
-            'written_recipes': written_recipes, 'follower': follower, 'following': following, 'planner': planner[0].data}
+            'written_recipes': written_recipes, 'planner': planner[0].data}
         return JsonResponse(user, safe=False, status=200)
     elif(request.method) == 'PUT':
         body = json.loads(request.body.decode())
@@ -93,8 +86,7 @@ def getuser(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             liked_recipes.append(newrecipe)
 
@@ -103,8 +95,7 @@ def getuser(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             recipe_basket.append(newrecipe)
         
@@ -113,14 +104,14 @@ def getuser(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             written_recipes.append(newrecipe)
-        follower = [user for user in user_1.follower.all().values()]
-        following = [user for user in user_1.following.all().values()]
+
+        planner = user_1.following.all()
+
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
-            'written_recipes': written_recipes, 'follower': follower, 'following': following}
+            'written_recipes': written_recipes, 'planner': planner[0].data}
         return JsonResponse(user, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
@@ -259,6 +250,14 @@ def recipe_page(request):
         if request.GET.get('Dessert') == 'true':
             category_query = category_query | Q(category__contains = "Dessert")
         
+        word_list = search_word.split()
+        flag = False
+        for word in word_list:
+            if not flag:
+                word_query = Q(title__contains = word)
+                flag = True
+            else:
+                word_query = word_query & Q(title__contains = word)
 
         list_of_recipes = Recipe.objects
         vector = SearchVector('title')
@@ -266,18 +265,25 @@ def recipe_page(request):
         if search_word:
             recipelist = list_of_recipes.annotate(rank=SearchRank(vector,query)).filter(
                 category_query,
+                word_query,
                 price__gte = min_cost, price__lte = max_cost,
                 duration__gte = min_time, duration__lte = max_time,
-                rank__gt = 0
             )
+            print(recipelist)
+            #recipelist = list_of_recipes.annotate(rank=SearchRank(vector,query)).filter(
+            #    category_query,
+            #    price__gte = min_cost, price__lte = max_cost,
+            #    duration__gte = min_time, duration__lte = max_time,
+            #    rank__gt = 0
+            #)
             if search_mode == 'likes':
-                recipepage = recipelist.order_by('-rank','-likes','price','-rating')[10*page_start:(10*page_start+51)]
+                recipepage = recipelist.order_by('-likes','price','-rating')[10*page_start:(10*page_start+51)]
             elif search_mode == 'cost':
-                recipepage = recipelist.order_by('-rank','price','-likes','-rating')[10*page_start:(10*page_start+51)]
+                recipepage = recipelist.order_by('price','-likes','-rating')[10*page_start:(10*page_start+51)]
             elif search_mode == 'rating':
-                recipepage = recipelist.order_by('-rank','-rating','price','-likes')[10*page_start:(10*page_start+51)]
+                recipepage = recipelist.order_by('-rating','price','-likes')[10*page_start:(10*page_start+51)]
             else: # search_mode == 'recommended'
-                recipepage = recipelist.order_by('-rank','price','-likes','-rating')[10*page_start:(10*page_start+51)]
+                recipepage = recipelist.order_by('price','-likes','-rating')[10*page_start:(10*page_start+51)]
         else:
             recipelist = list_of_recipes.filter(
                 category_query,
@@ -301,8 +307,7 @@ def recipe_page(request):
                 'id': recipe.id, 'title': recipe.title,
                 'author': author, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             newrecipepage.append(newrecipe)
         return JsonResponse(newrecipepage, safe=False, status=200)
@@ -409,7 +414,7 @@ def hotrecipe(request):
             for recipe in recipes:
                 newrecipe = {
                     'id': recipe.id, 'title': recipe.title,
-                    'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                    'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
                 }
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
@@ -421,7 +426,7 @@ def hotrecipe(request):
                 recipe = s[n-1]
                 newrecipe = {
                     'id': recipe.id, 'title': recipe.title,
-                    'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                    'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
                 }
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
@@ -435,7 +440,7 @@ def randomrecipe(request):
             for recipe in recipes:
                 newrecipe = {
                     'id': recipe.id, 'title': recipe.title,
-                    'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                    'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
                 }
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
@@ -447,7 +452,7 @@ def randomrecipe(request):
                 recipe = recipes[n]
                 newrecipe = {
                     'id': recipe.id, 'title': recipe.title,
-                    'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                    'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
                 }
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
@@ -473,8 +478,7 @@ def user_follow(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             liked_recipes.append(newrecipe)
 
@@ -483,8 +487,7 @@ def user_follow(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             recipe_basket.append(newrecipe)
         
@@ -493,8 +496,7 @@ def user_follow(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             written_recipes.append(newrecipe)
         follower = [user for user in user_1.follower.all().values()]
@@ -525,8 +527,7 @@ def user_unfollow(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             liked_recipes.append(newrecipe)
 
@@ -535,8 +536,7 @@ def user_unfollow(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             recipe_basket.append(newrecipe)
         
@@ -545,8 +545,7 @@ def user_unfollow(request, id):
                 'id': recipe.id, 'title': recipe.title,
                 'author': recipe.author.username, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                #'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
-                'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             written_recipes.append(newrecipe)
         follower = [user for user in user_1.follower.all().values()]
@@ -690,12 +689,12 @@ def recipe(request, id):
     if request.method == 'GET':
         recipe = Recipe.objects.get(id = id)
         p_list = recipe.photo_list
-        thumbnail = "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+        thumbnail = "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
         liked_user = recipe.liked_user
         scrapped_user = recipe.scrapped_user
         new_list = []
         for photo in p_list.all():
-            path = "http://3.217.98.184:8000/media/"+photo.img.name
+            path = "http://3.230.15.70:8000/media/"+photo.img.name
             new_list.append(path)
         igd = recipe.ingredient_list
         newigdlist = []
@@ -704,7 +703,7 @@ def recipe(request, id):
             newitem = {'name':item.name, 'quantity': item.quantity, 'price': item.price, 'price_normalized': item.price_normalized, 
                         'igd_type': item.igd_type, 'brand': item.brand, 'amount': membership.amount}
             try:
-                newigdphoto = "http://3.217.98.184:8000/media/"+item.picture.name
+                newigdphoto = "http://3.230.15.70:8000/media/"+item.picture.name
             except:
                 return HttpResponse(status = 400)
             newitem['picture'] = newigdphoto
@@ -769,7 +768,7 @@ def recipe(request, id):
         recipe.price = price
         recipe.duration = duration
         if "http" in thumbnail:
-            format, imgstr = thumbnail.split('http://3.217.98.184:8000/media/')
+            format, imgstr = thumbnail.split('http://3.230.15.70:8000/media/')
             recipe.thumbnail = imgstr
         else:
             format, imgstr = thumbnail.split(';base64,')
@@ -809,7 +808,7 @@ def recipe(request, id):
         new_photo_list = []
         for img_64 in p_list:
             if "http" in img_64:
-                format, imgstr = img_64.split('http://3.217.98.184:8000/media/')
+                format, imgstr = img_64.split('http://3.230.15.70:8000/media/')
                 new_img = ImageModel.objects.create(img=imgstr, description_index = cnt)
                 new_photo_list.append(new_img)
                 cnt = cnt + 1
@@ -989,7 +988,7 @@ def getml(request, id):
                 recipe = Recipe.objects.get(id = i)
                 newrecipe = {
                     'id': recipe.id, 'title': recipe.title,
-                    'thumbnail': "http://3.217.98.184:8000/media/"+recipe.thumbnail.name
+                    'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
                 }
                 res.append(newrecipe)
         return JsonResponse(res, status=200, safe=False)    
