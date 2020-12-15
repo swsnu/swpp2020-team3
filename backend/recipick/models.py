@@ -35,7 +35,7 @@ def default_planner():
 
 
 class Planner(models.Model):
-    data = models.JSONField(default=default_planner, null=True)
+    data = models.JSONField(null=True)
 
 
 class User(AbstractUser):

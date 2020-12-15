@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('is_active', models.BooleanField(default=False)),
-                ('following', models.ManyToManyField(blank=True, related_name='follower', to=settings.AUTH_USER_MODEL)),
+                ('following', models.ManyToManyField(blank=True, related_name='planner', to='recipick.Planner')),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
             ],
@@ -139,6 +139,13 @@ class Migration(migrations.Migration):
                 ('rating', models.FloatField(default=0)),
                 ('recipe', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='recipick.recipe')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Planner',
+            fields=[
+                    ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                    ('data', models.JSONField(null=True)),
             ],
         ),
     ]
