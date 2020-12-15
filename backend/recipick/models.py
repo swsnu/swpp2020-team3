@@ -87,7 +87,7 @@ class Recipe(models.Model):
     rating_user = models.ManyToManyField(
         User,
         related_name='rating',
-        through='ConnectRecipeRating',
+        through="ConnectRecipeRating",
         blank=True
     )
     photo_list = models.ManyToManyField(
@@ -97,7 +97,7 @@ class Recipe(models.Model):
     category = models.JSONField(null=True)
     ingredient_list = models.ManyToManyField(
         Ingredient,
-        through='ConnectRecipeIngredient'
+        through="ConnectRecipeIngredient"
     )
     rating = models.FloatField(null=True)
     likes = models.IntegerField(null=True)
