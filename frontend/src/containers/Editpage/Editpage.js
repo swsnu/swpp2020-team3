@@ -14,36 +14,71 @@ import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 const checkIngredients = (list) => {
     for(let i =0; i<list.length; i++){
         let item = list[i]
-        if(item.price==0 || item.name.length==0 || item.igd_type=='' || item.amount==0 || (item.price_normalized && item.quantity==0)){
-            return false;
+        console.log(item)
+        if(item.price_normalized){ // ideal
+            if(item.price!=0 && item.name.length != 0  && item.igd_type != '' && item.amount != 0 && item.quantity !=0)
+                continue;
+            else{
+                console.log('dd')
+                return false;
+            } 
+        }
+        else{
+            if(item.price != 0 && item.name.length != 0 && item.igd_type != '' && item.amount != 0){
+                console.log('dsd')
+                continue;
+            }
+            else {
+                console.log("dsadj")
+                return false;
+            }
         }
     } 
     return true;
 }
 
-const checkDescriptions = (list) => {
-    // check
-    return true
+const checkDescriptions = (steps, images) => {
+    // images < desc ==> false
+    let message = ''
+    if(images.length < steps.length){
+        message += '조리 방법에 대한 이미지를 삽입해주세요.\n'
+    }
+    for(let i = 0; i<steps.length; i++){
+        if(steps[i].length==0){
+            message += '조리 방법에 대한 설명을 추가해주세요.\n'
+            return message;
+        }
+    }
+    return message;
+    
+    // // desc empty ==> false
+    // // desc.length == images.length + 각각의 스텝이 비어있으면 안 됨.
+    // console.log(steps.length)
+    // console.log(images.length)
+    
+    // return true
 }
 
 const checkOutput = (recipe) => {
-    console.log(recipe)
     let message = ''
-    if(!recipe.title)
+    if(recipe.title.length == 0)
         message = message.concat('제목을 입력해주세요.\n')
-    if(!recipe.thumbnail)
+    if(recipe.thumbnail.length == 0)
         message = message.concat('대표사진을 추가해주세요.\n')
-    if(!recipe.duration)
+    if(recipe.duration.length == 0)
         message = message.concat('조리시간을 정해주세요.\n')
-    if(!recipe.ingredient_list)
+    if(recipe.ingredient_list.length == 0)
         message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
-    if(!recipe.description_list || !checkDescriptions(recipe.description_list))
+    if(recipe.description_list.length == 0)
         message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
-    if(recipe.ingredient_list && !checkIngredients(recipe.ingredient_list))
+    if(recipe.description_list.length != 0)
+        message = message.concat(checkDescriptions(recipe.description_list, recipe.photo_list))
+    if(recipe.ingredient_list.length != 0 && !checkIngredients(recipe.ingredient_list))
         message = message.concat('요리재료를 올바르게 채워주세요.')
-    
+    console.log(message)
     return message
 }
+
 class Editpage extends Component {
     state = {
         login_id : -1,
