@@ -33,9 +33,26 @@ const checkIngredients = (list) => {
     return true;
 }
 
-const checkDescriptions = (list) => {
-    // check
-    return true
+const checkDescriptions = (steps, images) => {
+    // images < desc ==> false
+    let message = ''
+    if(images.length < steps.length){
+        message += '조리 방법에 대한 이미지를 삽입해주세요.\n'
+    }
+    for(let i = 0; i<steps.length; i++){
+        if(steps[i].length==0){
+            message += '조리 방법에 대한 설명을 추가해주세요.\n'
+            return message;
+        }
+    }
+    return message;
+    
+    // // desc empty ==> false
+    // // desc.length == images.length + 각각의 스텝이 비어있으면 안 됨.
+    // console.log(steps.length)
+    // console.log(images.length)
+    
+    // return true
 }
 
 const checkOutput = (recipe) => {
@@ -48,11 +65,13 @@ const checkOutput = (recipe) => {
         message = message.concat('조리시간을 정해주세요.\n')
     if(recipe.ingredientList.length == 0)
         message = message.concat('최소한 하나의 요리재료를 추가해주세요.\n')
-    if(recipe.descriptionList.length == 0 || !checkDescriptions(recipe.descriptionList))
+    if(recipe.descriptionList.length == 0)
         message = message.concat('조리 방법에 대한 설명을 추가해주세요.\n')
+    if(recipe.descriptionList.length != 0)
+        message = message.concat(checkDescriptions(recipe.descriptionList, recipe.prevList))
     if(recipe.ingredientList.length != 0 && !checkIngredients(recipe.ingredientList))
         message = message.concat('요리재료를 올바르게 채워주세요.')
-    
+    console.log(message)
     return message
 }
 
@@ -196,7 +215,6 @@ class Createpage extends Component{
             thumbnail: state.thumbnailURL,
             date: date
         }
-        console.log(recipe.thumbnail);
         let pass = checkOutput(recipe);
         if(pass){
             window.alert(pass);

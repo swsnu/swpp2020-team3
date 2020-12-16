@@ -79,7 +79,7 @@ export class Mealplanner extends Component {
 
     addDayAbove(index) {
         if (this.state.recipeArray.length >= 7) {
-            console.log('max number is 7')
+            alert('7일 이상의 식단표를 만들 수 없습니다!')
         }
         else {
             let insertSubList = [{ id: null, thumbnail: 0 }, { id: null, thumbnail: 0 }, { id: null, thumbnail: 0 }]
