@@ -34,7 +34,7 @@ class Recipes extends Component {
                 </div>
                 <div className = "pages">
                     <div className = "pagepage">
-                        {slicedRecipes.length >= 1 && <p id='pagepagepage'>'Page'</p>}
+                        {slicedRecipes.length >= 1 && <div id='pagepagepage'>{'Page'}</div>}
                     </div>
                     <div className = "pagerow">
                         {this.state.pageStart != 0 && <button className="list-page-previous-button"

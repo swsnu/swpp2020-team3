@@ -153,8 +153,12 @@ class Editpage extends Component {
     onSubmit(){
         let pass = checkOutput(this.state);
         console.log(this.state)
-        if(pass.length == 0)
+	   console.log(pass.length)
+	    console.log(pass === "")
+        if(pass.length==0){
+	    console.log(pass);
             this.props.editRecipe(this.state, this.props.match.params.id).then(() => this.props.history.push('/detail-page/'+this.props.match.params.id))
+	}
         else {
             alert(pass)
         }

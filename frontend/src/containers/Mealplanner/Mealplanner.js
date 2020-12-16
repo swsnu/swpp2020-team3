@@ -124,15 +124,13 @@ export class Mealplanner extends Component {
         if(currlist[0]){
             arraylist[day][0] = currlist[0];
         }
-        else return;
         if(currlist[1]){
             arraylist[day][1] = currlist[1];
         }
-        else return;
         if(currlist[2]){
             arraylist[day][2] = currlist[2];
         }
-        else return;                            
+        this.setState({ recipeArray: arraylist })                   
     }
     generateAllML(){
         let currlist = this.state.recipes

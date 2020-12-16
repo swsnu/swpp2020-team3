@@ -431,7 +431,7 @@ def hotrecipe(request):
             return JsonResponse(newrecipes, safe=False)
         else :
             recipes = [recipes for recipes in Recipe.objects.all()]
-            s = sorted(recipes, key = lambda recipe: recipe.likes)
+            s = sorted(recipes, key = lambda recipe: recipe.likes, reverse=True)
             newrecipes = []
             for n in range(1,5):
                 recipe = s[n-1]
@@ -594,6 +594,7 @@ def recipe_like(request, id):
                 })
             }]
         )
+        print(data)
         return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -670,15 +671,17 @@ def recipe_rating(request, id):
             rating = rating + obj['rating']
             num = num + 1
         if num<=1:
-            num=2
-        rating = rating / (num-1)
+            num=1
+        print(num)
+        print(rating)
+        rating = rating / (num)
         rating = round(rating,2)
         recipe.rating = rating
         recipe.save()
         response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}
 
-        i = body['rating']-2
-        for j in range(1,i):
+        i = int(body['rating'])-2
+        for j in range(1,i+1):
             timestamp = int(time.time())
 
             personalize_events = boto3.client('personalize-events', 'us-east-1')
@@ -695,6 +698,7 @@ def recipe_rating(request, id):
                     })
                 }]
             )
+            print(data)
 
 
         return JsonResponse(response, safe=False, status=200)
@@ -854,7 +858,7 @@ def recipe(request, id):
         for ing in ingredient_list:
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
-            target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
+            target = Ingredient.objects.filter(name=ing['name'],price=ing['price'],igd_type=ing['igd_type'])
             exist = 0
             for ingredient in origin_ingredient_list.all():
                 if ingredient.id == target[0].id:
@@ -871,6 +875,7 @@ def recipe(request, id):
         new_photo_list = []
         for img_64 in p_list:
             if "http" in img_64:
+                print(img_64.split('http://3.230.15.70:8000/media'))
                 format, imgstr = img_64.split('http://3.230.15.70:8000/media/')
                 new_img = ImageModel.objects.create(img=imgstr, description_index = cnt)
                 new_photo_list.append(new_img)

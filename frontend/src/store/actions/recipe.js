@@ -94,9 +94,12 @@ export const createRecipe = (recipe) => {
 }
 
 const editRecipe_ = (recipe) => {
+	console.log(recipe);
   return {type: actionTypes.EDIT_RECIPE, modifiedRecipe: recipe}
 }
 export const editRecipe = (recipe, id) => {
+	console.log(recipe);
+	console.log(id);
   return dispatch => {
     return axios.put(`/api/recipe/${id}/`, recipe)
       .then(res => dispatch(editRecipe_(res.data)))
