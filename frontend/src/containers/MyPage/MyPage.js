@@ -122,7 +122,7 @@ class MyPage extends Component{
                     console.log(row)
                     return (
                         <div id='plannerItem'>
-                            <img src={row.thunmbnail} width={100} height={100} onClick = {() => row.real_id!=undefined && this.props.history.push((`/detail-page/${row.real_id}`))}></img>
+                            <img src={row.thunmbnail} width={100} height={100} onClick = {() => (row.real_id!=undefined && row.real_id!=0) && this.props.history.push((`/detail-page/${row.real_id}`))}></img>
                         </div>
                     )
                 })
