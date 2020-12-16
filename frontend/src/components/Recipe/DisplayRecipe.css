@@ -5,6 +5,10 @@
     flex-direction: column;
 }
 
+#DRImage:hover{
+    cursor: pointer;
+}
+
 #DRTitle {
     display: inline-block;
     text-align: center;

@@ -43,6 +43,8 @@ export class Mealplanner extends Component {
         { id: 3, thumbnail: 'sena' }, { id: 4, thumbnail: 'nena' }],
         recipes: [],
         login_id: -1,
+        pageStart: 0,
+        pageNumber: 1,
     }
     componentDidMount() {        
         // to connect with others' implementation
@@ -225,6 +227,10 @@ export class Mealplanner extends Component {
                     <input id="max" type='number' value={this.state.max} onChange={(event) => this.setState({max: event.target.value})}/>
 ++                    */
     render() {
+
+        let slicedPage = this.state.scrappedRecipes.slice(5*this.state.pageStart,5*this.state.pageStart+26);
+        let slicedRecipes = this.state.scrappedRecipes.slice(5*(this.state.pageNumber-1),5*this.state.pageNumber);
+
         return (
             <div className = 'Mealplanner'>
                 <div id='mpdsc'>
@@ -279,7 +285,7 @@ export class Mealplanner extends Component {
                                 <Droppable droppableId="scrappedArticles">
                                     {(provided) => (
                                         <div id='basket' {...provided.droppableProps} ref={provided.innerRef}  direction='horizontal' style={{display : "flex"}}>
-                                            {this.state.scrappedRecipes && this.state.scrappedRecipes.map((recipe, index) => (
+                                            {slicedRecipes && slicedRecipes.map((recipe, index) => (
                                                 <Draggable key={recipe.id} draggableId={`recipe_${recipe.id}`} index={index}>
                                                     {(provided) => (
                                                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
@@ -294,7 +300,33 @@ export class Mealplanner extends Component {
                                         </div>
                                     )}
                                 </Droppable>
-                            </div>                                                                  
+                            </div>
+                            <div className = "pages">
+                                <div className = "page">
+                                    {slicedPage.length >= 1 && <p>Page</p>}
+                                </div>
+                                <div className = "row">
+                                    {this.state.pageStart != 0 && slicedPage.length >= 1 && <button className="list-page-previous-button"
+                                            onClick={() => this.clickPagePreviousHandler()}>left</button>}
+                                    {slicedPage.length >= 1 && <button className="list-page-number-button"
+                                            style = {{backgroundColor: this.state.pageNumber%5==1 ? "grey" : null}}
+                                            onClick={() => this.clickPageNumberHandler(1)}>{this.state.pageStart+1}</button>}
+                                    {slicedPage.length >= 6 && <button className="list-page-number-button"
+                                            style = {{backgroundColor: this.state.pageNumber%5==2 ? "grey" : null}}
+                                            onClick={() => this.clickPageNumberHandler(2)}>{this.state.pageStart+2}</button>}
+                                    {slicedPage.length >= 11 && <button className="list-page-number-button"
+                                            style = {{backgroundColor: this.state.pageNumber%5==3 ? "grey" : null}}
+                                            onClick={() => this.clickPageNumberHandler(3)}>{this.state.pageStart+3}</button>}
+                                    {slicedPage.length >= 16 && <button className="list-page-number-button"
+                                            style = {{backgroundColor: this.state.pageNumber%5==4 ? "grey" : null}}
+                                            onClick={() => this.clickPageNumberHandler(4)}>{this.state.pageStart+4}</button>}
+                                    {slicedPage.length >= 21 && <button className="list-page-number-button"
+                                            style = {{backgroundColor: this.state.pageNumber%5==0 ? "grey" : null}}
+                                            onClick={() => this.clickPageNumberHandler(5)}>{this.state.pageStart+5}</button>}
+                                    {slicedPage.length >= 26 && <button className="list-page-next-button"
+                                            disabled={false} onClick={() => this.clickPageNextHandler()}>right</button>}
+                                </div>
+                            </div>                                                        
                         </div>
                     </DragDropContext>
                 </div>
