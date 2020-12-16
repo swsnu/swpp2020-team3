@@ -169,12 +169,20 @@ div .Createpage h3{
 }
 
 #type {
-    color: black;
-    padding: 5px 10px;
+    background-color: #f59278; /* Green */
+    border: none;
+    color: white;
+    padding: 8px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    margin-right: 2px;
+    font-size: 16px;
+    font-weight: bold;
+    width: 90px;
+    margin-left: 20px;
+    border-radius: 10px;
+    margin-right: 10px;
+    cursor: pointer;
 }
 
 #submit {
@@ -222,6 +230,51 @@ textarea {
     vertical-align:middle; 
     margin-top: 8px;
     margin-bottom:8px;
+}
+
+.ingr_detailed{
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    margin: 15px;
+    font-size: 13px;
+}
+
+.ingr_submit_0{
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    margin: 15px;
+    font-size: 13px;
+}
+
+#addStep{
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcc051;
+    border: none;
+    color: black;
+    border-radius:10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    margin: 15px;
+    font-size: 18px;
 }
 
 #step-input{

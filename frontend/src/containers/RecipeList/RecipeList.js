@@ -309,11 +309,11 @@ class RecipeList extends Component{
                 </div>
                 <div className = "pages">
                     <div className = "page">
-                        {this.props.storedRecipes.length >= 1 && <p>Page</p>}
+                        {this.props.storedRecipes.length >= 1 && <p className = "pagepage">Page</p>}
                     </div>
-                    <div className = "row">
+                    <div className = "pagerow">
                         {Math.floor((this.state.searchSettings.pageNumber-1)/5)!=0 && this.props.storedRecipes.length >= 1 && <button className="list-page-previous-button"
-                                onClick={() => this.clickPagePreviousHandler()}>left</button>}
+                                onClick={() => this.clickPagePreviousHandler()}>이전</button>}
                         {this.props.storedRecipes.length >= 1 && <button className="list-page-number-button"
                                 style = {{backgroundColor: this.state.searchSettings.pageNumber%5==1 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(1)}>{5*Math.floor((this.state.searchSettings.pageNumber-1)/5)+1}</button>}
@@ -330,7 +330,7 @@ class RecipeList extends Component{
                                 style = {{backgroundColor: this.state.searchSettings.pageNumber%5==0 ? "grey" : null}}
                                 onClick={() => this.clickPageNumberHandler(5)}>{5*Math.floor((this.state.searchSettings.pageNumber-1)/5)+5}</button>}
                         {this.props.storedRecipes.length >= 51 && <button className="list-page-next-button"
-                                onClick={() => this.clickPageNextHandler()}>right</button>}
+                                onClick={() => this.clickPageNextHandler()}>다음</button>}
                     </div>
                 </div>
                 <br/>

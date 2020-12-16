@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 const Recipe = (props) => {
     return (
         <div className='Recipe'>
-            <img className = 'recipe_thumbnail' src = {props.thumbnail} width={140} onClick={props.clickedRecipe}></img>
+            <img className = 'recipe_thumbnail' src = {props.thumbnail} width={140} height={100} onClick={props.clickedRecipe}></img>
             <div className='recipe_title'>
                 {props.title}
             </div>

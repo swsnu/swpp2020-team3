@@ -33,10 +33,10 @@ class Recipes extends Component {
                         <div id='slice'>{renderRecipes && renderRecipes.slice(5,10)}</div>
                 </div>
                 <div className = "pages">
-                    <div className = "page">
-                        {slicedRecipes.length >= 1 && <p>Page</p>}
+                    <div className = "pagepage">
+                        {slicedRecipes.length >= 1 && 'Page'}
                     </div>
-                    <div className = "row">
+                    <div className = "pagerow">
                         {this.state.pageStart != 0 && <button className="list-page-previous-button"
                                 onClick={() => this.clickPagePreviousHandler()}>left</button>}
                         {slicedRecipes.length >= 1 && <button className="list-page-number-button"

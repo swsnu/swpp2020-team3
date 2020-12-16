@@ -201,19 +201,15 @@ class MyPage extends Component{
                     {myInfo}
                     </div>}
                     {this.state.tab=='liked-recipes' && <div className = 'liked-recipes'>
-                    <p>liked recipes</p>
                     <div id='lr'>{<Recipes recipes={likedRecipes}/>}</div>
                     </div>}
                     {this.state.tab=='recipe-basket' && <div className = 'recipe-basket'>
-                    <p>recipe basket</p>
                     <div id='lr'>{<Recipes recipes={recipeBasket}/>}</div>
                     </div>}
                     {this.state.tab=='written-recipes' && <div className = 'written-recipes'>
-                    <p>written recipes</p>
                     <div id='wr'>{<Recipes recipes={writtenRecipes}/>}</div>
                     </div>}
                     {this.state.tab=='meal-planner' && <div className = 'meal-planner'>
-                    <p>planner</p>
                     <div id='mp'>{planner}</div>
                     </div>}
                 </div>
