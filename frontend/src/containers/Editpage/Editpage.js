@@ -74,7 +74,9 @@ const checkOutput = (recipe) => {
     if(recipe.description_list.length != 0)
         message = message.concat(checkDescriptions(recipe.description_list, recipe.photo_list))
     if(recipe.ingredient_list.length != 0 && !checkIngredients(recipe.ingredient_list))
-        message = message.concat('요리재료를 올바르게 채워주세요.')
+        message = message.concat('요리재료를 올바르게 채워주세요.\n')
+    if(!recipe.category.length)
+	message = message.concat('카테고리를 선택해주세요.')
     console.log(message)
     return message
 }

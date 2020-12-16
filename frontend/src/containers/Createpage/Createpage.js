@@ -380,7 +380,7 @@ class Createpage extends Component{
                             <p>둘 다 입력하게 되면 '제품' 칸이 채워진거기 때문에 제품의 가격이 먹힙니다.</p>
                             <br/> */}
 
-                            {<Select options={this.state.ingredientList}
+                            {<Select options={this.state.ingredientList.filter((item) => item.brand!='')}
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${option.price == 0 ? '?' 
                                         : (option.quantity == 0 ? 0 : option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
