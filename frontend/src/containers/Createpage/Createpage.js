@@ -216,10 +216,12 @@ class Createpage extends Component{
             date: date
         }
         let pass = checkOutput(recipe);
+	    console.log("hell");
         if(pass){
             window.alert(pass);
             return;
         }
+	    console.log(this.props.onCreate(recipe));
         this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
 
     }
