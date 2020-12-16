@@ -373,7 +373,7 @@ class Createpage extends Component{
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${option.price == 0 ? '?' 
                                         : (option.quantity == 0 ? 0 : option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
-                            isSearchable={true} placeholder={'재료를 입력하시오.'} value='' autoFocus={true}/>}
+                            isSearchable={true} placeholder={'재료를 입력하시오.'} value=''/>}
                             {/* horizontal로 쭉 됐으면 함 */}
                             <div id="add-custom-ingredient">
                                 <p>재료 이름</p>
