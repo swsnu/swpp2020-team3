@@ -15,7 +15,8 @@ class Detailpage extends Component {
         login_id: -1,
         like: 0,
         scrap: 0,
-        personal_rating: 0
+        personal_rating: 0,
+	recipe: '',
     };
     constructor(props) {
         super(props);
@@ -30,7 +31,10 @@ class Detailpage extends Component {
                 login_id: res.login_id
             })
         })
-        this.props.getRecipe(this.props.match.params.id)
+        this.props.getRecipe(this.props.match.params.id).then(res => {
+		console.log(res);
+		this.setState({recipe: res});
+	})
     }
 
     isLike = () => {
