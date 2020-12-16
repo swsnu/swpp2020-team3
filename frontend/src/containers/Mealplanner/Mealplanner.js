@@ -217,7 +217,7 @@ export class Mealplanner extends Component {
     render() {
 
         let slicedPage = this.state.scrappedRecipes.slice(5*this.state.pageStart,5*this.state.pageStart+26);
-        let slicedRecipes = this.state.scrappedRecipes.slice(5*this.state.pageNumber,5*this.state.pageNumber+5);
+        let slicedRecipes = this.state.scrappedRecipes.slice(5*(this.state.pageNumber-1),5*this.state.pageNumber);
 
         return (
             <div className = 'Mealplanner'>
@@ -291,7 +291,7 @@ export class Mealplanner extends Component {
                             </div>
                             <div className = "pages">
                                 <div className = "page">
-                                    {reversedComments.length >= 1 && <p>Page</p>}
+                                    {slicedPage.length >= 1 && <p>Page</p>}
                                 </div>
                                 <div className = "row">
                                     {this.state.pageStart != 0 && slicedPage.length >= 1 && <button className="list-page-previous-button"
