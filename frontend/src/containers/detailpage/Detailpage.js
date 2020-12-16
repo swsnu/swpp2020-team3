@@ -118,6 +118,7 @@ class Detailpage extends Component {
         const likes = this.props.recipe && this.props.recipe.likes
         const price = this.props.recipe && this.props.recipe.price
         const category = this.props.recipe && this.props.recipe.category
+        if(!category) category = 'etc';
         const author = this.props.recipe && this.props.recipe.author
         const duration = this.props.recipe && this.props.recipe.duration
         // const liked_user = this.props.recipe && this.props.recipe.liked_user
