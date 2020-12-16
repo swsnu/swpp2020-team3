@@ -46,6 +46,22 @@ export class Mealplanner extends Component {
         pageStart: 0,
         pageNumber: 1,
     }
+
+    clickPagePreviousHandler = () => {
+        let newState={...this.state, pageStart: this.state.pageStart-5, pageNumber: this.state.pageStart-4};
+        this.setState(newState)
+    }
+
+    clickPageNumberHandler = (id) => {
+        let newState={...this.state, pageNumber: this.state.pageStart+id};
+        this.setState(newState)
+    }
+
+    clickPageNextHandler = () => {
+        let newState={...this.state, pageStart: this.state.pageStart+5, pageNumber: this.state.pageStart+6};
+        this.setState(newState);
+    }
+
     componentDidMount() {        
         // to connect with others' implementation
         // this.props.getMLRecipes().then((res) =>console.log('"retrieve list of ml articles')) //console.log('"retrieved recipes"'))
