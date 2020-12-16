@@ -173,7 +173,7 @@ export class Mealplanner extends Component {
             let s_day = source.droppableId
             let d_day = destination.droppableId
             if(s_day != d_day){ // from one day to another
-                console.log('from one day to another day')
+                console.log('from one day to another day movement not allowed')
                 return;
             }
             else{ // from and to the same day
@@ -208,6 +208,7 @@ export class Mealplanner extends Component {
         }
         else { // one list to another
             console.log(result);
+            console.log(result.draggableId)
             let recipeArray = this.state.recipeArray;
             let selected = this.state.scrappedRecipes[source.index]
             let d_id = destination.droppableId.split('day')[1]
@@ -302,7 +303,7 @@ export class Mealplanner extends Component {
                                     {(provided) => (
                                         <div id='basket' {...provided.droppableProps} ref={provided.innerRef}  direction='horizontal' style={{display : "flex"}}>
                                             {slicedRecipes && slicedRecipes.map((recipe, index) => (
-                                                <Draggable key={recipe.id} draggableId={`recipe_${recipe.id}`} index={index}>
+                                                <Draggable key={recipe.id} draggableId={`recipe_${recipe.id}&pageNumber_${this.state.pageNumber}`} index={recipe.id} >
                                                     {(provided) => (
                                                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                             <div className='scrappedRecipe'>
