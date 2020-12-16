@@ -1,0 +1,3840 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
+-- Dumped by pg_dump version 13.1 (Ubuntu 13.1-1.pgdg18.04+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: db_to_csv(text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.db_to_csv(path text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+declare
+   tables RECORD;
+   statement TEXT;
+begin
+FOR tables IN 
+   SELECT (table_schema || '.' || table_name) AS schema_table
+   FROM information_schema.tables t INNER JOIN information_schema.schemata s 
+   ON s.schema_name = t.table_schema 
+   WHERE t.table_schema NOT IN ('pg_catalog', 'information_schema', 'configuration')
+   AND t.table_type NOT IN ('VIEW')
+   ORDER BY schema_table
+LOOP
+   statement := 'COPY ' || tables.schema_table || ' TO ''' || path || '/' || tables.schema_table || '.csv' ||''' DELIMITER '';'' CSV HEADER';
+   EXECUTE statement;
+END LOOP;
+return;  
+end;
+$$;
+
+
+ALTER FUNCTION public.db_to_csv(path text) OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO root;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_id_seq OWNER TO root;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
+
+
+--
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO root;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.auth_group_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO root;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
+
+
+--
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO root;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_permission_id_seq OWNER TO root;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
+
+
+--
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO root;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.django_admin_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_admin_log_id_seq OWNER TO root;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
+
+
+--
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO root;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.django_content_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_content_type_id_seq OWNER TO root;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
+
+
+--
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.django_migrations (
+    id integer NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO root;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.django_migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_migrations_id_seq OWNER TO root;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
+
+
+--
+-- Name: django_session; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO root;
+
+--
+-- Name: recipick_comment; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_comment (
+    id integer NOT NULL,
+    content text NOT NULL,
+    created_date date NOT NULL,
+    edited boolean NOT NULL,
+    author_id integer,
+    recipe_id integer
+);
+
+
+ALTER TABLE public.recipick_comment OWNER TO root;
+
+--
+-- Name: recipick_comment_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_comment_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_comment_id_seq OWNER TO root;
+
+--
+-- Name: recipick_comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_comment_id_seq OWNED BY public.recipick_comment.id;
+
+
+--
+-- Name: recipick_connectrecipeingredient; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_connectrecipeingredient (
+    id integer NOT NULL,
+    amount integer NOT NULL,
+    ingredient_id integer NOT NULL,
+    recipe_id integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_connectrecipeingredient OWNER TO root;
+
+--
+-- Name: recipick_connectrecipeingredient_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_connectrecipeingredient_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_connectrecipeingredient_id_seq OWNER TO root;
+
+--
+-- Name: recipick_connectrecipeingredient_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_connectrecipeingredient_id_seq OWNED BY public.recipick_connectrecipeingredient.id;
+
+
+--
+-- Name: recipick_imagemodel; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_imagemodel (
+    id integer NOT NULL,
+    img character varying(100) NOT NULL,
+    description_index integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_imagemodel OWNER TO root;
+
+--
+-- Name: recipick_imagemodel_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_imagemodel_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_imagemodel_id_seq OWNER TO root;
+
+--
+-- Name: recipick_imagemodel_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_imagemodel_id_seq OWNED BY public.recipick_imagemodel.id;
+
+
+--
+-- Name: recipick_ingredient; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_ingredient (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    quantity double precision NOT NULL,
+    price integer NOT NULL,
+    price_normalized double precision,
+    igd_type character varying(5) NOT NULL,
+    brand character varying(64) NOT NULL,
+    picture character varying(100)
+);
+
+
+ALTER TABLE public.recipick_ingredient OWNER TO root;
+
+--
+-- Name: recipick_ingredient_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_ingredient_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_ingredient_id_seq OWNER TO root;
+
+--
+-- Name: recipick_ingredient_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_ingredient_id_seq OWNED BY public.recipick_ingredient.id;
+
+
+--
+-- Name: recipick_recipe; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_recipe (
+    id integer NOT NULL,
+    title character varying(64) NOT NULL,
+    price integer NOT NULL,
+    thumbnail character varying(100),
+    duration integer NOT NULL,
+    description_list jsonb,
+    category jsonb,
+    rating double precision,
+    likes integer,
+    created_date date,
+    edited boolean,
+    summary text,
+    author_id integer
+);
+
+
+ALTER TABLE public.recipick_recipe OWNER TO root;
+
+--
+-- Name: recipick_recipe_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_recipe_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_recipe_id_seq OWNER TO root;
+
+--
+-- Name: recipick_recipe_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_recipe_id_seq OWNED BY public.recipick_recipe.id;
+
+
+--
+-- Name: recipick_recipe_liked_user; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_recipe_liked_user (
+    id integer NOT NULL,
+    recipe_id integer NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_recipe_liked_user OWNER TO root;
+
+--
+-- Name: recipick_recipe_liked_user_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_recipe_liked_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_recipe_liked_user_id_seq OWNER TO root;
+
+--
+-- Name: recipick_recipe_liked_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_recipe_liked_user_id_seq OWNED BY public.recipick_recipe_liked_user.id;
+
+
+--
+-- Name: recipick_recipe_photo_list; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_recipe_photo_list (
+    id integer NOT NULL,
+    recipe_id integer NOT NULL,
+    imagemodel_id integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_recipe_photo_list OWNER TO root;
+
+--
+-- Name: recipick_recipe_photo_list_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_recipe_photo_list_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_recipe_photo_list_id_seq OWNER TO root;
+
+--
+-- Name: recipick_recipe_photo_list_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_recipe_photo_list_id_seq OWNED BY public.recipick_recipe_photo_list.id;
+
+
+--
+-- Name: recipick_recipe_scrapped_user; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_recipe_scrapped_user (
+    id integer NOT NULL,
+    recipe_id integer NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_recipe_scrapped_user OWNER TO root;
+
+--
+-- Name: recipick_recipe_scrapped_user_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_recipe_scrapped_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_recipe_scrapped_user_id_seq OWNER TO root;
+
+--
+-- Name: recipick_recipe_scrapped_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_recipe_scrapped_user_id_seq OWNED BY public.recipick_recipe_scrapped_user.id;
+
+
+--
+-- Name: recipick_reply; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_reply (
+    id integer NOT NULL,
+    content text NOT NULL,
+    created_date date NOT NULL,
+    edited boolean NOT NULL,
+    author_id integer,
+    comment_id integer
+);
+
+
+ALTER TABLE public.recipick_reply OWNER TO root;
+
+--
+-- Name: recipick_reply_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_reply_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_reply_id_seq OWNER TO root;
+
+--
+-- Name: recipick_reply_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_reply_id_seq OWNED BY public.recipick_reply.id;
+
+
+--
+-- Name: recipick_user; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(150) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL,
+    is_active boolean NOT NULL
+);
+
+
+ALTER TABLE public.recipick_user OWNER TO root;
+
+--
+-- Name: recipick_user_following; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_user_following (
+    id integer NOT NULL,
+    from_user_id integer NOT NULL,
+    to_user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_user_following OWNER TO root;
+
+--
+-- Name: recipick_user_following_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_user_following_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_user_following_id_seq OWNER TO root;
+
+--
+-- Name: recipick_user_following_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_user_following_id_seq OWNED BY public.recipick_user_following.id;
+
+
+--
+-- Name: recipick_user_groups; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_user_groups (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_user_groups OWNER TO root;
+
+--
+-- Name: recipick_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_user_groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_user_groups_id_seq OWNER TO root;
+
+--
+-- Name: recipick_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_user_groups_id_seq OWNED BY public.recipick_user_groups.id;
+
+
+--
+-- Name: recipick_user_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_user_id_seq OWNER TO root;
+
+--
+-- Name: recipick_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_user_id_seq OWNED BY public.recipick_user.id;
+
+
+--
+-- Name: recipick_user_user_permissions; Type: TABLE; Schema: public; Owner: root
+--
+
+CREATE TABLE public.recipick_user_user_permissions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.recipick_user_user_permissions OWNER TO root;
+
+--
+-- Name: recipick_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE public.recipick_user_user_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipick_user_user_permissions_id_seq OWNER TO root;
+
+--
+-- Name: recipick_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE public.recipick_user_user_permissions_id_seq OWNED BY public.recipick_user_user_permissions.id;
+
+
+--
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
+
+
+--
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
+
+
+--
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
+
+
+--
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
+
+
+--
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- Name: recipick_comment id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_comment ALTER COLUMN id SET DEFAULT nextval('public.recipick_comment_id_seq'::regclass);
+
+
+--
+-- Name: recipick_connectrecipeingredient id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_connectrecipeingredient ALTER COLUMN id SET DEFAULT nextval('public.recipick_connectrecipeingredient_id_seq'::regclass);
+
+
+--
+-- Name: recipick_imagemodel id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_imagemodel ALTER COLUMN id SET DEFAULT nextval('public.recipick_imagemodel_id_seq'::regclass);
+
+
+--
+-- Name: recipick_ingredient id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_ingredient ALTER COLUMN id SET DEFAULT nextval('public.recipick_ingredient_id_seq'::regclass);
+
+
+--
+-- Name: recipick_recipe id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe ALTER COLUMN id SET DEFAULT nextval('public.recipick_recipe_id_seq'::regclass);
+
+
+--
+-- Name: recipick_recipe_liked_user id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_liked_user ALTER COLUMN id SET DEFAULT nextval('public.recipick_recipe_liked_user_id_seq'::regclass);
+
+
+--
+-- Name: recipick_recipe_photo_list id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_photo_list ALTER COLUMN id SET DEFAULT nextval('public.recipick_recipe_photo_list_id_seq'::regclass);
+
+
+--
+-- Name: recipick_recipe_scrapped_user id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_scrapped_user ALTER COLUMN id SET DEFAULT nextval('public.recipick_recipe_scrapped_user_id_seq'::regclass);
+
+
+--
+-- Name: recipick_reply id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_reply ALTER COLUMN id SET DEFAULT nextval('public.recipick_reply_id_seq'::regclass);
+
+
+--
+-- Name: recipick_user id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user ALTER COLUMN id SET DEFAULT nextval('public.recipick_user_id_seq'::regclass);
+
+
+--
+-- Name: recipick_user_following id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_following ALTER COLUMN id SET DEFAULT nextval('public.recipick_user_following_id_seq'::regclass);
+
+
+--
+-- Name: recipick_user_groups id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_groups ALTER COLUMN id SET DEFAULT nextval('public.recipick_user_groups_id_seq'::regclass);
+
+
+--
+-- Name: recipick_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.recipick_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.auth_group (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
+1	Can add user	1	add_user
+2	Can change user	1	change_user
+3	Can delete user	1	delete_user
+4	Can view user	1	view_user
+5	Can add comment	2	add_comment
+6	Can change comment	2	change_comment
+7	Can delete comment	2	delete_comment
+8	Can view comment	2	view_comment
+9	Can add connect recipe ingredient	3	add_connectrecipeingredient
+10	Can change connect recipe ingredient	3	change_connectrecipeingredient
+11	Can delete connect recipe ingredient	3	delete_connectrecipeingredient
+12	Can view connect recipe ingredient	3	view_connectrecipeingredient
+13	Can add image model	4	add_imagemodel
+14	Can change image model	4	change_imagemodel
+15	Can delete image model	4	delete_imagemodel
+16	Can view image model	4	view_imagemodel
+17	Can add ingredient	5	add_ingredient
+18	Can change ingredient	5	change_ingredient
+19	Can delete ingredient	5	delete_ingredient
+20	Can view ingredient	5	view_ingredient
+21	Can add reply	6	add_reply
+22	Can change reply	6	change_reply
+23	Can delete reply	6	delete_reply
+24	Can view reply	6	view_reply
+25	Can add recipe	7	add_recipe
+26	Can change recipe	7	change_recipe
+27	Can delete recipe	7	delete_recipe
+28	Can view recipe	7	view_recipe
+29	Can add log entry	8	add_logentry
+30	Can change log entry	8	change_logentry
+31	Can delete log entry	8	delete_logentry
+32	Can view log entry	8	view_logentry
+33	Can add permission	9	add_permission
+34	Can change permission	9	change_permission
+35	Can delete permission	9	delete_permission
+36	Can view permission	9	view_permission
+37	Can add group	10	add_group
+38	Can change group	10	change_group
+39	Can delete group	10	delete_group
+40	Can view group	10	view_group
+41	Can add content type	11	add_contenttype
+42	Can change content type	11	change_contenttype
+43	Can delete content type	11	delete_contenttype
+44	Can view content type	11	view_contenttype
+45	Can add session	12	add_session
+46	Can change session	12	change_session
+47	Can delete session	12	delete_session
+48	Can view session	12	view_session
+49	Can add connect recipe rating	13	add_connectreciperating
+50	Can change connect recipe rating	13	change_connectreciperating
+51	Can delete connect recipe rating	13	delete_connectreciperating
+52	Can view connect recipe rating	13	view_connectreciperating
+\.
+
+
+--
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.django_content_type (id, app_label, model) FROM stdin;
+1	recipick	user
+2	recipick	comment
+3	recipick	connectrecipeingredient
+4	recipick	imagemodel
+5	recipick	ingredient
+6	recipick	reply
+7	recipick	recipe
+8	admin	logentry
+9	auth	permission
+10	auth	group
+11	contenttypes	contenttype
+12	sessions	session
+13	recipick	connectreciperating
+\.
+
+
+--
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.django_migrations (id, app, name, applied) FROM stdin;
+1	contenttypes	0001_initial	2020-12-02 15:55:53.95002+00
+2	contenttypes	0002_remove_content_type_name	2020-12-02 15:55:53.964335+00
+3	auth	0001_initial	2020-12-02 15:55:53.992667+00
+4	auth	0002_alter_permission_name_max_length	2020-12-02 15:55:54.03171+00
+5	auth	0003_alter_user_email_max_length	2020-12-02 15:55:54.038125+00
+6	auth	0004_alter_user_username_opts	2020-12-02 15:55:54.044731+00
+7	auth	0005_alter_user_last_login_null	2020-12-02 15:55:54.051253+00
+8	auth	0006_require_contenttypes_0002	2020-12-02 15:55:54.053605+00
+9	auth	0007_alter_validators_add_error_messages	2020-12-02 15:55:54.059807+00
+10	auth	0008_alter_user_username_max_length	2020-12-02 15:55:54.066179+00
+11	auth	0009_alter_user_last_name_max_length	2020-12-02 15:55:54.072898+00
+12	auth	0010_alter_group_name_max_length	2020-12-02 15:55:54.081006+00
+13	auth	0011_update_proxy_permissions	2020-12-02 15:55:54.088731+00
+14	auth	0012_alter_user_first_name_max_length	2020-12-02 15:55:54.094846+00
+15	recipick	0001_initial	2020-12-02 15:55:54.259323+00
+16	admin	0001_initial	2020-12-02 15:55:54.389874+00
+17	admin	0002_logentry_remove_auto_add	2020-12-02 15:55:54.41401+00
+18	admin	0003_logentry_add_action_flag_choices	2020-12-02 15:55:54.428872+00
+19	sessions	0001_initial	2020-12-02 15:55:54.439525+00
+20	recipick	0002_auto_20201204_1225	2020-12-06 23:57:46.5787+00
+21	recipick	0002_auto_20201210_0738	2020-12-10 08:58:26.292814+00
+\.
+
+
+--
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+fz1h4bx82jluop76g3458jae5o414lxf	e30:1kkfg2:d7oDzsR4qyneA05miYcYMcksIMecUwXaRCEHnpiHR8E	2020-12-17 03:53:06.662814+00
+mvw7csgnovxpli389mxksv4d4w602k2u	e30:1kkfir:CoBzsGyFZ20qjdtK1km15IOwNujR21phcqeDsr232Lg	2020-12-17 03:56:01.256189+00
+hn1q7ue2o9du2vvdnhypuc7ft6qf9jl3	e30:1kkflQ:6gGrmw2AVK1zD6Pa5Co-kMBKfbZfqARJdZ3yRsucG84	2020-12-17 03:58:40.771369+00
+qwru2sdn9ls5jd9fr9taaxl8dhh2c0w6	e30:1kkfoP:VcLRBcGm1jrixOX32RSCC0vLRBWDvwGlsYFswjNF1qE	2020-12-17 04:01:45.90291+00
+6cymglef0htroohrv7lcwgak8cc4cgmn	e30:1kkfq2:zHxw29uv5afdarbw4xQASK2O7RRJ2hfVhtF7iBAaEhs	2020-12-17 04:03:26.510151+00
+9170lgacevcbl22tw69erfu675ijc2wf	.eJxVjDsOwyAQRO9CHSHYAF5Sps8Z0PILTiKQjF1FuXtsyYVdzrw382WOlrm4pafJjZHdmFTsciw9hXeqG4kvqs_GQ6vzNHq-KXynnT9aTJ_77p4OCvWyrjElhVbJAb1GqTELJAHCXwmACCRYzCqTyBLWhKh09MZGbU3IRg_Afn_j5Tcd:1knIy2:FD7XmpXgs-cTccP1wAJr9yHiXgrjdm0XTvlIQUvctz0	2020-12-24 10:14:34.008869+00
+5nphlbyyw0fx0a0sf6j2fahab9i2i9ez	.eJxVjMsOwiAQRf-FtSHA8NKle7-BTGdAqoYmpV0Z_92QdKHbe865b5Fw32rae17TzOIiwIvT7zghPXMbhB_Y7oukpW3rPMmhyIN2eVs4v66H-3dQsddRK2splpgNReMYEIqyngk5ZK8RHVgw2jtFSB5jUcGpctY6gGdmh-LzBRDgOCc:1knIyd:73nNTlNEeocEcbzg-TzTxWosVYvDWOTlrJlPqMaAaWU	2020-12-24 10:15:11.117241+00
+r9kyvl7rvjj3at195unuet7dkawrez4b	.eJxVjMsOwiAQRf-FtSE8OiAu3fcbyEwHpGogKe3K-O_apAvd3nPOfYmI21ri1tMSZxYXYYM4_Y6E0yPVnfAd663JqdV1mUnuijxol2Pj9Lwe7t9BwV6-tUO0GUihVylkpTUooET6DDagRk_BMw6gk-fswaMzDM4MRgNmYsvi_QENQzgp:1knIzA:1WKwFD5npanyDPiMZJFcL8J0s0XZdag_sjVM6ToiRvM	2020-12-24 10:15:44.488776+00
+8my6e4h634l79qnqf4gxbfqg088epo1b	.eJxVjEsOwjAMBe-SNYpaJ6YJS_Y9Q-TaDimgVOpnhbg7VOoCtm9m3ssk2taStkXnNIq5GO_N6XcciB9adyJ3qrfJ8lTXeRzsrtiDLrafRJ_Xw_07KLSUb40RRUUDInbBI2sTAgeAhjiSRIcq4DyAV2TXuNxhy1HOlBkotwzm_QH_yDgR:1knJ0E:_VPuP15gujMev6AevSzAc3hnP76qtWbQSoqpSmVWWQU	2020-12-24 10:16:50.642889+00
+j5l2rra27qk74hkse8dxwhsbeygtk2px	.eJxVjMsOwiAQRf-FtSE8psi4dO83EJihUjWQlHZl_HfbpAvdnnPufYsQ16WEtec5TCwuAs7i9AtTpGeuu-FHrPcmqdVlnpLcE3nYLm-N8-t6tH8HJfayrTV5RpMVGAaldeSU1GgtOk-sxuyZAB2qjWhHJiEOCOAgM7FNgzHi8wUCtjet:1knJ0y:HhE601SzKBm_NZ6DBRrTa4eaEHfUJ9MB6Wmgh3nmYc0	2020-12-24 10:17:36.765207+00
+97fv7zgvh9nq5uhl62vm0u28tc6xk785	.eJxVjDEOwjAMRe-SGUUJlR2XkZ0zRE7skAJqpaadEHenlTrA-t77_20ir0uNa9M5DmIuxoM5_cLE-anjbuTB432yeRqXeUh2T-xhm71Noq_r0f4dVG51W4fCCAQImL3risMOkziXSDQAeeqyMFOfADVTCRn7c1EtArjhQN58vgBrOFU:1kkqKp:UGkGSts8RUpCC073DP3OybHwqRLMQ_Zo9mg0IIxet-4	2020-12-17 15:15:55.038204+00
+vpmivun9emqtzar4ypgfdwb1wwmzocew	.eJxVjEEOwiAQRe_C2hCKQGdcuu8ZyMBMpWpoUtqV8e7apAvd_vfef6lI21ri1mSJE6uL8p06_Y6J8kPqTvhO9TbrPNd1mZLeFX3QpoeZ5Xk93L-DQq18a7EBARG9jJAkGURxoWfvjEjvPBoC20HIAGczQg6ULYnnzGAB2ZJ6fwD8qDgJ:1knJ1r:Ht3jm21w2mxvVUR-FjCZ3SJ7kqDGunlvoc2iTzkrnx4	2020-12-24 10:18:31.384422+00
+62qu73y49xstq7fmb8bofy7xjhucyyeo	.eJxVjDsOwyAQRO9CHSHYAF5Sps8Z0PILTiKQjF1FuXtsyYVdzrw382WOlrm4pafJjZHdmFTsciw9hXeqG4kvqs_GQ6vzNHq-KXynnT9aTJ_77p4OCvWyrjElhVbJAb1GqTELJAHCXwmACCRYzCqTyBLWhKh09MZGbU3IRg_Afn_j5Tcd:1knN3j:uJHU6puLCO3QR3JOzd0lAwnsOGQFIgNcZpcyG9UmytQ	2020-12-24 14:36:43.595795+00
+gwuaviq4cx1i86bbfzls8jxbxv6pfaf7	.eJxVjDsOwyAQRO9CHSHYAF5Sps8Z0PILTiKQjF1FuXtsyYVdzrw382WOlrm4pafJjZHdmFTsciw9hXeqG4kvqs_GQ6vzNHq-KXynnT9aTJ_77p4OCvWyrjElhVbJAb1GqTELJAHCXwmACCRYzCqTyBLWhKh09MZGbU3IRg_Afn_j5Tcd:1knN4A:SrwC8F5Syyye8zybxCvlDXsh9JiIlnzbp7NxOWv9XQU	2020-12-24 14:37:10.978699+00
+3xojy0dtj7baqkrkghv4au7b1ix4ga3e	.eJxVjDEOwjAMRe-SGUUJlR2XkZ0zRE7skAJqpaadEHenlTrA-t77_20ir0uNa9M5DmIuxoM5_cLE-anjbuTB432yeRqXeUh2T-xhm71Noq_r0f4dVG51W4fCCAQImL3risMOkziXSDQAeeqyMFOfADVTCRn7c1EtArjhQN58vgBrOFU:1klArC:xsn8FrGqhqkjCM5Mdue6YT6NTNGtqS0z67vYfOh7-iY	2020-12-18 13:10:42.592088+00
+26zl2regomqjyq49bbl8a1ikrtkznbxe	.eJxVjDsOwyAQRO9CHSHYAF5Sps8Z0PILTiKQjF1FuXtsyYVdzrw382WOlrm4pafJjZHdmFTsciw9hXeqG4kvqs_GQ6vzNHq-KXynnT9aTJ_77p4OCvWyrjElhVbJAb1GqTELJAHCXwmACCRYzCqTyBLWhKh09MZGbU3IRg_Afn_j5Tcd:1kmi1o:RbiqSPZkh81iQdIWbMjbDVYyGlxZF3O20M_fdh4E-0E	2020-12-22 18:48:00.187363+00
+ngpnyyjqjx4rp08a0yp48t6dl4l98xti	.eJxVjDsOwyAQRO9CHSHYAF5Sps8Z0PILTiKQjF1FuXtsyYVdzrw382WOlrm4pafJjZHdmFTsciw9hXeqG4kvqs_GQ6vzNHq-KXynnT9aTJ_77p4OCvWyrjElhVbJAb1GqTELJAHCXwmACCRYzCqTyBLWhKh09MZGbU3IRg_Afn_j5Tcd:1kmoFM:IzicjtPjwXIl5mlPkqUk3G-FaB4EOcmcGwmVkliWEpE	2020-12-23 01:26:24.859438+00
+3x4pqogs4bge1bd5ainh6od111xdloo1	.eJxVjDsOwyAQRO9CHSHYAF5Sps8Z0PILTiKQjF1FuXtsyYVdzrw382WOlrm4pafJjZHdmFTsciw9hXeqG4kvqs_GQ6vzNHq-KXynnT9aTJ_77p4OCvWyrjElhVbJAb1GqTELJAHCXwmACCRYzCqTyBLWhKh09MZGbU3IRg_Afn_j5Tcd:1kn38h:rvp2NiytiAd_sxoXxsNocYp3J2dGu7y-n88VhySZFyY	2020-12-23 17:20:31.425956+00
+2mkb7ip9qg3qix891fpoiklutdiovpkz	.eJxVjDsOwyAQRO9CHSHYAF5Sps8Z0PILTiKQjF1FuXtsyYVdzrw382WOlrm4pafJjZHdmFTsciw9hXeqG4kvqs_GQ6vzNHq-KXynnT9aTJ_77p4OCvWyrjElhVbJAb1GqTELJAHCXwmACCRYzCqTyBLWhKh09MZGbU3IRg_Afn_j5Tcd:1knIox:onjpdYPZMj9g8rpb4QgOMUT6dm-5Dz1Prkah2oNNf4Q	2020-12-24 10:05:11.64113+00
+t3uoeidrmqrhpe1y888oangq48kgouxt	.eJxVjEEOwiAQRe_C2hAYqYBL956BzDCMVA1NSrsy3l2bdKHb_977L5VwXWpae5nTyOqswKvD70iYH6VthO_YbpPOU1vmkfSm6J12fZ24PC-7-3dQsddvLS5Yi3wCkIBsYjzSEA3nIJ6MIwFvIjqyJGYQBjI5oEfxUNAHAKfeHxKWOF8:1knIsm:O8cVl3mAEeOxut3CBJCS37HR7EYMPa2ME2Wad1ouqXE	2020-12-24 10:09:08.77459+00
+bzk2xz6owqaybz73x54z7nhcvs434mfg	.eJxVjMEOwiAQRP-FsyHCUigevfsNZGEXqRpISnsy_rtt0oOeJpn3Zt4i4LqUsHaew0TiIkCL028ZMT257oQeWO9NplaXeYpyV-RBu7w14tf1cP8OCvayra2NNHgNNpot2GXnSQ1DHr0Di-6MzEYBJ6IxoTWJGFXMSYM3AJCN-HwBAmo4SQ:1knIvr:Op26QAC5pdCTkGc5JhUVGY25iK1HPq9r4S3uq_d3T2s	2020-12-24 10:12:19.027945+00
+h0v1ly5bstimxntcktd174fumvyz8ozb	.eJxVjDsOwjAQRO_iGllW_F1Kes5g7a4dHEC2FCdVxN1JpBRQTDPvzWwi4rqUuPY8xymJq9BGXH5LQn7lepD0xPpokltd5onkociTdnlvKb9vp_t3ULCXfW11QGcUKWNzAO81o0uZCZTTyMDKEg0-QKKgaA-CzqMDYBwouRHE5wsEhTh4:1knIvy:A-ZSgdL-UiDYaObCYtXFnLBlQdVcWNEMAfTjADiykeo	2020-12-24 10:12:26.569002+00
+\.
+
+
+--
+-- Data for Name: recipick_comment; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_comment (id, content, created_date, edited, author_id, recipe_id) FROM stdin;
+1	aaa	2020-11-05	f	14	21
+2	aa	2020-11-05	f	34	151
+3	치킨 스테이크가 맛있어보이네요!	2020-11-05	f	32	65
+4	뮻	2020-11-05	f	34	65
+5	whgdkdy!	2020-11-05	f	47	53
+6	무생채 잘 보고가요~	2020-11-05	f	51	37
+\.
+
+
+--
+-- Data for Name: recipick_connectrecipeingredient; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_connectrecipeingredient (id, amount, ingredient_id, recipe_id) FROM stdin;
+1	100	1	1
+2	222	5	1
+6	100	74	4
+7	400	6	4
+17	300	12	9
+18	100	4	9
+19	3	75	9
+20	1	76	9
+21	2	77	9
+22	2	78	9
+23	1	79	9
+43	100	61	17
+44	0	76	17
+45	1	85	17
+46	1	86	17
+47	1	87	17
+48	1	78	17
+49	0	88	17
+50	1	89	19
+51	1	90	19
+52	1	88	19
+53	2	79	19
+54	4	92	20
+55	2	93	20
+56	3	94	20
+57	2	75	20
+58	2	78	21
+59	0	75	21
+60	0	79	21
+61	10	60	21
+62	1	95	21
+63	200	12	21
+64	50	41	21
+65	200	30	21
+66	8	84	22
+67	200	78	22
+68	1	96	22
+69	1	97	23
+70	400	4	23
+71	1	98	24
+72	3	99	25
+73	200	100	25
+74	100	101	26
+75	2	78	26
+76	30	102	27
+77	2	103	28
+78	2	78	28
+79	1	81	28
+80	2	88	28
+81	100	104	28
+82	1	105	28
+83	100	106	29
+84	2	107	29
+85	1	108	29
+86	2	109	30
+87	2	110	30
+88	7	78	30
+89	500	106	31
+90	2	111	31
+91	3	112	31
+92	25	78	31
+93	200	113	31
+94	500	106	32
+95	200	114	32
+96	100	115	33
+97	50	116	33
+98	3	84	34
+99	700	80	34
+100	500	117	35
+101	200	118	35
+102	100	74	36
+103	1	119	36
+104	1	119	37
+105	10	79	37
+106	2	120	38
+107	3	78	38
+108	5	75	38
+109	3	121	39
+110	3	79	39
+111	4	78	40
+112	3	81	40
+113	3	79	40
+114	1	122	40
+115	1	123	40
+116	100	106	40
+117	100	124	41
+118	10	125	41
+119	100	126	42
+120	10	60	42
+121	0	105	43
+122	1	85	43
+123	2	127	44
+124	2	128	45
+125	1	129	45
+126	2	78	45
+127	2	79	45
+128	100	130	46
+129	20	60	46
+130	10	131	46
+131	450	4	47
+132	200	132	48
+133	4	78	48
+134	2	133	49
+135	3	78	49
+136	2	81	49
+137	2	134	50
+138	1	85	51
+139	1	135	51
+140	100	136	52
+141	200	137	52
+142	1	138	53
+143	100	74	53
+144	1	76	53
+145	300	139	54
+146	1	76	54
+147	20	60	54
+148	5	85	55
+149	1	76	55
+150	600	140	56
+151	2	79	56
+152	400	9	57
+153	3	77	57
+154	400	141	58
+155	3	78	58
+156	1	142	58
+157	250	143	59
+158	500	40	60
+159	100	106	61
+160	2	85	61
+161	1	144	62
+162	1	85	62
+163	1	145	63
+164	1	146	63
+165	1	147	64
+166	3	78	64
+167	1	85	64
+168	200	28	65
+169	1	111	65
+170	2	122	66
+171	3	84	66
+172	1	111	66
+173	150	37	66
+174	100	148	66
+175	2	111	67
+176	5	135	68
+177	80	1	68
+178	2	122	68
+179	1	111	68
+180	10	149	68
+181	100	28	69
+182	1	111	69
+183	1	150	69
+184	200	19	69
+185	300	124	70
+186	1	111	70
+187	3	151	70
+188	7	152	70
+189	150	153	71
+190	7	154	71
+191	1	111	71
+192	100	100	71
+193	1	128	72
+194	200	19	72
+195	100	148	72
+196	4	155	73
+197	50	37	73
+198	100	156	73
+199	1	157	74
+200	100	158	74
+201	1	159	74
+202	1	160	75
+203	1	161	75
+204	1	162	75
+205	1	163	75
+206	1	164	75
+207	1	165	76
+24	100	61	10
+25	600	80	10
+26	1	81	10
+28	0	83	10
+30	1	84	10
+208	1	166	76
+209	1	167	77
+210	1	168	77
+211	1	169	78
+212	1	170	78
+213	1	163	78
+214	1	165	78
+215	1	160	78
+216	1	161	79
+217	1	160	79
+218	1	171	79
+219	1	164	79
+220	100	100	80
+221	50	172	80
+222	100	148	80
+223	1	25	80
+227	5	84	82
+228	80	156	82
+229	20	149	82
+230	1	111	82
+231	50	172	82
+224	2	165	81
+225	1	173	81
+226	1	174	81
+236	400	177	84
+237	1	178	84
+238	1	111	84
+239	7	150	84
+240	3	152	84
+241	250	19	84
+242	1	160	85
+243	1	167	85
+244	1	179	85
+245	1	180	85
+246	2	84	86
+247	30	181	86
+248	3	182	87
+249	1	163	87
+250	1	165	87
+251	10	102	88
+252	2	84	88
+253	200	139	88
+254	1	183	89
+255	1	169	89
+256	1	184	89
+257	1	185	89
+258	2	182	90
+259	1	164	90
+260	5	186	90
+261	1	161	90
+262	2	182	91
+263	1	164	91
+264	5	186	91
+265	1	161	91
+266	2	182	92
+267	1	164	92
+268	1	161	92
+269	2	182	93
+270	1	164	93
+271	1	161	93
+272	2	182	94
+273	1	164	94
+274	1	161	94
+275	1	187	95
+276	80	2	95
+277	1	150	95
+278	50	148	95
+279	125	188	96
+280	1	109	97
+281	500	124	97
+282	1	111	97
+283	1	189	98
+284	1	190	98
+285	400	191	99
+286	1	192	99
+287	1	174	100
+288	2	164	100
+289	200	193	101
+290	1	194	102
+291	1	183	102
+292	1	169	103
+293	1	195	103
+294	1	185	103
+295	1	183	103
+296	1	167	104
+297	1	196	105
+298	150	153	105
+299	1	182	105
+300	1	174	105
+301	2	182	106
+302	2	175	106
+303	350	139	107
+304	1	111	107
+305	1	182	107
+306	50	181	107
+307	1	197	108
+308	1	171	108
+309	1	198	109
+310	1	199	109
+311	1	183	109
+312	2	165	110
+313	150	200	110
+314	1	111	110
+315	1	185	110
+316	400	201	111
+317	10	152	111
+318	2	182	111
+319	20	181	111
+320	1	167	112
+321	1	202	112
+322	4	182	113
+323	1	109	114
+324	80	1	114
+325	1	182	114
+326	1	164	115
+327	1	174	115
+328	1	182	115
+329	1	164	116
+330	1	174	116
+331	1	182	116
+332	1	196	117
+333	1	203	117
+334	1	170	118
+335	1	204	118
+336	3	182	119
+337	1	111	119
+338	20	172	119
+339	1	174	119
+340	30	181	119
+341	4	205	120
+342	1	206	120
+345	2	182	122
+346	20	156	122
+347	30	181	122
+348	1	183	122
+343	1	207	121
+344	1	208	121
+349	1	209	123
+350	1	189	123
+351	3	162	123
+352	1	202	124
+353	1	210	124
+354	2	164	125
+355	2	182	125
+356	1	211	125
+357	350	212	126
+358	100	213	126
+359	200	214	127
+360	1	215	127
+361	40	216	127
+362	8	154	128
+363	5	152	128
+364	2	135	128
+365	2	182	129
+366	1	111	129
+367	1	165	129
+368	100	177	129
+369	1	176	129
+370	20	156	129
+371	200	217	130
+372	100	172	130
+373	3	182	130
+374	1	111	130
+375	200	124	131
+376	1	111	131
+377	3	152	131
+378	1	155	131
+379	40	181	131
+380	2	218	132
+381	1	219	132
+382	1	220	132
+383	1	221	133
+384	1	163	133
+385	1	222	133
+386	1	223	133
+387	1	160	134
+388	1	224	134
+389	1	225	135
+390	1	183	135
+391	1	226	136
+233	2	165	83
+232	4	175	83
+234	2	176	83
+392	1	227	136
+393	1	228	137
+394	1	229	137
+395	1	230	137
+396	1000	156	138
+397	1	227	138
+398	1	231	138
+399	4	232	138
+400	1	233	139
+401	1	234	139
+402	1	235	139
+403	1	236	140
+404	1	194	141
+405	1	237	141
+406	1	238	142
+407	1	239	142
+408	1	175	143
+409	1	163	143
+410	1	183	143
+411	1	165	143
+418	1	179	145
+419	1	167	145
+420	1	165	146
+421	1	162	146
+422	1	241	146
+423	2	218	147
+424	1	240	147
+425	1	183	147
+426	1	162	147
+427	1	242	148
+428	1	195	148
+429	2	162	149
+430	1	240	149
+431	1	243	149
+432	1	244	149
+433	1	239	150
+434	1	161	150
+435	1	174	150
+436	1	245	150
+437	1	229	150
+438	500	156	151
+439	1	165	151
+440	1	246	151
+441	1	247	151
+442	500	156	152
+443	1	165	152
+444	1	246	152
+445	1	247	152
+446	2	109	153
+447	100	172	153
+448	30	5	153
+449	2	183	153
+450	1	182	153
+451	1	111	153
+452	200	213	154
+453	60	156	154
+454	2	183	154
+455	20	37	154
+456	5	182	155
+457	1	111	155
+458	1	183	155
+459	300	248	156
+460	1	152	156
+461	1	111	156
+462	20	249	156
+463	175	250	157
+464	2	152	157
+465	20	181	157
+466	250	251	158
+467	1	111	158
+468	5	182	159
+469	300	252	159
+470	50	172	159
+471	330	33	160
+472	1	111	160
+473	20	249	160
+474	50	19	160
+475	1	164	161
+476	1	111	161
+477	30	172	161
+478	1	122	161
+479	50	2	161
+480	200	177	162
+481	4	175	162
+482	1	111	162
+483	1	253	163
+484	320	28	164
+485	3	182	164
+486	50	158	164
+487	4	182	165
+488	1	222	165
+489	2	254	166
+490	150	19	166
+491	50	252	166
+492	100	114	166
+493	6	151	167
+494	1	111	167
+495	1	183	167
+496	150	19	167
+497	600	255	168
+498	2	111	168
+499	300	256	169
+500	2	257	169
+501	20	216	169
+502	4	152	169
+503	50	181	169
+504	1	111	170
+505	50	139	170
+506	2	182	170
+507	100	19	170
+508	1	183	170
+29	100	6	10
+27	2	82	10
+412	2	162	144
+416	1	163	144
+414	2	165	144
+415	1	183	144
+413	1	209	144
+417	1	240	144
+509	10	1	171
+510	10	1	172
+511	10000	139	173
+235	2	160	83
+512	3	258	174
+513	2	259	174
+\.
+
+
+--
+-- Data for Name: recipick_imagemodel; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_imagemodel (id, img, description_index) FROM stdin;
+1	temp.png	0
+2	temp_EyuGfM7.png	1
+3	temp.png	0
+4	temp.png	0
+5	temp_rXCEeg1.png	1
+6	temp_gQs4T1q.png	2
+7	temp_LPmAGwJ.png	3
+8	temp_bGesQm1.png	4
+9	temp_n41FGeQ.png	5
+10	temp.png	0
+11	temp_XVsinup.png	1
+12	temp_9CE6rCz.png	2
+13	temp_Wu3u5BB.png	3
+14	temp_i8TTwzE.png	4
+18	temp.png	0
+19	temp_GCOAwvH.png	1
+20	temp.png	0
+21	temp_6GdAOm8.png	1
+22	temp_iufOTJF.png	2
+23	temp.png	0
+24	temp_bmrItaQ.png	1
+25	temp_oVmABWM.png	2
+26	temp.png	0
+27	temp_hVrIPMG.png	1
+28	temp.png	0
+29	temp_LZg3Z59.png	1
+30	temp_N2VxPM1.png	2
+31	temp.png	0
+32	temp.png	0
+33	temp_r02T4zh.png	1
+34	temp.png	0
+35	temp.png	0
+36	temp_IgQsHUp.png	1
+37	temp.png	0
+38	temp_PggeImb.png	1
+39	temp_LFR7IDf.png	2
+40	temp.png	0
+41	temp_PR3XThF.png	1
+42	temp_osmRhSd.png	2
+43	temp.png	0
+44	temp_RInNaHT.png	1
+45	temp.png	0
+46	temp_B5uMN5z.png	1
+47	temp.png	0
+48	temp_LxQXzux.png	1
+49	temp_2Z9cHaQ.png	2
+50	temp.png	0
+51	temp_xBV3675.png	1
+52	temp_Z0I33qb.png	2
+53	temp.png	0
+54	temp_NJQh4XL.png	1
+55	temp.png	0
+56	temp_nrUOrJ9.png	1
+57	temp_q8Cj49Z.png	2
+58	temp.png	0
+59	temp_Ehj3U4X.png	1
+60	temp.png	0
+61	temp_QWnvuTY.png	1
+62	temp.png	0
+63	temp_6mxgOhx.png	1
+64	temp_z06GDHO.png	2
+65	temp.png	0
+66	temp_komKTWK.png	1
+67	temp.png	0
+68	temp_w5BVKnw.png	1
+69	temp.png	0
+70	temp_f8aUDhK.png	1
+71	temp_5aeFLy8.png	2
+72	temp_vQKhqrE.png	3
+73	temp.png	0
+74	temp_LDl4pdn.png	1
+75	temp_n5taorl.png	2
+76	temp.png	0
+77	temp_gyK0h3h.png	1
+78	temp_B7yzO1O.png	2
+79	temp.png	0
+80	temp_IT0s6EN.png	1
+81	temp_XwrK4z6.png	2
+82	temp.png	0
+83	temp.png	0
+84	temp_XSjTSaz.png	1
+85	temp_lSFv6Hy.png	2
+86	temp.png	0
+87	temp_4RPOjXl.png	1
+88	temp_CziOxUN.png	2
+89	temp.png	0
+90	temp_3Ou1wN1.png	1
+91	temp_rx6l8F6.png	2
+92	temp.png	0
+93	temp_s1O9sZX.png	1
+94	temp.png	0
+95	temp_LxBfsrt.png	1
+96	temp_hojMTgz.png	2
+97	temp.png	0
+98	temp_JOVX2Ja.png	1
+99	temp.png	0
+100	temp_BH4NFud.png	1
+101	temp.png	0
+102	temp_7Aau8rf.png	1
+103	temp_0JqOjuO.png	2
+104	temp.png	0
+105	temp_PfWjFRK.png	1
+106	temp_WlLPpCn.png	2
+107	temp.png	0
+108	temp_op16bTa.png	1
+109	temp_H78Z2Cx.png	2
+110	temp.png	0
+111	temp_c1fQ0ON.png	1
+112	temp.png	0
+113	temp_AYMw39y.png	1
+114	temp_R0TBnUs.png	2
+115	temp.png	0
+116	temp_dx1IjLZ.png	1
+117	temp_DL8Cm2t.png	2
+118	temp.png	0
+119	temp_CLRjjJV.png	1
+120	temp_ExIYblT.png	2
+121	temp.png	0
+122	temp_U7yhEyi.png	1
+123	temp.png	0
+124	temp.png	0
+125	temp_CfsfnPo.png	1
+126	temp.png	0
+127	temp_jaEleNz.png	1
+128	temp.png	0
+129	temp_TrTGqwf.png	1
+130	temp_bzJ1Hy1.png	2
+131	temp.png	0
+132	temp_uJBzrSW.png	1
+136	temp_7c1iMom.png	0
+137	temp_s7qovFl.png	1
+138	temp_rZMETMS.png	2
+139	temp.png	0
+140	temp_w3PdtqQ.png	1
+141	temp_uOzH0A9.png	2
+142	temp.png	0
+143	temp_HTChcTd.png	1
+144	temp_RnvdaLs.png	2
+145	temp_QjvyH24.png	3
+146	temp.png	0
+147	temp_SuABX5C.png	1
+148	temp_9JCvX5Q.png	2
+149	temp.png	0
+150	temp_qOwuhGg.png	1
+151	temp_UJ6kr6c.png	2
+152	temp_AIHpdgQ.png	3
+153	temp_bEgWa3S.png	4
+154	temp.png	0
+155	temp_XgyAeMB.png	1
+156	temp_4B3EWLt.png	2
+157	temp.png	0
+158	temp_aM016BM.png	1
+159	temp_o56P0M9.png	2
+160	temp_ytJPNjI.png	3
+161	temp.png	0
+162	temp_qPJwPn7.png	1
+163	temp_cvqrZTN.png	2
+164	temp.png	0
+165	temp_HdRv3zv.png	1
+166	temp_Ue2cRCH.png	2
+167	temp_IUyvqj5.png	3
+168	temp_Iws7dGr.png	4
+169	temp.png	0
+170	temp_Yn3Lt1U.png	1
+171	temp_SP8k6ev.png	2
+172	temp_Q8JE0Ab.png	3
+173	temp.png	0
+174	temp_JbRaEDJ.png	1
+175	temp_u7qstIu.png	2
+176	temp_LqJReKR.png	3
+177	temp.png	0
+178	temp_DhzgpJX.png	1
+179	temp_d90IC55.png	2
+180	temp_gy5xNZA.png	3
+181	temp.png	0
+182	temp_QcbSmoD.png	1
+183	temp_TPbEllj.png	2
+184	temp_Hw7dQqp.png	3
+185	temp_dtjwvc4.png	4
+186	temp.png	0
+187	temp_NBTmvoP.png	1
+188	temp_oUBSWsQ.png	2
+189	temp_Q9wKDVf.png	3
+190	temp.png	0
+191	temp_aXShp46.png	1
+192	temp_SOKXEaH.png	2
+193	temp_eTk7vIk.png	3
+194	temp.png	0
+195	temp_MF0ocHY.png	1
+196	temp_YDEtAgs.png	2
+200	temp.png	0
+201	temp_gj1ctOM.png	1
+202	temp_q4bEiIR.png	2
+203	temp_fagzqI6.png	3
+204	temp_M8nsGog.png	0
+205	temp_90YTefT.png	1
+206	temp_CLOjNt2.png	2
+214	temp.png	0
+215	temp_Bk3LWoA.png	1
+216	temp_qaxBX9v.png	2
+217	temp.png	0
+218	temp_a4O4hWx.png	1
+219	temp_MDvV9lf.png	2
+220	temp.png	0
+221	temp_OxaQUtW.png	1
+222	temp_AJ5lPrT.png	2
+223	temp.png	0
+224	temp_pY6c0mG.png	1
+225	temp_imtEeJD.png	2
+226	temp.png	0
+227	temp_CHbG69G.png	1
+228	temp_x1GIwKb.png	2
+229	temp_AlElIvs.png	3
+230	temp.png	0
+231	temp_CwQkU6F.png	1
+232	temp.png	0
+233	temp_wjPYHfV.png	1
+234	temp_c2g9nd4.png	2
+235	temp.png	0
+236	temp_JeFJx9Q.png	1
+237	temp_lhq1q3Z.png	2
+238	temp.png	0
+239	temp_Iu7vNjm.png	1
+240	temp_Zl1iwaI.png	2
+241	temp.png	0
+242	temp_5W1eif6.png	1
+243	temp_cldqEWM.png	2
+244	temp.png	0
+245	temp_wibbe7G.png	1
+246	temp_hWqhx0y.png	2
+247	temp.png	0
+248	temp_DANdaio.png	1
+249	temp_eZAW1nA.png	2
+250	temp.png	0
+251	temp_eQSmSJO.png	1
+252	temp_fJLgl8B.png	2
+253	temp_siJKp6A.png	3
+254	temp.png	0
+255	temp_UK2N7d0.png	1
+256	temp_4orts2O.png	2
+257	temp.png	0
+258	temp_kXfHC3k.png	1
+259	temp.png	0
+260	temp_a1OO8aP.png	1
+261	temp_KTuCmlD.png	2
+262	temp.png	0
+263	temp_3Pz2BVa.png	1
+264	temp_2vxQ2Rx.png	2
+265	temp.png	0
+266	temp_BNr8SRL.png	1
+267	temp_zY5UaxW.png	2
+268	temp.png	0
+269	temp_k8OrK21.png	1
+270	temp_HHJG5AP.png	2
+271	temp_OrSzDCx.png	3
+272	temp.png	0
+273	temp_PIAjVBs.png	1
+274	temp_rZ61Wsw.png	2
+275	temp.png	0
+276	temp_LCfkKzJ.png	1
+277	temp.png	0
+278	temp_YgW8hYI.png	1
+279	temp_q3N1aJx.png	2
+280	temp_6yuBMLl.png	3
+281	temp.png	0
+282	temp_UDxwxHV.png	1
+283	temp_Bp0FYxp.png	2
+284	temp.png	0
+285	temp_CwPK2ug.png	1
+286	temp_UpjkSNm.png	2
+287	temp.png	0
+288	temp_WNqulmG.png	1
+289	temp.png	0
+290	temp_yCDpiyJ.png	1
+291	temp.png	0
+292	temp_3e52X8R.png	1
+293	temp_RfaoLXn.png	2
+294	temp.png	0
+295	temp_vg5q7B3.png	1
+296	temp_I8q7ylm.png	2
+299	temp_h2UUSam.png	0
+300	temp_DZ1Z4dj.png	1
+301	temp.png	0
+302	temp_m5o3Hco.png	1
+303	temp_h1DawYq.png	2
+304	temp.png	0
+305	temp_daKg9oN.png	1
+306	temp_7agUJHI.png	2
+307	temp.png	0
+308	temp_lBj5AvR.png	1
+309	temp.png	0
+310	temp_SVILQah.png	1
+311	temp.png	0
+312	temp_hi12qhZ.png	1
+317	temp_QMrnM7y.png	0
+318	temp_cDfbuaz.png	1
+319	temp_zUnRdhX.png	2
+320	temp_RZxUJFI.png	3
+321	temp.png	0
+322	temp_SGDHLVx.png	1
+323	temp_bVk7OaH.png	2
+324	temp.png	0
+325	temp_QyUDEna.png	1
+326	temp_uRTnDD9.png	2
+331	temp.png	0
+332	temp_RLSKFPl.png	1
+333	temp_YEoDjyx.png	2
+334	temp_RwpJOCf.png	0
+335	temp_gUU4ZPd.png	1
+336	temp_li0YJ4o.png	2
+337	temp_RZSKVS3.png	3
+338	temp.png	0
+339	temp_7cHjqfs.png	1
+340	temp_ZqR8ACW.png	2
+341	temp.png	0
+342	temp_mpO3x9E.png	1
+343	temp.png	0
+344	temp_JCRNbrj.png	1
+345	temp_qeShHy4.png	2
+346	temp.png	0
+347	temp_oMUATrM.png	1
+348	temp_gZPvBlV.png	2
+349	temp.png	0
+350	temp_gBuJNRx.png	1
+351	temp_eZm1Mkz.png	2
+352	temp.png	0
+353	temp_y6Gwbfv.png	1
+354	temp_TaJ9x1F.png	2
+355	temp.png	0
+356	temp_cAe3N0X.png	1
+357	temp_EFK0uAR.png	2
+358	temp.png	0
+359	temp_g9Ak1jE.png	1
+360	temp_Y3F5L8S.png	2
+361	temp.png	0
+362	temp_T8iAVZr.png	1
+363	temp_uCLGQwU.png	2
+364	temp.png	0
+365	temp_NyGnbuy.png	1
+366	temp_1gHY1bp.png	2
+367	temp_Dj3cp2Q.png	3
+368	r_133u_14cnt_0.png	0
+369	r_133u_14cnt_1.png	1
+370	r_133u_14cnt_2.png	2
+371	r_134u_14cnt_0.png	0
+372	r_134u_14cnt_1.png	1
+373	r_135u_14cnt_0.png	0
+374	r_135u_14cnt_1.png	1
+375	r_135u_14cnt_2.png	2
+376	r_135u_14cnt_3.png	3
+377	r_136u_14cnt_0.png	0
+378	r_136u_14cnt_1.png	1
+379	r_136u_14cnt_2.png	2
+380	r_137u_14cnt_0.png	0
+381	r_138u_14cnt_0.png	0
+382	r_138u_14cnt_1.jpeg	1
+383	r_138u_14cnt_2.png	2
+384	r_138u_14cnt_3.png	3
+385	r_139u_14cnt_0.png	0
+386	r_139u_14cnt_1.png	1
+387	r_139u_14cnt_2.png	2
+388	r_140u_14cnt_0.jpeg	0
+389	r_140u_14cnt_1.png	1
+390	r_140u_14cnt_2.png	2
+391	r_141u_14cnt_0.png	0
+392	r_141u_14cnt_1.png	1
+393	r_142u_14cnt_0.png	0
+394	r_142u_14cnt_1.png	1
+395	r_143u_14cnt_0.png	0
+396	r_143u_14cnt_1.png	1
+397	r_143u_14cnt_2.jpeg	2
+398	r_143u_14cnt_3.png	3
+403	r_145u_14cnt_0.png	0
+404	r_145u_14cnt_1.png	1
+405	r_146u_14cnt_0.png	0
+406	r_146u_14cnt_1.png	1
+407	r_147u_14cnt_0.png	0
+408	r_147u_14cnt_1.png	1
+409	r_147u_14cnt_2.png	2
+410	r_148u_14cnt_0.png	0
+411	r_148u_14cnt_1.png	1
+412	r_149u_14cnt_0.png	0
+413	r_149u_14cnt_1.png	1
+414	r_149u_14cnt_2.png	2
+415	r_150u_14cnt_0.png	0
+416	r_150u_14cnt_1.png	1
+417	r_150u_14cnt_2.png	2
+418	r_150u_14cnt_3.png	3
+419	r_151u_14cnt_0.png	0
+420	r_151u_14cnt_1.png	1
+421	r_151u_14cnt_2.png	2
+422	r_151u_14cnt_3.png	3
+423	r_151u_14cnt_4.png	4
+424	r_152u_14cnt_0.png	0
+425	r_152u_14cnt_1.png	1
+426	r_152u_14cnt_2.png	2
+427	r_152u_14cnt_3.png	3
+428	r_152u_14cnt_4.png	4
+429	r_153u_19cnt_0.png	0
+430	r_153u_19cnt_1.png	1
+431	r_153u_19cnt_2.png	2
+432	r_154u_19cnt_0.png	0
+433	r_154u_19cnt_1.png	1
+434	r_154u_19cnt_2.png	2
+435	r_155u_19cnt_0.png	0
+436	r_155u_19cnt_1.png	1
+437	r_155u_19cnt_2.png	2
+438	r_156u_19cnt_0.png	0
+439	r_156u_19cnt_1.png	1
+440	r_156u_19cnt_2.png	2
+441	r_157u_19cnt_0.png	0
+442	r_157u_19cnt_1.png	1
+443	r_157u_19cnt_2.png	2
+444	r_158u_19cnt_0.png	0
+445	r_158u_19cnt_1.png	1
+446	r_158u_19cnt_2.png	2
+447	r_159u_19cnt_0.png	0
+448	r_159u_19cnt_1.png	1
+449	r_160u_19cnt_0.png	0
+450	r_160u_19cnt_1.png	1
+451	r_160u_19cnt_2.png	2
+452	r_161u_20cnt_0.png	0
+453	r_161u_20cnt_1.png	1
+454	r_161u_20cnt_2.png	2
+455	r_162u_20cnt_0.png	0
+456	r_162u_20cnt_1.png	1
+457	r_162u_20cnt_2.png	2
+458	r_163u_20cnt_0.png	0
+459	r_163u_20cnt_1.png	1
+460	r_163u_20cnt_2.png	2
+461	r_164u_20cnt_0.png	0
+462	r_164u_20cnt_1.png	1
+463	r_164u_20cnt_2.png	2
+464	r_165u_20cnt_0.png	0
+465	r_165u_20cnt_1.png	1
+466	r_165u_20cnt_2.png	2
+467	r_166u_20cnt_0.png	0
+468	r_166u_20cnt_1.png	1
+469	r_166u_20cnt_2.png	2
+470	r_167u_20cnt_0.png	0
+471	r_167u_20cnt_1.png	1
+472	r_167u_20cnt_2.png	2
+473	r_168u_20cnt_0.png	0
+474	r_168u_20cnt_1.png	1
+475	r_168u_20cnt_2.png	2
+476	r_169u_20cnt_0.png	0
+477	r_169u_20cnt_1.png	1
+478	r_169u_20cnt_2.png	2
+479	r_170u_20cnt_0.png	0
+480	r_170u_20cnt_1.png	1
+481	r_170u_20cnt_2.png	2
+482	temp_bAmbG6S.png	0
+483	temp_Rm7pcH9.png	1
+484	temp_xMv05EO.png	2
+485	r_144u_14cnt_0.jpeg	0
+486	r_144u_14cnt_1.jpeg	1
+487	r_144u_14cnt_2.jpeg	2
+488	r_144u_14cnt_3.jpeg	3
+489	r_173u_39cnt_0.jpeg	0
+490	r_83u_14cnt_0.png	0
+491	temp_wGbrqEV.png	1
+492	temp_9YqscHx.png	2
+493	temp_vFGuXh7.png	3
+494	temp_YFBXupN.png	4
+495	temp_84dODiU.png	5
+496	temp_sHDxErN.png	6
+\.
+
+
+--
+-- Data for Name: recipick_ingredient; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_ingredient (id, name, quantity, price, price_normalized, igd_type, brand, picture) FROM stdin;
+1	노브랜드 쫄깃한 베이컨 	300	3980	\N	 g	NoBrand	노브랜드_쫄깃한_베이컨__AqvG7tG.jpeg
+2	[노브랜드]한입쏙쏙비엔나 	550	4980	\N	g	NoBrand	노브랜드한입쏙쏙비엔나__UAGa6Dy.jpeg
+3	[노브랜드] 숯불데리야끼닭꼬치 	800	12980	\N	g	NoBrand	노브랜드_숯불데리야끼닭꼬치__67RRsP1.jpeg
+4	[노브랜드] 쫄깃한 모둠어묵 	450	2580	\N	g	NoBrand	노브랜드_쫄깃한_모둠어묵__wg8hNwJ.jpeg
+5	[노브랜드] 크라비 맛살 	150	1380	\N	g	NoBrand	노브랜드_크라비_맛살__yb7x6du.jpeg
+6	노브랜드 떡국떡 	800	1680	\N	g	NoBrand	노브랜드_떡국떡__aQHsBzt.jpeg
+7	[노브랜드] 종합 어묵 	1	3980	\N	kg	NoBrand	노브랜드_종합_어묵__4DypsrI.jpeg
+8	[노브랜드] 김밥용 맛 단무지 	550	1980	\N	g	NoBrand	노브랜드_김밥용_맛_단무지__gCA8WtH.jpeg
+9	[노브랜드] 칠리 새우 	400	6580	\N	g	NoBrand	노브랜드_칠리_새우__iCGQhic.jpeg
+10	[노브랜드]간편한 유부초밥 	540	4380	\N	g	NoBrand	노브랜드간편한_유부초밥__miufRYe.jpeg
+11	[노브랜드] 통안심치킨텐더	550	5880	\N	g	NoBrand	노브랜드_통안심치킨텐더_69ZV7Ot.jpeg
+12	노브랜드 떡볶이떡 	800	1680	\N	g	NoBrand	노브랜드_떡볶이떡__6PWOhUh.jpeg
+13	노브랜드 감자칩 오리지날 	110	890	\N	g	NoBrand	노브랜드_감자칩_오리지날__PBTC0Ek.jpeg
+14	노브랜드 담백한 살코기참치 	90	980	\N	g	NoBrand	노브랜드_담백한_살코기참치__wBFoY7B.jpeg
+15	노브랜드 초코 웨이퍼롤 	115	980	\N	g	NoBrand	노브랜드_초코_웨이퍼롤__3nlAQYH.jpeg
+16	[노브랜드] 갈비만두	720	5980	\N	g	NoBrand	노브랜드_갈비만두_U5Irayh.jpeg
+17	노브랜드 감자칩 사워크림&어니언 	110	980	\N	g	NoBrand	노브랜드_감자칩_사워크림어니언__ORuRR5g.jpeg
+18	[노브랜드] 초코 칩 아이스 크림 	660	3980	\N	ml	NoBrand	노브랜드_초코_칩_아이스_크림__WfynvlT.jpeg
+19	[노브랜드] 홈스타일 토마토 스파게티 소스 	400	1780	\N	g	NoBrand	노브랜드_홈스타일_토마토_스파게티_소스__tQMVugC.jpeg
+20	[노브랜드] 한입 동그랑 땡 	700	4880	\N	g	NoBrand	노브랜드_한입_동그랑_땡__81glpDU.jpeg
+21	[노브랜드] 아몬드 크랜베리 시리얼 	630	4980	\N	g	NoBrand	노브랜드_아몬드_크랜베리_시리얼__Uyk7R95.jpeg
+22	[노브랜드] 김밥용맛살	165	1280	\N	g	NoBrand	노브랜드_김밥용맛살_BSWGjhe.jpeg
+23	[노브랜드] 짜장라면 	5	2280	\N	개입	NoBrand	노브랜드_짜장라면__zCsN8kV.jpeg
+24	[노브랜드] 국수 소면 	500	980	\N	g	NoBrand	노브랜드_국수_소면__hZqULP6.jpeg
+25	[노브랜드] 리얼 햄 	1	6980	\N	kg	NoBrand	노브랜드_리얼_햄__BBibQy4.jpeg
+26	[노브랜드] 김밥용햄 	150	1480	\N	g	NoBrand	노브랜드_김밥용햄__ujAid3w.jpeg
+27	[노브랜드] 정통왕교자 	945	5280	\N	 g	NoBrand	노브랜드_정통왕교자__FkZCko3.jpeg
+28	[노브랜드] 그릴 닭가슴살 	140	1980	\N	g	NoBrand	노브랜드_그릴_닭가슴살__SJvk1Ck.jpeg
+29	노브랜드 자색고구마칩 	110	980	\N	g	NoBrand	노브랜드_자색고구마칩__jIG7XjZ.jpeg
+30	노브랜드 라면스낵 	250	1980	\N	g	NoBrand	노브랜드_라면스낵__aLBKtDO.jpeg
+31	[노브랜드] 메밀김치전병	720	5980	\N	g	NoBrand	노브랜드_메밀김치전병_kmba3Bq.jpeg
+32	노브랜드 인절미스낵 	130	1380	\N	g	NoBrand	노브랜드_인절미스낵__oDRRz22.jpeg
+33	[노브랜드] 빅그릴프랑크 	550	4980	\N	g	NoBrand	노브랜드_빅그릴프랑크__OmfAp3q.jpeg
+34	[노브랜드] 칼국수 생면 	1	3180	\N	kg	NoBrand	노브랜드_칼국수_생면__1bBiAzB.jpeg
+35	[노브랜드] 밀크 아이스 크림 	660	3980	\N	ml	NoBrand	노브랜드_밀크_아이스_크림__NElMUqA.jpeg
+36	[노브랜드] 쫀득한 치즈스틱 	1	8580	\N	kg	NoBrand	노브랜드_쫀득한_치즈스틱__BrPOF74.jpeg
+37	노브랜드 체다슬라이스치즈 	900	8580	\N	g	NoBrand	노브랜드_체다슬라이스치즈__bCqSzUu.jpeg
+38	[노브랜드] 치즈 크림 케익 	590	9980	\N	g	NoBrand	노브랜드_치즈_크림_케익__jl9Lu7o.jpeg
+39	[노브랜드] 홈스타일 로제 스파게티 소스 	400	1780	\N	g	NoBrand	노브랜드_홈스타일_로제_스파게티_소스__c0rMNbm.jpeg
+40	노브랜드 순수돈까스 	500	4880	\N	 g	NoBrand	노브랜드_순수돈까스__d1NVptD.jpeg
+41	[노브랜드] 쫄깃한 어묵 	350	1980	\N	g	NoBrand	노브랜드_쫄깃한_어묵__DOZRT8r.jpeg
+42	노브랜드 바닐라향 웨이퍼롤 	115	980	\N	g	NoBrand	노브랜드_바닐라향_웨이퍼롤__209Z8kq.jpeg
+43	[노브랜드] 딸기 담은 요구르트 	750	2080	\N	ml	NoBrand	노브랜드_딸기_담은_요구르트__qWnnnbC.jpeg
+44	[노브랜드]머스타드소스	410	2280	\N	g	NoBrand	노브랜드머스타드소스_VEcDyMb.jpeg
+45	노브랜드 버터쿠키 	400	2980	\N	g	NoBrand	노브랜드_버터쿠키__SjvfTRp.jpeg
+46	[노브랜드] 유자 차 	2	7980	\N	kg	NoBrand	노브랜드_유자_차__CNjK5FG.jpeg
+47	[노브랜드] 치자 맛 단무지 	500	2880	\N	g	NoBrand	노브랜드_치자_맛_단무지__qg3VCO5.jpeg
+48	[노브랜드]핫칠리소스	440	2880	\N	g	NoBrand	노브랜드핫칠리소스_pAaM50a.jpeg
+49	노브랜드 딸기잼 	800	4580	\N	g	NoBrand	노브랜드_딸기잼__qN4hDg4.jpeg
+50	노브랜드 다크 초콜릿 	100	980	\N	g	NoBrand	노브랜드_다크_초콜릿__uPpSTnM.jpeg
+51	노브랜드 비빔쫄면	420	3180	\N	g	NoBrand	노브랜드_비빔쫄면_eG4qWFR.jpeg
+52	[노브랜드] 오리엔탈 드레싱 	420	2880	\N	g	NoBrand	노브랜드_오리엔탈_드레싱__dTKeXZ3.jpeg
+53	[노브랜드] 초코링 시리얼 	570	3980	\N	g	NoBrand	노브랜드_초코링_시리얼__PDhgvFr.jpeg
+54	노브랜드 콜드브루 아메리카노 	500	1880	\N	m	NoBrand	노브랜드_콜드브루_아메리카노__OJims1t.jpeg
+55	[노브랜드] 리얼 핫도그 	750	6180	\N	g	NoBrand	노브랜드_리얼_핫도그__En8TksN.jpeg
+56	[노브랜드] 홈스타일 크림 스프 	100	980	\N	g	NoBrand	노브랜드_홈스타일_크림_스프__Xi0V5jC.jpeg
+57	[노브랜드] 순살 치킨 너겟 	800	6280	\N	g	NoBrand	노브랜드_순살_치킨_너겟__5qGeHnB.jpeg
+58	노브랜드돈까스소스	430	2280	\N	g	NoBrand	노브랜드돈까스소스_EeqO1wq.jpeg
+59	노브랜드 한입떡갈비 	740	6880	\N	 g	NoBrand	노브랜드_한입떡갈비__LqbNIta.jpeg
+60	노브랜드 정성가득 초고추장 	500	1580	\N	g	NoBrand	노브랜드_정성가득_초고추장__EEb74HT.jpeg
+61	노브랜드 왕만두 	980	5280	\N	 g	NoBrand	노브랜드_왕만두__pjOw0Ee.jpeg
+62	노브랜드 체다치즈볼 	370	3980	\N	g	NoBrand	노브랜드_체다치즈볼__1Js3suu.jpeg
+63	[노브랜드] 도토리묵 	350	1580	\N	g	NoBrand	노브랜드_도토리묵__IOiUjtv.jpeg
+64	노브랜드 헤이즐넛디핑&브레드스틱 	52	980	\N	g	NoBrand	노브랜드_헤이즐넛디핑브레드스틱__hPvNhL2.jpeg
+65	[노브랜드] 치즈 치킨 가스 	600	6180	\N	g	NoBrand	노브랜드_치즈_치킨_가스__TkzsQrT.jpeg
+66	노브랜드 우리쌀 우리보리 고추장 	1	6980	\N	kg	NoBrand	노브랜드_우리쌀_우리보리_고추장__GkS6tfC.jpeg
+67	[노브랜드] 초코 크림 케익 	440	9980	\N	g	NoBrand	노브랜드_초코_크림_케익__gmoGWiQ.jpeg
+68	노브랜드 피넛쿠키 	283	1980	\N	g	NoBrand	노브랜드_피넛쿠키__4fbGPxP.jpeg
+69	노브랜드 피넛버터 크리미 	340	2980	\N	g	NoBrand	노브랜드_피넛버터_크리미__CLKFRan.jpeg
+70	[노브랜드] 홈스타일 크림 스파게티 소스 	400	1780	\N	g	NoBrand	노브랜드_홈스타일_크림_스파게티_소스__KBZYdGv.jpeg
+71	노브랜드 고르곤졸라치즈 소프트콘 	145	1280	\N	g	NoBrand	노브랜드_고르곤졸라치즈_소프트콘_.jpeg
+72	[노브랜드] 바삭 냉동 군 만두 	1	3980	\N	kg	NoBrand	노브랜드_바삭_냉동_군_만두__dfESJL7.jpeg
+73	노브랜드 초코칩쿠키 	400	3480	\N	g	NoBrand	노브랜드_초코칩쿠키__bPmVfgn.jpeg
+74	소고기	0	0	0	g		carrot.png
+75	설탕	0	0	0	스푼		carrot.png
+76	대파	0	0	0	대		carrot.png
+77	고추장	0	0	0	스푼		carrot.png
+78	간장	0	0	0	스푼		carrot.png
+79	고추가루	0	0	0	스푼		carrot.png
+80	물	0	0	0	ml		carrot.png
+81	다진마늘	0	0	0	T		carrot.png
+82	국간장	0	0	0	T		carrot.png
+83	대파	0	0	0	약간		carrot.png
+84	계란	0	300	0	개		carrot.png
+85	계란	0	0	0	개		carrot.png
+86	밥	0	980	0	인분		carrot.png
+87	굴소스	0	0	0	T		carrot.png
+88	참기름	0	0	0	T		carrot.png
+89	두부	0	2750	0	모		carrot.png
+90	양파	0	590	0	개		carrot.png
+91	고구마	0	1000	0	개		carrot.png
+92	고구마	0	1000	0	개		carrot.png
+93	기름	0	10	0	종이컵		carrot.png
+94	올리고당	0	10	0	스푼		carrot.png
+95	양파	0	100	0	g		carrot.png
+96	고추	0	100	0	개		carrot.png
+97	양파	0	100	0	개		carrot.png
+98	검은콩	0	5000	0	kg		carrot.png
+99	전복	0	990	0	0		carrot.png
+100	쌀	0	1000	0	g		carrot.png
+101	건새우	0	5000	0	g		carrot.png
+102	메추리알	0	3000	0	개		carrot.png
+103	소면	0	1000	0	인분		carrot.png
+104	당근	0	0	0	g		carrot.png
+105	단호박	0	0	0	개		carrot.png
+106	김치	0	0	0	g		carrot.png
+107	김	0	0	0	장		carrot.png
+108	밥	0	980	0	인분		carrot.png
+109	감자	0	2000	0	개		carrot.png
+110	고추	0	1000	0	개		carrot.png
+111	양파	0	500	0	개		carrot.png
+112	고추	0	100	0	개		carrot.png
+113	갈비	0	2500	0	g		carrot.png
+114	부침가루	0	3000	0	g		carrot.png
+115	미숫가루	0	5000	0	g		carrot.png
+116	꿀	0	1000	0	g		carrot.png
+117	콘	0	1500	0	g		carrot.png
+118	치즈	0	14000	0	g		carrot.png
+119	무	0	1000	0	개		carrot.png
+120	연근	0	1000	0	개		carrot.png
+121	호박	0	1500	0	개		carrot.png
+122	감자	0	100	0	개		carrot.png
+123	스펨	0	3500	0	개		carrot.png
+124	소고기	0	1500	0	g		carrot.png
+125	미역	0	100	0	0		carrot.png
+126	소고기	0	1000	0	개		carrot.png
+127	옥수수	0	1000	0	개		carrot.png
+128	가지	0	800	0	개		carrot.png
+129	양파	0	500	0	개		carrot.png
+130	멸치	0	7000	0	g		carrot.png
+131	고추	0	10	0	개		carrot.png
+132	미역	0	800	0	g		carrot.png
+133	가지	0	1500	0	개		carrot.png
+134	오이	0	1500	0	개		carrot.png
+135	식빵	0	80	0	개		carrot.png
+136	콩나물	0	1500	0	g		carrot.png
+137	간고기	0	2000	0	g		carrot.png
+138	두부	0	3000	0	모		carrot.png
+139	돼지고기	0	3000	0	g		carrot.png
+140	닭고기	0	4000	0	g		carrot.png
+141	콩나물	0	3000	0	g		carrot.png
+142	밥	0	0	0	개		carrot.png
+143	통새우 볶음밥	0	4000	0	g	노브랜드	carrot.png
+144	스펨	0	3000	0	개		carrot.png
+145	두부	0	3000	0	모		carrot.png
+146	양파	0	200	0	개		carrot.png
+147	양파	0	200	0	개		carrot.png
+148	모짜렐라 치즈	0	10	0	g		carrot.png
+149	피자치즈	100	1000	1	g	이마트	carrot.png
+150	새송이버섯	1	300	1	개	이마트	carrot.png
+151	표고버섯	1	300	1	g	이마트	carrot.png
+152	마늘	5	1500	1	g	이마트	carrot.png
+153	오징어	500	10000	1	g	이마트	carrot.png
+154	새우	1	570	1	개	이마트	carrot.png
+155	시금치	1	1500	1	단	이마트	carrot.png
+156	우유	1000	2000	1	ml	이마트	carrot.png
+157	가자미	1	4000	1	마리	이마트	carrot.png
+158	밀가루	500	3000	1	g	이마트	carrot.png
+159	레몬	1	700	1	개	이마트	carrot.png
+160	감동란	2	1600	1	개	감동란	carrot.png
+161	종가집 맛김치 80g	1	1300	1	개	종가집	carrot.png
+162	스쿨초이스 스트링치즈 24g	1	1300	1	개	제니코	carrot.png
+163	리퀴진 롱에센 뽀득프랑크 100g	1	2300	1	개	롯데	carrot.png
+164	햇반 210g	1	1500	1	개	CJ	carrot.png
+165	슬라이스 치즈 100g	22	2000	1	장	동원	carrot.png
+166	진짬뽕	1	1600	1	개	오뚜기	carrot.png
+167	한입포자만두 6개입	1	2000	1	개	세븐일레븐	carrot.png
+168	진짜장	1	1500	1	개	오뚜기	carrot.png
+169	불닭떡볶이	1	3000	1	개	삼양	carrot.png
+170	오뚜기 카레면	1	1600	1	개	오뚜기	carrot.png
+171	바삭통다리치킨	1	2000	1	개	GS25	carrot.png
+172	당근	100	348	1	g	이마트	carrot.png
+173	아이비크래커 90g	1	1500	1	개	해태	carrot.png
+174	동원참치 라이트스탠다드 150g	1	3600	1	개	동원	carrot.png
+175	우유식빵 330g	12	1800	1	장	삼립	carrot.png
+176	슬라이스햄 100g	10	1900	1	장	롯데	carrot.png
+177	토마토	2000	8500	1	g	이마트	carrot.png
+178	애호박	1	1200	1	개	이마트	carrot.png
+179	사리곰탕 큰사발면	1	1050	1	개	농심	carrot.png
+180	옛날쌀떡국	1	2300	1	개	오뚜기	carrot.png
+181	버터	100	2500	1	g	이마트	carrot.png
+182	라면친구 계란	1	350	1	개	청계원	carrot.png
+183	뿌려먹는 모짜렐라 치즈 25g	1	1000	1	개	빙그레	carrot.png
+184	순살치킨꼬치	1	1500	1	개	CU	carrot.png
+185	오뚜기 스위트콘 340g	1	1000	1	캔	오뚜기	carrot.png
+186	고기볶음장	0	100	0	숟가락		carrot.png
+187	단호박	1	3000	1	개	이마트	carrot.png
+188	오레오오즈	250	5000	1	g	Post	carrot.png
+189	포카칩 오리지널	1	1500	1	봉지	농심	carrot.png
+190	수비드닭가슴살샐러드 250g	1	2900	1	팩	세븐일레븐	carrot.png
+191	등갈비	100	3480	1	g	이마트	carrot.png
+192	대파	4	3200	1	개	이마트	carrot.png
+193	연어	400	18000	1	g	이마트	carrot.png
+194	후레쉬번 140g	1	1500	1	봉	SHAVY	carrot.png
+195	불닭볶음면 120g	1	1600	1	개	삼양	carrot.png
+196	가쓰오 우동컵	1	2900	1	개	CJ	carrot.png
+197	왕갈비통닭볶음면	1	1500	1	개	삼양	carrot.png
+198	까르보불닭떡볶이	1	3000	1	개	삼양	carrot.png
+199	오뚜기 3분 미트볼 150g	1	990	1	봉	오뚜기	carrot.png
+200	또띠아	225	3000	1	g	이마트	carrot.png
+201	목살	400	11000	1	g	이마트	carrot.png
+202	팔도비빔면 컵	1	1050	1	개	팔도	carrot.png
+203	오뎅 한그릇	1	2500	1	개	삼호	carrot.png
+204	너구리	1	1500	1	개	농심	carrot.png
+205	통단팥호빵	4	4200	1	개	삼립	carrot.png
+206	고추잡채	1	3500	1	개	GS25	carrot.png
+207	신라면 큰사발	1	1400	1	개	농심	carrot.png
+208	햄스빌 베이컨 70g	1	2550	1	개	CJ	carrot.png
+209	오뚜기 콕콕콕 스파게티 120g	1	1000	1	개	오뚜기	carrot.png
+210	자연산 골뱅이 140g	1	4000	1	캔	유동	carrot.png
+211	대개딱지장	1	3500	1	개	GS25	carrot.png
+212	닭날개(아래)	500	6500	1	g	이마트	carrot.png
+213	전분(녹말가루)	350	2800	1	g	이마트	carrot.png
+214	파스타면	400	1280	1	g	이마트	carrot.png
+215	아보카도	2	4000	1	개	이마트	carrot.png
+216	방울토마토	600	4500	1	g	이마트	carrot.png
+217	순두부	350	1800	1	g	이마트	carrot.png
+218	삼각김밥	1	1200	1	개	편의점	carrot.png
+219	종가집 볶음김치 80g	1	1300	1	개	종가집	carrot.png
+220	미니 맛단무지	1	500	1	개	세븐일레븐	carrot.png
+221	오모리 김치찌개라면	1	1500	1	개	GS25	carrot.png
+222	콩이가득두부 300g	1	1300	1	모	종가집	carrot.png
+223	직화구이꼬치파스팸 80g	1	2000	1	개	CJ	carrot.png
+224	짜왕 가바컵밥	1	3000	1	개	오테이스트	carrot.png
+225	아이스 군고구마	1	1500	1	개	GS25	carrot.png
+226	단팥빵 	1	1000	1	개	삼립	carrot.png
+227	투게더 오리지널 바닐라	1	3500	1	개	빙그레	carrot.png
+228	덴마크 드링킹 요구르트 플레인 310ml	1	1800	1	개	덴마크우유	carrot.png
+229	얼음컵	1	500	1	개	편의점	carrot.png
+230	미닛메이드 오렌지 350ml	1	1950	1	개	코카콜라	carrot.png
+231	죠리퐁	1	1500	1	개	크라운	carrot.png
+232	맥심 모카골드커피믹스	1	100	1	개	맥심	carrot.png
+233	크랜베리 340ml	1	2000	1	개	오션스프레이 	carrot.png
+234	스파클링 복숭아 355ml	1	1200	1	개	트로피카나	carrot.png
+235	레모나산	10	2800	1	포	경남	carrot.png
+236	예감(오리지널)	1	1200	1	개	오리온	carrot.png
+237	뭉개뭉계란	1	2600	1	개	GS25	carrot.png
+238	불막창	1	7900	1	개	GS25	carrot.png
+239	컵누들 베트남쌀국수	1	1300	1	개	오뚜기	carrot.png
+240	자이언트 떡볶이	1	2200	1	개	CU	carrot.png
+241	오! 감자	1	1500	1	개	오리온	carrot.png
+242	짜파게티	1	1150	1	개	농심	carrot.png
+243	자이언트 피자	1	2400	1	개	CU	carrot.png
+244	훈제 닭다리	1	3500	1	개	한양	carrot.png
+245	팔도만능비빔장	1	500	1	개	팔도	carrot.png
+246	바삭매콤치킨	1	1900	1	개	CU	carrot.png
+247	파스타 테이블 투움바 파스타	1	1600	1	개	삼양	carrot.png
+248	병아리콩	500	3000	1	g	이마트	carrot.png
+249	카레가루	100	2500	1	g	이마트	carrot.png
+250	부채살(스테이크용)	300	9000	1	g	이마트	carrot.png
+251	통삼겹살	500	10000	1	g	이마트	carrot.png
+252	소시지	500	3000	1	g	이마트	carrot.png
+253	양배추	1	2500	1	개	이마트	carrot.png
+254	감자	1	700	1	개	이마트	carrot.png
+255	소 목심	500	10500	1	g	이마트	carrot.png
+256	소 등심	300	40000	1	g	이마트	carrot.png
+257	아스파라거스	6	5280	1	개	이마트	carrot.png
+258	백종원	0	100	0	10		carrot.png
+259	배추	0	1000	0	1		carrot.png
+\.
+
+
+--
+-- Data for Name: recipick_recipe; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_recipe (id, title, price, thumbnail, duration, description_list, category, rating, likes, created_date, edited, summary, author_id) FROM stdin;
+9	떡볶이	1203	blog/2020/12/04/temp_R7HyYzE.png	30	["설탕3스푼, 고추장2스푼, 간장2스푼, 고춧가루 1.5스푼을 넣고 잘섞어줍니다", "떡볶이를 먹기 좋은 크기로 썰어주세요.", "어묵과 대파도 먹기 좋은 크기로 썰어주세요.", "냄비에 재료들을 넣고, 양념도 넣어줍니다.", "물 두 컵을 넣고 끓여줍니다. "]	["Korean"]	0	0	2020-12-04	\N	백종원 떡볶이 황금레시피.\n출처: https://brunch.co.kr/@ssuujin/10	15
+10	만두국ㄷ	1049	blog/2020/12/08/temp.png	30	["냄비에 물을 받아 국간장과 다진 마늘을 넣고 끓여줍니다. 물 대신 육수를 넣어도 좋습니다.", "떡을 넣고 끓이고, 만두도 넣어줍니다. ", "만두가 익으면 몇개는 터트려 육수가 우러나오게 합니다. \\n계란을 넣고, 대파와 참기름을 넣어 감칠맛을 더해줍니다. 완성!"]	["Korean"]	0	0	2020-12-04	\N	육수없이 끓이는 초간단 만두국\n출처: https://ddongri.tistory.com/120	15
+4	떡국	3840	blog/2020/12/03/temp_DPaf0ty.png	45	["우선 떡은 물에 불려서 준비합니다대략 20~30분 정도 불려주면 좋은데 만들기 전에 가장 먼저 물에 넣어서 불려주면 됩니다 ", "대파는 먹기 좋은 크기로 잘라서 준비합니다!!대파의 양은 적당량이긴 한데 한 줌 정도 잘라서 준비하면 될 것 같아요 ", "특이하게 백종원소고기 떡국 끓이는법에서는 참기름 외에 비법의 기름이 들어가는데 바로 식용유랍니다\\n식용유 1스푼, 참기름 한스푼을 넣어서 고기랑 같이 볶아줍니다.", "이제 물을 넣어줘야 하는데요물의 양은 떡국 양의 3배 정도~ 너무 많지도 적지도 않게 넣어주시면 될 것 같아요. \\n약불로 20-30분 끓여주세요!", "떡을 넣고 난 뒤 강불로 해서 끓여줍니다 떡을 불려서 그런지 오래 끓이지 않고도 빨리 익기 시작했어요.\\n간은 국간장 2스푼을 넣고 줍니다그리고 다진 마늘 1스푼을 넣어줍니다 ", "마지막으로 계란과 대파를 넣고 후추를 2번 톡톡 뿌려줍니다"]	["Korean"]	0	0	2020-12-04	\N	백종원의 떡국 레시피.\n출처: https://brunch.co.kr/@ssuujin/31	15
+1	카레라면	704360	blog/2020/12/03/temp.png	3	["끓여~", "또 끓여~"]	["Korean"]	0	1	2020-12-03	\N	맛잇어요	11
+17	냉동만두 볶음밥	1519	blog/2020/12/04/temp_lZquTZp.png	20	["계란은 풀고, 만두는 피와 속을 분리했어요 \\n식용유  두른 팬에 한쪽엔 대파와 다른 한쪽엔 계란을 넣고 계란은 스크램플해요 ", "팬에 만두속과, 밥을 넣고 볶아요. 굴소스와 간장, 참기름도 넣습니다. "]	["Korean"]	0	0	2020-12-04	\N	볶음밥레시피. 냉동만두를 이용한 초간단 만두볶음밥 만들기\n\n\n출처: https://happytime.tanz.xyz/entry/볶음밥레시피-냉동만두를-이용한-초간단-만두볶음밥-만들기 [우리들의 행복한 시간]	15
+19	두부조림	3340	blog/2020/12/04/temp_z1EWTSz.png	15	["팬에 식용유를 넉넉하게 둘러주고 두부를 구워줍니다.", "양념에 들어갈 파는 잘게 썰어서 준비합니다. 저는 대파를 잘게 썰어서 준비했어요.\\n홍고추 1개, 청고추 1개를 잘게 썰어서 준비합니다.", "양파는 반개를 썰어서 준비합니다. 김수미 두부조림은 특이한 점이 있다면 양념에 양파를 넣는 것이 아니라 양파만 살짝 익혀서 나중에 두부조림 위에 올려주는 것이 특징이랍니다, 양파의 아삭함을 느낄 수 있어서 개인적으로 맛있는 것 같아요!"]	["Korean"]	0	0	2020-12-04	\N	수미네반찬 두부조림 황금레시피!	15
+27	메추리알 장조림	3000	blog/2020/12/04/temp_H8cAkEw.png	30	["메추리알을 삶아줍니다. ", "메추리알을 까줍니다. ", "메추리알을 조립니다. "]	["Korean"]	0	0	2020-12-04	\N	메추리알 쉽게 까는법 : 새송이버섯 메추리알 장조림\n출처: https://brunch.co.kr/@ssuujin/75	15
+20	고구마 맛탕	1020	blog/2020/12/04/temp_9l8Lwya.png	25	["먹기 좋은 크기로 잘라주는데요. 이렇게 아래의 사진처럼 동글동글하면서 한 입 크기로 잘라줍니다.\\n바로 튀겨도 되지만 전분기를 빼려고 찬물에 10분 정도 담가주었어요. 그럼 튀겼을 때 더욱더 바삭한 것 같아요 :)\\n커다란 팬에 종이컵으로 2컵 정도의 기름을 넣고 고구마를 넣고 튀겨줍니다. 기름은 좀 더 줄여도 상관없을 것 같아요", ". \\n이제 고구마맛탕 만들기의 마지막 소스와 함께 버무려줘야겠죠? 우선 팬에 식용유 1스푼을 넣어줍니다. 그다음 올리고당 3스푼과 설탕도 넣어줍니다.", "소스와 고구마가 잘 어우러지도록 잘 저어줍니다. 코팅이 되어서 그런지 반질반질 된 모습이 보이죠?"]	["Korean"]	0	0	2020-12-04	\N	고구마 요리 고구마 맛탕 쉽게 만들기\nhttps://brunch.co.kr/@ssuujin/63	15
+23	오뎅볶음	2392	blog/2020/12/04/temp_pHSdNOT.png	30	[" 재료는 비교적 간단해요 어묵이랑 그리고 야채는 당근, 양파, 대파 양념은 집에 있는 재료로 이용하면 될 것 같습니다. "]	["Korean"]	0	0	2020-12-04	\N	백종원 오뎅볶음 간단하게 만드는 어묵볶음 황금레시피	15
+21	라볶이	2418	blog/2020/12/04/temp_HeXMnfI.png	20	["라면과 떡, 어묵, 양파, 대파를 제외한 모든 양념들을 섞어 양념장을 만듭니다.", "냄비에 양념장과 물을 넣어 끓이고 나머지 재료를 넣습니다. "]	["Korean"]	0	0	2020-12-04	\N	백종원 라볶이\n출처: https://brunch.co.kr/@ssuujin/73	15
+22	마약계란	2500	blog/2020/12/04/temp_LuegQPD.png	60	["계란을 삶아요.", "양념장을 만들어요.", "볼에 넣어요."]	["Korean"]	0	0	2020-12-04	\N	마약계란 만들기, 계란 반숙 삶는법 알려드려요!\n출처: https://brunch.co.kr/@ssuujin/68	15
+24	서리태 볶음	5000	blog/2020/12/04/temp_rdJ9iP1.png	120	["검은콩을 물에 뿔립니다. ", "에어프라이기를 180분 동안 돌립니다. "]	["Korean"]	0	0	2020-12-04	\N	에어프라이어 검은콩, 서리태 볶기\n출처: https://brunch.co.kr/@ssuujin/74	15
+30	감자조림	3000	blog/2020/12/04/temp_Jr6Ojyi.png	60	["감자를 썰고, 간장과 물을 섞은 뒤 냄비에 다 넣어 끓여줍니다. ", "고추를 넣고 물이 없어질때까지 조립니다. "]	["Korean"]	0	0	2020-12-04	\N	김수미 수미네반찬 감자조림 맛있게 만드는법\n출처: https://brunch.co.kr/@ssuujin/50	15
+25	전복죽	1990	blog/2020/12/04/temp_M947qqF.png	50	["아래의 재료들을 통해 전복죽을 만듭니다. "]	["Korean"]	0	0	2020-12-04	\N	백종원 전복죽 맛있게 끓이는 방법, 황금레시피\n출처: https://brunch.co.kr/@ssuujin/61	15
+28	간장국수	1000	blog/2020/12/04/temp_U99LMea.png	15	["간장과 깨, 참기름을 넣고 섞어줍니다. ", "소면을 삶아줍니다. ", "야채와 함께 다 섞어줍니다. "]	["Korean"]	0	0	2020-12-04	\N	박막례 할머니 간장국수 레시피 맛있자나~\n출처: https://brunch.co.kr/@ssuujin/60	15
+26	건새우볶음	5000	blog/2020/12/04/temp_Fo9Epsa.png	30	["양념들을 다 넣었으면 잘 섞어서 준비해줍니다.", "건새우를 양념과 볶아줍니다. "]	["Korean"]	0	0	2020-12-04	\N	백종원 건새우볶음 만드는방법 간단해요\n출처: https://brunch.co.kr/@ssuujin/80	15
+33	미숫가루	6000	blog/2020/12/04/temp_C63CQRP.png	5	["재료를 준비합니다. ", "다 섞어줍니다. "]	["Korean"]	0	0	2020-12-05	\N	미숫가루 맛있게 먹는법 황금비율, 보관법 알아보기\n출처: https://brunch.co.kr/@ssuujin/51	15
+29	김치 볶음밥	980	blog/2020/12/04/temp_5okcWLx.png	15	["파와 김치를 볶아줍니다. ", "볶아준것에 밥을 함께 섞어줍니다. "]	["Korean"]	0	0	2020-12-04	\N	백종원 강식당 김치밥 레시피 너무 쉽고 맛있어요\n출처: https://brunch.co.kr/@ssuujin/43	15
+32	김치전	3000	blog/2020/12/04/temp_PgIse73.png	15	["김치를 잘라서 준비하고 나머지 재료도 준비합니다. ", "다 섞어줍니다. ", "식용유를 두르고 부칩니다. "]	["Korean"]	0	0	2020-12-05	\N	백종원 김치전 맛있게 하는 법, 김치부침개\n출처: https://brunch.co.kr/@ssuujin/47	15
+31	묵은지등갈비찜	3100	blog/2020/12/04/temp_e6VeDVW.png	120	["양념장을 만듭니다. ", "고기를 제웁니다. ", "김치와 함께 물을 조금 넣어 끓입니다. 요정들이 와서 맛있게 해줄거에여^^"]	["Korean"]	0	0	2020-12-04	\N	수미네반찬 김수미 묵은지등갈비찜 레시피\n출처: https://brunch.co.kr/@ssuujin/35	15
+34	계란찜	900	blog/2020/12/04/temp_H8ffM2V.png	10	["계란을 꺠고 물과 함께 섞어줍니다. ", "매우 잘 섞고, 대파 송송", "전자레인지 5분 돌립니다. "]	["Korean"]	0	0	2020-12-05	\N	초보자도 쉽게 만드는 전자레인지 계란찜\n출처: https://brunch.co.kr/@ssuujin/23	15
+35	콘치즈	4300	blog/2020/12/04/temp_VKIl7DO.png	10	["콘과 파프리카를 준비합니다. ", "마요네즈와 치즈를 섞습니다. \\n전자레인지에 5분 돌립니다. "]	["Korean"]	0	0	2020-12-05	\N	맥주안주 전자렌지 콘치즈 만들기\n출처: https://brunch.co.kr/@ssuujin/22	15
+36	소고기뭇국	2500	blog/2020/12/04/temp_pi2wPAb.png	30	["소고기를 참기름과 넣고 볶습니다. \\n조금 뒤에 무를 넣어 볶습니다. ", "물을 넣어줍니다.\\n간을 위해 간장과 소금, 다진마늘을 넣습니다."]	["Korean"]	0	0	2020-12-05	\N	백종원 소고기뭇국 황금레시피\n출처: https://brunch.co.kr/@ssuujin/28	15
+37	무생채	1000	blog/2020/12/04/temp_xXxFXFU.png	15	["무를 썰어줍니다.", "고추가루, 소금, 간장, 다진마늘과 버무려줍니다.", "다 버무린 후, 대파를 넣습니다."]	["Korean"]	0	0	2020-12-05	\N	백종원 무생채 황금레시피\n출처: https://brunch.co.kr/@ssuujin/29	15
+38	연근조림	2000	blog/2020/12/04/temp_m6uqfHu.png	40	["연근을 썰어줍니다.", "간장과 설틍과 물을 넣고 20분간 조립니다."]	["Korean"]	0	0	2020-12-05	\N	해바라기씨가 들어간 색다른  만물상 연근조림\n출처: https://brunch.co.kr/@ssuujin/26	15
+44	옥수수 삶기	1000	blog/2020/12/04/temp_RrhoZou.png	10	["랩에 싸서 전자레인지에 7분 돌립니다."]	["Korean"]	0	0	2020-12-05	\N	초당 옥수수 삶는법 : 전자렌지 옥수수 삶기\n출처: https://brunch.co.kr/@ssuujin/45	15
+39	호박볶음	1500	blog/2020/12/04/temp_MNnGSw8.png	15	["호박을 썰어 냄비에 물 약간과 함께 끓여줍니다. ", "고추가루, 액젓, 소금, 간장, 깨를 넣고 쫄여줍니다."]	["Korean"]	0	0	2020-12-05	\N	수미네반찬 레시피 새우젓 호박볶음\n출처: https://brunch.co.kr/@ssuujin/25	15
+40	감자짜글이	3600	blog/2020/12/04/temp_Viuz2Ao.png	20	["양념들을 섞어 양념장을 만들어줍니다.", "재료를 준비해줍니다.", "스펨도 으깨줍니다.", "다 섞어 물과 함께 끓여줍니다."]	["Korean"]	0	0	2020-12-05	\N	추운날 국물이 생각날때 백종원 감자짜글이\n출처:https://brunch.co.kr/@ssuujin/21	15
+48	미역줄기볶음	800	blog/2020/12/04/temp_8FMABKU.png	15	["미역을 불려준 다음에 다진마늘에 볶아줍니다.", "다른 야채도 넣고 양념을 넣어 간을 합니다."]	["Korean"]	0	0	2020-12-05	\N	비린내없이 미역줄기볶음 만드는법\n출처: https://brunch.co.kr/@ssuujin/18	15
+41	미역국	1600	blog/2020/12/04/temp_4fxFvah.png	30	["소고기를 넣고 볶습니다.", "미역도 볶아요.", "물을 넣고 끓여요."]	["Korean"]	0	0	2020-12-05	\N	소고기를 넣은 미역국 맛있게 만드는팁\n출처: https://brunch.co.kr/@ssuujin/7	15
+45	가지볶음	1300	blog/2020/12/04/temp_AJz43fl.png	20	["가지와 양파, 파를 손질해서 살짝 볶아줍니다.", "양념을 넣고 볶아줍니다.", "다 볶으면 참기름과 깨를 넣습니다."]	["Korean"]	0	0	2020-12-05	\N	백종원 가지볶음 황금레시피 간단해요\n출처: https://brunch.co.kr/@ssuujin/44	15
+42	고추장찌개	1031	blog/2020/12/04/temp_cTRbbBB.png	20	["재료를 준비해줍니다.", "다 넣고 양념을 넣고 볶습니다.", "물을 넣고 다 끓입니다."]	["Korean"]	0	0	2020-12-05	\N	국물요리 백종원 고추장찌개 만드는법\n출처: 	15
+43	단호박 에그슬럿	1300	blog/2020/12/04/temp_q29slkb.png	20	["단호박을 아래의 그림처럼 잘라줍니다.", "계란을 넣습니다.", "치즈로 덮습니다."]	["Korean"]	0	0	2020-12-05	\N	SNS에서 난리난 단호박 에그슬럿 밤호박으로 만들어요!\n출처: 	15
+46	멸치볶음	7163	blog/2020/12/04/temp_pkvf7Cw.png	10	["고추를 잘라 소금에 절입니다 (일주일)", "양념을 넣고 고추청을 팬에 넣습니다.", "멸치를 넣고 볶아요."]	["Korean"]	0	0	2020-12-05	\N	만물상 김가연 멸치볶음 맛있게 만드는법, 고추청 만들기\n출처: https://brunch.co.kr/@ssuujin/34	15
+51	마약토스트	380	blog/2020/12/04/temp_9LHLCxg.png	15	["식빵에 마요네즈를 짜고 그 안에 계란을 넣습니다.", "오븐/전자레인지에 넣습니다."]	["Korean"]	0	0	2020-12-05	\N	SNS 인기인 마약토스트 만들기\n출처: https://brunch.co.kr/@ssuujin/4	15
+47	어묵볶음	2578	blog/2020/12/04/temp_zL0YtAv.png	30	["어묵과 다진마늘을 볶습니다.", "간장을 넣고 나머지 양념도 넣습니다.", "나머지 채소도 넣습니다."]	["Korean"]	0	0	2020-12-05	\N	백종원 어묵볶음 맛있게 만드는법, 오뎅볶음 황금레시피\n출처: https://brunch.co.kr/@ssuujin/24	15
+49	가지볶음	1500	blog/2020/12/04/temp_a6RR2e1.png	20	["가지를 소금에 절입니다.", "그 동안 양념장을 만듭니다.", "양파랑 가지를 볶기 시작하고 양념을 넣고 파프리카를 넣습니다."]	["Korean"]	0	0	2020-12-05	\N	가지볶음 하는법 어렵지 않아요\n출처: https://brunch.co.kr/@ssuujin/16	15
+50	오이볶음	1500	blog/2020/12/04/temp_yIwfjt4.png	25	["오이를 소금에 절입니다. ", "물기를 짜주고 다른 재료들을 넣고 섞어줍니다. "]	["Korean"]	0	0	2020-12-05	\N	간단반찬 맛있는 오이볶음 만들기\n출처: 	15
+52	콩나물찌개	3500	blog/2020/12/04/temp_vs8dw5i.png	20	["파를 볶고 고기도 볶습니다.", "양념을 넣습니다.", "콩나물을 넣고 물을 넣고 끓입니다."]	["Korean"]	0	0	2020-12-05	\N	출처: https://greensnakediary.tistory.com/12	15
+54	제육볶음	3063	blog/2020/12/04/temp_3o1xQmN.png	25	["고기를 볶다가 대파를 넣어줍니다.", "양념을 넣습니다.", "야채를 넣고 볶스비다."]	["Korean"]	0	0	2020-12-05	\N	https://greensnakediary.tistory.com/281	15
+55	계란찜	0	blog/2020/12/04/temp_iMRa4E9.png	15	["계란을 풀고 소금을 넣어줍니다.", "약불에 올려놓고 간혹 섞어줍니다."]	["Korean"]	0	2	2020-12-05	\N	https://greensnakediary.tistory.com/9	15
+56	닭볶음탕	4000	blog/2020/12/04/temp_75Hum9D.png	60	["닭을 삶는다.", "다진마늘과 야채들을 넣고 끓여준다.", "양념을 넣고 졸인다."]	["Korean"]	0	0	2020-12-05	\N	https://greensnakediary.tistory.com/203	15
+57	칠리새우	6580	blog/2020/12/04/temp_6i0sNc9.png	15	["재료를 손질합니다.", "양념장을 만듭니다.", "다 볶아줍니다."]	["Korean"]	0	0	2020-12-05	\N	출처: https://blog.naver.com/cutesiwoo/221136640185	15
+58	콩나물밥	3000	blog/2020/12/04/temp_qQ58X8X.png	10	["양념장을 만들어줍니다.", "콩나물을 삶아요.", "밥 위에 콩나물을 얹어요."]	["Korean"]	0	0	2020-12-05	\N	https://blog.naver.com/cutesiwoo/220650941514	15
+59	통새우 볶음밥	2000	blog/2020/12/04/temp_YrUEM2N.png	10	["봉지를 뜯고,", "볶아줍니다 ^^"]	["Korean"]	0	0	2020-12-05	\N	https://m.blog.naver.com/PostView.nhn?blogId=jstory22&logNo=221133996089&proxyReferer=https:%2F%2Fwww.google.com%2F	15
+69	닭가슴살 볶음밥 그라탕	4560	blog/2020/12/06/temp_9gcOj72.png	15	["닭가슴살, 양파, 새송이버섯, 파프리카를 먹기 좋은 크기로 잘라서 준비해주세요.", "그다음 새송이버섯, 파프리카를 넣어 함께 볶아주세요.", "그리고 토마토스파게티소스를 3스푼 넣어주세요. 혹시 토마토스파게티소스가 없으면 케찹을 넣으셔도 상관없어요.", "밥을 넣어주세요. 그리고 버터도 조금 넣어 함께 볶아주심 볶음밥이 감칠맛이 나면서 더욱 맛있답니다.", "완성된 닭가슴살 볶음밥을 그릇에 담고 모짜렐라 치즈를 듬뿍 올려 오븐이나 전자렌지를 이용해 치즈를 녹여주심 된답니다. 전 전자렌지를 사용했어요 3분정도 돌렸네요. 집집마다 틀리니깐 전자렌지 사용시 중간 중간 체크해 주세요."]	["American"]	0	0	2020-12-07	\N	담백하고 고소한 치킨 그라탕이랍니다. 출처: https://www.10000recipe.com/recipe/6842996	14
+60	돈까스	4880	blog/2020/12/04/temp_qOkNq8q.png	10	["돈까스를 튀겨줍니다 ^^"]	["Korean"]	0	0	2020-12-05	\N	https://womentravellers.tistory.com/122	15
+61	김치볶음밥	0	blog/2020/12/04/temp_zzhKb1g.png	15	["김치를볶아줍니다.", "밥을 넣고 고추가루를 넣습니다."]	["Korean"]	0	0	2020-12-05	\N	http://college.koreadaily.com/%ED%95%9C%EC%8B%9D%EC%9D%B4-%EA%B7%B8%EB%A6%AC%EC%9A%B8-%EB%95%8C-%EC%9E%90%EC%B7%A8%EC%83%9D-%EA%B0%84%EB%8B%A8-%EB%A0%88%EC%8B%9C%ED%94%BC-5%EA%B0%80%EC%A7%80/	15
+62	스펨큐브덮밥	3000	blog/2020/12/04/temp_7oOtU3u.png	15	["계란을 풀고 대파와 양파를 썰어줍니다.", "스펨을 볶고 양파도 볶고 계란을 넣고 파를 넣어줍니다.\\n밥 위에 올립니다."]	["Korean"]	0	0	2020-12-05	\N	https://krtiptiptip.tistory.com/1402	15
+68	도미노 포테이토피자 토스트	5660	blog/2020/12/06/temp.png	20	["감자는 껍질째 깨끗하게 씻은 뒤 웨지 모양으로 자른다.", "에어프라이어 바스켓에 종이호일을 깔고, 식빵을 얹은 뒤 케첩을 바르고 양파를 올린다.", "감자와 베이컨도 올린다.마요네즈를 두른 뒤 예열을 하지 않은 에어프라이어에 180도로 10분 돌리면 완성!"]	["American"]	0	0	2020-12-07	\N	저는 피자 중에서 포테이토피자를 가장 좋아하는데요.\n특히 마요네즈가 듬뿍 올라간 도미노피자의 포테이토피자를 가장 좋아한답니다. 출처: https://www.10000recipe.com/recipe/6935427	14
+63	두부덮밥	3200	blog/2020/12/04/temp_1p1B28O.png	25	["두부를 구워줍니다.", "야채를 볶아줍니다.", "둘 다 섞고 양념을 넣습니다. \\n밥 위에 올립니다."]	["Korean"]	0	0	2020-12-05	\N	https://momostrip.tistory.com/362	15
+66	감자구이 오믈렛	9490	blog/2020/12/05/temp_aSfm3na.png	15	["감자는 0.2cm 정도의 두께로 통썰기 합니다.", "감자는 여러번 물에 헹군 다음 달구어진 팬에 기름을 두르고 감자를 넣고 앞, 뒤 노릇노릇하게 굽습니다.", "그 다음 구워 두었던 감자를 놓고 달걀물을 마저 부은 다음 뚜껑 닫고 약불에서 천천히 익힙니다. 다 익어갈때쯤 모짜렐라치즈와 슬라이스치즈를 뿌립니다."]	["American"]	0	0	2020-12-06	\N	이색적인 브런치 감자구이 오믈렛입니다. 출처: https://www.10000recipe.com/recipe/3874774	14
+64	양파덮밥	500	blog/2020/12/04/temp_ABBzXTu.png	15	["양파와 양념을 졸입니다.", "파를 넣고 계란을 넣고 끌여줍니다."]	["Korean"]	0	0	2020-12-05	\N	https://blog.naver.com/rltjru/221133602907	15
+70	소고기 찹스테이크	3800	blog/2020/12/06/temp_wiCyqRX.png	15	["소고기는 키친타올을 이용해 핏물을 제거해주세요\\n그리고 올리브유1, 허브솔트, 맛술1을 넣고 밑간을 해주세요", "그리고 야채도 다듬어 양파와 버섯을 깍둑모양으로,\\n마늘은 편으로 썰어주세요", "고기의 겉면이 익으면 야채를 넣고 볶아주세요"]	["American"]	0	0	2020-12-07	\N	아이들도 좋아하고 술안주로도, 홈파티메뉴로도 딱~좋은 찹스테이크에요. 출처: https://www.10000recipe.com/recipe/6864725	14
+65	크림소스 치킨 스테이크	2480	blog/2020/12/05/temp.png	30	["버터를 녹인 후라이팬에 양파를 볶아주세요", "다른 후라이팬에 올리브유를 두르고 닭가슴살을 앞뒤로 구워주세요", "접시에 닭가슴살을 담고 소스를 올리고 파슬리를 뿌려주면 완성"]	["American"]	0	1	2020-12-06	\N	영화속요리 10탄 줄리앤줄리아 속 크림소스 치킨스테이크 출처: https://brunch.co.kr/@ssuujin/24	14
+71	빠에야	12070	blog/2020/12/06/temp_bZP7pvu.png	60	["널찍한 팬에 올리브오일을 듬뿍 넣고 오징어와 새우를 먼저 익혀요\\n다 익은 오징어와 새우는 따로 덜어둡니다", "불리지 않은 생쌀(씻기만 하세요)을 넣고 살짝 볶아요", "육수를 넣고 5분 정도 끓입니다\\n팬을 흔들어서 쌀을 골고루 펼쳐주고 이제부터는 쌀을 건드리지마세요\\n샤프론이 있다면 지금 넣으세요(안넣어도 상관없어요)", "해산물을 위에 올리고 약불에 15분 정도 더 익힙니다"]	["American"]	0	0	2020-12-07	\N	닭이나 토끼, 오리, 달팽이와 채소들로 만드는게 발렌시아식 정통 빠에야입니다\n근데 발렌시아식 보다 더 널리 알려진건 해물빠에야지요. 출처: https://www.10000recipe.com/recipe/6938217	14
+67	라구파스타	500	blog/2020/12/05/temp_r6Ev1bn.png	20	["냄비에 올리브오일 (그냥 오일도 가능) 적당량 넣어주시고~", "다짐육들 투하! 둘 다없으면 베이컨이랑 소고기도 가능하고 소고기만 해도 되고 돼지고기만 넣으셔도 됩니다 ㅎㅎ", "볶아주세요", "익히면서 다 삶은 면을 넣고\\t\\n섞어주시면 끝!"]	["American"]	0	1	2020-12-06	\N	사람들이 잘 모르는 라구파스타입니다!! 출처: https://www.10000recipe.com/recipe/6937461	14
+72	가지 라자냐	2590	blog/2020/12/06/temp_GVIdIrQ.png	10	["전자렌지 가능한 용기에 가지를 얇게 깔아 줍니다. 가지를 구워서 사용하기도 하지만 가지 두께가 얇게 때문에 굽지 않아도 괜찮더라구요", "마지막 윗면 피자치즈는 본인 기호대로 풍성하게 뿌려주세요. 이 상태로 랩을 씌워 5-6분 돌려주시되 한번에 다 돌리지 마시고 2분씩 끊어 돌려주시면 됩니다.", "전자렌지 가지 라자냐가 완성되었어요. 냄새가 너무 맛있게 나는데요."]	["American"]	0	0	2020-12-07	\N	가지를 싫어하는 사람도 반할만한 전자렌지 가지 라자냐 초간단 레시피를 소개하겠습니다^^ 출처: https://www.10000recipe.com/recipe/6911891	14
+73	리코타치즈 시금치탑	12080	blog/2020/12/06/temp_xdRIwVl.png	30	["후라이팬에 올리브유를 두르고 소금 약간, 후추 약간으로 간을 한 뒤 시금치를 센 불에서 볶아줍니다.", "남은 우유소스에는 슬라이스 치즈 한장을 넣고 녹을 때 까지 끓여줍니다.", "걷어낸 시금치를 반 정도 쌓아주고", "그 위에 리코타치즈를 쌓아줍니다. 한번 더 반복합니다.", "흐트러지지 않게 조심스럽게 종이컵을 제거합니다."]	["American"]	0	0	2020-12-07	\N	어느 지중해요리 레시피를 보면서 만들어 본 시금치 요리입니다. 고급진 재료를 제하고 저희 집 냉장고 재료로 만들어본 요리입니다. 출처: https://www.10000recipe.com/recipe/6881749	14
+77	만두소 짜장라면	3500	blog/2020/12/06/temp_Dkba0jx.png	20	["만두의 속을 발라주고, 대파, 양파를 네모나게 썰어준다.", "짜장라면 1개를 끓여, 면수와 면을 분리해준다.", "식용유를 약간 붓고, 대파와 양파를 넣어 살짝 볶아준다.", "만두소, 짜장스프를 넣고 볶아준다. 면수를 중간중간 넣어준다.", "라면을 넣고 마저 볶아준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	만두소를 넣어 더 풍요로워진 짜장라면	14
+74	프랑스식 가자미 구이	7700	blog/2020/12/06/temp_FqpGWEa.png	20	["가자미에 밀가루 옷을 입혀요.\\n밀가루 옷이 얇아야하니 마지막에 조심스레 털어주세요.", "강불에 식용유 40ml + 버터40g을 녹여주세요.\\n버터가 녹으며 거품이 생기고 골드컬러로 변하면 가자미를 살부분부터 익혀주세요.\\n1~2분이면 되어요.", "스파출라로 냄비 바닥을 긁어주면서 녹이면 되어요.\\n녹이면 서서히 버터의 찌꺼기가 보일텐데요,\\n찌꺼기가 갈색이 되면 체에 거르세요.\\n향이 정말로 좋답니다!", "레몬즙을 뿌려뒀던 가자미 위에\\n헤이즐넛 향이 나는 갈색 버터 소스를 뿌리고,\\n다진 파슬리를 솔솔 뿌려주세요.\\n예쁘게 레몬을 올려주면 더 좋아요. 맛있게 드세요! 본아뻬띠!"]	["American"]	0	0	2020-12-07	\N	흰살생선이 너무 먹고 싶어 장을 보러 갔다가 맛좋은 가자미를 사왔어요.\n부드러운 가자미, 프랑스식으로 구워보세요 ^^ 출처: https://www.10000recipe.com/recipe/6936951	14
+75	소세지김치컵밥	7200	blog/2020/12/06/temp_rv9Ea1c.png	10	["진간장, 설탕, 케탑, 고추장을 섞어 양념을 만든다.", "계란 프라이 1개를 준비한다.", "소시지바와 스트링치즈를 적당한 크기로 잘라주고,\\n김치, 소시지바, 스트링치즈를 밥 위에 얹어준다.", "전자레인지에 밥을 2분 동안 돌려준 후, 준비한 계란프라이 1개를 위에 얹어준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	편의점 음식으로 집에서 간단하게 즐길 수 있는 컵밥!	14
+76	까르보짬뽕	1690	blog/2020/12/06/temp_nxdLAK7.png	15	["준비된 짬뽕라면의 면을 반만 익혀준다.", "프라이팬에 짬뽕라면 향미유에 얇게 썬 양파와 마늘을 볶아준다.", "볶아준 양파와 마늘에 우유, 슬라이스 치즈 1장을 넣어준 후 끓인다.", "짬뽕라면과 청양고추를 넣고 마저 익혀준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	우유와 치즈로 까르보 맛을 담은 짬뽕	14
+79	치킨김치볶음밥	5600	blog/2020/12/06/temp_Sxwo8Vb.png	15	["치킨 1개를 잘게 자른다.", "김치 1봉과 송송 썬 대파 1/4대를 식용유에 볶아준다.", "치킨, 고추장 1스푼, 후추를 넣고 볶아준다.", "밥을 넣고 볶아준다.\\n기호에 따라 김가루, 계란을 추가한다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	무난하고 간편하게 먹을 수 있는 편의점표 치킨김치볶음밥	14
+78	불닭카레떡볶이	7790	blog/2020/12/06/temp_gQSxwR5.png	10	["불닭떡볶이 1개를 조리해준다.", "카레라면 1개를 조리해준다.", "불닭떡볶이에 카레라면을 부어 섞어준다.", "소세지바 1개, 슬라이스 치즈 1개를 넣고 전자레인지에 1분간 돌린다.\\n기호에 따라 조리 후 삶은 계란 1개를 추가할 수 있다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	불닭떡볶이와 카레라면의 색다른 만남	14
+80	아란치니	8164	blog/2020/12/06/temp_SMgvgZm.png	30	["기름을 두른 팬에 버터를 녹인 후 앞서 준비한 재료를 넣고 볶아줍니다.", "양파가 투명해지면 밥을 넣고 골고루 섞어줍니다.\\n이때 소금과 후추를 넣는데 나중에 튀김옷을 입히므로 간을 쎄게 해야 맛의 균형이 맞아요! :)", "2번에 걸쳐 아란치니를 튀겨줍니다.\\n1차는 약불에서 오랫동안 안까지 익혀주는 느낌으로!"]	["Western"]	0	0	2020-12-07	\N	아란치니는 정해져있는 레시피가 따로 없기 때문에\n한번 배워놓으면 다양하게 응용가능한 재치만점의 요리랍니다 ! 출처: https://www.10000recipe.com/recipe/6877392	18
+81	참치치즈크래커	5281	blog/2020/12/06/temp_EQ2xE3H.png	5	["치즈 2장을 1/4크기로 자른다.", "아이비에 마요네즈를 약간 바르고, 위에 치즈를 올린 후 전자레인지에 30초 돌려준다.\\n", "전자레인지에 다 돌렸으면 위에 참치를 올려주고, 다진 쪽파를 고명으로 약간 올려준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	색다른 조합이지만 맛 하나는 보장하는 참치치즈크래커	14
+136	아이스 단팥빵	4500	blog/2020/12/07/temp_QYcD4YS.png	10	["단팥빵 속살이 보이도록 옆으로 갈라준 후, 20초 돌려준다", "차가운 바닐라 아이스크림을 팥 위에 올린다.", "이제 아이스 단팥빵을 맛있게 먹으면 된다."]	["Dessert", "ConvenienceStore"]	0	0	2020-12-07	\N		14
+121	라면 오일 파스타	3950	blog/2020/12/06/temp_UbKTHGc.png	20	["라면의 면을 반만 익혀준다.", "마늘, 양파, 베이컨을 썬 후, 마늘과 양파를 볶아주다가 노릇해지면 베이컨 놓고 다시 볶아준다.", "베이컨이 다 익으면 익힌 면과 라면스프를 넣고 같이 볶는다.", "다 익으면 음식을 접시에 담는다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	파스타로 변장한 라면	14
+82	프리타타	1334	blog/2020/12/06/temp_PF1ryLc.png	30	["그릇에 계란5개를 잘 풀어준 다음, 파마산치즈가루 1스푼을 넣어서 섞어줍니다.", "양파, 당근, 소시지, 대파도 조금씩 썰어서 준비하구요~ (소시지 안에 하얀건 치즈 들어있는 소시지라 그래요^^)", "프라이팬에 약간의 식용유를 넣은 후 당근, 양파, 소시지를 먼저 넣어서 볶아주기 시작합니다.", "여기에 미리 만들어 놓은 계란물을 부어줍니다."]	["Western"]	0	0	2020-12-07	\N	화려한 브런치 부럽지 않게 더 알차고 영양만점인 프리타타!!\n만들어 볼까요^^ 출처: https://www.10000recipe.com/recipe/6844674	18
+85	사리곰탕떡만둣국	6150	blog/2020/12/06/temp_wkuGBgs.png	15	["달걀 1개의 노른자 흰자를 나눠 지단을 부친다.", "사리곰탕 스프와 면사리, 쌀떡국 스프와 떡사리를 같이 넣고 끓인다.\\n기호에 따라중간에 편의점 만두를 넣어준다.\\n", "고명으로 1에서 만든 계란지단, 원형으로 얇게 썬 대파, 김가루 등을 위에 얹어준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	간편하게 준비할 수 있는 편의점표 사리곰탕떡문둣국	14
+83	대만 샌드위치	2761	blog/2020/12/06/temp_ad67PrZ.png	20	["슬라이스햄 2장을 조리한다.", "달걀 2개에 소금을 약간 넣어준 후, 흰자와 노른자가 구별되지 않게 섞어준다.\\n체에 걸러 알끈을 제거한 후, 인덕션에 조리해서 계란 슬라이스를 만들어준다.", "버터 3숟가락과 연유 2숟가락을 섞어준다.", "식빵 2장의 한 면에 마요네즈를 발라준다.", "(4) 위에 계란 슬라이스를 올려주고, 그 위에 (3)을 발라준다.", "나머지 식빵 두 장을 덮어준 후, 그 위에 (3)을 또 발라준다.", "식빵 한 쪽에는 슬라이스 치즈 2장, 다른 쪽에는 슬라이스 햄 2장을 올려준후 합친다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	대만식 샌드위치를 직접 만들어 먹어보세요	14
+88	스카치에그	6300	blog/2020/12/06/temp_wA1cCpz.png	15	["돼지고기를 적당히 떼어내서 얇게 펴줍니다", "사라락 감싸서 슬슬 여며주세요 갈은 돼지고기라서 잘 붙어요~^^", "계란옷 입혀주고", "식용유는 빵가루나 나무젓가락 넣어 기포가 뽀르르~ 올라오면 재료를 넣고 노릇 노릇 튀겨주세요"]	["Western"]	0	0	2020-12-07	\N	스카치에그는 소세지나 갈은 돼지고기로\n달걀을 감싸 밀가루와 계란물 빵가루를 묻혀\n튀겨낸 영국 간식이래요~ 출처: https://www.10000recipe.com/recipe/6835328	18
+86	수플레 오믈렛	1050	blog/2020/12/06/temp_Y5v4lZi.png	15	["달궈진 (약불)에 식용유 약간 넣고 골고루 코팅 하고 노른자를 넣고 둥근 모양을 만들고 위에 흰자 거품 올리고 편편히 편 후 뚜껑 덮고 꺼질락 말락 하는 정도의 불에 놓고 4~5분간 익힌다", "4분 후 버터를 가장 자리에 넣고 버터가 아래에 스며 들도록 하고", "반으로 접은 수플레 오믈렛"]	["Western"]	0	0	2020-12-07	\N	천번을 저어 만든다 는 수플레 오믈렛 쉽게 꺼지지 않아요 수플레 오믈렛 두 가지 방법으로 쉽게 만들어요. 출처: https://www.10000recipe.com/recipe/6930877	18
+87	소시지 달걀말이	3440	blog/2020/12/06/temp_89iSdbH.png	15	["다진 당근 1숟가락, 다진 대파 1숟가락, 약간의 소금, 약간의 후추를 넣고 섞어준다.", "네모난 틀 위에 (1)을 넣고, 위에 슬라이스 치즈와 소시지를 올린 후 계란이 굳으면 돌돌 만다.", "먹기 좋은 크기로 잘라준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	달걀말이의 소시지 변주	14
+91	소보로 덮밥	3600	blog/2020/12/06/temp_maDmCZs.png	20	["에그 스크램블을 만든다. ", "김치를 볶아준다.", "밥 1공기 위에 고기볶음장 5숟가락, 에그 스크램블, 김치를 올려준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	3가지 맛의 덮밥을 동시에 느낄 수 있다! 얼마나 좋지 않은가!	14
+89	떡볶이 치킨 그라탕	6500	blog/2020/12/06/temp_NSrz3Xp.png	10	["컵떡볶이를 조리해준다.", "양파, 옥수수 통조림, 치킨꼬치, 모짜렐라 치즈를 위에 올려주고, 전자레인지에 2분간 조리한다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	떡볶이, 치킨, 치즈의 완벽한 합주곡	14
+90	소보로 덮밥	3600	blog/2020/12/06/temp_aUmdVe1.png	20	["에그 스크램블을 만든다. ", "김치를 볶아준다.", "밥 1공기 위에 고기볶음장 5숟가락, 에그 스크램블, 김치를 올려준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	3가지 맛의 덮밥을 동시에 느낄 수 있다! 얼마나 좋지 않은가!	14
+92	소보로 덮밥	3500	blog/2020/12/06/temp_XLJuMS9.png	20	["에그 스크램블을 만든다. ", "김치를 볶아준다.", "밥 1공기 위에 고기볶음장 5숟가락, 에그 스크램블, 김치를 올려준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	3가지 맛의 덮밥을 동시에 느낄 수 있다! 얼마나 좋지 않은가!	14
+93	소보로 덮밥	3500	blog/2020/12/06/temp_adGfnuz.png	20	["에그 스크램블을 만든다. ", "김치를 볶아준다.", "밥 1공기 위에 고기볶음장 5숟가락, 에그 스크램블, 김치를 올려준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	3가지 맛의 덮밥을 동시에 느낄 수 있다! 얼마나 좋지 아니한가!	14
+94	소보로 덮밥	3500	blog/2020/12/06/temp_nx6H54Q.png	20	["에그 스크램블을 만든다. ", "김치를 볶아준다.", "밥 1공기 위에 고기볶음장 5숟가락, 에그 스크램블, 김치를 올려준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	3가지 맛의 덮밥을 동시에 느낄 수 있다! 얼마나 좋지 아니한가!	14
+134	중화짜장밥	3800	blog/2020/12/07/temp.png	10	["짜장밥 하나를 조리한다.", "짜장밥 위에 반숙란을 올려준 후, 반숙란의 노른자를 짜장밥과 골고루 섞어준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+98	감자칩 카나페	4400	blog/2020/12/06/temp_8q4GlDI.png	15	["감자칩 위에, 잘게 자른 샐러드와 닭가슴살을 올려준다.\\n닭가슴살은 2분간 전자레인지에 돌린 상태여야한다.", "이외에 좋아하는 고명 및 소스를 추가해본다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	감자칩으로 만든 간편한 카나페	14
+95	단호박 치즈 그라탕	4034	blog/2020/12/06/temp_048MYb8.png	30	["햄, 양파, 당근, 버섯을 다져 준비하고.\\n버섯은 표고버섯을 넣었어요.\\n새송이, 양송이버섯 사용하시거나 없으면 생략해도 돼요.", "만들어 놓은 야채 소스를 올려주고 다시 단호박을 올려주고 같은 방법으로 해주심 된답니다.", "마지막에 모차렐라치즈 1컵 가득 올리고\\n잘라 놓은 단호박을  올려놓고\\n전자레인지에 5분~ 정도 돌려주세요.\\n집집마다 전자레인지가 다르니깐 중간중간 체크해 주는 센스 잊지 마세요."]	["Western"]	0	0	2020-12-07	\N	단호박 치즈 그라탕 출처: https://www.10000recipe.com/recipe/6874425	18
+96	오레오 오즈바	5000	blog/2020/12/06/temp_S3Ahe4l.png	40	["올리고당 5숟가락, 설탕 2.5숟가락, 올리브유 1숟가락을 다 넣고 인덕션에 가열시켜 시럽을 만든다.", "오레오 오즈 3 종이컵에 시럽을 넣고 한 덩어리로 뭉칠 수 있도록 섞어준다.", "네모난 틀에 오레오 오즈를 담아주고, 냉장고에 20-30분간 보관한다.", "굳은 오즈바를 먹기 좋은 크기로 잘라준다."]	["Mexican"]	0	0	2020-12-07	\N	시리얼로만 먹던 오레오 오즈를 오즈바로 색다르게 먹어보자!	14
+101	연어 데리야끼 스테이크	9000	blog/2020/12/06/temp_HCamQUm.png	30	["연어에 굵은 소금, 후추, 맛술, 올리브 오일을 넣고 잠시 재워두세요.", "연어를 기름을 두르지 않은 후라이팬에 넣고 겉면만 살짝 익혀주세요.", "데리야끼 소스 재료를 넣은 냄비를 살짝 끓이고 그 안에 연어를 넣고 졸여주세요."]	["Western"]	0	0	2020-12-07	\N	부드러운 연어 살이 살살 녹는 연어 데리야끼 스테이크입니다.	18
+97	아쉬 빠멍티에	4000	blog/2020/12/06/temp_Mu4oknq.png	45	["달궈진 후라이팬에 버터(혹은 식용유)를 넣고 녹여주시고 썰어놓은 야채와 갈은 소고기를 넣어주세요.\\n그리고 소금,후추,바질가루,마늘가루를 넣고 모든 재료가 다 익을때까지 볶아줍니다.", "오븐용 그릇에 고기와 야채 볶은걸 넣어주시고 수저나 주걱을 이용해서 꾹꾹 눌러주시고 평평하게 정리해주세요.", "160도로 예열해놓은 오븐에 15~20정도 넣어서 구워주세요.\\n재료들은 이미 다 익었기 때문에 치즈가 노릇노릇해질때까지만 넣어주시면 됩니다"]	["Western"]	0	0	2020-12-07	\N	맛있는 프랑스 가정식이예요. ^_^ 출처: https://www.10000recipe.com/recipe/6837908	18
+99	등갈비 바베큐	14720	blog/2020/12/06/temp_fBl6RtK.png	30	["냄비에 등갈비를 넣고 잠길 정도로 물을 채워주고 통후추, 대파, 통마늘(생략 가능)을 넣고 끓여줍니다.\\n끓기 시작하고 5분 정도 후에 불을 끄고불순물들을 깨끗이 씻어 줍니다.", "깨끗하게 씻어둔 등갈비를 양념장에 골고루 버무려 줍니다.", "180도에 15분 구워주고\\n뒤집어서 10분 정도 더 구워줍니다."]	["Western"]	0	0	2020-12-07	\N	코로나로 외식도 힘든 요즘,\n아이들을 위해 할로윈 특별 메뉴를 만들어보았어요.^^ 출처: https://www.10000recipe.com/recipe/6945246	18
+100	바삭바삭 주먹밥	6600	blog/2020/12/06/temp_4yPpSZi.png	20	["밥, 참치, 통깨, 후추, 소금을 넣어준 후 비벼준다.", "원하는 모양의 주먹밥을 여러 개 만든다.", "식용유를 뿌린 프라이팬에 주먹밥을 튀겨 겉을 바삭하게 만든다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	삼각김밥을 크리스피하게 즐겨보아요	14
+105	우동 오코노미야끼	9850	blog/2020/12/06/temp_FD5IF0A.png	30	["오징어를 뜨거운 물에 10분간 불린다", "뜨거운 물에 우동면을 익힌다.", "익힌 우동 면사리, 잘게 자른 오징어, 참치, 달걀, 밀가루, 우동 액상스프를 한데 모아넣고 섞는다.\\n참치는 기름기를 빼도록 한다.", "프라이팬에 굽는다"]	["ConvenienceStore"]	0	0	2020-12-07	\N	편의점 음식으로 오코노미야끼를 만들 수 있을까? 물론!	14
+102	치즈마늘빵	2500	blog/2020/12/06/temp_xr4HC7u.png	10	["후레쉬번을 반으로 자른다.", "단면에 버터와 다진마늘을 퍼발라준다.", "그 위에 피자치즈를 올려준다.", "잘랐던 후레쉬번을 다시 덮어주면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N	후레쉬번, 이젠 진부하게 먹지 마라.	14
+104	만두교자	2000	blog/2020/12/06/temp_ZIegnrB.png	20	["밀가루 2숟가락과 물 6숟가락을 섞어준다.", "식용유 위에 만두를 올리고, (1)을 넣어준 후 약불에서 오랫동안 굽는다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	먹는 맛과 보는 맛 둘 다 챙겨버린 만두교자	14
+103	콘마요불닭정식	6600	blog/2020/12/06/temp_L3PlcSX.png	15	["불닭떡볶이 1개를 조리한다.", "불닭볶음면 1개를 조리한다.", "둘을 섞어준 후, 콘샐러드와 모짜렐라 치즈를 위에 부은 후 전자레인지에 2분 동안 조리한다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	불닭떡볶이, 불닭볶음면, 거기에 치즈와 콘샐러드를 곁들어준 불닭의 정수	14
+106	타마고산도	1000	blog/2020/12/06/temp_bZpkz0W.png	10	["식빵 두 장에 각각 마요네즈와 와사비를 발라준다.", "그 사이에 달걀말이 1개를 넣는다.", "식빵을 달걀말이 크기에 맞게 자른다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	언제나 간편하게 즐길 수 있는 계란과 빵	14
+119	계란치즈 스크램블	5969	blog/2020/12/06/temp_3z3jm4r.png	15	["야채들은 송송다져서 사용합니다. 팬에 버터를 두르고 야채를 먼저 볶아줍니다.", "계란 3개와 참치, 소금약간을 넣고 살짝 볶아냅니다.", "볶아낸 스크램블은 내열용기에 잘 펴서 담은 후 치즈를 골고루 얹어서 전자렌지에 2~3분가량 돌려주면 됩니다."]	["Western"]	0	0	2020-12-07	\N	부드럽고 든든한 계란치즈스크램블입니다. 출처: https://www.10000recipe.com/recipe/4031003	19
+137	요거트 만난 지 얼마나 오렌지	4250	blog/2020/12/07/temp_0WprlPu.png	5	["얼음컵에 오렌지 주스와 플레인 요구르트를 3대2 비율로 넣어준 후, 잘 섞어먹는다."]	["ConvenienceStore", "Dessert"]	0	0	2020-12-07	\N		14
+107	함박스테이크	5100	blog/2020/12/06/temp_JUr3F7D.png	60	["돼지다짐육 350g에 당근5센티(생략가능)다져서 넣어 주셔요~\\n(돼지고기랑,소고기비율은 1대1이에요~전 돼지다짐육 밖에 없어 돼지고기로만 만들었어요)", "계란하나 톡 넣어 잘 치대(?)주시다가~ 빵가루를 조금씩 더 넣어 가며 점도를 맞춰 주세요^^\\n(저는 총 8스푼 넣었어요~)", "물을 넣고 두껑 덮어 속까지 익겠금 끓여(?) 주셔요~계속 약불에서 익혀 주셔용^~^"]	["Western"]	0	0	2020-12-07	\N	집에 돼지다짐육 밖에 없어 제맘대로 돼지고기로만 만들었는데도 완전 맛있네용~⊙.⊙ㅎㅎ 초간단으로 쉽게 ~ 출처: https://www.10000recipe.com/recipe/6874149	18
+108	치킨볶음면	3500	blog/2020/12/06/temp_1tob4dx.png	12	["왕갈비통닭볶음면을 조리한다.\\n면은 살짝만 익힌다.", "잘게 자른 치킨, 편썬 마늘 2개, 송송 썬 대파 1/4개와 면을 다 넣은 후 볶아주면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N	불닭볶음면이 지겨우신 당신들을 위한 새로운 볶음면	14
+110	허니버터치즈피자	3681	blog/2020/12/06/temp_J3pAzlk.png	30	["분량의 버터+꿀+마요네즈(또는 크림치즈)를 넣고 전자렌지에 돌려 녹인 뒤 잘 섞어주세요.\\n또띠아 위에 허니버터소스를 듬뿍 펴발라줍니다.", "집에 있던 슬라이스 치즈도 올려줍니다. 마지막으로 모짜렐라치즈를 올린 뒤 파슬리가루를 톡톡 뿌려주면 끝!", "에어프라이어에 180도 8분~9분 가량 돌려주세요"]	["Western"]	0	0	2020-12-07	\N	또띠아와 집에있는 야채들을 처리하기 위해 고민해봤어요. 출처: https://www.10000recipe.com/recipe/6909912	19
+109	미트볼로제떡볶이	4990	blog/2020/12/06/temp_n0tQVi1.png	10	["까르보 떡볶이 1개를 조리한다.", "미트볼과 모짜렐라치즈을 넣고 전자레인지에 2분간 돌린다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	미트볼, 로제는 파스타에만 붙는 수식어일까? 그렇지 않다, 미트볼로제떡볶이가 있기 때문에.	14
+115	참치달걀죽	5450	blog/2020/12/06/temp_o36mJLc.png	10	["밥, 참치 50g, 물 반 컵을 넣고 전자레인지에 2분간 돌려준다.", "날달걀을 1개 넣어준 후, 소금과 후추로 간을 한다.\\n골고루 섞어준 후 전자레인지에 2분간 돌리면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N	간편하게 만들어 먹을 수 있는 죽	14
+111	목살스테이크	15200	blog/2020/12/06/temp_YKUeK1c.png	60	["팬에 식용유를 넉넉히 두르고 고기와\\n통마늘을 넣고 약한불에 천천히 익혀 주세요.\\n전.. 통마늘을 고기랑 먹으려고 잘라\\n논거라 통마늘이 아니에요..", "익은 통마늘을 먼저 꺼내준 다음 기름을\\n키친타올로 제거해 주세요.\\n그리고 버터를 적당히 잘라서 넣고", "버터로 고기를 구운팬에 케찹 4큰술,\\n설탕 2큰술, 간장 2큰술, 식초 2큰술을\\n넣고 센불에 소스를 저어가면서 적당히\\n볶아 시큼한 향을 날려줍니다.\\n그리고 물을 넣고 보글보글 끊인 후\\n고기와 마늘을 넣고 적당히 졸여주면 완성~"]	["Western"]	0	0	2020-12-07	\N	삼겹살 구워 먹고 남은 목살로\n백선생님의 돼지 목살스테이크를\n만들었어요~ 간단하지만 맛은 최고~ 출처: https://www.10000recipe.com/recipe/6945081	19
+114	뢰스티(스위스 감자전)	3411	blog/2020/12/06/temp_rXMHHHT.png	30	["예열된 프라이팬에 기름을 두르고, 채 썰은 감자를 동그랗게 놓고 노릇하게 구워주세요.", "베이컨을 먹고 싶은 만큼 잘라 프라이팬 위에 구워주세요.", "프라이도 반숙이 될 때까지 익혀주세요."]	["Western"]	0	0	2020-12-07	\N	감자전이 튀김처럼 바삭하고 잘 구워진 양파의 달콤함과 베이컨의 육즙에 반숙의 노른자 맛이 어우러져서 맛있답니다. 아침으로도 손색이 없답니다~ 출처: https://www.10000recipe.com/recipe/6864694	19
+112	만두비빔면	3050	blog/2020/12/06/temp_bPmS833.png	10	["비빔면 1봉을 끓인다. 원한다면 콩나물도 넣어준다.", "전자레인지에 돌려 익혀준 만두 6개를 비빔면과 함께 비벼준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	익숙하지만 언제나 맛있는 비빔면과 만두	14
+113	구름계란	1400	blog/2020/12/06/temp_aVtO6Ll.png	15	["시작전 오븐예열은 필수! 350도F(180도C).\\n계란은 흰자와 노른자를 분리해서 담아놓습니다. 흰자는 한군데에 두되 노른자는 각각 다른 그릇에 따로 빼두세요. 노른자에 붙어있는 알끈은 그냥 놔두는 게 좋을 듯이요. 그거 빼다가 살짝 터짐. ㅡㅡ;", "베이킹 팬에 유산지 깔고 2번의 머랭을 4등분해서 놔두고", "노른자를 위해 만들어 둔 구덩이에 조심스럽게 노른자를 넣어준 다음 5분 더 구워주어요"]	["Western"]	0	0	2020-12-07	\N	너무 신기하게 생겨서 안 만들고는 못 배기겠더라구요. 요리에 포인트를 주고 싶을 때 사용하면 좋을 구름 계란입니다. 토스트에 올려먹기도 하고 출처: https://www.10000recipe.com/recipe/6908671	19
+117	어묵우동	5400	blog/2020/12/06/temp_EcXuuWM.png	10	["우동 면을 익혀주고, 물을 따라 버려준다.", "익은 우동 면에 어묵탕 1개, 우동 소스 넣고 전자레인지에 2분간 돌린다.\\n계란, 대파는 기호에 따라 추가한다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	우동에 어묵이 없어 심심했던 사람들을 위한 어묵우동	14
+116	참치달걀죽	5450	blog/2020/12/06/temp_nce3B3w.png	10	["밥, 참치 50g, 물 반 컵을 넣고 전자레인지에 2분간 돌려준다.", "날달걀을 1개 넣어준 후, 소금과 후추로 간을 한다.\\n골고루 섞어준 후 전자레인지에 2분간 돌리면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N	간편하게 만들어 먹을 수 있는 죽	14
+118	카구리	3100	blog/2020/12/06/temp_ClTUK9E.png	10	["물 5 종이컵에 너구리라면 다시마를 넣어 육수를 낸다.", "카레 라면과 너구리 라면 스프를 육수에 넣는다.", "카레라면, 너구리 라면의 면사리를 넣고 끓인다.", "채썬 대파를 위에 올려주면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N	카레라면과 너구리의 절묘한 만남	14
+120	중화풍호빵	7700	blog/2020/12/06/temp_HEE7ATE.png	10	["호빵을 반으로 잘라 칼집을 내고 2분간 전자렌지에 데운다.", "편의점 고추잡채 1개를 2분간 데운다.", "호빵 속에 고추잡채를 넣으면 중화식호빵을 간단하게 즐길 수 있다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	중국식 호빵을 간단하게 만들어 먹어보자.	14
+126	데리야끼 윙	5350	blog/2020/12/06/temp_E1siWzv.png	60	["위생비닐에 녹말가루 반컵을 담아주고, 밑간한 닭날개를 넣어줍니다.\\n그리고 꾹 꾹 눌러가며(쥐어가며) 튀김옷을 입혀주세요.", "후라이팬에 기름을 넉넉히 부어주고, 튀김옷 입은 닭날개를 약 10분간 튀기듯 구워줍니다.", "팬에 앞의 양념장을 넣어 끓여줍니다.\\n가장자리가 끓어오르기 시작하면 기름을 뺀 닭날개를 넣어주고, 재빨리 소스를 버무려 데리야키윙(닭날개구이)를 마무리해줍니다."]	["Western"]	0	0	2020-12-07	\N	달콤짭쪼롬하게 즐기는\n데리야키윙 레시피입니다! 출처: https://www.10000recipe.com/recipe/6914836	19
+122	컵 오믈렛	2490	blog/2020/12/06/temp_jA9NvKf.png	5	["머그컵이나 라떼잔과 같이 넉넉한 컵에 다진 양파와 버터, 파슬리 가루를 넣고 전자렌지에서 30~40초 버터를 녹여줍니다.\\n전자렌지에 따라 다르니 버터가 약간 남아 있을 때 꺼내 남아있는 열로 녹이면 됩니다.", "달걀 2개, 우유, 파마산 치즈, 소금과 후춧가루를 넣고", "전자렌지에 넣고 달걀이 부풀어오를 때까지 2~3분간 돌려줍니다."]	["Western"]	0	0	2020-12-07	\N	아무것도 하기 싫은 주말 아침 5분이면 즐길 수 있는 초간단 컵 오믈렛입니다. 출처: https://www.10000recipe.com/recipe/6856772	19
+123	감자라면피자	6400	blog/2020/12/06/temp_JfzFck4.png	20	["익힌 스파게티라면의 면을 식용유에 볶아준다.", "볶아준 면 위에 스파게티 라면소스를 뿌린다.\\n그 위에 감자 튀김과 잘게 자른 스트링치즈 3개도 올려준다.", "뚜껑을 닫고 가열하면 요리가 완성된다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+128	감바스 알 아히요	6140	blog/2020/12/06/temp_oTYmOZ6.png	15	["작은 팬을 사용\\n올리브오일을 넣고\\n끓여준 뒤\\n페페론치와 마늘을 넣어 튀겨준다", "소금과 후추로 밑간을 한\\n새우를 같이 넣고 튀겨준다", "새우가 익으면 조리 과정은\\n끝이 난다\\n바게트빵과 같이 먹고\\n남은 올리브오일은\\n스파게티 면만 익혀서 넣어 주면\\n오일파스타가 만들어진다"]	["Western"]	0	0	2020-12-07	\N	오일 파스타가 먹고 싶을 때\n만들면 좋은 감바스 알 아히요~ 출처: https://www.10000recipe.com/recipe/6884805	19
+124	골빔면	5050	blog/2020/12/06/temp_xVGEavi.png	10	["비빔면 1개를 끓인 후, 찬물에 헹군다.", "골뱅이, 양파, 홍고추, 청고추, 골뱅이, 참기름, 비빔면을 한데 모아 비벼준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	골뱅이와 비빔면의 환상적인 조화	14
+127	아보카도 파스타	2940	blog/2020/12/06/temp_7Gk9LOw.png	30	["씨를 삭짝 제거해 수저로 아이스크림 푸듯 밀어주면 껍질과 분리하기 쉬워요 파스타에 넣을 아보가도는 잘게 다져줍니다", "달군팬에 올리브유를 충분히 두루고 파스타를 넣고 볶다가 다진 아보가도 넣고 같이 볶아줍니다 (아보가도를 믹서에 갈아 사용하면 입자가 고운데 저는 다져서 사용했답니다)", "면수 1컵 부어 면수가 졸아들면 후추와 소금으로 간을하고 바질 넣어 마무리 합니다"]	["Western"]	0	0	2020-12-07	\N	신이 내려준 선물이라 할만큼 노화방지에 좋은 아보가도를 이용해 파스타를 만들었어요. 출처: https://www.10000recipe.com/recipe/6938850	19
+125	대게딱지장 볶음밥	7200	blog/2020/12/06/temp_jnlgnKV.png	30	["송송 썬 대파 1/2대, 달걀 2개, 밥 2공기를 볶아준다", "어느정도 볶았으면 대개딱지장 1개와 참기름을 넣고 다시 볶아준다.", "대게를 적당히 볶았으면 김가루, 통깨 3숟가락을 넣고 다시 볶아준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+130	순두부 스크램블	2926	blog/2020/12/06/temp_BylJH2S.png	10	["그릇에 계란을 풀고 다져놓은 야채와 함께 순두부를 넣어줍니다. 간은 소금으로 살짝 해주세요. 반찬이 아니라 식사대용 또는 간식으로 먹을꺼라 간은 싱겁게 해주심 좋아요.", "팬에 기름을 두르고 모두 부어주세요.", "밥공기에 완성된 스크램블을 넣고 숟가락으로 꾹 눌어주세요. 그리고 그릇에 올려주심 된답니다."]	["Western"]	0	0	2020-12-07	\N	부드럽고 고소한 순두부 바쁜 아침 또는 간식으로 휘리릭 스크램블 만들어 해결 해봐요 순두부를 넣어 한끼 식사로 충분해요. 출처: https://www.10000recipe.com/recipe/6850688	19
+129	토마토 오믈렛	1945	blog/2020/12/06/temp_MB9lt7j.png	30	["달군팬에 올리브오일을 넣은후 양파부터 넣고 달달 볶아주다가.. 토마토와 햄을 넣고 마저 볶아주세요~~", "약불로 달군팬에 역시 올리브오일을 둘러주고.. 달걀물을 부어 젓가락으로 휘저어가며 두툼하고 몽글몽글하게 익혀주는데요~~ 스크램블에그같이 산산조각(?) 내면 안되구여...ㅎ 지단같이 부쳐주되 몽글몽글하면서 도톰하게 부쳐주셔야해요~~", "볶아놓은 토마토와 채소를 치즈위에 올려주구여~~"]	["Western"]	0	0	2020-12-07	\N	영양 듬뿍 토마토 오믈렛 출처: https://www.10000recipe.com/recipe/4841288	19
+131	찹스테이크	5400	blog/2020/12/06/temp_8Pp4IV1.png	15	["소고기 채끝살로 준비해 키친타올로 핏물을 제거하고 깍둑모양으로 썰어 올리브유1스픈 소금 넣고 밑간을 했어요 양파 파프리카도 적당한 크기로 준비~", "마늘향이 올라 올때 밑간해둔 소고기 넣고 센불에 볶아 주세요 센불에 익혀야 육즙이 빠져 나가지 않아 맛있는 고기를 유지할수 있답니다", "손질한 야채를 넣고 1분 정도 볶은 후 굴소스 케찹 후추 넣어 소스가 고루 섞이게 볶다가"]	["Western"]	0	0	2020-12-07	\N	조리 시간이 짧인 후다닥 만들 수 있는 메뉴지만 소스와 조리 시간에 따라 맛이 많이 달라집니다 출처: https://www.10000recipe.com/recipe/6891905	19
+132	삼각김밥비빔밥	4200	blog/2020/12/06/temp_9bn9stz.png	10	["삼각김밥의 김을 벗긴다.", "벗긴 삼각김밥 위에 김치, 단무지를 넣는다.", "참기름을 둘러 고소함을 더한다.", "김자반 볶음을 살짝 뿌린 후, 비벼서 먹으면 된다."]	["ConvenienceStore"]	0	0	2020-12-07	\N	가성비 좋은 삼각김밥을 비빔밥으로 즐겨보자	14
+133	부대찌개라면	7100	blog/2020/12/06/temp_MGoyJiS.png	10	["김치찌개 맛 라면을 제조한다.", "소시지, 햄, 두부를 가위로 먹기 좋게 잘라 넣는다.", "전자레인지에 3분간 돌리면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N	간편하지만 몸도 마음이 든든해지는 한 끼 식사	14
+138	요리조리라떼	7400	blog/2020/12/07/temp_1xGHA1n.png	20	["바닐라 아이스크림을 20초 데운다.", "스틱 커피에 물을 조금 넣어 에스프레소 스타일로 만든다.", "컵에 죠리퐁과 우유를 섞어준후, 죠리퐁을 먼저 건져 먹는다.", "진해진 우유에 녹인 아이스크림과 커피를 섞고, 죠리퐁을 한번 더 넣고 먹는다."]	["ConvenienceStore", "Dessert"]	0	0	2020-12-07	\N	죠리퐁을 이용한 라떼.\n주의: 한 사람이 먹기엔 양이 많습니다. 3명~4명이서 나눠드세요.	14
+139	레몬, 너한테 피치나	3480	blog/2020/12/07/temp_GtYeLTx.png	5	["얼음컵에 크랜베리 주스 3/4컵을 넣어준다.", "복숭아 스파클링 음료 1/2컵을 넣어준다.", "레모나 한 포를 뿌리고, 가루가 녹도록 섞어준다.\\n다 섞었으면 맛있게 먹는다."]	["ConvenienceStore", "Dessert"]	0	0	2020-12-07	\N		14
+144	마크 정식	9281	blog/2020/12/07/temp.jpeg	15	["스파게티와 떡볶이를 따로 조리한 후 두 개를 한 용기에 넣어 섞는다.", "소시지를 적당한 크기로 잘라 넣어준다.", "여러 가지 종류의 치즈도 넣어준다.", "전자레인지에 2분 정도 돌려주면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+140	민기네 젖은 감자	1200	blog/2020/12/07/temp_qj9H2KD.png	5	["종이컵 3개를 겹친 후, 감자 과자 1봉지를 모두 넣는다.", "과자 선에 맞춰 뜨거운 물을 넣고, 과자가 물을 흡수할 때까지 기다린다.", "감자 과자가 물을 흡수하면 으깨어 저어준다."]	["Dessert", "ConvenienceStore"]	0	0	2020-12-07	\N		14
+141	에그머니빵	4100	blog/2020/12/07/temp_Vbdye68.png	5	["샌드를 반으로 잘라준다.", "달걀 샐러드를 빵 속에 넣어주면 간단하게 완성된다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+151	닭.치.유 파스타	4590	blog/2020/12/07/temp_46aNuJ5.png	15	["우유를 뚜껑을 연 채로 전자레인지에 2분 데운다.\\n", "매콤 치킨을 손으로 잘게 찢어 전자레인지에 30초간 데운다.", "데워진 우유를 표시선보다 적게 붓고 뚜껑을 덮어 전자레인지에 3분 더 데운다.", "익은 면 위에 분말 수프를 뿌린 후 잘 섞는다.", "그 위에 체다치즈를 한 장 올리고 전자레인지에 30초 데운다.\\n"]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+142	호치민 막창국수	9200	blog/2020/12/07/temp_4K8To9i.png	10	["쌀국수 컵라면에 뜨거운 물을 붓고, 막창은 전자레인지에 2분 30초 데운다.", "쌀국수 면만 건져서 불막창에 넣어 비비면 간단하게 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+145	사리곰탕 만둣국	3050	blog/2020/12/07/temp_S0VdjVy.png	10	["사리곰탕 라면을 끓인다.", "끓인 라면 위에 편의점 만두를 넣으면 간단하지만 담백한 맛의 조화를 느낄 수 있다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+143	소피 말았소	3540	blog/2020/12/07/temp_FPxLKrt.png	10	["식빵 한 장에 체다치즈 한 장을 올린다.", "그 위에 소시지를 잘라 넣고, 모짜렐라 치즈를 듬뿍 뿌린다.", "전자레인지에 1분 30초간 돌린다.", "위에 케찹을 뿌린후 돌돌 말아먹으면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+149	밴쯔 정식	10700	blog/2020/12/07/temp_2jf5s1B.png	10	["조각피자와 떡볶이를 따로 조리해준다.", "훈제 닭다리, 떡볶이, 치즈를 피자 위에 올린다.", "1분 30초간 전자레인지에 조리한 후, 케첩을 뿌려준다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+146	오지치즈후라이	2890	blog/2020/12/07/temp_RqekqI2.png	10	["오감자 위에 적당한 크기로 자른 체다치즈와 스트링치즈를 올린다.", "40초간 전자레인지에 돌리면 간단하게 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+147	떡볶이 리조또	6900	blog/2020/12/07/temp_6xrlItk.png	10	["물, 떡볶이, (김을 제거한) 삼각김밥을 한 곳에 모아 섞어준다.", "위에 치즈들을 올려준다.", "전자레인지에 3분 정도 돌리면 완성!"]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+148	강다니엘 정식	2750	blog/2020/12/07/temp_dDnBpmP.png	10	["라면사리 2개를 익힌다.", "짜장라면 소스, 불닭볶으면 소스, 고춧가루, 후추를 넣고 비벼주면 간편하게 완성된다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+150	치치면	7200	blog/2020/12/07/temp_Y7b7Ihz.png	15	["컵누들의 면만 넣고 뜨거운 물에 3분간 조리한다.\\n", "얼음물에 면을 헹구고, 컵라면 컵에 다시 담는다.", "면 위에 김치와 참치 토핑을 추가한다.\\n참치의 기름은 제거되어야 한다.", "면 위에 김치와 참치 토핑을 추가한다."]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+152	닭.치.유 파스타	4590	blog/2020/12/07/temp_MFNTPGQ.png	15	["우유를 뚜껑을 연 채로 전자레인지에 2분 데운다.\\n", "매콤 치킨을 손으로 잘게 찢어 전자레인지에 30초간 데운다.", "데워진 우유를 표시선보다 적게 붓고 뚜껑을 덮어 전자레인지에 3분 더 데운다.", "익은 면 위에 분말 수프를 뿌린 후 잘 섞는다.", "그 위에 체다치즈를 한 장 올리고 전자레인지에 30초 데운다.\\n"]	["ConvenienceStore"]	0	0	2020-12-07	\N		14
+153	감자 고로케 스테이크	5474	blog/2020/12/07/temp_RAwERRD.png	60	["팬에 기름을 두르고 양파, 당근을 넣고 볶다가 당근이 익으면 소금, 고추를 넣고 볶습니다.", "감자는 찌거나 삶아 으깨어 둡니다. 으깬 감자 그릇에 볶은 채소, 게맛살, 모짜렐라치즈, 달걀을 넣고 쓱쓱 비벼 재료들을 잘 섞이도록 합니다.", "원하는 크기로 만들어 둡니다. 감자전분, 달걀, 빵가루 순으로 묻혀 기름에 노릇하게 구우면 완성입니다."]	["Western"]	0	0	2020-12-07	\N	간식으로 한끼식사로도 좋은 감자 고로케 스테이크 소개합니다. 출처: https://www.10000recipe.com/recipe/3646410	19
+154	뚝배기 치즈 퐁듀	3910	blog/2020/12/07/temp_uSck4Wh.png	30	["재료를 준비한다.", "작은 뚝배기에 치즈, 우유를 채워준다.", "치즈가 살짝 녹으면 전분물을 넣어준다."]	["Western"]	0	1	2020-12-07	\N	그리고 원래 퐁듀를 만들때는 와인도 들어가고,\n치즈도 에멘탈치즈 그뤼에르치즈등을 씁니다\n이건 구독자님들이 최대한 쉽고 맛있게 드실 수 있는 레시피에요! 출처: https://www.10000recipe.com/recipe/6870709	19
+135	마가린 치즈 고구마	2500	blog/2020/12/07/temp_gb02EgS.png	10	["아이스 고구마 반을 갈라준다.", "반이 갈라진 고구마 안쪽에 마가린을 넣는다.", "그 위에 모짜렐라 치즈를 뿌려준다.", "전자레인지에 돌려줬다면 이제 마가린 치즈 고구마를 즐길 수 있다."]	["ConvenienceStore", "Dessert"]	0	3	2020-12-07	\N		14
+160	커리부어스트	4209	blog/2020/12/07/temp_L55KyGK.png	30	["토마토파스타소스 4스푼, 매운카레가루 1스푼, 고춧가루 반스푼, 올리고당 1티스푼을 넣고 잘 섞어주세요", "양파가 투명하게 익으면 한쪽으로 밀어내고 후랑크소세지를 노릇하게 구워줍니다", "뜨끈뜨끈한 후랑크소세지와\\n양파볶음을 올리고 소스를 부운 후\\n카레가루 반 스푼을 솔솔 뿌려주면 완성!"]	["Western"]	0	0	2020-12-07	\N	후랑크소세지로 독일 길거리 간식 커리부어스트를 만들어봤어요 새콤달콤한 맛에 커리맛까지 더해지니 맥주스틸러가 따로 없어용 출처: https://www.10000recipe.com/recipe/6893578	19
+155	파프리카 달걀 그라탕	3250	blog/2020/12/07/temp_n3uE5gh.png	30	["일단 계란과 파프리카와 각종 양념을 준비해요.", "계란을 중불에서 13분 삶아서 껍질을 까서 준비하여", "으깨어준후 사진은 생럑되어 있지만 기호에 맞는 각종야채른 다져 넣고 머스타드와 소금 설탕 파슬리 후레이크를 넣고 간을 맞 춘후 모짤렐라 치즈를 토핑하고 파슬리 가루를 뿌린후 오븐에 넣어 치즈가 녹을 때까지 구워줍니다."]	["Western"]	0	0	2020-12-07	\N	달걀 샐러드 샌드위치를 해먹고 남은 샐러드와 파프리카를 이용해서 그라탕을 만들어 보았어요. 이미 만들어진 샐러드가 남아 있다면 너무나 간편하고 쉬운 요리입니다. 출처: https://www.10000recipe.com/recipe/6885626	19
+158	된장양념 로스트포크	5500	blog/2020/12/07/temp_RpiR0VO.png	90	["통삼겹살을 반으로 잘라 양념에 잘 버무려 비닐봉지 등에 공기가 들어가지 않게 잘싼다음 냉장에서 1시간 이상 두세요.", "240도로 예열된 오븐에 돼지고기를 호일에 싸서 30~40분 정도 구워주세요.", "호일을 벗겨낸 다음 반으로 잘라 상태를 확인한 다음 220~240도에서 20분 내외로 구워주세요."]	["Western"]	0	0	2020-12-07	\N	더운 여름을 맞이해서 건강에 좋은 된장 양념을 한 로스트포크를 만들어보세요. 온가족이 함께 즐길 주말 메뉴로 좋을꺼 같아요.	19
+156	병아리콩 튀김 팔라펠	3100	blog/2020/12/07/temp_BHWZFZ0.png	60	["불은 병아리콩을 체에 받쳐 물기를 제거하고 믹서기에 소금, 샐러리, 양파, 후추, 카레가루, 마늘을 넣고 갈아준다.", "동글동글 한 입 크기로 빚어준다.", "기름에 노릇하게 튀겨준다."]	["Western"]	0	0	2020-12-07	\N	중동지역뿐만 아니라 다양한 나라에서 식당, 길거리에서 맛볼 수 있는 음식이죠. 특히 이 팔라펠을 피타 빵에 넣어 샌드위치로 파는 것을 먹어본 적이 있는데, 얼마나 맛있던지.....담백한 빵에 팔라펠 끼고 요거트소스, 치즈, 다양한 채소들을 끼워 넣어 드셔보세요. 한끼 식사로 완벽하답니다. 출처: https://www.10000recipe.com/recipe/6917443	19
+157	부채살 스테이크	6350	blog/2020/12/07/temp_YYa24K5.png	60	["뜨겁게 예열된 팬에 중불에서 올리브오일을 두르고\\n소고기를 넣고 허브솔트를 뿌려 앞뒤로 1분간 구워준 뒤", "그리고 버터를 넣고 녹인 버터에 앞뒤로 30초씩 더 구워주고 상온에서 2분간 래스팅 해줍니다", "접시에 구운 가니쉬채소와 스테이크를 담아주면 완성!!"]	["Western"]	0	0	2020-12-07	\N	기념일이나 홈파티를 할 때 제일 중요한 건 역시 음식이겠죠!!ㅎㅎ\n두툼한 부채살 스테이크 맛있게 굽는 레시피입니다	19
+159	소시지 달걀 프리타타	3724	blog/2020/12/07/temp_6Zqj5pB.png	30	["팬에 기름을 두르고 소시지, 당근, 양파를 볶는다.", "달걀물을 붓고 뚜껑을 덮어 약불로 익힌다."]	["Western"]	0	0	2020-12-07	\N	냉장고를 털어먹기 딱! 좋은메뉴 찾으세요?\n그렇다면 바로 요 소시지달걀프리타타! 출처: https://www.10000recipe.com/recipe/6897399	19
+161	회오리 오므라이스	2656	blog/2020/12/07/temp_GJ3HshY.png	30	["오일을 1T 두른 후라이팬에 감자, 당근, 파부터 볶아주세요\\n어느정도 재료가 있었다고 싶으면 나머지 재료를 넣고 한번더 볶아주시면 되는데요\\n이때, 소금 한꼬집, 후추 톡톡, 케찹 1T를 넣고 간해주세요\\n그리고 밥 한공기를 재료에 넣고 잘 섞어주시면 된답니다", "냄비에 버터1T, 케찹4T, 돈가스소스6T, 올리고당2T, 굴소스1, 물 1/3컵을 넣고 끓여주세요\\n이때, 후추 톡톡도 잊지말아주세요\\n몽글몽글 한번 끓으면 오므라이스소스 완성됩니다", "볶아둔 밥을 밥공기에 넣고 꾹꾹 눌러서 담아주세요\\n그 다음 플레이팅할 접시에 대고 뒤집어서 봉긋한 모양으로 엎어서 모양을 잡아줍니다\\n여기까지는 크게 어려운게 없으셨지요??\\n그냥 볶음밥하는것이랑 똑같은 레시피라서~~"]	["Western"]	0	0	2020-12-08	\N	보기에도 너무 예쁘고 맛도 너무 맛있는 오므라이스 만들기\n회오리 오므라이스에 소스까지 같이 포스팅 할게요\n사먹지 않아도 너무 근사한 저녁식사가 되어서 뿌듯합니다 출처: https://www.10000recipe.com/recipe/6935734	20
+162	브루스케타	1950	blog/2020/12/07/temp_uf6CGr1.png	15	["바게뜨나 식빵 또는 대체할만한 빵을\\n버터를 발라 살짝 구워주세요", "토마토, 양파에\\n토마토 살사 양념 바질가루, 올리브유 1T, 레몬즙(또는 식초) 1T를 넣고 잘 섞어줍니다", "빵위에 한 스푼씩 골고루 올려주면 브루스케타 완성입니다!"]	["Western"]	0	0	2020-12-08	\N	브루스케타(Bruschetta)는 이탈리안 애피타이저로 빵위에 올리브유, 소금, 후추등을 올려서 먹는 요리인데 토마토를 주로 많이 올려먹는답니다. 여행 때 기억을 되살려 집에 있는 재료로 따라해봤어요! 출처: https://www.10000recipe.com/recipe/6867769	20
+163	돼지고기 양배추롤(롤캬베츠)	2500	blog/2020/12/07/temp_iybnjrN.png	30	["두부는 으깨고 양파, 당근은 다진 뒤 나머지 돼지고기 반죽을 넣어 골고루 섞은 뒤 차지게 치대줍니다.", "뭉친 돼지고기 반죽을 양배추 위에 올린 뒤 돌돌 싸서 말아줍니다.", "양배추롤을 넣고 뚜껑을 덮은 뒤,,, 중불에서 15분쯤을 조려 돼지고기 반죽을 완전히 익혀줍니다."]	["Western"]	0	0	2020-12-08	\N	양배추 안에 돼지고기반죽을 넣어 맛과 영양을 동시에 챙길 수 있는 돼지고기 양배추롤!! 출처: https://www.10000recipe.com/recipe/6622198	20
+168	LA갈비맛 스테이크	13100	blog/2020/12/07/temp_LQG3VIo.png	30	["소금, 후추를 제외하고\\n양념재료를 모두 한꺼번에 넣어줍니다.\\n양념 뭐 별로 대단한 거 없어보이지만 맛은 시시하지 않아요.", "양파는 고기를 조리하기 직전에 준비합니다.\\n채 썰어서 달궈진 후라이팬에 올리브오일 살짝 둘러 겉만 살짝 익혀서 그릇에 따로 담아놓아요.\\n저는 레스토랑에서 먹는 기분 내려고 철판 데워서 사용해줬답니다. ㅎ", "고기를 꺼내서 후라이팬에 볶습니다.\\n고기에서 육즙이 나오면서 후라이팬이 흥건해지는데, 고기가 다 익었다고 그냥 불 꺼버리지 마시고 부글거리던 국물이 다 졸고 양념이 시럽처럼 끈적거릴 때까지 끝까지 바싹 볶아주어야 해요. 그러면 희한하게 불에 직화한 맛 비슷하게 나더라구요.\\n간을 보시고 소금, 후추를 추가하실 분들은 지금 해주세요. 저는 후추가루만 조금 넣었어요"]	["Western"]	0	0	2020-12-08	\N	이 레시피는 스테이크용 고기로 했을 때 갈비살과 아주 비슷한 느낌이 납니다. LA갈비는 고소하고 부드럽지만 기름기도 많고 뼈무게 때문에 가격도 많이 나와서 잘 사지 않는편인데 소고기 목심은 가격은 착한 편이고 중간중간 섞여있는 기름기만 빼주면 심하게 기름지지는 않지만 육질이 좀 질긴 편이라 스테이크로 구우려면 많이 두들겨줘야 해서 좀 귀찮은게 단점이죠. 출처: https://www.10000recipe.com/recipe/6891937	20
+164	치킨치즈롤	5874	blog/2020/12/07/temp_qBVhnpe.png	60	["닭가슴살에 피자치즈를 넣어 롤을 만든다.", "닭가슴살에 밀가루, 달걀물, 빵가루 순서로 튀김옷을 입힌다.", "예열된 팬에 기름을 넉넉히 두르고 바삭하게 튀겨낸다."]	["Western"]	0	0	2020-12-08	\N	치킨, 치즈! 두 치느님의 만남!\n상상했던것보다 더 맛있는 치킨치즈롤! 출처: https://www.10000recipe.com/recipe/6896344	20
+165	두부 스크램블 에그	2700	blog/2020/12/07/temp_X6HOyks.png	30	["제일 먼저 두부는 으깨고 키친타올을 사용해서 물기를 제거한다.", "그다음 두부와 계란을 잘 섞는다.", "준비가 끝나면 팬에 기름을 두르고 두부와 계란을 섞은 것을 넣고 소금을 넣어 간을 하고 젓가락으로 휘저으면서 익힌다."]	["Western"]	0	0	2020-12-08	\N	두부 특유의 향과 맛이 계란과 잘 어울려 그 누구도 잘 먹을 수 있습니다. 출처: https://www.10000recipe.com/recipe/6900628	20
+166	감자채피자	5367	blog/2020/12/07/temp_zLMj5Wy.png	30	["채썬 감자는 굵은 소금 1큰술을 넣어\\n찬물에 20분 간 담궈서 전분기를 제거해 주세요.\\n이 후 물에 여러번 헹군 후 물기를 빼 준비해 줍니다", "감자채에 밀가루3큰술, 소금, 후추, 계란 1개 넣어 골고루 섞어 반죽해 준 후,\\n팬에 넣고 앞뒤로 노릇하게 완전히 익혀줍니다", "앞뒤로 감자채 도우가 모두 익었으면\\n토마토소스-피자치즈-토핑을 원하는 대로 올려서\\n약불로 뚜껑을 덮어 치즈만 녹여 주면 끝~!"]	["Western"]	0	0	2020-12-08	\N	제철 감자를 보니 별미 요리가 먹고 싶어서\n감자채 도우를 사용해 감자채피자를 만들어 봤어요 출처: https://www.10000recipe.com/recipe/6913247	20
+169	등심 스테이크	44359	blog/2020/12/07/temp_etm6vSO.png	60	["키친타월로 핏물을 뺀 소고기는 소금, 후추, 올리브유를 뿌려 10분간 재운다.", "팬에 기름을 두르고 채소를 넣고 소금,후추를 뿌려 굽는다.", "달군팬에 올리브유를 두르고 소고기를 올려 굽는다."]	["Western"]	0	0	2020-12-08	\N	기념일에 빠져서는 안되는 소고기 스테이크!\n스테이크를 구워 간단하게 소스 만드는 팁까지~!! 출처: https://www.10000recipe.com/recipe/6926532	20
+84	라따뚜이	7512	blog/2020/12/06/temp_S4THaZS.png	30	["깨끗이 씻은 양파와 마늘을 작게 다진다. 토마토·애호박·가지는 도톰하게, 양송이 버섯은 한입 크기로 썬다.", "양송이와 토마토 소스를 넣고, 소금과 후추로 간을 하여 1분 정도 볶는다. 토마토·애호박·가지를 가지런히 둘러 중간 불에서 15~20분 푹 익힌다.", "채소가 익으면 바질이나 파슬리를 뿌려 완성한다."]	["Western"]	0	1	2020-12-07	\N	가정에서도 근사하게, 프랑스 가정식 요리를 해보세요. 제철에만 먹을 수 있는 대저 토마토를 이용하면 더 색다른 맛을 맛볼 수 있습니다. 출처: https://www.10000recipe.com/recipe/6845511	18
+170	에그인헬	5645	blog/2020/12/07/temp_YbaLrGF.png	30	["달궈진 팬에 오일을 넣고 고기와 다진마늘을 볶아주세요", "물 반컵과 토마토소스를 넣고 끓여주세요", "계란을 위에 넣고 치즈를 올려 살짝 익을때 쯤 불을 꺼주세요"]	["Western"]	0	0	2020-12-08	\N	지옥에서 온 계란 ! 에그인 헬 레시피 입니다. 출처: https://www.10000recipe.com/recipe/6849784	20
+171	제목	132	blog/2020/12/10/oU2ayVBvTajOArNbi7Q_iQ.jpeg	10	[""]	[]	0	0	2020-12-10	\N	설명	36
+167	표고버섯 치즈구이	3967	blog/2020/12/07/temp_DKsYJ6b.png	15	["볼에 다진 양파와 버섯을 넣고 토마토 소스, 소금, 후추, 파마산 치즈가루를 넣어 버무린다.", "버무려 놓은 재료를 포고 위에 올린다.", "180도로 예열된 오븐에 약 5분~7분 또는 전자레인지에 약 2분간 익혀 완성한다."]	["Western"]	0	3	2020-12-08	\N	오늘 저녁, 와인 한 잔 하세요?\n그렇다면 표고버섯 치즈구이와 함께 하세요♥ 출처: https://www.10000recipe.com/recipe/6906483	20
+172	제목	132	blog/2020/12/10/MVUhEAn02l51KU7HD8CaTA.jpeg	10	[""]	[]	0	0	2020-12-10	\N	설명	36
+173	돼지고기	3000	blog/2020/12/10/T1fj1Tsee2Q79TKLBRF25Q.jpeg	100	[""]	["Korean"]	0	0	2020-12-10	\N	돼지고기입니다	39
+53	순두부찌개	3000	blog/2020/12/04/temp_2KgALp6.png	30	["파와 양파를 볶다가 고기를 볶습니다. ", "양념을 넣고 볶습니다.", "볶아놓은 양념장 1큰술에 물을 넣고 두부를 넣고 끓입니다."]	["Korean"]	0	1	2020-12-05	\N	집밥백선생 백종원 순두부찌개 양념장, 순두부찌개 맛있게 끓이는법\n출처: https://greensnakediary.tistory.com/60	15
+174	김치백종원	1100	blog/2020/12/10/Aa7TBCnfIuJJvkRveV_lqA.jpeg	200	["손씻기"]	["Dessert"]	0	0	2020-12-10	\N	백종원을 김장담궈봅시다	44
+\.
+
+
+--
+-- Data for Name: recipick_recipe_liked_user; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_recipe_liked_user (id, recipe_id, user_id) FROM stdin;
+2	1	14
+4	84	14
+5	67	14
+6	154	14
+8	55	14
+9	55	22
+10	65	32
+13	167	51
+17	135	47
+18	135	51
+20	53	47
+\.
+
+
+--
+-- Data for Name: recipick_recipe_photo_list; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_recipe_photo_list (id, recipe_id, imagemodel_id) FROM stdin;
+1	1	1
+2	1	2
+4	4	4
+5	4	5
+6	4	6
+7	4	7
+8	4	8
+9	4	9
+10	9	10
+11	9	11
+12	9	12
+13	9	13
+14	9	14
+18	17	18
+19	17	19
+20	19	20
+21	19	21
+22	19	22
+23	20	23
+24	20	24
+25	20	25
+26	21	26
+27	21	27
+28	22	28
+29	22	29
+30	22	30
+31	23	31
+32	24	32
+33	24	33
+34	25	34
+35	26	35
+36	26	36
+37	27	37
+38	27	38
+39	27	39
+40	28	40
+41	28	41
+42	28	42
+43	29	43
+44	29	44
+45	30	45
+46	30	46
+47	31	47
+48	31	48
+49	31	49
+50	32	50
+51	32	51
+52	32	52
+53	33	53
+54	33	54
+55	34	55
+56	34	56
+57	34	57
+58	35	58
+59	35	59
+60	36	60
+61	36	61
+62	37	62
+63	37	63
+64	37	64
+65	38	65
+66	38	66
+67	39	67
+68	39	68
+69	40	69
+70	40	70
+71	40	71
+72	40	72
+73	41	73
+74	41	74
+75	41	75
+76	42	76
+77	42	77
+78	42	78
+79	43	79
+80	43	80
+81	43	81
+82	44	82
+83	45	83
+84	45	84
+85	45	85
+86	46	86
+87	46	87
+88	46	88
+89	47	89
+90	47	90
+91	47	91
+92	48	92
+93	48	93
+94	49	94
+95	49	95
+96	49	96
+97	50	97
+98	50	98
+99	51	99
+100	51	100
+101	52	101
+102	52	102
+103	52	103
+104	53	104
+105	53	105
+106	53	106
+107	54	107
+108	54	108
+109	54	109
+110	55	110
+111	55	111
+112	56	112
+113	56	113
+114	56	114
+115	57	115
+116	57	116
+117	57	117
+118	58	118
+119	58	119
+120	58	120
+121	59	121
+122	59	122
+123	60	123
+124	61	124
+125	61	125
+126	62	126
+127	62	127
+128	63	128
+129	63	129
+130	63	130
+131	64	131
+132	64	132
+136	65	136
+137	65	137
+138	65	138
+139	66	139
+140	66	140
+141	66	141
+142	67	142
+143	67	143
+144	67	144
+145	67	145
+146	68	146
+147	68	147
+148	68	148
+149	69	149
+150	69	150
+151	69	151
+152	69	152
+153	69	153
+154	70	154
+155	70	155
+156	70	156
+157	71	157
+158	71	158
+159	71	159
+160	71	160
+161	72	161
+162	72	162
+163	72	163
+164	73	164
+165	73	165
+166	73	166
+167	73	167
+168	73	168
+169	74	169
+170	74	170
+171	74	171
+172	74	172
+173	75	173
+174	75	174
+175	75	175
+176	75	176
+177	76	177
+178	76	178
+179	76	179
+180	76	180
+181	77	181
+182	77	182
+183	77	183
+184	77	184
+185	77	185
+186	78	186
+187	78	187
+188	78	188
+189	78	189
+190	79	190
+191	79	191
+192	79	192
+193	79	193
+194	80	194
+195	80	195
+196	80	196
+200	82	200
+201	82	201
+202	82	202
+203	82	203
+204	81	204
+205	81	205
+206	81	206
+214	84	214
+215	84	215
+216	84	216
+217	85	217
+218	85	218
+219	85	219
+220	86	220
+221	86	221
+222	86	222
+223	87	223
+224	87	224
+225	87	225
+226	88	226
+227	88	227
+228	88	228
+229	88	229
+230	89	230
+231	89	231
+232	90	232
+233	90	233
+234	90	234
+235	91	235
+236	91	236
+237	91	237
+238	92	238
+239	92	239
+240	92	240
+241	93	241
+242	93	242
+243	93	243
+244	94	244
+245	94	245
+246	94	246
+247	95	247
+248	95	248
+249	95	249
+250	96	250
+251	96	251
+252	96	252
+253	96	253
+254	97	254
+255	97	255
+256	97	256
+257	98	257
+258	98	258
+259	99	259
+260	99	260
+261	99	261
+262	100	262
+263	100	263
+264	100	264
+265	101	265
+266	101	266
+267	101	267
+268	102	268
+269	102	269
+270	102	270
+271	102	271
+272	103	272
+273	103	273
+274	103	274
+275	104	275
+276	104	276
+277	105	277
+278	105	278
+279	105	279
+280	105	280
+281	106	281
+282	106	282
+283	106	283
+284	107	284
+285	107	285
+286	107	286
+287	108	287
+288	108	288
+289	109	289
+290	109	290
+291	110	291
+292	110	292
+293	110	293
+294	111	294
+295	111	295
+296	111	296
+299	112	299
+300	112	300
+301	113	301
+302	113	302
+303	113	303
+304	114	304
+305	114	305
+306	114	306
+307	115	307
+308	115	308
+309	116	309
+310	116	310
+311	117	311
+312	117	312
+317	118	320
+318	118	317
+319	118	318
+320	118	319
+321	119	321
+322	119	322
+323	119	323
+324	120	324
+325	120	325
+326	120	326
+331	122	331
+332	122	332
+333	122	333
+334	121	336
+335	121	337
+336	121	334
+337	121	335
+338	123	338
+339	123	339
+340	123	340
+341	124	341
+342	124	342
+343	125	343
+344	125	344
+345	125	345
+346	126	346
+347	126	347
+348	126	348
+349	127	349
+350	127	350
+351	127	351
+352	128	352
+353	128	353
+354	128	354
+355	129	355
+356	129	356
+357	129	357
+358	130	358
+359	130	359
+360	130	360
+361	131	361
+362	131	362
+363	131	363
+364	132	364
+365	132	365
+366	132	366
+367	132	367
+368	133	368
+369	133	369
+370	133	370
+371	134	371
+372	134	372
+373	135	373
+374	135	374
+375	135	375
+376	135	376
+377	136	377
+378	136	378
+379	136	379
+380	137	380
+381	138	381
+382	138	382
+383	138	383
+384	138	384
+385	139	385
+386	139	386
+387	139	387
+388	140	388
+389	140	389
+390	140	390
+391	141	391
+392	141	392
+393	142	393
+394	142	394
+395	143	395
+396	143	396
+397	143	397
+398	143	398
+403	145	403
+404	145	404
+405	146	405
+406	146	406
+407	147	407
+408	147	408
+409	147	409
+410	148	410
+411	148	411
+412	149	412
+413	149	413
+414	149	414
+415	150	415
+416	150	416
+417	150	417
+418	150	418
+419	151	419
+420	151	420
+421	151	421
+422	151	422
+423	151	423
+424	152	424
+425	152	425
+426	152	426
+427	152	427
+428	152	428
+429	153	429
+430	153	430
+431	153	431
+432	154	432
+433	154	433
+434	154	434
+435	155	435
+436	155	436
+437	155	437
+438	156	438
+439	156	439
+440	156	440
+441	157	441
+442	157	442
+443	157	443
+444	158	444
+445	158	445
+446	158	446
+447	159	447
+448	159	448
+449	160	449
+450	160	450
+451	160	451
+452	161	452
+453	161	453
+454	161	454
+455	162	455
+456	162	456
+457	162	457
+458	163	458
+459	163	459
+460	163	460
+461	164	461
+462	164	462
+463	164	463
+464	165	464
+465	165	465
+466	165	466
+467	166	467
+468	166	468
+469	166	469
+470	167	470
+471	167	471
+472	167	472
+473	168	473
+474	168	474
+475	168	475
+476	169	476
+477	169	477
+478	169	478
+479	170	479
+480	170	480
+481	170	481
+482	10	482
+483	10	483
+484	10	484
+485	144	488
+486	144	485
+487	144	486
+488	144	487
+489	173	489
+490	83	490
+491	83	491
+492	83	492
+493	83	493
+494	83	494
+495	83	495
+496	83	496
+\.
+
+
+--
+-- Data for Name: recipick_recipe_scrapped_user; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_recipe_scrapped_user (id, recipe_id, user_id) FROM stdin;
+2	1	14
+4	65	32
+21	65	34
+22	53	47
+23	135	47
+27	135	51
+\.
+
+
+--
+-- Data for Name: recipick_reply; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_reply (id, content, created_date, edited, author_id, comment_id) FROM stdin;
+1	오오 멋져요 :)	2020-11-05	f	32	4
+\.
+
+
+--
+-- Data for Name: recipick_user; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, date_joined, is_active) FROM stdin;
+28	pbkdf2_sha256$216000$yoj4oHSfq80o$vQopg7i7JOjycWGzplEdXycLUaroeAryMI/Qk/UXkfU=	\N	f	imitationgame				f	2020-12-10 10:11:23.541487+00	f
+19	pbkdf2_sha256$216000$cOB0E8ivEmxJ$iQmXpY+rFAGKQgHDR0At7uKz8tHx2stFnyIJXLKAgr4=	2020-12-06 20:05:35.793284+00	f	superkgd2				f	2020-12-06 20:04:32.579224+00	t
+9	password	\N	f	user1	hyunsoo	Kim		f	2020-12-03 04:03:26.503512+00	f
+10	pbkdf2_sha256$216000$IU62jtON7F00$iarEduSVow4UUmisTOdCj2iiwsYbkXyLd9Fshh3P1wo=	\N	f	qwer1234				f	2020-12-03 09:39:35.565392+00	f
+11	pbkdf2_sha256$216000$FKfDHtrGhkAd$MfK+d6cha3ZNf1CkLalYZKjj3TXfXiWET8D8o78bGj8=	2020-12-03 10:13:37.719847+00	f	gongon1234				f	2020-12-03 10:10:00.103522+00	t
+29	pbkdf2_sha256$216000$H0HfLKzCprtR$qaffwKuM26BJCzpNq3FcEjES1jhvPsWQy+BdaWASReg=	\N	f	a				f	2020-12-10 10:11:29.126226+00	f
+20	pbkdf2_sha256$216000$QQFF5NHh2qqo$gNDiwIVxhkAYEDadAaaem9t0Ug0SCgf5YjED1RnmNSw=	2020-12-07 16:08:00.264962+00	f	superkgd4				f	2020-12-07 16:05:03.677795+00	t
+13	pbkdf2_sha256$216000$9bhyG5gkboWd$9m7JvCPC4p6vUYDj+nRCemZiDL1xjEYtI7NowBs5Zks=	2020-12-03 10:20:00.030939+00	f	qwer12345				f	2020-12-03 10:19:04.000188+00	t
+39	pbkdf2_sha256$216000$mpr8k9Zr9dNt$/Dko/2MuzwMH04/Kyx+moQ7PmfAQzvye6M/eA44y2rc=	2020-12-10 10:15:44.486818+00	f	mushypeas				f	2020-12-10 10:15:14.654235+00	t
+16	pbkdf2_sha256$216000$hQgvOsWIymiR$0t6iXthy/gRG4uTP8JxnQfc5gJ9/L2MOJ+6OCkmOhO4=	\N	f	umjunsick				f	2020-12-03 12:36:20.15373+00	f
+21	pbkdf2_sha256$216000$eF4TzHdQtSYI$Nd0SBhz1mn6nQM+1ECWpbx1Tcncuc9c1pb7D3Geu7sc=	\N	f	user2				f	2020-12-09 17:22:44.553329+00	f
+42	pbkdf2_sha256$216000$HHilnqshj41F$dTH8xvUgyIaXG8iLlmUVN4MmhXq4y9TjisSMOK4LWoI=	\N	f	aabaa				f	2020-12-10 10:16:19.116026+00	f
+15	pbkdf2_sha256$216000$NaPSQuiFpLA4$8462ypDQaBxUYY8gBBnbVVJfbsQCtjWp+s+M8sb2KDc=	2020-12-04 13:10:42.58945+00	f	현수				f	2020-12-03 12:32:06.596553+00	t
+32	pbkdf2_sha256$216000$i054pMDpGZM4$nXtVd8VELE0sQFDrdjJkR0eDNOdoVV+rma1h9B7iYn0=	2020-12-10 10:12:19.026071+00	f	트로닠				f	2020-12-10 10:11:32.5775+00	t
+17	pbkdf2_sha256$216000$avzqkZMaUT85$5YnVX814UiNrQ9yePS0bUve8Jw6TSiAKgnu6EQRyo7U=	\N	f	name				f	2020-12-05 16:24:17.226488+00	f
+22	pbkdf2_sha256$216000$Kk8Xhqv8BdM5$NPIzU27xldRKnAoPkaQf+3Bfor6ApGEADmTN6I4p6B8=	2020-12-09 17:26:47.10775+00	f	user3				f	2020-12-09 17:26:08.099818+00	t
+34	pbkdf2_sha256$216000$7tSgAPvV3yzh$iyDlyMGqRItOScIcIajAeXEE2CP63LCEXFGAW1iXbVY=	2020-12-10 10:12:26.566973+00	f	aaa				f	2020-12-10 10:12:03.983864+00	t
+35	pbkdf2_sha256$216000$zkoUWmMS0v51$PBCBZ0mJTaGddCwChZfCTIjv58gu/efIUqj/2Q8QTgE=	\N	f	ch				f	2020-12-10 10:12:27.612589+00	f
+18	pbkdf2_sha256$216000$0OAsXq8FDhRn$thBWhqmJozZvRdgx6Wi/jimbGJ1Y3y3+kIHfRfH3Gy0=	2020-12-06 18:24:34.969187+00	f	superkgd1				f	2020-12-06 18:23:46.171978+00	t
+24	pbkdf2_sha256$216000$5Ot0JClRaBqp$88PuTxRAO5D4uMeYt5hsAOR3I+d+9bqjKBLlvvBguy0=	2020-12-10 09:46:28.095676+00	f	latent1357				f	2020-12-10 09:43:50.382701+00	t
+25	pbkdf2_sha256$216000$iQp4J2AcCwyV$h5U8QQJnlsNC47bEUMBCTKoPmFxaRnvBlVi9tnlBcIw=	2020-12-10 09:57:45.44792+00	f	latent13579				f	2020-12-10 09:57:19.92731+00	t
+43	pbkdf2_sha256$216000$WRGR8LRGGRnC$e7zA8ODc5lG84Ft4/qHn8Bh1n0U+eOJErUkHQ7ohV1k=	\N	f	iwannagohome				f	2020-12-10 10:16:20.629233+00	f
+26	pbkdf2_sha256$216000$nQznE73cmNVC$LlacberNbrtyO7aSpY0ygPptdyCZgLQc8TdFC8to5xM=	\N	f	현뚜				f	2020-12-10 10:06:23.896069+00	t
+27	pbkdf2_sha256$216000$QtqpD5f4Aq6O$zg4Rd/TELX/OaxFwHDTG6quFfqwxJIrynG2akO16nR8=	2020-12-10 10:09:08.772488+00	f	hscornelia				f	2020-12-10 10:08:44.5211+00	t
+37	pbkdf2_sha256$216000$JvBR3ACk7dBq$jPUWMu3lMPYoKqEu/hZakuEH/oFX/nEdZu9BasIrMyY=	\N	f	백종원				f	2020-12-10 10:14:56.408727+00	f
+38	pbkdf2_sha256$216000$SGzLuCoYcnji$wVdYfc2mEeCGAoQvQtkjPhjD2/7Xv1aD9qUgcAhPXGY=	\N	f	yg				f	2020-12-10 10:15:01.822682+00	f
+36	pbkdf2_sha256$216000$GJgwd59mnon8$J/rdYybvJjWamqn5py40fbOB6gUEI2H9WLcIwcBGVgw=	2020-12-10 10:15:11.115263+00	f	sin				f	2020-12-10 10:14:25.182184+00	t
+40	pbkdf2_sha256$216000$gtMv03PR8Wls$dk/LujBXb4At5G+BfiwEwJr203+/GCt7yn4hxZbkYIc=	\N	f	khkim				f	2020-12-10 10:15:33.289725+00	f
+52	pbkdf2_sha256$216000$kEZHzoPC1B34$8/EYskCuV4mo+8Xt8UwJWRlZMq5/OgO+5zEDgAGoWfI=	\N	f	sug				f	2020-12-10 10:17:55.709345+00	f
+44	pbkdf2_sha256$216000$A5bmuFaDVzvl$eCQPKfoHh+C2Alz9qoG8E+2e8tX5bPDTAR1j9dbVbpg=	2020-12-10 10:16:50.640861+00	f	백종원2				f	2020-12-10 10:16:23.598886+00	t
+48	pbkdf2_sha256$216000$qujzdaPCrAx1$GQ4mUcC5yX9z8Jotrd6ooycGjGCRbPLl6dHfHwAE4ig=	\N	f	aA				f	2020-12-10 10:16:54.092254+00	f
+50	pbkdf2_sha256$216000$QzeEcJFhnHL0$KM8p3OPD+3vFQdEHXqr/N3CJDLXy0LHIR6sDRjlWxs8=	\N	f	kristy2				f	2020-12-10 10:17:10.67415+00	f
+47	pbkdf2_sha256$216000$GxX4Y0xkm6xo$dFdMEZxblPfNNzPdCSjqr0OyA43iIyjoe1/81osdiCg=	2020-12-10 10:17:36.763309+00	f	iwannagohome2				f	2020-12-10 10:16:48.717575+00	t
+51	pbkdf2_sha256$216000$hReXSN7vJ07J$E9RVFiOaMj4tNUeT3iW0mVDRNbUc/rsUh1obHgfSt0s=	2020-12-10 10:18:31.382188+00	f	MANDOOLOVER				f	2020-12-10 10:17:43.109602+00	t
+54	pbkdf2_sha256$216000$7sYl8HhF2JW4$ijqgNQKEcwTwkB8FyLFnzy8yuHunwzI3VUZOuj/5ZRc=	\N	f	백중원				f	2020-12-10 11:04:51.380939+00	f
+14	pbkdf2_sha256$216000$4LgQ4wya9nwc$sPGJlJiEPpX5ERACmNHJGyY/Kz1OkfecV0od4STPb/I=	2020-12-10 14:37:10.976646+00	f	username				f	2020-12-03 10:20:41.125964+00	t
+\.
+
+
+--
+-- Data for Name: recipick_user_following; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_user_following (id, from_user_id, to_user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: recipick_user_groups; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_user_groups (id, user_id, group_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: recipick_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY public.recipick_user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.auth_group_id_seq', 1, false);
+
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
+
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 52, true);
+
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
+
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 13, true);
+
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 21, true);
+
+
+--
+-- Name: recipick_comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_comment_id_seq', 6, true);
+
+
+--
+-- Name: recipick_connectrecipeingredient_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_connectrecipeingredient_id_seq', 513, true);
+
+
+--
+-- Name: recipick_imagemodel_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_imagemodel_id_seq', 496, true);
+
+
+--
+-- Name: recipick_ingredient_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_ingredient_id_seq', 259, true);
+
+
+--
+-- Name: recipick_recipe_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_recipe_id_seq', 174, true);
+
+
+--
+-- Name: recipick_recipe_liked_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_recipe_liked_user_id_seq', 20, true);
+
+
+--
+-- Name: recipick_recipe_photo_list_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_recipe_photo_list_id_seq', 496, true);
+
+
+--
+-- Name: recipick_recipe_scrapped_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_recipe_scrapped_user_id_seq', 27, true);
+
+
+--
+-- Name: recipick_reply_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_reply_id_seq', 1, true);
+
+
+--
+-- Name: recipick_user_following_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_user_following_id_seq', 1, false);
+
+
+--
+-- Name: recipick_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_user_groups_id_seq', 1, false);
+
+
+--
+-- Name: recipick_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_user_id_seq', 54, true);
+
+
+--
+-- Name: recipick_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('public.recipick_user_user_permissions_id_seq', 1, false);
+
+
+--
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- Name: recipick_comment recipick_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_comment
+    ADD CONSTRAINT recipick_comment_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_connectrecipeingredient recipick_connectrecipeingredient_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_connectrecipeingredient
+    ADD CONSTRAINT recipick_connectrecipeingredient_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_imagemodel recipick_imagemodel_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_imagemodel
+    ADD CONSTRAINT recipick_imagemodel_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_ingredient recipick_ingredient_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_ingredient
+    ADD CONSTRAINT recipick_ingredient_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_recipe_liked_user recipick_recipe_liked_user_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_liked_user
+    ADD CONSTRAINT recipick_recipe_liked_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_recipe_liked_user recipick_recipe_liked_user_recipe_id_user_id_e9c1087c_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_liked_user
+    ADD CONSTRAINT recipick_recipe_liked_user_recipe_id_user_id_e9c1087c_uniq UNIQUE (recipe_id, user_id);
+
+
+--
+-- Name: recipick_recipe_photo_list recipick_recipe_photo_li_recipe_id_imagemodel_id_eeac988e_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_photo_list
+    ADD CONSTRAINT recipick_recipe_photo_li_recipe_id_imagemodel_id_eeac988e_uniq UNIQUE (recipe_id, imagemodel_id);
+
+
+--
+-- Name: recipick_recipe_photo_list recipick_recipe_photo_list_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_photo_list
+    ADD CONSTRAINT recipick_recipe_photo_list_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_recipe recipick_recipe_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe
+    ADD CONSTRAINT recipick_recipe_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_recipe_scrapped_user recipick_recipe_scrapped_user_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_scrapped_user
+    ADD CONSTRAINT recipick_recipe_scrapped_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_recipe_scrapped_user recipick_recipe_scrapped_user_recipe_id_user_id_a75c506d_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_scrapped_user
+    ADD CONSTRAINT recipick_recipe_scrapped_user_recipe_id_user_id_a75c506d_uniq UNIQUE (recipe_id, user_id);
+
+
+--
+-- Name: recipick_reply recipick_reply_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_reply
+    ADD CONSTRAINT recipick_reply_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_user_following recipick_user_following_from_user_id_to_user_id_bf52de85_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_following
+    ADD CONSTRAINT recipick_user_following_from_user_id_to_user_id_bf52de85_uniq UNIQUE (from_user_id, to_user_id);
+
+
+--
+-- Name: recipick_user_following recipick_user_following_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_following
+    ADD CONSTRAINT recipick_user_following_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_user_groups recipick_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_groups
+    ADD CONSTRAINT recipick_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_user_groups recipick_user_groups_user_id_group_id_145331fc_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_groups
+    ADD CONSTRAINT recipick_user_groups_user_id_group_id_145331fc_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- Name: recipick_user recipick_user_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user
+    ADD CONSTRAINT recipick_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_user_user_permissions recipick_user_user_permi_user_id_permission_id_e371225b_uniq; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_user_permissions
+    ADD CONSTRAINT recipick_user_user_permi_user_id_permission_id_e371225b_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- Name: recipick_user_user_permissions recipick_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_user_permissions
+    ADD CONSTRAINT recipick_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipick_user recipick_user_username_key; Type: CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user
+    ADD CONSTRAINT recipick_user_username_key UNIQUE (username);
+
+
+--
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- Name: recipick_comment_author_id_d29f5aaf; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_comment_author_id_d29f5aaf ON public.recipick_comment USING btree (author_id);
+
+
+--
+-- Name: recipick_comment_recipe_id_c22c95f7; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_comment_recipe_id_c22c95f7 ON public.recipick_comment USING btree (recipe_id);
+
+
+--
+-- Name: recipick_connectrecipeingredient_ingredient_id_da0bffd3; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_connectrecipeingredient_ingredient_id_da0bffd3 ON public.recipick_connectrecipeingredient USING btree (ingredient_id);
+
+
+--
+-- Name: recipick_connectrecipeingredient_recipe_id_f2c96bca; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_connectrecipeingredient_recipe_id_f2c96bca ON public.recipick_connectrecipeingredient USING btree (recipe_id);
+
+
+--
+-- Name: recipick_recipe_author_id_4a698a3f; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_recipe_author_id_4a698a3f ON public.recipick_recipe USING btree (author_id);
+
+
+--
+-- Name: recipick_recipe_liked_user_recipe_id_1995b3b3; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_recipe_liked_user_recipe_id_1995b3b3 ON public.recipick_recipe_liked_user USING btree (recipe_id);
+
+
+--
+-- Name: recipick_recipe_liked_user_user_id_e09afb6a; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_recipe_liked_user_user_id_e09afb6a ON public.recipick_recipe_liked_user USING btree (user_id);
+
+
+--
+-- Name: recipick_recipe_photo_list_imagemodel_id_808e784f; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_recipe_photo_list_imagemodel_id_808e784f ON public.recipick_recipe_photo_list USING btree (imagemodel_id);
+
+
+--
+-- Name: recipick_recipe_photo_list_recipe_id_1fd1265e; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_recipe_photo_list_recipe_id_1fd1265e ON public.recipick_recipe_photo_list USING btree (recipe_id);
+
+
+--
+-- Name: recipick_recipe_scrapped_user_recipe_id_48285ae4; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_recipe_scrapped_user_recipe_id_48285ae4 ON public.recipick_recipe_scrapped_user USING btree (recipe_id);
+
+
+--
+-- Name: recipick_recipe_scrapped_user_user_id_ef78af73; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_recipe_scrapped_user_user_id_ef78af73 ON public.recipick_recipe_scrapped_user USING btree (user_id);
+
+
+--
+-- Name: recipick_reply_author_id_77d21afa; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_reply_author_id_77d21afa ON public.recipick_reply USING btree (author_id);
+
+
+--
+-- Name: recipick_reply_comment_id_569b495e; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_reply_comment_id_569b495e ON public.recipick_reply USING btree (comment_id);
+
+
+--
+-- Name: recipick_user_following_from_user_id_cfafd460; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_user_following_from_user_id_cfafd460 ON public.recipick_user_following USING btree (from_user_id);
+
+
+--
+-- Name: recipick_user_following_to_user_id_28eae6b1; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_user_following_to_user_id_28eae6b1 ON public.recipick_user_following USING btree (to_user_id);
+
+
+--
+-- Name: recipick_user_groups_group_id_eeb7aae1; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_user_groups_group_id_eeb7aae1 ON public.recipick_user_groups USING btree (group_id);
+
+
+--
+-- Name: recipick_user_groups_user_id_b3b5e143; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_user_groups_user_id_b3b5e143 ON public.recipick_user_groups USING btree (user_id);
+
+
+--
+-- Name: recipick_user_user_permissions_permission_id_c564fcee; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_user_user_permissions_permission_id_c564fcee ON public.recipick_user_user_permissions USING btree (permission_id);
+
+
+--
+-- Name: recipick_user_user_permissions_user_id_393b85fe; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_user_user_permissions_user_id_393b85fe ON public.recipick_user_user_permissions USING btree (user_id);
+
+
+--
+-- Name: recipick_user_username_27e0eb1a_like; Type: INDEX; Schema: public; Owner: root
+--
+
+CREATE INDEX recipick_user_username_27e0eb1a_like ON public.recipick_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_recipick_user_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_recipick_user_id FOREIGN KEY (user_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_comment recipick_comment_author_id_d29f5aaf_fk_recipick_user_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_comment
+    ADD CONSTRAINT recipick_comment_author_id_d29f5aaf_fk_recipick_user_id FOREIGN KEY (author_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_comment recipick_comment_recipe_id_c22c95f7_fk_recipick_recipe_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_comment
+    ADD CONSTRAINT recipick_comment_recipe_id_c22c95f7_fk_recipick_recipe_id FOREIGN KEY (recipe_id) REFERENCES public.recipick_recipe(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_connectrecipeingredient recipick_connectreci_ingredient_id_da0bffd3_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_connectrecipeingredient
+    ADD CONSTRAINT recipick_connectreci_ingredient_id_da0bffd3_fk_recipick_ FOREIGN KEY (ingredient_id) REFERENCES public.recipick_ingredient(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_connectrecipeingredient recipick_connectreci_recipe_id_f2c96bca_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_connectrecipeingredient
+    ADD CONSTRAINT recipick_connectreci_recipe_id_f2c96bca_fk_recipick_ FOREIGN KEY (recipe_id) REFERENCES public.recipick_recipe(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_recipe recipick_recipe_author_id_4a698a3f_fk_recipick_user_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe
+    ADD CONSTRAINT recipick_recipe_author_id_4a698a3f_fk_recipick_user_id FOREIGN KEY (author_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_recipe_liked_user recipick_recipe_like_recipe_id_1995b3b3_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_liked_user
+    ADD CONSTRAINT recipick_recipe_like_recipe_id_1995b3b3_fk_recipick_ FOREIGN KEY (recipe_id) REFERENCES public.recipick_recipe(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_recipe_liked_user recipick_recipe_liked_user_user_id_e09afb6a_fk_recipick_user_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_liked_user
+    ADD CONSTRAINT recipick_recipe_liked_user_user_id_e09afb6a_fk_recipick_user_id FOREIGN KEY (user_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_recipe_photo_list recipick_recipe_phot_imagemodel_id_808e784f_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_photo_list
+    ADD CONSTRAINT recipick_recipe_phot_imagemodel_id_808e784f_fk_recipick_ FOREIGN KEY (imagemodel_id) REFERENCES public.recipick_imagemodel(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_recipe_photo_list recipick_recipe_phot_recipe_id_1fd1265e_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_photo_list
+    ADD CONSTRAINT recipick_recipe_phot_recipe_id_1fd1265e_fk_recipick_ FOREIGN KEY (recipe_id) REFERENCES public.recipick_recipe(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_recipe_scrapped_user recipick_recipe_scra_recipe_id_48285ae4_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_scrapped_user
+    ADD CONSTRAINT recipick_recipe_scra_recipe_id_48285ae4_fk_recipick_ FOREIGN KEY (recipe_id) REFERENCES public.recipick_recipe(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_recipe_scrapped_user recipick_recipe_scra_user_id_ef78af73_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_recipe_scrapped_user
+    ADD CONSTRAINT recipick_recipe_scra_user_id_ef78af73_fk_recipick_ FOREIGN KEY (user_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_reply recipick_reply_author_id_77d21afa_fk_recipick_user_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_reply
+    ADD CONSTRAINT recipick_reply_author_id_77d21afa_fk_recipick_user_id FOREIGN KEY (author_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_reply recipick_reply_comment_id_569b495e_fk_recipick_comment_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_reply
+    ADD CONSTRAINT recipick_reply_comment_id_569b495e_fk_recipick_comment_id FOREIGN KEY (comment_id) REFERENCES public.recipick_comment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_user_following recipick_user_follow_from_user_id_cfafd460_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_following
+    ADD CONSTRAINT recipick_user_follow_from_user_id_cfafd460_fk_recipick_ FOREIGN KEY (from_user_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_user_following recipick_user_following_to_user_id_28eae6b1_fk_recipick_user_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_following
+    ADD CONSTRAINT recipick_user_following_to_user_id_28eae6b1_fk_recipick_user_id FOREIGN KEY (to_user_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_user_groups recipick_user_groups_group_id_eeb7aae1_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_groups
+    ADD CONSTRAINT recipick_user_groups_group_id_eeb7aae1_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_user_groups recipick_user_groups_user_id_b3b5e143_fk_recipick_user_id; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_groups
+    ADD CONSTRAINT recipick_user_groups_user_id_b3b5e143_fk_recipick_user_id FOREIGN KEY (user_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_user_user_permissions recipick_user_user_p_permission_id_c564fcee_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_user_permissions
+    ADD CONSTRAINT recipick_user_user_p_permission_id_c564fcee_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: recipick_user_user_permissions recipick_user_user_p_user_id_393b85fe_fk_recipick_; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY public.recipick_user_user_permissions
+    ADD CONSTRAINT recipick_user_user_p_user_id_393b85fe_fk_recipick_ FOREIGN KEY (user_id) REFERENCES public.recipick_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

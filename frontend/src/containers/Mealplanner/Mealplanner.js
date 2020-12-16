@@ -53,6 +53,17 @@ export class Mealplanner extends Component {
         
         // temporary function to get temp getrecipes
         this.props.isLogin().then(res => {
+            if(!res.login_id){
+                let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
+                if(input){
+                    this.props.history.push('/login')
+                }
+                else{
+                    this.props.history.push('/main-page')
+                }
+                return;
+            }
+
             this.setState({login_id: res.login_id})
             this.props.getMls(res.login_id).then((res)=> {
                 let new_list = res.mlRecipes.map((recipe, index) => ({'id':index, 'thumbnail':recipe.thumbnail, 'real_id':recipe.id}))
@@ -70,7 +81,7 @@ export class Mealplanner extends Component {
 
     addDayAbove(index) {
         if (this.state.recipeArray.length >= 7) {
-            console.log('max number is 7')
+            alert('7일 이상의 식단표를 만들 수 없습니다!')
         }
         else {
             let insertSubList = [{ id: null, thumbnail: 0 }, { id: null, thumbnail: 0 }, { id: null, thumbnail: 0 }]
@@ -204,6 +215,7 @@ export class Mealplanner extends Component {
 
     onClickSave(){
         this.props.savePlanner(this.state.login_id, this.state.recipeArray)
+        window.alert("식단표가 저장이 되었습니다!")
     }
 
     /* <Draggable direction="horizontal"> <-- 이 태그를 이용해서 horizontal flex에 맞게 drag and drop 가능.

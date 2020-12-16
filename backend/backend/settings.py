@@ -26,14 +26,13 @@ SECRET_KEY = '@$(7l20qx*j1rqu9=s@=a3ey3pmn1wa5+n_85+b&075eis0%@$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ '3.230.15.70', 'localhost', '127.0.0.1' ]
 
 # Base url to serve media files
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 
 # Path where media is stored
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
 
 # Application definition
 
@@ -46,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_cleanup.apps.CleanupConfig',
-    'verify_email'
+    'verify_email',
+    'sslserver'
 ]
 
 MIDDLEWARE = [
@@ -64,10 +64,11 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.media'
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -149,3 +150,4 @@ EMAIL_HOST_PASSWORD = my_settings.EMAIL['EMAIL_HOST_PASSWORD']
 STATIC_URL = '/static/'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
+
