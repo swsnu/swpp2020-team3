@@ -72,7 +72,7 @@ class Editpage extends Component {
                     photo_list: res['selectedRecipe'].photo_list,
                 })
                 let list = this.state.photo_list.map((item) => (
-                    'data:image/png;base64,'+item
+                    item
                 ))
                 this.setState({photo_list: list})
             })
