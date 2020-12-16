@@ -28,6 +28,11 @@
     margin-top: 2px;
     margin-bottom: 50px;
 }
+
+.search-confirm-button:hover {
+    cursor: pointer;
+}
+
 #categoryblock {
     display: flex;
     justify-content: center;
@@ -49,7 +54,7 @@
 .search-mode-select-button {
     display: inline-block;
     text-align: center;
-    background-color: #fcc051;
+    background-color: gray;
     border: none;
     border-radius: 3px;
     color: black;
@@ -60,6 +65,10 @@
     width: 100px;
     margin-top: 2px;
     margin-bottom: 2px;
+}
+
+.search-mode-select-button:hover {
+    cursor: pointer;
 }
 
 #list-option {
@@ -120,6 +129,11 @@
     font-size: 13px;
     margin: 5px;
 }
+
+.category-select-button:hover {
+    cursor: pointer;
+}
+
 .search-options {
     margin-top: -30px;
 }
@@ -137,5 +151,14 @@
     width:100px;
 }
 
-.pages {
+.list-page-previous-button:hover{
+    cursor: pointer;
+}
+
+.list-page-number-button:hover{
+    cursor: pointer;
+}
+
+.list-page-next-button:hover{
+    cursor: pointer;
 }

@@ -23,7 +23,7 @@ class RecipeList extends Component{
             minDuration : 0,
             maxDuration : 100,
             searchWord : "",
-            searchMode : "likes",
+            searchMode : "cost",
             pageNumber: 1,
         },
 
@@ -40,7 +40,7 @@ class RecipeList extends Component{
             minDuration : 0,
             maxDuration : 100,
             searchWord : "",
-            searchMode : "likes",
+            searchMode : "cost",
         },
 
         
@@ -290,12 +290,12 @@ class RecipeList extends Component{
                                 <div className = "options">
                                     <div className ="search-options-button">분류</div>
                                     <br/>
+                                    <button className ="search-mode-select-button" style = {{backgroundColor: this.state.tempSearchSettings.searchMode == 'cost' ? "#fcc051" : null}}
+                                            onClick={() => this.clickSearchModeHandler("cost")}>가격순</button>
                                     <button className ="search-mode-select-button" style = {{backgroundColor: this.state.tempSearchSettings.searchMode == 'likes' ? "#fcc051" : null}}
-                                            onClick={() => this.clickSearchModeHandler("likes")}>좋아요순</button>
+                                            onClick={() => this.clickSearchModeHandler("likes")}>추천순</button>
                                     <button className ="search-mode-select-button" style = {{backgroundColor: this.state.tempSearchSettings.searchMode == 'rating' ? "#fcc051" : null}}
                                             onClick={() => this.clickSearchModeHandler("rating")}>평점순</button>
-                                    <button className ="search-mode-select-button" style = {{backgroundColor: this.state.tempSearchSettings.searchMode == 'cost' ? "#fcc051" : null}}
-                                            onClick={() => this.clickSearchModeHandler("cost")}>비용순</button>
                                 </div>
                         </div>
                     </div>

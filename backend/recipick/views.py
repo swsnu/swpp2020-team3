@@ -79,6 +79,7 @@ def getuser(request, id):
             temp = planner[0].data
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
             'written_recipes': written_recipes, 'planner': temp}
+
         return JsonResponse(user, safe=False, status=200)
     elif(request.method) == 'PUT':
         body = json.loads(request.body.decode())
@@ -316,7 +317,7 @@ def recipe_page(request):
                 'id': recipe.id, 'title': recipe.title,
                 'author': author, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                'thumbnail': recipe.thumbnail.url
+                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
             }
             newrecipepage.append(newrecipe)
         return JsonResponse(newrecipepage, safe=False, status=200)

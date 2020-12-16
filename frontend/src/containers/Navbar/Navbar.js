@@ -55,7 +55,7 @@ class Navbar extends Component{
             minDuration: 0, maxDuration: 1000,
             searchWord: this.state.keyword,
             pageNumber: 1,
-            searchMode: 'likes',
+            searchMode: 'cost',
         }
         let searchSettings = this.checkInputHandler(query);
         if(searchSettings){
@@ -74,7 +74,7 @@ class Navbar extends Component{
             minDuration: 0, maxDuration: 1000,
             searchWord: this.state.keyword,
             pageNumber: 1,
-            searchMode: 'likes',
+            searchMode: 'cost',
         }
         let searchSettings = this.checkInputHandler(query);
         if(searchSettings){
