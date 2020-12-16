@@ -90,6 +90,13 @@ class Detailpage extends Component {
     }
     submitRating = () => {
         console.log('submit')
+        if(this.state.login_id <= 0){
+            let input = window.confirm("로그인이 필요합니다. 로그인 하시겠습니까?");
+            if(input){
+                this.props.history.push('/login')
+            }
+            return;
+        }
         if(this.state.personal_rating > 10 || this.state.personal_rating < 0){
             alert("별점은 10점 만점입니다.")
             return;

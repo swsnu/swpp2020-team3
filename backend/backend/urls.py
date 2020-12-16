@@ -23,9 +23,9 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('recipick.urls')),
-]
+] 
 
 urlpatterns += static(
-    prefix=settings.MEDIA_URL,
+    prefix = settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT,
 )
