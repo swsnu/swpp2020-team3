@@ -35,6 +35,7 @@ def getuser(request, id):
     if(request.method) == 'GET':
         user_1 = User.objects.get(id = id)
         user_info = [user for user in User.objects.filter(id = id).values()]
+        print(user_info)
         liked_recipes = []
         recipe_basket = []
         written_recipes = []
@@ -267,7 +268,7 @@ def recipe_page(request):
                 word_query = Q(title__contains = word)
                 flag = True
             else:
-                word_query = word_query & Q(title__contains = word)
+                word_query = word_query | Q(title__contains = word)
 
         list_of_recipes = Recipe.objects
         vector = SearchVector('title')
@@ -676,22 +677,24 @@ def recipe_rating(request, id):
         recipe.save()
         response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}
 
-        timestamp = int(time.time())
+        i = body['rating']-2
+        for j in range(1,i):
+            timestamp = int(time.time())
 
-        personalize_events = boto3.client('personalize-events', 'us-east-1')
+            personalize_events = boto3.client('personalize-events', 'us-east-1')
 
-        data = personalize_events.put_events(
-            trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
-            userId = user.id,
-            sessionId = 'session_id',
-            eventList = [{
-                'sentAt': timestamp,
-                'eventType': 'Likes',
-                'properties': json.dumps({
-                'itemId': recipe.id
-                })
-            }]
-        )
+            data = personalize_events.put_events(
+                trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
+                userId = user.id,
+                sessionId = 'session_id',
+                eventList = [{
+                    'sentAt': timestamp,
+                    'eventType': 'Likes',
+                    'properties': json.dumps({
+                    'itemId': recipe.id
+                    })
+                }]
+            )
 
 
         return JsonResponse(response, safe=False, status=200)
