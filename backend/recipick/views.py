@@ -35,6 +35,7 @@ def getuser(request, id):
     if(request.method) == 'GET':
         user_1 = User.objects.get(id = id)
         user_info = [user for user in User.objects.filter(id = id).values()]
+        print(user_info)
         liked_recipes = []
         recipe_basket = []
         written_recipes = []
@@ -267,7 +268,7 @@ def recipe_page(request):
                 word_query = Q(title__contains = word)
                 flag = True
             else:
-                word_query = word_query & Q(title__contains = word)
+                word_query = word_query | Q(title__contains = word)
 
         list_of_recipes = Recipe.objects
         vector = SearchVector('title')
@@ -833,6 +834,16 @@ def recipe(request, id):
         # ingredients: 
         ingList = Ingredient.objects.all()
         origin_ingredient_list = recipe.ingredient_list
+        for ing in origin_ingredient_list:
+            target = Ingredient.objects.filter(name=ing['name'], price=ing['price'],igd_type=ing['igd_type'])
+            exist = 0
+            for ingredient in ingredient_list.iterator():
+                if ingredient.id == target[0].id:
+                    exist = 1
+            if exist == 0: # delete else leave the connection
+                ConnectRecipeIngredient.objects.get(recipe=recipe, ingredient=target[0]).delete()
+
+
         for ing in ingredient_list:
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
