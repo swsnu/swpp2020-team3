@@ -79,7 +79,6 @@ export const deleteRecipe = (id) => {
   return dispatch => {
     return axios.delete('/api/recipe/'+id+'/')
       .then(() => dispatch(deleteRecipe_(id)))
-      .then(() => dispatch(push('/main-page/')))
   }
 }
 
