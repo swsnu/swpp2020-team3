@@ -117,10 +117,12 @@ class MyPage extends Component{
                 );
             });
             planner = this.props.storedUser.planner.map( (res, index) => {
-                let a = res[0].thunmbnail
-                let b = res[1].thunmbnail
-                let c = res[2].thunmbnail
-                console.log(b)
+                let a = res[0].thumbnail
+                let b = res[1].thumbnail
+                let c = res[2].thumbnail
+                console.log(res[1].thumbnail)
+		console.log(b)
+		console.log(res[1].thumbnail)
                 return (
                     <div id = 'plannerRows'>
                         <div>{`${index} 일차`}</div>
