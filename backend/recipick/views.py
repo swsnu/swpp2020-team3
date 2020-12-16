@@ -583,13 +583,13 @@ def recipe_like(request, id):
 
         data = personalize_events.put_events(
             trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
-            userId = user.id,
+            userId = str(user.id),
             sessionId = 'session_id',
             eventList = [{
                 'sentAt': timestamp,
                 'eventType': 'Likes',
                 'properties': json.dumps({
-                'itemId': id
+                'itemId': str(id)
                 })
             }]
         )
@@ -684,13 +684,13 @@ def recipe_rating(request, id):
 
             data = personalize_events.put_events(
                 trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
-                userId = user.id,
+                userId = str(user.id),
                 sessionId = 'session_id',
                 eventList = [{
                     'sentAt': timestamp,
-                    'eventType': 'Likes',
+                    'eventType': 'Rating',
                     'properties': json.dumps({
-                    'itemId': recipe.id
+                    'itemId': str(recipe.id)
                     })
                 }]
             )
