@@ -117,6 +117,7 @@ class MyPage extends Component{
                 );
             });
             planner = this.props.storedUser.planner.map( (res, index) => {
+                console.log(res)
                 return (
                     <div id = 'plannerRows'>
                         <div>{`${index} 일차`}</div>
