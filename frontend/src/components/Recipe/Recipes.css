@@ -1,4 +1,4 @@
-.pagepage{
+#pagepagepage{
     display: inline-block;
     justify-content: center;
     text-align: center;
@@ -22,7 +22,7 @@
 }
 
 .list-page-number-button{
-    background-color: #fcc051;
+    
     border: none;
     border-radius: 3px;
 }

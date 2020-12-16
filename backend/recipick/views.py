@@ -35,6 +35,7 @@ def getuser(request, id):
     if(request.method) == 'GET':
         user_1 = User.objects.get(id = id)
         user_info = [user for user in User.objects.filter(id = id).values()]
+        print(user_info)
         liked_recipes = []
         recipe_basket = []
         written_recipes = []
@@ -267,7 +268,7 @@ def recipe_page(request):
                 word_query = Q(title__contains = word)
                 flag = True
             else:
-                word_query = word_query & Q(title__contains = word)
+                word_query = word_query | Q(title__contains = word)
 
         list_of_recipes = Recipe.objects
         vector = SearchVector('title')
