@@ -831,6 +831,16 @@ def recipe(request, id):
         # ingredients: 
         ingList = Ingredient.objects.all()
         origin_ingredient_list = recipe.ingredient_list
+        for ing in origin_ingredient_list:
+            target = Ingredient.objects.filter(name=ing['name'], price=ing['price'],igd_type=ing['igd_type'])
+            exist = 0
+            for ingredient in ingredient_list.iterator():
+                if ingredient.id == target[0].id:
+                    exist = 1
+            if exist == 0: # delete else leave the connection
+                ConnectRecipeIngredient.objects.get(recipe=recipe, ingredient=target[0]).delete()
+
+
         for ing in ingredient_list:
             # make sure picture field isn't empty
             # normally should try except for decoding each ingredient
