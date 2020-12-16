@@ -68,7 +68,7 @@
     margin-left: 50px;
     background-color: white;
     border-radius: 20px;
-    border: 3px solid #89cff0; 
+    border: 3px solid #0d66d4; 
 }
 
 #mlpDescription {
@@ -102,7 +102,7 @@
 }
 
 .planbutton {
-    background-color: #e7851cf1;
+    background-color: #FF8868;
     margin: 3px;
     border: none;
     padding: 6px;
@@ -116,7 +116,7 @@
 .day {
     margin:12px;
     padding: 20px;
-    border: 3px solid #ed820e;
+    border: 3px solid palevioletred;
     border-radius: 20px;
 }
 
@@ -130,7 +130,7 @@
 }
 
 #ml-generate{
-    background-color: grey;
+    background-color: #d4840d;
     padding:10px;
     border: none;
     border-radius: 10px;
@@ -140,7 +140,7 @@
 }
 
 #mlpSave {
-    background-color: grey;
+    background-color: #d4840d;
     padding-left:20px;
     padding-right:20px;
     padding-top:7px;
@@ -160,7 +160,7 @@
     align-items: center;
     flex-direction: column;
     padding: 5px;
-    border: 3px solid grey;
+    border: 3px solid #f28305;
     border-radius: 20px;
     width:900px;
 }
