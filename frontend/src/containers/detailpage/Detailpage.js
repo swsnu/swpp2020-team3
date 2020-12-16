@@ -101,8 +101,8 @@ class Detailpage extends Component {
             }
             return;
         }
-        if(this.state.personal_rating > 10 || this.state.personal_rating < 0){
-            alert("별점은 10점 만점입니다.")
+        if(this.state.personal_rating > 5 || this.state.personal_rating < 0){
+            alert("별점은 5점 만점입니다.")
             return;
         }
         this.props.addRating(this.props.recipe.id, this.state.personal_rating)
