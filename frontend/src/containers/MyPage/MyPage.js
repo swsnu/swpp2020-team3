@@ -117,20 +117,20 @@ class MyPage extends Component{
                 );
             });
             planner = this.props.storedUser.planner.map( (res, index) => {
-
-                let items = res.map( (row) => {
-                    console.log(row)
-                    return (
-                        <div id='plannerItem'>
-                            <img src={row.thunmbnail} width={100} height={100} onClick = {() => (row.real_id!=undefined && row.real_id!=0) && this.props.history.push((`/detail-page/${row.real_id}`))}></img>
-                        </div>
-                    )
-                })
-
                 return (
                     <div id = 'plannerRows'>
                         <div>{`${index} 일차`}</div>
-                        <div id='plannerCols'>{items}</div>
+                        <div id='plannerCols'>
+                            <div id='plannerItem'>
+                                <img src={res[0].thunmbnail} width={100} height={100} onClick = {() => (res[0].real_id!=undefined || res[0].real_id!=0) && this.props.history.push((`/detail-page/${res[0].real_id}`))}></img>
+                            </div>
+                            <div id='plannerItem'>
+                                <img src={res[1].thunmbnail} width={100} height={100} onClick = {() => (res[1].real_id!=undefined || res[1].real_id!=0) && this.props.history.push((`/detail-page/${res[1].real_id}`))}></img>
+                            </div>
+                            <div id='plannerItem'>
+                                <img src={res[2].thunmbnail} width={100} height={100} onClick = {() => (res[2].real_id!=undefined || res[2].real_id!=0) && this.props.history.push((`/detail-page/${res[2].real_id}`))}></img>
+                            </div>
+                        </div>
                     </div>
                 )
                    
