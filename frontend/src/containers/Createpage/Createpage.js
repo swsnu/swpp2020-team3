@@ -428,12 +428,12 @@ class Createpage extends Component{
                         <div className = 'create_third'>
                             <div className='buttons'>
                                 <p>카테고리 선택</p>
-                                <button id='type' className = "type_first" onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>중식</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>한식</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Western')}>양식</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>일식</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>디저트</button>
-                                <button id='type' onClick={(event)=>this.onClickChangeColor(event, 'ConvenienceStore')}>편의점</button>
+                                <button id='type' className = "type_first" style={(this.state.category.includes('Chinese')?{'background-color':'#c2563a'}:null)} onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>중식</button>
+                                <button id='type' style={(this.state.category.includes('Korean')?{'background-color':'#c2563a'}:null)} onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>한식</button>
+                                <button id='type' style={(this.state.category.includes('American')?{'background-color':'#c2563a'}:null)} onClick={(event)=>this.onClickChangeColor(event, 'American')}>양식</button>
+                                <button id='type' style={(this.state.category.includes('Japanese')?{'background-color':'#c2563a'}:null)} onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>일식</button>
+                                <button id='type' style={(this.state.category.includes('Dessert')?{'background-color':'#c2563a'}:null)} onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>디저트</button>
+                                <button id='type' style={(this.state.category.includes('ConvenienceStore')?{'background-color':'#c2563a'}:null)} onClick={(event)=>this.onClickChangeColor(event, 'ConvenienceStore')}>편의점</button>
                             </div>
                         </div>
                         <div className = 'create_fourth'>
