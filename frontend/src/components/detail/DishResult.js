@@ -20,7 +20,7 @@ class DishResult extends Component {
 
     render() {
         let category_dictionary = {'Korean' : '한식', 'Chinese': '중식', 'Japanese': '일식',
-            'American': '양식', 'ConvenienceStore': '편의점', 'Dessert': '디저트'};
+            'American': '양식', 'Western': '양식', 'ConvenienceStore': '편의점', 'Dessert': '디저트', 'etc': ''};
         const showigd = this.props.ingredients
         // const tag = this.props.tag && this.props.tag.map((tag) => <span key={tag} id='tag'>{tag} </span>)
         let categories;

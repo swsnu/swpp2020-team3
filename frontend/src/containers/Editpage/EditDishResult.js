@@ -239,6 +239,7 @@ class EditDishResult extends Component {
                 }
             }
         }
+        console.log(this.state.category);
         return (
             <div className='dish_result'>
                 <div id = 'detailbox1'>

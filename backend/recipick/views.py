@@ -318,7 +318,7 @@ def recipe_page(request):
                 'id': recipe.id, 'title': recipe.title,
                 'author': author, 'price': recipe.price,
                 'rating': recipe.rating, 'likes': recipe.likes,
-                'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
+                'thumbnail': recipe.thumbnail.url
             }
             newrecipepage.append(newrecipe)
         return JsonResponse(newrecipepage, safe=False, status=200)
@@ -437,7 +437,7 @@ def hotrecipe(request):
                 recipe = s[n-1]
                 newrecipe = {
                     'id': recipe.id, 'title': recipe.title,
-                    'thumbnail': "http://3.230.15.70:8000/media/"+recipe.thumbnail.name
+                    'thumbnail': recipe.thumbnail.url
                 }
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)

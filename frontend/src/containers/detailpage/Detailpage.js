@@ -117,8 +117,8 @@ class Detailpage extends Component {
         const rating  = this.props.recipe && this.props.recipe.rating
         const likes = this.props.recipe && this.props.recipe.likes
         const price = this.props.recipe && this.props.recipe.price
-        const category = this.props.recipe && this.props.recipe.category
-        if(!category) category = 'etc';
+        let category = this.props.recipe && this.props.recipe.category
+        if(!category) category = ['etc'];
         const author = this.props.recipe && this.props.recipe.author
         const duration = this.props.recipe && this.props.recipe.duration
         // const liked_user = this.props.recipe && this.props.recipe.liked_user
@@ -150,6 +150,7 @@ class Detailpage extends Component {
         }
         const methodData = descriptions && descriptions.map((item, index) => ({img: this.props.recipe.photo_list[index], explanation:item}))
         const methods = methodData && methodData.map((item) => <DishStep key={item.id} img={item.img} explanation={item.explanation}/>)
+        console.log(this.state.category);
         return (
             <div id = 'detailBackground'>
                 <div className="Detailpage">

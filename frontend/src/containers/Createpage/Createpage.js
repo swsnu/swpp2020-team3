@@ -71,6 +71,8 @@ const checkOutput = (recipe) => {
         message = message.concat(checkDescriptions(recipe.descriptionList, recipe.prevList))
     if(recipe.ingredientList.length != 0 && !checkIngredients(recipe.ingredientList))
         message = message.concat('요리재료를 올바르게 채워주세요.')
+    if(!recipe.category.length)
+	message = message.concat('카테고리를 골라주세요.')
     console.log(message)
     return message
 }
