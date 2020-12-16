@@ -790,6 +790,7 @@ def recipe(request, id):
             return HttpResponse(status=401)
         try: 
             recipe = Recipe.objects.get(id = id)
+            print(recipe)
         except:
             return HttpResponse(status = 404)
         if user.id != recipe.author_id: # non author --> 403
@@ -831,15 +832,21 @@ def recipe(request, id):
         recipe.category = t_list
         recipe.summary = summary
         recipe.save()
+
         # ingredients: 
         ingList = Ingredient.objects.all()
         origin_ingredient_list = recipe.ingredient_list
-        for ing in origin_ingredient_list:
-            target = Ingredient.objects.filter(name=ing['name'], price=ing['price'],igd_type=ing['igd_type'])
+
+        print(origin_ingredient_list.all())
+
+        for ing in origin_ingredient_list.all():
+            print(ing.name)
+            target = ingList.filter(name=ing.name, price=ing.price,igd_type=ing.igd_type)
             exist = 0
-            for ingredient in ingredient_list.iterator():
-                if ingredient.id == target[0].id:
+            for ingredient in ingredient_list:
+                if ingredient['name'] == target[0].name:
                     exist = 1
+                    print('same')
             if exist == 0: # delete else leave the connection
                 ConnectRecipeIngredient.objects.get(recipe=recipe, ingredient=target[0]).delete()
 
@@ -849,7 +856,7 @@ def recipe(request, id):
             # normally should try except for decoding each ingredient
             target = Ingredient.objects.filter(name=ing['name'], brand=ing['brand'],price=ing['price'],igd_type=ing['igd_type'])
             exist = 0
-            for ingredient in origin_ingredient_list.iterator():
+            for ingredient in origin_ingredient_list.all():
                 if ingredient.id == target[0].id:
                     exist = 1
             if exist == 0:
