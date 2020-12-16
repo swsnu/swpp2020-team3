@@ -117,19 +117,22 @@ class MyPage extends Component{
                 );
             });
             planner = this.props.storedUser.planner.map( (res, index) => {
-                console.log(res)
+                let a = res[0].thunmbnail
+                let b = res[1].thunmbnail
+                let c = res[2].thunmbnail
+                console.log(b)
                 return (
                     <div id = 'plannerRows'>
                         <div>{`${index} 일차`}</div>
                         <div id='plannerCols'>
                             <div id='plannerItem'>
-                                <img src={res[0].thunmbnail} width={100} height={100} onClick = {() => (res[0].real_id!=undefined && res[0].real_id!=0) && this.props.history.push((`/detail-page/${res[0].real_id}`))}></img>
+                                <img src={a} width={100} height={100} onClick = {() => (res[0].real_id!=undefined && res[0].real_id!=0) && this.props.history.push((`/detail-page/${res[0].real_id}`))}></img>
                             </div>
                             <div id='plannerItem'>
-                                <img src={res[1].thunmbnail} width={100} height={100} onClick = {() => (res[1].real_id!=undefined && res[1].real_id!=0) && this.props.history.push((`/detail-page/${res[1].real_id}`))}></img>
+                                <img src={b} width={100} height={100} onClick = {() => (res[1].real_id!=undefined && res[1].real_id!=0) && this.props.history.push((`/detail-page/${res[1].real_id}`))}></img>
                             </div>
                             <div id='plannerItem'>
-                                <img src={res[2].thunmbnail} width={100} height={100} onClick = {() => (res[2].real_id!=undefined && res[2].real_id!=0) && this.props.history.push((`/detail-page/${res[2].real_id}`))}></img>
+                                <img src={c} width={100} height={100} onClick = {() => (res[2].real_id!=undefined && res[2].real_id!=0) && this.props.history.push((`/detail-page/${res[2].real_id}`))}></img>
                             </div>
                         </div>
                     </div>
