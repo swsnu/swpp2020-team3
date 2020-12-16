@@ -360,15 +360,22 @@ class Createpage extends Component{
                                 onChange={(event) => this.thumbnailHandler(event.target.files[0])}/>
                             <img src={this.state.thumbnailURL} width='250' height='200' />
                             <br/>
+
+                            <p>예상 조리 시간</p>
+                            <input id="recipe-cooking-time-input" type='number' min="0"
+                                value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
+                                placeholder='minutes' name='cooking-time' />
+                            {"  분"}
                             
-                            <h4>재료 추가</h4>
+                            {/* <h4>재료 추가</h4>
                             <p>레시피에 필요한 재료를 추가해주세요! 선택란에 없다면 직접 추가하실 수 있습니다.</p>
                             <p>사용하시는 재료가 특정 브랜드의 상품이 아니고 신선한 재료라면 (야채, 과일...) 재료명과 '제품'의 가격을 입력해주세요!</p>
                             <p>양 (상품) 칸에는 특정 브랜드의 상품을 입력할때만 사용해주세요! 즉, 시중에 파는 상품이 아니면 건너뛰시면 됩니다!</p>
                             <p>할 수 있다면 사용하시는 브랜드의 명과 상품의 가격 및 총량을 입력해주세요. 입력하기 귀찮으시다면 위처럼 재료명과 가격('제품'칸)에 입력해주세요.</p>
                             <p>제품칸에 입력을 안 하시고 상품칸에 재료의 가격을 입력하게 된다면 실제 가격보다 훨씬 더 많이 측정이 됩니다 ㅠㅠ</p>
                             <p>둘 다 입력하게 되면 '제품' 칸이 채워진거기 때문에 제품의 가격이 먹힙니다.</p>
-                            <br/>
+                            <br/> */}
+
                             {<Select options={this.state.ingredientList}
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${option.price == 0 ? '?' 
                                         : (option.quantity == 0 ? 0 : option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
@@ -410,11 +417,7 @@ class Createpage extends Component{
 
                             {selectedIngredientList}
 
-                            <p>예상 조리 시간</p>
-                            <input id="recipe-cooking-time-input" type='number' min="0"
-                                value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
-                                placeholder='minutes' name='cooking-time' />
-                            {"  분"}
+                            
                         </div>
                         <br/>
                         <div className = 'create_second'>
