@@ -61,11 +61,18 @@ describe('<Navbar />', () => {
         wrapper = component.find('.Search_Confirm').at(0);
         wrapper.simulate('click')
         expect(wrapper.length).toBe(1);
+        // must return message
+        let instance = component.find(Navbar.WrappedComponent).instance()
+        instance.setState({maxPrice: 'as', minPrice: 'as'})
+        wrapper.simulate('click')
+        expect(wrapper.length).toBe(1);
       });
 
     it('should test categories', () => {
       const component = mount(navBar);
       component.find('a').forEach((wrap) => {
+        let instance = component.find(Navbar.WrappedComponent).instance()
+        instance.setState({maxPrice: '12', minPrice: '15'})
         wrap.simulate('click')
       })
     })

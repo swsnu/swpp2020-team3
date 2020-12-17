@@ -72,11 +72,8 @@ describe('<Createpage />', () => {
         'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}
         var spyHistory = jest.spyOn(mockHistory, 'push')
             .mockImplementation(() => {})
-        //var spyCreate = jest.spyOn(actionCreators, 'createRecipe')
-          //  .mockImplementation((props) => {return dispatch => {}})
         const component = mount(createpage)
-        const wrapper = component.find('#submit')
-        // length of list = 0
+        const wrapper = component.find('#submit')  
         wrapper.simulate('click')
         // expect(spyHistory).toHaveBeenCalledTimes(1) // this is right
         expect(spyHistory).toHaveBeenCalledTimes(0)
