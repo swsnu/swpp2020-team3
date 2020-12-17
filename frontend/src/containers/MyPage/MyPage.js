@@ -51,6 +51,7 @@ class MyPage extends Component{
         let recipeBasket=[];
         let writtenRecipes=[];
         let planner
+        //console.log(this.props.storedUser)
         if(this.props.storedUser){
             myInfo = this.props.storedUser.user_info.map((user) => {
                 return (
@@ -74,6 +75,7 @@ class MyPage extends Component{
                     />
                 );
             });
+            console.log('1'+this.props.storedUser.liked_recipes);
             likedRecipes = this.props.storedUser.liked_recipes.map((recipe) => {
                 return (
                     <Recipe key={recipe.id}
