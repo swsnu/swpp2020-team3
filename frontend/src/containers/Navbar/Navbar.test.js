@@ -5,18 +5,22 @@ import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history' ;
 import { getMockStore } from '../../test-utils/mocks';
 
-import Navbar from './Navbar'
+import Navbar from './Navbar';
+import * as userCreators from '../../store/actions/userCreators';
 
 const history = createBrowserHistory()
 
-const stubInitialState = {
-  user : {login_id: 'hello'}
+let stubInitialState = {
+  login_id: 0
 };
-const mockStore = getMockStore(stubInitialState);
+let mockStore = getMockStore(stubInitialState);
 
 describe('<Navbar />', () => {
     let navBar;
   
+    const fflushPromises = () => {
+      return new Promise(resolve => setImmediate(resolve))
+    }
     beforeEach(() => {
       navBar = (
         <Provider store={mockStore}>
@@ -77,5 +81,48 @@ describe('<Navbar />', () => {
       })
     })
 
+    it('should test categories withdout price', () => {
+      const component = mount(navBar);
+      component.find('a').forEach((wrap) => {
+        let instance = component.find(Navbar.WrappedComponent).instance()
+        instance.setState({maxPrice: '', minPrice: ''})
+        wrap.simulate('click')
+      })
+    })
+
+    it('should test categories with error', () => {
+      const component = mount(navBar);
+      component.find('a').forEach((wrap) => {
+        let instance = component.find(Navbar.WrappedComponent).instance()
+        instance.setState({maxPrice: 'a', minPrice: 'b'})
+        wrap.simulate('click')
+      })
+    })
+    
+    it('should logout', async () => {
+      const spyLogout = jest.spyOn(userCreators, 'signOut')
+        .mockImplementation(() => {
+          return () => new Promise((resolve) => {
+            setImmediate(resolve({}))
+          })
+        })
+      stubInitialState = {
+        login_id: 1
+      };
+      mockStore = getMockStore(stubInitialState);
+      navBar = (
+        <Provider store={mockStore}>
+          <Router history={history}>
+              <Navbar history={history}/>
+          </Router>
+        </Provider>
+      );
+
+      const component = mount(navBar);
+      const wrapper = component.find('#lilogout');
+      wrapper.simulate('click');
+      await fflushPromises();
+      expect(spyLogout).toHaveBeenCalledTimes(1);
+    })
 
 })

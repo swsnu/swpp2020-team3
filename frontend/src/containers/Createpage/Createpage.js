@@ -35,6 +35,8 @@ const checkIngredients = (list) => {
 
 const checkDescriptions = (steps, images) => {
     // images < desc ==> false
+    console.log(steps)
+    console.log(images)
     let message = ''
     if(images.length < steps.length){
         message += '조리 방법에 대한 이미지를 삽입해주세요.\n'
@@ -221,9 +223,10 @@ class Createpage extends Component{
 	    console.log("hell");
         if(pass){
             window.alert(pass);
+            console.log(pass)
             return;
         }
-	    console.log(this.props.onCreate(recipe));
+	    //console.log(this.props.onCreate(recipe));
         this.props.onCreate(recipe).then((res) => this.props.history.push('/detail-page/'+res.selectedRecipe.id))
 
     }
