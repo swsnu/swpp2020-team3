@@ -350,26 +350,27 @@ class Createpage extends Component{
                         <label> 레시피 등록 </label>
                         <br/>
                         <div className = 'create_first'>
-                            <p>레시피 제목</p>
+                            <p id="recipe-title">레시피 제목</p>
                             <input id="recipe-title-input" type='text' placeholder='Title' name='title' 
                             onChange={(event) => this.setState({title: event.target.value})}/>
                             <br/>
-                            <p>레시피의 간단한 설명</p>
+                            <p id="recipe-sum">레시피의 간단한 설명</p>
                             <textarea id="recipe-summary-input" type='text' placeholder='Summary' name='summary' 
                             onChange={(event) => this.setState({summary: event.target.value})}/>
                             <br/>
 
-                            <p> 썸네일 사진 추가 </p>
+                            <p id="recipe-thumbnail"> 썸네일 사진 추가 </p>
                             <input id="recipe-thumbnail-input" type="file" accept='.jpg, .png, .jpeg'
                                 onChange={(event) => this.thumbnailHandler(event.target.files[0])}/>
                             <img src={this.state.thumbnailURL} width='250' height='200' />
                             <br/>
 
-                            <p>예상 조리 시간</p>
+                            <p id="recipe-cooking-time">예상 조리 시간</p>
                             <input id="recipe-cooking-time-input" type='number' min="0"
                                 value={this.state.value} onChange={(event) => this.setState({duration: event.target.value})} 
                                 placeholder='minutes' name='cooking-time' />
                             {"  분"}
+                            <br/><br/>
                             
                             {/* <h4>재료 추가</h4>
                             <p>레시피에 필요한 재료를 추가해주세요! 선택란에 없다면 직접 추가하실 수 있습니다.</p>
@@ -380,36 +381,36 @@ class Createpage extends Component{
                             <p>둘 다 입력하게 되면 '제품' 칸이 채워진거기 때문에 제품의 가격이 먹힙니다.</p>
                             <br/> */}
 
-                            {<Select options={this.state.ingredientList.filter((item) => item.brand!='')}
+                            {<Select id="select-ingr" options={this.state.ingredientList.filter((item) => item.brand!='')}}
+
                             getOptionLabel={option => `[${option.brand}] ${option.name} (${option.price}원 - ${option.price == 0 ? '?' 
                                         : (option.quantity == 0 ? 0 : option.price/option.quantity).toFixed(2)}원/${option.price == 0 ? '?': option.igd_type})`}
                             onChange={(event) => this.addSelectedIngredientHandler(event)}
                             isSearchable={true} placeholder={'재료를 입력하시오.'} value=''/>}
                             {/* horizontal로 쭉 됐으면 함 */}
                             <div id="add-custom-ingredient">
-                                <p>재료 이름</p>
+                                <p id="ingr-name">재료 이름</p>
                                 <input className='ingr_name' type="text" value={this.state.customIngrName} onChange={(event) => this.setState({customIngrName: event.target.value})}/>
                                 <br/>
-                                <p>계량(igd_type)</p>
+                                <p id="ingr-type">계량(igd_type)</p>
                                 <input className='ingr_type' type="text" value={this.state.customIngrType} placeholder="g, ml..." onChange={(event) => this.setState({customIngrType: event.target.value})}/>
                                 <br/>
-                                <p>가격 (실제 사용된 만큼의 재료의 가격)</p>
+                                <p id="ingr-price">가격</p>
                                 <input className='ingr_price_1' type="number" value={this.state.customIngrNormPrice} onChange={(event) => this.setState({customIngrNormPrice: event.target.value})}/>
-                                <br/>
                                 <br/>
                                 
                                 <button className='ingr_detailed' onClick={() => this.setState({detailed: !this.state.detailed})}>상품 상세 </button>
                                 <br/>
                                 {
                                     (this.state.detailed == true 
-                                        ? <div>
-                                            <p>브랜드명</p>
+                                        ? <div >
+                                            <p id="ingr_brand">브랜드명</p>
                                             <input type="text" className='ingr_brand' value={this.state.customIngrBrand} onChange={(event) => this.setState({customIngrBrand: event.target.value})}/>
                                             <br/>
-                                            <p>상품의 제조량</p>
+                                            <p id="ingr_quantity">상품의 제조량</p>
                                             <input type="number" className='ingr_quantity' value={this.state.customIngrQuantity} onChange={(event) => this.setState({customIngrQuantity: event.target.value})}/>
                                             <br/>
-                                            <p>상품의 가격</p>
+                                            <p id="ingr_price_0">상품의 가격</p>
                                             <input type="number" className='ingr_price_0' value={this.state.customIngrPrice} onChange={(event) => this.setState({customIngrPrice: event.target.value})}/>
                                           </div> 
                                         : <div></div>)
