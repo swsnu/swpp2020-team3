@@ -27,5 +27,10 @@ module.exports = {
     "rules": {
         "react/prop-types":0,
         "react/display-name":0,
+        "no-unused-vars": 0,
+        "no-mixed-spaces-and-tabs":0,
+        "no-control-regex":0,
+        "react/jsx-key":0,
+        "no-undef":0,
     }
 };

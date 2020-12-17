@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 //import './Recipe.css';
-import StarRatings from 'react-star-ratings';
-import PropTypes from "prop-types";
 class Recipes extends Component {
     state={
         pageStart : 0,
@@ -61,7 +59,7 @@ class Recipes extends Component {
             </div>
         );
     }
-};
+}
 
 
-export default Recipes;
+export default Recipes

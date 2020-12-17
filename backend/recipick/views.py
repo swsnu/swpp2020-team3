@@ -492,23 +492,25 @@ def recipe_like(request, id):
         recipe.likes = recipe.likes+1
         recipe.save()
 
-        timestamp = int(time.time())
+        try: 
+            timestamp = int(time.time())
 
-        personalize_events = boto3.client('personalize-events', 'us-east-1')
+            personalize_events = boto3.client('personalize-events', 'us-east-1')
 
-        data = personalize_events.put_events(
-            trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
-            userId = str(user.id),
-            sessionId = 'session_id',
-            eventList = [{
-                'sentAt': timestamp,
-                'eventType': 'Likes',
-                'properties': json.dumps({
-                'itemId': str(id)
-                })
-            }]
-        )
-        print(data)
+            data = personalize_events.put_events(
+                trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
+                userId = str(user.id),
+                sessionId = 'session_id',
+                eventList = [{
+                    'sentAt': timestamp,
+                    'eventType': 'Likes',
+                    'properties': json.dumps({
+                    'itemId': str(id)
+                    })
+                }]
+            )
+        except:
+            return HttpResponse(status=403)
         return JsonResponse(user.id, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['POST'])
@@ -593,24 +595,26 @@ def recipe_rating(request, id):
         response = {'user.id': user.id, 'rating': previous.rating, 'recipe.id': recipe.id}
 
         i = int(body['rating'])-2
-        for j in range(1,i+1):
-            timestamp = int(time.time())
+        try: 
+            for j in range(1,i+1):
+                timestamp = int(time.time())
 
-            personalize_events = boto3.client('personalize-events', 'us-east-1')
+                personalize_events = boto3.client('personalize-events', 'us-east-1')
 
-            data = personalize_events.put_events(
-                trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
-                userId = str(user.id),
-                sessionId = 'session_id',
-                eventList = [{
-                    'sentAt': timestamp,
-                    'eventType': 'Rating',
-                    'properties': json.dumps({
-                    'itemId': str(recipe.id)
-                    })
-                }]
-            )
-            print(data)
+                data = personalize_events.put_events(
+                    trackingId = 'dea1262b-0b85-409e-8ee0-f94ec208e665',
+                    userId = str(user.id),
+                    sessionId = 'session_id',
+                    eventList = [{
+                        'sentAt': timestamp,
+                        'eventType': 'Rating',
+                        'properties': json.dumps({
+                        'itemId': str(recipe.id)
+                        })
+                    }]
+                )
+        except:
+            return HttpResponse(status=403)
 
 
         return JsonResponse(response, safe=False, status=200)
@@ -957,11 +961,14 @@ def activate(request, uidb64, token):
 def getml(request, id):
     if request.method == 'GET':
         print(1)
-        personalizeRt = boto3.client('personalize-runtime', region_name = 'us-east-1')
-        response = personalizeRt.get_recommendations(
-            campaignArn = "arn:aws:personalize:us-east-1:912135822055:campaign/test2",
-            filterArn = "arn:aws:personalize:us-east-1:912135822055:filter/filter2",
-            userId = str(id))
+        try:
+            personalizeRt = boto3.client('personalize-runtime', region_name = 'us-east-1')
+            response = personalizeRt.get_recommendations(
+                campaignArn = "arn:aws:personalize:us-east-1:912135822055:campaign/test2",
+                filterArn = "arn:aws:personalize:us-east-1:912135822055:filter/filter2",
+                userId = str(id))
+        except:
+            return HttpResponse(status=403)
         ml_list = []
         for item in response['itemList']:
             ml_list.append(item['itemId'])

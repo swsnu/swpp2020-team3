@@ -40,11 +40,11 @@ class MyInfo extends Component{
                         </div>
                         <p id='infolabel'>new password</p>
                         {'\u00A0'.repeat(26)}
-                        <input type="text" className="new_password" type="password" placeholder = "새 비밀번호" onChange={(event) => this.setState({new_password: event.target.value})}></input>
+                        <input className="new_password" type="password" placeholder = "새 비밀번호" onChange={(event) => this.setState({new_password: event.target.value})}></input>
                         <br/>
                         <p id='infolabel' >new password(confirm)</p>
                         {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'}
-                        <input type="text" className="password_confirm" type="password" placeholder = "비밀번호 확인" onChange={(event) => this.setState({password_confirm: event.target.value})}></input>
+                        <input className="password_confirm" type="password" placeholder = "비밀번호 확인" onChange={(event) => this.setState({password_confirm: event.target.value})}></input>
                         <br/>
                         <button className="changePassword" disabled = {!this.state.new_password || !this.state.password_confirm} onClick={()=>this.onClickSubmit()}>저장</button>
                     </form>

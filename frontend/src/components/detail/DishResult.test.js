@@ -50,7 +50,7 @@ describe('DishResult', () => {
 
     it('test handleRating', () => {
         const spyUpdate = jest.fn();
-        const component = shallow(<DishResult loginid={1} tag={['test_tag1', 'test_tag2']} isscrap={true} updateState={(arg) => spyUpdate()}/>);
+        const component = shallow(<DishResult loginid={1} tag={['test_tag1', 'test_tag2']} isscrap={true} updateState={() => spyUpdate()}/>);
         component.instance().handleRating({target: {value: 2}})
         expect(spyUpdate).toHaveBeenCalledTimes(1);
     })
