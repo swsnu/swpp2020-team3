@@ -135,8 +135,10 @@ class Detailpage extends Component {
                         <div id = 'detailigdinfo'>
                             <div id='igdlabel'>{"이름: "+igd.name}</div>
                             <div id='igdlabel'>{'브랜드: '+igd.brand}</div>
-                            <div id='igdlabel'>{"수량: "+igd.quantity+igd.igd_type+' * '+igd.amount}</div>
-                            <div id='igdlabel'>{"가격: "+igd.price+'원'}</div>
+                            <div id='igdlabel'>{"수량: "+igd.amount+igd.igd_type}</div>
+                            <div id='igdlabel'>{"가격: "+ (igd.price_normalized == 0 ? igd.price : 
+                            (parseFloat((igd.quantity == 0 ? 0 : parseFloat(((igd.price/igd.quantity)*igd.amount).toFixed(2)).toFixed(2))).toFixed(2)))
+                            +'원'}</div>
                         </div>
                         {<img id = 'detailimg' src={igd.picture} width='200'/>}
                     </div>
