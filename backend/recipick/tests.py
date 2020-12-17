@@ -46,7 +46,7 @@ class RecipickTestCase(TestCase):
         self.csrftoken = response.cookies['csrftoken'].value  # Get csrf token from cookie
         # Create dummy user
         User = get_user_model()
-        self.user1 = User.objects.create_user(username='swpp', password='iluvswpp')
+        self.user1 = User.objects.create_user(username='swpp', password='iluvswpp', email = 'swpp@naver.com')
         self.user1.is_active = True
         self.user1.save()
 
@@ -257,6 +257,46 @@ class RecipickTestCase(TestCase):
             'pageStart' : 0,
             'pageNumber': 1,
             'searchMode' : "likes",
+            'searchOptionsClicked' : 'false',
+        }
+        response = client.get('/api/recipepage/', rp_json, HTTP_X_CSRFTOKEN=csrftoken)
+        rp_json = {
+            'American': 'true',
+            'Korean': 'true',
+            'Chinese': 'true',
+            'Japanese': 'true',
+            'ConvenienceStore': 'true',
+            'Dessert': 'true',
+
+            'minPrice' : 0,
+            'maxPrice' : 100000,
+            'minDuration' : 0,
+            'maxDuration' : 100,
+            'searchWord' : "gon",
+
+            'pageStart' : 0,
+            'pageNumber': 1,
+            'searchMode' : "rating",
+            'searchOptionsClicked' : 'false',
+        }
+        response = client.get('/api/recipepage/', rp_json, HTTP_X_CSRFTOKEN=csrftoken)
+        rp_json = {
+            'American': 'true',
+            'Korean': 'true',
+            'Chinese': 'true',
+            'Japanese': 'true',
+            'ConvenienceStore': 'true',
+            'Dessert': 'true',
+
+            'minPrice' : 0,
+            'maxPrice' : 100000,
+            'minDuration' : 0,
+            'maxDuration' : 100,
+            'searchWord' : "gon",
+
+            'pageStart' : 0,
+            'pageNumber': 1,
+            'searchMode' : "li",
             'searchOptionsClicked' : 'false',
         }
         response = client.get('/api/recipepage/', rp_json, HTTP_X_CSRFTOKEN=csrftoken)
@@ -504,6 +544,13 @@ class RecipickTestCase(TestCase):
     def test_zrecipedelete(self):
         client = self.client
         csrftoken = self.csrftoken
+        response = client.post('/api/recipe/12/like/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/rating/', json.dumps({'rating':5}), content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/scrap/', HTTP_X_CSRFTOKEN=csrftoken)       
+        response = client.post('/api/recipe/12/removelike/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/removescrap/', HTTP_X_CSRFTOKEN=csrftoken) 
+        response = client.get('/api/recipe/12/removelike/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.get('/api/recipe/12/removescrap/', HTTP_X_CSRFTOKEN=csrftoken)
         print(client.login(username='swpp', password='iluvswpp'))
         rcp_json = json.dumps({'title': 'test_title', 'totalPrice': 100, 'duration': 100, 'price': 100,
                                 'thumbnail': 'data:image/png;base64,nothingblablabla',
@@ -516,8 +563,13 @@ class RecipickTestCase(TestCase):
         self.assertEqual(response.status_code, 201)
 
         temprecipe = Recipe.objects.all().values()[0]
-
+        print(Recipe.objects.all().values)
+        print('11')
         response = client.post('/api/recipe/12/like/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/like/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/rating/', json.dumps({'rating':5}), content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipe/12/rating/', content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken) 
+        response = client.get('/api/recipe/12/rating/', HTTP_X_CSRFTOKEN=csrftoken)
         response = client.post('/api/recipe/12/scrap/', HTTP_X_CSRFTOKEN=csrftoken)
         client.get('/api/getuser/{}/'.format(temprecipe['author_id']), HTTP_X_CSRFTOKEN=csrftoken)
  
@@ -525,3 +577,48 @@ class RecipickTestCase(TestCase):
         response = client.post('/api/recipe/12/removescrap/', HTTP_X_CSRFTOKEN=csrftoken)
         response = client.put('/api/recipe/12/removescrap/', HTTP_X_CSRFTOKEN=csrftoken)
         response = client.get('/api/hot/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.get('/api/planner/18/', HTTP_X_CSRFTOKEN=csrftoken)
+        pln_json = json.dumps([
+                [{ "id": 1, "thumbnail": 0, "real_id": 0 }, { "id": 2, "thumbnail": 0, "real_id": 0}, { "id": 3, "thumbnail": 0, "real_id": 0}],
+                [{ "id": 4, "thumbnail": 0, "real_id": 0 }, { "id": 5, "thumbnail": 0, "real_id": 0 }, { "id": 6, "thumbnail": 0, "real_id": 0 }],
+                [{ "id": 7, "thumbnail": 0, "real_id": 0 }, { "id": 8, "thumbnail": 0, "real_id": 0 }, { "id": 9, "thumbnail": 0, "real_id": 0 }]
+            ])
+        response = client.put('/api/planner/18/', pln_json, HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.get('/api/getml/18/', HTTP_X_CSRFTOKEN=csrftoken)
+
+        Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
+                                description_list='[step1, step2]', category='American',
+                                summary='test_summary', likes=5)
+        Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
+                                description_list='[step1, step2]', category='American',
+                                summary='test_summary', likes=5)
+        Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
+                                description_list='[step1, step2]', category='American',
+                                summary='test_summary', likes=5)
+        Recipe.objects.create(title='test_title', price=100, duration=100, thumbnail='carrot.png',
+                                description_list='[step1, step2]', category='American',
+                                summary='test_summary', likes=3)
+        response = client.get('/api/hot/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/getuser/18/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.get('/api/signup/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.post('/api/recipepage/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/recipe/12/rating/', HTTP_X_CSRFTOKEN=csrftoken) 
+        response = client.get('/api/activate/afs/asf', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/curuser/', HTTP_X_CSRFTOKEN=csrftoken)
+
+        rcp_json = json.dumps({'title': 'test_title', 'totalPrice': None, 'duration': 100, 
+                                'thumbnail': 'data:image/png;base64,nothingblablabla',
+                                'descriptionList': '[step1, step2]', 'tagList': '[tag1, tag2]', 'category': 'American',
+                                'ingredientList': [{'name': 'first','price':1000, 'amount':1, 'igd_type': 'g', 'brand': 'CU'}],
+                                'prevList': ['data:image/png;base64,nothingblablabla', 'data:image/png;base64,nothingblablabla'], 
+                                'summary': 'test_summary', 'date': '2020-01-01'}, )
+        Ingredient.objects.create(name= 'first', price =1000, quantity =1, igd_type = 'g', brand= 'CU')
+        response = client.post('/api/recipe/', rcp_json, content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/hot/', HTTP_X_CSRFTOKEN=csrftoken)
+        esponse = client.delete('/api/recipe/12/like/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/recipe/12/rating/', json.dumps({'rating':5}), content_type='application/json', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/recipe/12/scrap/', HTTP_X_CSRFTOKEN=csrftoken)       
+        response = client.delete('/api/recipe/12/removelike/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/recipe/12/removescrap/', HTTP_X_CSRFTOKEN=csrftoken) 
+        response = client.delete('/api/recipe/12/removelike/', HTTP_X_CSRFTOKEN=csrftoken)
+        response = client.delete('/api/recipe/12/removescrap/', HTTP_X_CSRFTOKEN=csrftoken)

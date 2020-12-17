@@ -122,9 +122,16 @@ def getuser(request, id):
             written_recipes.append(newrecipe)
 
         planner = user_1.following.all()
-
+        if not planner:
+            res = [
+                [{ "id": 1, "thumbnail": 0, "real_id": 0 }, { "id": 2, "thumbnail": 0, "real_id": 0}, { "id": 3, "thumbnail": 0, "real_id": 0}],
+                [{ "id": 4, "thumbnail": 0, "real_id": 0 }, { "id": 5, "thumbnail": 0, "real_id": 0 }, { "id": 6, "thumbnail": 0, "real_id": 0 }],
+                [{ "id": 7, "thumbnail": 0, "real_id": 0 }, { "id": 8, "thumbnail": 0, "real_id": 0 }, { "id": 9, "thumbnail": 0, "real_id": 0 }]
+            ]
+        else :
+            res = planner[0].data
         user = {'user_info': user_info, 'liked_recipes': liked_recipes, 'recipe_basket': recipe_basket,
-            'written_recipes': written_recipes, 'planner': planner[0].data}
+            'written_recipes': written_recipes, 'planner': res}
         return JsonResponse(user, safe=False, status=200)
     else:
         return HttpResponseNotAllowed(['GET', 'PUT'])
@@ -135,6 +142,8 @@ def curuser(request):
         if(not login_id):
             login_id=0
         return JsonResponse(login_id, safe=False, status=200)
+    else:
+        return HttpResponseNotAllowed(['POST', 'PUT', 'DELETE'])
 
 @csrf_exempt
 def signup(request):
@@ -443,6 +452,8 @@ def hotrecipe(request):
                 }
                 newrecipes.append(newrecipe)
             return JsonResponse(newrecipes, safe=False)
+    else:
+        return HttpResponseNotAllowed(['POST', 'PUT', 'DELETE'])
 
 def randomrecipe(request):
      if request.method == 'GET':
@@ -575,8 +586,6 @@ def recipe_rating(request, id):
             num = num + 1
         if num<=1:
             num=1
-        print(num)
-        print(rating)
         rating = rating / (num)
         rating = round(rating,2)
         recipe.rating = rating
@@ -642,7 +651,10 @@ def recipe(request, id):
     if request.method == 'GET':
         recipe = Recipe.objects.get(id = id)
         p_list = recipe.photo_list
-        thumbnail = recipe.thumbnail.url
+        try: 
+            thumbnail = recipe.thumbnail.url
+        except:
+            return HttpResponse(status=403)
         liked_user = recipe.liked_user
         scrapped_user = recipe.scrapped_user
         new_list = []
@@ -715,8 +727,6 @@ def recipe(request, id):
             duration = body['duration']
             # date = body['date'] ==> implement edited time   
         except Exception as e:
-            print(e)
-            print(1)
             return HttpResponse(status = 400)
         recipe.title = title
         recipe.price = price
