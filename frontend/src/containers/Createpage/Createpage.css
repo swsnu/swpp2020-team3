@@ -172,7 +172,7 @@ div .Createpage h3{
     background-color: #f59278; /* Green */
     border: none;
     color: white;
-    padding: 8px 20px;
+    padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -183,6 +183,7 @@ div .Createpage h3{
     border-radius: 10px;
     margin-right: 10px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 #submit {

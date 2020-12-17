@@ -24,6 +24,25 @@ const chunk = (arr, size) =>
     );
 
 // TODO: get articles and display thumbnail
+function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+                }
+
+         return array;
+}
+
 export class Mealplanner extends Component {
     constructor(props) {
         super(props)
@@ -121,7 +140,8 @@ export class Mealplanner extends Component {
         console.log(day)
         let currlist = this.state.recipes
         let arraylist = this.state.recipeArray
-        if(currlist[0]){
+        currlist = shuffle(currlist)
+	if(currlist[0]){
             arraylist[day][0] = currlist[0];
         }
         if(currlist[1]){
