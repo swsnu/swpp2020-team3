@@ -6,6 +6,26 @@ import './Mainpage.css';
 import * as actionCreators from '../../store/actions/index'
 import PropTypes from "prop-types";
 
+function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+                }
+
+         return array;
+}
+
+
 class Mainpage extends Component{
 
     state={
@@ -59,7 +79,7 @@ class Mainpage extends Component{
                 this.props.getMls(res.login_id).then( res => {
                     console.log(res)
                     let new_list = res.mlRecipes.map((recipe, index) => ({'image':recipe.thumbnail, 'id':recipe.id, 'title': recipe.title}))
-                    this.setState({thirdList: new_list})
+                    this.setState({thirdList: shuffle(new_list)})
                 })
             }
         })
@@ -96,6 +116,7 @@ class Mainpage extends Component{
                 )   
             })
         }
+	
         let thirdlist = this.state.thirdList.map( (td, index) => {
             if(index<=4){
                 let d = td.image

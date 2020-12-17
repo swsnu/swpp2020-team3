@@ -38,7 +38,7 @@ class DishResult extends Component {
                             <br/>
                             <div id = 'detailinfo'>
                                 <p id='detaillabel'>{'가격'}</p>
-                                {this.props.price}
+                                {this.props.price+'원'}
                                 <br/>
                                 <p id='detaillabel'>{'추천수'}</p>
                                 {this.props.likes }
@@ -47,15 +47,15 @@ class DishResult extends Component {
                                 {this.props.recipe_rating}
                                 <br/>
                                 <p id='detaillabel'>{'예상 조리 시간'}</p>
-                                {this.props.duration}
+                                {this.props.duration+'분'}
                                 <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
                                 {categories && categories.slice(0,2)}
                                 <div id='categsplit'>{categories && categories.slice(2,4)}</div>
                                 <div id='categsplit'>{categories && categories.slice(4,6)}</div>
                                 <div id='userbuttons'>
-                                    {(this.props.loginid!=-1)?<div><button id='ub' style={(this.props.islike?{'background-color':'#c2563a'}:null)} onClick={this.props.onlikeClicked}>좋아요</button>
-                                    <button id='ub' style={(this.props.isscrap?{'background-color':'#c2563a'}:null)} onClick={this.props.onscrapClicked}>장바구니 추가</button>
+                                    {(this.props.loginid!=-1)?<div><button id='ub' style={(this.props.islike?{'background-color':'#c2563a'}:null)} onClick={this.props.onlikeClicked}>추천하기</button>
+                                    <button id='ub' style={(this.props.isscrap?{'background-color':'#c2563a'}:null)} onClick={this.props.onscrapClicked}>식단바구니  추가</button>
                                     <br/>
                                     <input id='ratinginput' type='number' value={this.props.rating} onChange={(event)=>{this.handleRating(event)}}/>
                                     <button id='ratingbutton' onClick={this.props.confirmRating}>별점 주기</button>
