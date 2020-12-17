@@ -59,7 +59,7 @@ jest.mock('../comments/Comments', () => {
 })
 describe('<Detailpage />', () => {
     let spyGetRating;
-    let detailpage, spyDeleteRecipe;
+    let detailpage;
     let spyIsLogin = jest.spyOn(userCreators, 'isLogin')
       .mockImplementation(() => {
           return () => new Promise((resolve) => {
@@ -72,7 +72,17 @@ describe('<Detailpage />', () => {
     }
     const spyGetRecipe = jest.spyOn(recipeCreators, 'getRecipe')
       .mockImplementation(() => {
-        return () => {}
+        return () => new Promise((resolve) => {
+          const result = {recipe: stubState.selectedRecipe}
+          setImmediate(resolve(result))
+        })
+      })
+    const spyDeleteRecipe = jest.spyOn(recipeCreators, 'deleteRecipe')
+      .mockImplementation(() => {
+        return () => new Promise((resolve) => {
+          const result = {recipe: stubState.selectedRecipe}
+          setImmediate(resolve(result))
+        })
       })
     beforeEach(() => {
       detailpage = (
@@ -82,13 +92,11 @@ describe('<Detailpage />', () => {
           </Router>
         </Provider>
       );
-      spyDeleteRecipe = jest.spyOn(recipeCreators, 'deleteRecipe')
-      .mockImplementation(() => {return () => {}})
+      
       spyGetRating = jest.spyOn(recipeCreators, 'getRating')
       .mockImplementation(() => {
         return () => new Promise((resolve) => {
           const data = {login_id: 3}
-          resolve(data)
           setImmediate(resolve(data))
       })
 

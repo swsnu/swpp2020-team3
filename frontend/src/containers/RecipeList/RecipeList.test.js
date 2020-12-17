@@ -139,7 +139,7 @@ describe('<RecipeList />', () => {
     });
 
     it(`should render search mode`, () => {
-        let searchModeList = ['likes','rating','cost']
+        let searchModeList = ['cost','likes','rating']
         const component = mount(recipeList);
         let newRecipeInstance = component.find(RecipeList.WrappedComponent).instance();
 

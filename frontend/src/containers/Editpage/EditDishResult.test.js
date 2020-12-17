@@ -104,32 +104,6 @@ describe('<Editpage />', () => {
       wrapper = component.find('select')
       wrapper.at(0).simulate('change', {target: {value: 'text'}})
 
-      wrapper = component.find('#add-custom-simple input')
-      expect(wrapper.length).toBe(3);
-      wrapper.forEach(button => {
-        if(button.type == 'text'){
-          button.simulate('change', {target: {value: 'text'}})
-        }
-        else{
-          button.simulate('change', {target: {value: 1}})
-        }
-      })
-      wrapper = component.find('#add-custom-simple button')
-      wrapper.simulate('click')
-
-      wrapper = component.find('#add-custom-detailed input');
-      expect(wrapper.length).toBe(5);
-      wrapper.forEach(button => {
-        if(button.type == 'text'){
-          button.simulate('change', {target: {value: 'text'}});
-        }
-        else{
-          button.simulate('change', {target: {value: 1}})
-        }
-      })
-      wrapper = component.find('#add-custom-detailed button');
-      wrapper.simulate('click');
-
       wrapper = component.find('#recipe-cooking-time-input');
       wrapper.simulate('change', {target:{value: 'text'}})
 

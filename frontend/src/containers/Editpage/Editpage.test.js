@@ -17,11 +17,11 @@ const stubState = {
     'duration': 'test_duration',
     'rating': 3,
     'likes': 4,
-    'category': 1,
+    'category': ["Korean"],
     'summary': 'test_summary',
     'ingredient_list': [
       {'name': 'ingredient', 'quantity': 100, 'price': 1000, 'price_normalized': 10,
-      'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}],
+      'igd_type': 'g', 'brand': 'CU', 'picture': 'image'}],
     'photo_list': ['test_image'],
     'thumbnail': 'test_thumbnail',
     'description_list': ['test_step1']
@@ -33,15 +33,6 @@ const stubDescriptionList = ['text1', 'text2']
 const mockHistory = createBrowserHistory()
 const mockStore = getMockStore(stubState)
 
-/*jest.mock('../comments/Comments', () => {
-    return jest.fn(() => {
-      return (
-          <div className="Comments">
-            <h1>Hello</h1>
-          </div>
-      )
-  })
-})*/
 jest.mock('./EditDishResult', () => (props) => {
   return (
         <input id="spyUpdateState" onChange={(event) => props.updateState('title', event.target.value)}/>
@@ -54,7 +45,7 @@ describe('<Editpage />', () => {
       return new Promise(resolve => setImmediate(resolve));
     }
     const mock_alert = jest.spyOn(window, 'alert')
-    .mockImplementation((arg) => {})
+    .mockImplementation(() => {})
     beforeEach(() => {
       editpage = (
           <Provider store={mockStore}>
@@ -74,13 +65,24 @@ describe('<Editpage />', () => {
       let wrapper = component.find('Editpage');
       let instance = component.find(Editpage.WrappedComponent).instance()
 
-      instance.setState({ingredient_list: [
+      instance.setState({
+        title: stubState['selectedRecipe'].title,
+        price: stubState['selectedRecipe'].price,
+        duration: stubState['selectedRecipe'].duration,
+        rating: stubState['selectedRecipe'].rating,
+        likes: stubState['selectedRecipe'].likes,
+        category: stubState['selectedRecipe'].category,
+        summary: stubState['selectedRecipe'].summary,
+        thumbnail: stubState['selectedRecipe'].thumbnail,
+        ingredient_list: [
         {'name': '', 'quantity': 100, 'price': 0, 'price_normalized': 10,
-        'igd_type': 'g', 'brand': 'CU', 'picutre': 'image'}], description_list:[], photo_list:[]})
+        'igd_type': 'g', 'brand': 'CU', 'picture': 'image'}], 
+        description_list:[], 
+        photo_list:[]})
+      console.log(instance.state)
       wrapper = component.find('#submit')
       wrapper.at(0).simulate('click')
       expect(mock_alert).toHaveBeenCalledTimes(1);
-
       
       expect(wrapper.length).toBe(1)
       
@@ -159,7 +161,19 @@ describe('<Editpage />', () => {
     it('should check checkOutput', () => {
       const component = mount(editpage);
       const instance = component.find(Editpage.WrappedComponent).instance();
-      instance.setState({});
+      instance.setState({
+        title:'',
+        price: stubState['selectedRecipe'].price,
+        duration: stubState['selectedRecipe'].duration,
+        rating: stubState['selectedRecipe'].rating,
+        likes: stubState['selectedRecipe'].likes,
+        category: stubState['selectedRecipe'].category,
+        summary: stubState['selectedRecipe'].summary,
+        ingredient_list: stubState['selectedRecipe'].ingredient_list,
+        thumbnail: stubState['selectedRecipe'].thumbnail,
+        description_list: stubState['selectedRecipe'].description_list,
+        photo_list: stubState['selectedRecipe'].photo_list,
+      });
       const wrapper = component.find('#submit')
       wrapper.at(0).simulate('click')
       expect(mock_alert).toHaveBeenCalledTimes(1);

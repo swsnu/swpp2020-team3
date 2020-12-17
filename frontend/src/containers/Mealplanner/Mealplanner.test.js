@@ -52,7 +52,7 @@ jest.mock('react-beautiful-dnd', (onDragEnd) => ({
   //   onDragEnd: jest.fn()
   // }, {}),
   DragDropContext: ({ children }) => {
-    children = {...children, onDragEnd: onDragEnd}
+    //children = {...children, onDragEnd: onDragEnd}
     return children
   },
 }));

@@ -61,6 +61,8 @@ const checkDescriptions = (steps, images) => {
 
 const checkOutput = (recipe) => {
     let message = ''
+    console.log(recipe)
+    console.log(recipe.category.length)
     if(recipe.title.length == 0)
         message = message.concat('제목을 입력해주세요.\n')
     if(recipe.thumbnail.length == 0)
@@ -158,9 +160,9 @@ class Editpage extends Component {
 	   console.log(pass.length)
 	    console.log(pass === "")
         if(pass.length==0){
-	    console.log(pass);
+	        console.log(pass);
             this.props.editRecipe(this.state, this.props.match.params.id).then(() => this.props.history.push('/detail-page/'+this.props.match.params.id))
-	}
+	    }
         else {
             alert(pass)
         }
