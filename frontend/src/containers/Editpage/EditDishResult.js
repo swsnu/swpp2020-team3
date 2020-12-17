@@ -27,6 +27,7 @@ const totalPriceCalculator = (list ) => {
 }
 
 class EditDishResult extends Component {
+    category_dictionary = {'Korean': '한식', 'Chinese': '중식', 'Japanese': '일식', 'American': '양식', 'Western': '양식', 'ConvenienceStore': '편의점', 'Dessert': '디저트'};
     state = {
         title: this.props.recipe && this.props.recipe.title,
         price: this.props.recipe && this.props.recipe.price,
@@ -51,16 +52,25 @@ class EditDishResult extends Component {
 
     }
 
-    componentDidMount(){
+    componentDidMount = ()=>{
         this.props.getRecipe(parseInt(this.props.match.params.id)).then((res1) => {
             let res = res1.selectedRecipe
+	    let categories;
+	    if(res.category.length){
+		categories = res.category.map((td) => {
+		    return this.category_dictionary[td]+"  "
+		})
+	    }
             this.setState({
             title: res.title,
             price: res.price,
             duration: res.duration,
             likes: res.likes,
             rating: res.rating,
-            category: res.category,
+            category: res.category&&res.category.map((item) => {
+		if(item=='American') return 'Western';
+		else return item;
+	    }),
             summary: res.summary,
             selectedIngredientList: res.ingredient_list,
             thumbnail_preview: res.thumbnail,
@@ -249,8 +259,8 @@ class EditDishResult extends Component {
                             <br/>
                             <div id = 'detailinfo'>
                                 <p id='detaillabel'>{'가격'}</p>
-                                <label>{this.state.price} | </label>
-                                <label>{isNaN(totalPrice) ? 0 : totalPrice.toFixed(2)} 원</label>
+                                <label>{this.state.price}</label>
+				{/*<label>{isNaN(totalPrice) ? 0 : totalPrice.toFixed(2)} 원</label>*/}
                                 <br/>
                                 <p id='detaillabel'>{'추천수'}</p>
                                 {this.state.likes}
@@ -265,19 +275,19 @@ class EditDishResult extends Component {
                                 {"  분"}
                                 <br/>
                                 <p id='detaillabel'>{'카테고리'}</p>
-                                <button id='type' className = "type_first" style = {{background: (this.state.category&&this.state.category.includes('한식'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, '한식')}>한식</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('양식'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, '양식')}>양식</button>
-                                <button id='type' className = 'type_second' style = {{background: (this.state.category&&this.state.category.includes('일식'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, '일식')}>일식</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('중식'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, '중식')}>중식</button>
+                                <button id='type' className = "type_first" style = {{background: (!(this.state.category&&this.state.category.includes('Korean')))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Korean')}>한식</button>
+                                <button id='type' style = {{background: (!(this.state.category&&this.state.category.includes('Western')))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Western')}>양식</button>
+                                <button id='type' className = 'type_second' style = {{background: (!(this.state.category&&this.state.category.includes('Japanese')))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Japanese')}>일식</button>
+                                <button id='type' style = {{background: (!(this.state.category&&this.state.category.includes('Chinese')))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Chinese')}>중식</button>
                                 <br/>
-                                <button id='type' className = "type_second" style = {{background: (this.state.category&&this.state.category.includes('편의점'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, '편의점')}>편의점</button>
-                                <button id='type' style = {{background: (this.state.category&&this.state.category.includes('디저트'))&&'grey'}} 
-                                                    onClick={(event)=>this.onClickChangeColor(event, '디저트')}>디저트</button>
+                                <button id='type' className = "type_second" style = {{background: (!(this.state.category&&this.state.category.includes('ConvenienceStore')))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'ConvenienceStore')}>편의점</button>
+                                <button id='type' style = {{background: (!(this.state.category&&this.state.category.includes('Dessert')))&&'grey'}} 
+                                                    onClick={(event)=>this.onClickChangeColor(event, 'Dessert')}>디저트</button>
                                 <br/>
                             </div>
                         </div>
