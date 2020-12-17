@@ -89,6 +89,7 @@ let user1 = {
     written_recipes: [recipe1],
     follower: [user2],
     following: [user3],
+    planner: [[{'thumbnail': 'thumbnail1'}, {'thumbnail': 'thumbnail2'}, {'thumbnail': 'thumbnail3'}]]
 }
 
 const stubInitialState = {
@@ -194,6 +195,7 @@ describe('<MyPage />', () => {
         const spyHistoryPush = jest.spyOn(history, 'push')
         .mockImplementation(() => {});
         const component = mount(myPage);
+        console.log(component.debug())
 
         const wrapper = component.find('.spyButton');
         wrapper.at(0).simulate('click');
