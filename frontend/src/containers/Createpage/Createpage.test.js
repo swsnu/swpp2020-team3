@@ -73,13 +73,43 @@ describe('<Createpage />', () => {
         var spyHistory = jest.spyOn(mockHistory, 'push')
             .mockImplementation(() => {})
         const component = mount(createpage)
-        const wrapper = component.find('#submit')  
-        wrapper.simulate('click')
-        // expect(spyHistory).toHaveBeenCalledTimes(1) // this is right
-        expect(spyHistory).toHaveBeenCalledTimes(0)
-     
-        // length of list is bigger than 0
+        const wrapper = component.find('#submit') 
         let instance = component.find(Createpage.WrappedComponent).instance()
+
+        wrapper.simulate('click')
+        expect(spyHistory).toHaveBeenCalledTimes(0)
+        
+        console.log("!!!!!!!!!!!!!!!")
+        // all errors displayed:
+        instance.setState({
+            title: 'd',
+            duration: '2',
+            totalPrice: 0,
+            descriptionList: ['as', 'dsad'],
+            category: '',
+            prevList: ['', '', ''],
+            summary: '',
+            ingredientList: ['', ''],
+            thumbnail: 'lkj',
+            date: null
+        })
+        wrapper.simulate('click')
+
+        instance.setState({
+            title: '',
+            duration: '2',
+            totalPrice: 0,
+            descriptionList: ['', ''],
+            category: [''],
+            prevList: ['', '', ''],
+            summary: '',
+            ingredientList: [],
+            thumbnail: '',
+            date: null
+        })
+        wrapper.simulate('click')
+
+        // length of list is bigger than 0
         instance.setState({selectedIngredientList: [stub]})
         wrapper.simulate('click')
         // expect(spyHistory).toHaveBeenCalledTimes(2) // this is right

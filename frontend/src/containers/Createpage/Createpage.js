@@ -328,7 +328,6 @@ class Createpage extends Component{
             <div id='ingredient' key={index}>
                 {item.brand} {" | "}
                 {item.name} {" | "}
-                {console.log(item)}
                 {item.price_normalized == 0 ? (item.price == undefined ? 0 : item.price) 
                     : (parseFloat((item.quantity == 0 ? 0 : parseFloat((item.price/item.quantity).toFixed(2)).toFixed(2))).toFixed(2))} 
                 {`per  ${item.igd_type} | `}
